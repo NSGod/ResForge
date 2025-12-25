@@ -22,6 +22,9 @@ let package = Package(
             name: "DialogEditor",
             targets: ["DialogEditor"]),
         .library(
+            name: "FONDEditor",
+            targets: ["FONDEditor"]),
+        .library(
             name: "ImageEditor",
             targets: ["ImageEditor"]),
         .library(
@@ -59,6 +62,8 @@ let package = Package(
             name: "ImageEditor",
             dependencies: [.target(name: "RFSupport"),
                            .product(name: "OrderedCollections", package: "swift-collections")]),
+        .target(name: "FONDEditor",
+            dependencies: [.target(name: "RFSupport")]),
         .target(
             name: "MenuEditor",
             dependencies: [.target(name: "RFSupport")]),
