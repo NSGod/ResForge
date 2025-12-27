@@ -9,11 +9,36 @@ import Cocoa
 import RFSupport
 
 struct WidthTable {
-    var numberOfEntries:    Int16               /* number of entries - 1 */
+    var numberOfEntries:    Int16               // number of entries - 1
     var entries:            [WidthTableEntry]
 }
 
+extension WidthTable {
+    init(_ reader: BinaryDataReader, fond parentFond: FOND) throws {
+        numberOfEntries = try reader.read()
+        entries = []
+        for _ in 0...numberOfEntries {
+            let entry = try WidthTableEntry(reader, fond:parentFond)
+            entries.append(entry)
+        }
+    }
+}
+
+
 struct WidthTableEntry {
-    var style:      MacFontStyle    // style entry applies to
-    var widths:     [Fixed4Dot12]
+    var style:              MacFontStyle        // style entry applies to
+    var widths:             [Fixed4Dot12]
+}
+
+extension WidthTableEntry {
+    init(_ reader: BinaryDataReader, fond parentFond: FOND) throws {
+        style = try reader.read()
+        widths = []
+        // I'm not exactly sure why this is + 3, but that's what FontForge does
+        let numGlyphs = parentFond.lastChar - parentFond.firstChar + 3
+        for _ in 0..<numGlyphs {
+            let width: Fixed4Dot12 = try reader.read()
+            widths.append(width)
+        }
+    }
 }

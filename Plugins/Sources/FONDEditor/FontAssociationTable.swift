@@ -9,9 +9,21 @@ import Cocoa
 import RFSupport
 
 struct FontAssociationTable {
-    var numberOfEntries:    Int16                       /* number of entries - 1 */
+    var numberOfEntries:    Int16                           // number of entries - 1
     var entries:            [FontAssociationTableEntry]
 }
+
+extension FontAssociationTable {
+    init(_ reader: BinaryDataReader) throws {
+        numberOfEntries = try reader.read()
+        entries = []
+        for _ in 0...numberOfEntries {
+            let entry: FontAssociationTableEntry = try FontAssociationTableEntry(reader)
+            entries.append(entry)
+        }
+    }
+}
+
 
 struct FontAssociationTableEntry: Comparable {
     var fontPointSize:  Int16
@@ -31,5 +43,12 @@ struct FontAssociationTableEntry: Comparable {
                lhs.fontStyle == rhs.fontStyle &&
                lhs.fontID == rhs.fontID
     }
+}
 
+extension FontAssociationTableEntry {
+    init(_ reader: BinaryDataReader) throws {
+        fontPointSize = try reader.read()
+        fontStyle = try reader.read()
+        fontID = try reader.read()
+    }
 }

@@ -10,6 +10,11 @@ import RFSupport
 
 typealias ResID = Int16
 
+typealias CharCode      = UInt8
+typealias UVBMP         = UInt16
+typealias EncodingID    = UInt16
+typealias LanguageID    = UInt16
+
 typealias Fixed4Dot12 = Int16
 let fixed4: UInt16 = 1 << 12
 
@@ -97,6 +102,22 @@ struct MacFontStyle: OptionSet, Hashable, Comparable {
         return lhs.rawValue < rhs.rawValue
     }
 }
+
+/// I believe this is since `underline` wouldn't affect any calculated PostScript name?
+func CompressMacFontStyle(fontStyle: MacFontStyle) -> MacFontStyle {
+    var rawValue: UInt16 = 0
+    if fontStyle.contains(.bold) { rawValue += 1 }
+    if fontStyle.contains(.italic) { rawValue += 2 }
+    if fontStyle.contains(.outline) { rawValue += 4 }
+    if fontStyle.contains(.shadow) { rawValue += 8 }
+    if fontStyle.contains(.condensed) {
+        rawValue += 16
+    } else if fontStyle.contains(.extended) {
+        rawValue += 32
+    }
+    return MacFontStyle(rawValue: rawValue)
+}
+
 
 /********  Font Family tables component *********/
 

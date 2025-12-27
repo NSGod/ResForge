@@ -18,5 +18,16 @@ import RFSupport
  */
 
 struct GlyphNameEncodingSubtable {
-    
+    var numberOfEntries:            Int16
+
+    var charCodesToGlyphNames:      [CharCode: String]
+
+}
+
+extension GlyphNameEncodingSubtable {
+    init(_ reader: BinaryDataReader) throws {
+
+
+    }
+
 }
