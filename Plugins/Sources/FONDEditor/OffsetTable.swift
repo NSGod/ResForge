@@ -15,6 +15,10 @@ struct OffsetTable {
 }
 
 extension OffsetTable {
+    var length: Int {
+        return entries.count * OffsetTableEntry.length
+    }
+
     init(_ reader: BinaryDataReader) throws {
         numberOfEntries = try reader.read()
         entries = []
@@ -30,6 +34,10 @@ struct OffsetTableEntry {
 }
 
 extension OffsetTableEntry {
+    static var length: Int {
+        return MemoryLayout<Int32>.size // 2
+    }
+
     init(_ reader: BinaryDataReader) throws {
         offsetOfTable = try reader.read()
     }

@@ -15,6 +15,10 @@ struct BoundingBoxTable {
 }
 
 extension BoundingBoxTable {
+    var length: Int {
+        return MemoryLayout<Int16>.size + entries.count * BoundingBoxTableEntry.length
+    }
+
     init(_ reader: BinaryDataReader) throws {
         numberOfEntries = try reader.read()
         entries = []
@@ -35,6 +39,10 @@ struct BoundingBoxTableEntry {
 }
 
 extension BoundingBoxTableEntry {
+    static var length: Int {
+        return MemoryLayout<Int16>.size * 5 // 10
+    }
+
     init(_ reader: BinaryDataReader) throws {
         fontStyle = try reader.read()
         left = try reader.read()

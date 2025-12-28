@@ -12,15 +12,15 @@ import RFSupport
 //        Style-mapping table : 58 bytes
 
 struct StyleMappingTable {
-    var fontClass:                  FontClass
-    var offset:                     Int32       /* offset from the start of this table to the glyph-name-encoding subtable component */
+    var fontClass:                  FontClass   // UInt16
+    var offset:                     Int32       // offset from the start of this table to the glyph-name-encoding subtable component
     var reserved:                   Int32
     var indexes:                    [UInt8]     // [48]
 
     var fontNameSuffixSubtable:     FontNameSuffixSubtable?
     var glyphNameEncodingSubtable:  GlyphNameEncodingSubtable?
 
-    static let length: Int = MemoryLayout<FontClass>.size + MemoryLayout<Int32>.size * 2 + 48 // 58 bytes
+    static let length = MemoryLayout<FontClass>.size + MemoryLayout<Int32>.size * 2 + 48 // 58 bytes
 }
 
 extension StyleMappingTable {
@@ -34,18 +34,19 @@ extension StyleMappingTable {
             let index: UInt8 = try reader.read()
             indexes.append(index)
         }
-        var nameSuffixRange: NSRange = knownRange
+        var nameSuffixRange = knownRange
         nameSuffixRange.location += Self.length
         nameSuffixRange.length -= Self.length
-        var glyphNameTableLength: Int = 0
+        var glyphNameTableLength = 0
         if offset != 0 {
             glyphNameTableLength = NSMaxRange(knownRange) - (origOffset + Int(offset))
             nameSuffixRange.length -= glyphNameTableLength
         }
         fontNameSuffixSubtable = try FontNameSuffixSubtable(reader, range: nameSuffixRange)
         if offset != 0 {
-            try reader.setPosition(origOffset + Int(offset))
+            try reader.pushPosition(origOffset + Int(offset))
             glyphNameEncodingSubtable = try GlyphNameEncodingSubtable(reader)
+            reader.popPosition()
         }
     }
 

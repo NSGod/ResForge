@@ -15,6 +15,12 @@ struct WidthTable {
 }
 
 extension WidthTable {
+    var length: Int {
+        var length = MemoryLayout<Int16>.size
+        for entry in self.entries { length += entry.length }
+        return length
+    }
+    
     init(_ reader: BinaryDataReader, fond parentFond: FOND) throws {
         numberOfEntries = try reader.read()
         entries = []
@@ -32,6 +38,10 @@ struct WidthTableEntry {
 }
 
 extension WidthTableEntry {
+    var length: Int {
+        return MemoryLayout<MacFontStyle>.size + widths.count * MemoryLayout<Fixed4Dot12>.size //
+    }
+
     init(_ reader: BinaryDataReader, fond parentFond: FOND) throws {
         style = try reader.read()
         widths = []

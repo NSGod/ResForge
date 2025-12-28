@@ -13,11 +13,17 @@ struct KernTable {
     var numberOfEntries:                Int16              // number of entries - 1
     var entries:                        [KernTableEntry]
 
-    var hasOutOfRangeCharCodes: Bool
+    var hasOutOfRangeCharCodes:         Bool
     private var fontStylesToEntries:    [MacFontStyle: KernTableEntry]
 }
 
 extension KernTable {
+    var length: Int {
+        var length = MemoryLayout<Int16>.size
+        for entry in self.entries { length += entry.length }
+        return length
+    }
+
     init(_ reader: BinaryDataReader) throws {
         numberOfEntries = try reader.read()
         entries = []
@@ -26,7 +32,6 @@ extension KernTable {
             let entry: KernTableEntry = try KernTableEntry(reader)
             entries.append(entry)
             fontStylesToEntries[entry.style] = entry
-//            hasOutOfRangeCharCodes |= entry.hasOutOfRangeCharCodes
             hasOutOfRangeCharCodes = hasOutOfRangeCharCodes ? true : entry.hasOutOfRangeCharCodes
         }
     }
@@ -53,6 +58,10 @@ struct KernTableEntry {
 }
 
 extension KernTableEntry {
+    var length: Int {
+        return MemoryLayout<UInt16>.size * 2 + Int(numKerns) * KernPair.length
+    }
+
     init(_ reader: BinaryDataReader) throws {
         style = try reader.read()
         numKerns = try reader.read()
@@ -78,6 +87,10 @@ struct KernPair: Equatable {
 }
 
 extension KernPair {
+    static var length: Int {
+        return MemoryLayout<UInt8>.size * 2 + MemoryLayout<Fixed4Dot12>.size // 4
+    }
+
     init(_ reader: BinaryDataReader) throws {
         kernFirst = try reader.read()
         kernSecond = try reader.read()

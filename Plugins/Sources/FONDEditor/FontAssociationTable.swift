@@ -15,6 +15,10 @@ struct FontAssociationTable {
 }
 
 extension FontAssociationTable {
+    var length: Int {
+        return entries.count * FontAssociationTableEntry.length
+    }
+
     init(_ reader: BinaryDataReader) throws {
         numberOfEntries = try reader.read()
         entries = []
@@ -41,12 +45,16 @@ struct FontAssociationTableEntry: Comparable {
 
     static func == (lhs: FontAssociationTableEntry, rhs: FontAssociationTableEntry) -> Bool {
         return lhs.fontPointSize == rhs.fontPointSize &&
-               lhs.fontStyle == rhs.fontStyle &&
-               lhs.fontID == rhs.fontID
+               lhs.fontStyle     == rhs.fontStyle &&
+               lhs.fontID        == rhs.fontID
     }
 }
 
 extension FontAssociationTableEntry {
+    static var length: Int {
+        return MemoryLayout<Int16>.size + MemoryLayout<MacFontStyle>.size + MemoryLayout<ResID>.size // 6
+    }
+
     init(_ reader: BinaryDataReader) throws {
         fontPointSize = try reader.read()
         fontStyle = try reader.read()

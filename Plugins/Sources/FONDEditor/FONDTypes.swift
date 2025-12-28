@@ -16,7 +16,7 @@ typealias EncodingID    = UInt16
 typealias LanguageID    = UInt16
 
 typealias Fixed4Dot12 = Int16
-let fixed4: UInt16 = 1 << 12
+fileprivate let fixed4: UInt16 = 1 << 12
 
 func Fixed4Dot12ToDouble(_ x: Fixed4Dot12) -> Double {
     Double(x) * 1.0/Double(fixed4)
