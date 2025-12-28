@@ -4,6 +4,7 @@
 //
 //  Created by Mark Douma on 12/23/2025.
 //
+//  https://developer.apple.com/library/archive/documentation/mac/pdf/Text.pdf#page=494
 
 import Cocoa
 import RFSupport
