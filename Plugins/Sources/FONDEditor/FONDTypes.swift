@@ -5,17 +5,18 @@
 //  Created by Mark Douma on 12/23/2025.
 //
 
-import Cocoa
+import Foundation
 import RFSupport
 
-typealias ResID = Int16
+typealias ResID         = Int16
 
 typealias CharCode      = UInt8
 typealias UVBMP         = UInt16
 typealias EncodingID    = UInt16
 typealias LanguageID    = UInt16
 
-typealias Fixed4Dot12 = Int16
+typealias Fixed4Dot12   = Int16
+
 fileprivate let fixed4: UInt16 = 1 << 12
 
 func Fixed4Dot12ToDouble(_ x: Fixed4Dot12) -> Double {
@@ -25,6 +26,19 @@ func Fixed4Dot12ToDouble(_ x: Fixed4Dot12) -> Double {
 func DoubleToFixed4Dot12(_ x: Double) -> Fixed4Dot12 {
     Fixed4Dot12(x * Double(fixed4) + (x < 0 ? -0.5 : 0.5))
 }
+
+extension BinaryDataReader {
+    public func peek<T: FixedWidthInteger>(bigEndian: Bool? = nil) throws -> T {
+        let length = T.bitWidth / 8
+        try self.advance(length)
+        let val = data.withUnsafeBytes {
+            $0.loadUnaligned(fromByteOffset: position-length-data.startIndex, as: T.self)
+        }
+        try setPosition(position - length)
+        return bigEndian ?? self.bigEndian ? T(bigEndian: val) : T(littleEndian: val)
+    }
+}
+
 
 /* Font family flags. An integer value, the bits of which specify general characteristics
  of the font family. This value is represented by the ffFlags field in the FamRec data type.

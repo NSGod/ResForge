@@ -6,7 +6,7 @@
 //
 //  https://developer.apple.com/library/archive/documentation/mac/pdf/Text.pdf#page=483
 
-import Cocoa
+import Foundation
 import RFSupport
 
 struct FontAssociationTable {
@@ -41,12 +41,6 @@ struct FontAssociationTableEntry: Comparable {
         } else {
             return lhs.fontStyle < rhs.fontStyle
         }
-    }
-
-    static func == (lhs: FontAssociationTableEntry, rhs: FontAssociationTableEntry) -> Bool {
-        return lhs.fontPointSize == rhs.fontPointSize &&
-               lhs.fontStyle     == rhs.fontStyle &&
-               lhs.fontID        == rhs.fontID
     }
 }
 

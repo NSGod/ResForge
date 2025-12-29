@@ -51,6 +51,10 @@ public class BinaryDataReader {
         self.position = position
     }
 
+    public func pushSavedPosition() {
+        posStack.append(self.position)
+    }
+
     public func pushPosition(_ position: Int) throws {
         posStack.append(self.position)
         try self.setPosition(position)

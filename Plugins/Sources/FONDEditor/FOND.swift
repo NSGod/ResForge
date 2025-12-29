@@ -6,7 +6,7 @@
 //
 //  https://developer.apple.com/library/archive/documentation/mac/pdf/Text.pdf#page=478
 
-import Cocoa
+import Foundation
 import RFSupport
 
 enum FONDError: LocalizedError {
@@ -31,6 +31,8 @@ enum FONDError: LocalizedError {
 }
 
 struct FOND {
+    static let fontFamilyRecordLength   = 52
+
     // FontFamilyRecord is the first 52 bytes of the FOND
     var ffFlags:        FontFamilyFlags     // flags for family
     var famID:          ResID               // family ID number
@@ -69,7 +71,10 @@ struct FOND {
         return fontAssociationTable.entries.count
     }
 
-    // lazy data structures
+    var remainingTableData:     Data
+
+    // MARK: ideally, these would be lazy data structures,
+    // though I'm not sure how to do that in Swift and given the current BinaryDataReader design
     var offsetTable:            OffsetTable?
     var boundingBoxTable:       BoundingBoxTable?
     var widthTable:             WidthTable?
@@ -84,8 +89,9 @@ struct FOND {
         case kernTable
     }
 
-    private var offsetTypesToRanges: [TableOffsetType: Range<Int>]
-    private var needsRepair: Bool
+    private var offsetTypesToRanges:    [TableOffsetType: NSRange]
+    private var offsetsCalculated:      Bool
+    private var needsRepair:            Bool   // If this FOND resource's resourceID doesn't match the famID, we need to update the famID
 }
 
 extension FOND {
@@ -117,7 +123,79 @@ extension FOND {
         intl1           = try reader.read()
         ffVersion       = try reader.read()
 
-        
+        // FIXME: make sure famID == this FOND's resource ID, otherwise repair it
+        // FIXME: add validation/error-checking here
+
+        fontAssociationTable = try FontAssociationTable(reader)
+
+        reader.pushSavedPosition()
+        remainingTableData = try reader.readData(length: reader.bytesRemaining)
+        reader.popPosition()
+
+        try calculateOffsetsIfNeeded(reader)
+
+        // can only have a Bounding Box table if we have an offset table to specify its offset
+        if let offsetTable = offsetTable {
+            // might have a bounding box table
+            let offsetTableOffset = Self.fontFamilyRecordLength + fontAssociationTable.length
+            try reader.pushPosition(offsetTableOffset + Int(offsetTable.entries[0].offsetOfTable))
+            boundingBoxTable = try BoundingBoxTable(reader)
+            reader.popPosition()
+        }
+
+        // Width table
+        if wTabOff > 0 {
+            try reader.pushPosition(Int(wTabOff))
+            widthTable = try WidthTable(reader, fond:self)
+            reader.popPosition()
+        }
+
+        // Kern table
+        if kernOff > 0 {
+            guard let kernRange = offsetTypesToRanges[.kernTable] else {
+                NSLog("\(type(of: self)).\(#function)() *** ERROR: could not determine kernTableRange!")
+            }
+            try reader.pushPosition(Int(kernOff))
+            kernTable = try KernTable(reader)
+            reader.popPosition()
+        }
+
+        // StyleMapping table
+        if styleOff > 0 {
+            if let styleMappingRange = offsetTypesToRanges[.styleTable] {
+                try reader.pushPosition(Int(styleOff))
+                styleMappingTable = try StyleMappingTable(reader, range:styleMappingRange)
+                reader.popPosition()
+            } else {
+                NSLog("\(type(of: self)).\(#function)() *** ERROR: could not determine styleMappingRange!!")
+            }
+        }
+
+    }
+
+    private mutating func calculateOffsetsIfNeeded(_ reader: BinaryDataReader) throws {
+        if offsetsCalculated == true { return }
+        var offsetsToOffsetTypes: [Int32: TableOffsetType] = [:]
+        if wTabOff > 0 { offsetsToOffsetTypes[wTabOff] = .widthTable }
+        if styleOff > 0 { offsetsToOffsetTypes[styleOff] = .styleTable }
+        if kernOff > 0 { offsetsToOffsetTypes[kernOff] = .kernTable }
+        var currentOffset: Int32 = Int32(Self.fontFamilyRecordLength) + Int32(fontAssociationTable.length)
+        var orderedOffsets: [Int32] = Array(offsetsToOffsetTypes.keys)
+        orderedOffsets.sort()
+        if (orderedOffsets.count == 0 && currentOffset < reader.data.count) ||
+            (orderedOffsets.count > 0 && currentOffset < orderedOffsets[0] && currentOffset < reader.data.count) {
+            // may have an Offset table
+            try reader.setPosition(Int(currentOffset))
+            offsetTable = try OffsetTable(reader)
+        }
+        for i in 0..<orderedOffsets.count {
+            let firstOffset = orderedOffsets[i]
+            let secondOffset = (i == orderedOffsets.count - 1 ? Int32(reader.data.count) : orderedOffsets[i + 1])
+            let range = NSMakeRange(Int(firstOffset), Int(secondOffset - firstOffset))
+            // FIXME: I don't know what's going on here with the ! being necessary:
+            offsetTypesToRanges[offsetsToOffsetTypes[firstOffset]!] = range
+        }
+        offsetsCalculated = true
     }
 
     mutating func add(_ fontAssociationTableEntry: FontAssociationTableEntry) throws {
@@ -128,8 +206,28 @@ extension FOND {
 
     }
 
-    func unitsPerEm(for fontStyle: MacFontStyle) -> UnitsPerEm {
+    mutating func shiftOffsetsAndRanges(by deltaLength: Int) {
+        // the table offsets could be empty (== 0) so check before modifying their values
+        if wTabOff > 0 {
 
+        }
+
+        if kernOff > 0 {
+
+        }
+
+        if styleOff > 0 {
+
+        }
+    }
+
+    func unitsPerEm(for fontStyle: MacFontStyle) -> UnitsPerEm {
+        for entry in fontAssociationTable.entries {
+            if entry.fontStyle == fontStyle && entry.fontPointSize == 0 {
+                return .trueTypeStandard
+            }
+        }
+        return .postScriptStandard
     }
 
     func glyphName(for charCode: CharCode) -> String? {

@@ -6,7 +6,7 @@
 //
 //  https://developer.apple.com/library/archive/documentation/mac/pdf/Text.pdf#page=493
 
-import Cocoa
+import Foundation
 import RFSupport
 
 /*   The glyph-name encoding subtable of the style-mapping table allows the
@@ -26,16 +26,28 @@ import RFSupport
  */
 
 struct GlyphNameEncodingSubtable {
-    var numberOfEntries:            Int16               // number of entries
+    var numberOfEntries:            Int16               // actual number of entries
 
     var charCodesToGlyphNames:      [CharCode: String]
 
+    private(set)var length: Int
 }
 
 extension GlyphNameEncodingSubtable {
+    
     init(_ reader: BinaryDataReader) throws {
+        let before = reader.position
+        numberOfEntries = try reader.read()
+        for _ in 0..<numberOfEntries {
+            let charCode: CharCode = try reader.read()
+            let glyphName = try reader.readPString()
+            charCodesToGlyphNames[charCode] = glyphName
+        }
+        length = before - reader.position
+    }
 
-
+    func glyphName(for charCode: CharCode) -> String? {
+        return charCodesToGlyphNames[charCode]
     }
 
 }

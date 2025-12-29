@@ -6,7 +6,7 @@
 //
 //  https://developer.apple.com/library/archive/documentation/mac/pdf/Text.pdf#page=494
 
-import Cocoa
+import Foundation
 import RFSupport
 
 struct KernTable {

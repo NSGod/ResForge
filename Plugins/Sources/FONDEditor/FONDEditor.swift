@@ -10,22 +10,6 @@ import RFSupport
 
 public class FONDEditor : AbstractEditor, ResourceEditor {
 
-    public required init?(resource: Resource, manager: RFEditorManager) {
-        <#code#>
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    public func saveResource(_ sender: Any) {
-        <#code#>
-    }
-    
-    public func revertResource(_ sender: Any) {
-        <#code#>
-    }
-    
     public static var bundle: Bundle { .module }
     public static let supportedTypes = [
         "FOND",
@@ -37,6 +21,22 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
         "FONDEditorWindow"
     }
 
+
+    public required init?(resource: Resource, manager: RFEditorManager) {
+        <#code#>
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    public func saveResource(_ sender: Any) {
+        <#code#>
+    }
+
+    public func revertResource(_ sender: Any) {
+        <#code#>
+    }
 
 
 

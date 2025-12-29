@@ -6,7 +6,7 @@
 //
 //  https://developer.apple.com/library/archive/documentation/mac/pdf/Text.pdf#page=487
 
-import Cocoa
+import Foundation
 import RFSupport
 
 //        Style-mapping table : 58 bytes
