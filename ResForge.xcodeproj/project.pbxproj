@@ -56,6 +56,7 @@
 		B229EEF715A4FB6F0032C12C /* InfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = B229EEEE15A4FB6F0032C12C /* InfoWindow.xib */; };
 		B229EEF815A4FB6F0032C12C /* PrefsWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = B229EEF015A4FB6F0032C12C /* PrefsWindow.xib */; };
 		B229EEF915A4FB6F0032C12C /* ResourceDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = B229EEF215A4FB6F0032C12C /* ResourceDocument.xib */; };
+		C1960C4C2F049DBC003BC1E4 /* FONDEditor in Frameworks */ = {isa = PBXBuildFile; productRef = C1960C4B2F049DBC003BC1E4 /* FONDEditor */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -204,6 +205,7 @@
 				49AA91E02DC08054007944F6 /* NovaTools in Frameworks */,
 				49AA91E42DC08DE1007944F6 /* MenuEditor in Frameworks */,
 				49AA91E62DC08EC2007944F6 /* SoundEditor in Frameworks */,
+				C1960C4C2F049DBC003BC1E4 /* FONDEditor in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,6 +363,7 @@
 				49AA91E52DC08EC2007944F6 /* SoundEditor */,
 				49AA91FD2DC0A902007944F6 /* RFSupport */,
 				496107632DC0E71000D73B44 /* TemplateEditor */,
+				C1960C4B2F049DBC003BC1E4 /* FONDEditor */,
 			);
 			productInstallPath = "$(USER_APPS_DIR)";
 			productName = ResForge;
@@ -800,6 +803,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 493CC3A9270AE8CA00A9173E /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = OrderedCollections;
+		};
+		C1960C4B2F049DBC003BC1E4 /* FONDEditor */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FONDEditor;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

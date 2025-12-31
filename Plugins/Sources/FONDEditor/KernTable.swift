@@ -13,7 +13,7 @@ struct KernTable {
     var numberOfEntries:                Int16              // number of entries - 1
     var entries:                        [KernTableEntry]
 
-    var hasOutOfRangeCharCodes:         Bool
+    var hasOutOfRangeCharCodes:         Bool = false
     private var fontStylesToEntries:    [MacFontStyle: KernTableEntry]
 }
 
@@ -54,7 +54,7 @@ struct KernTableEntry {
 
     var kernPairs:  [KernPair]
 
-    var hasOutOfRangeCharCodes: Bool
+    var hasOutOfRangeCharCodes: Bool = false
 }
 
 extension KernTableEntry {

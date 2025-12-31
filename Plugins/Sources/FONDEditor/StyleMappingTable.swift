@@ -26,10 +26,11 @@ struct StyleMappingTable {
 extension StyleMappingTable {
 
     init(_ reader: BinaryDataReader, range knownRange: NSRange) throws {
-        var origOffset = reader.position
+        let origOffset = reader.position
         fontClass = try reader.read()
         offset = try reader.read()
         reserved = try reader.read()
+        indexes = []
         for _ in 0..<48 {
             let index: UInt8 = try reader.read()
             indexes.append(index)

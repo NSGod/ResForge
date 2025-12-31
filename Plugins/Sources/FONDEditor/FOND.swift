@@ -89,12 +89,17 @@ struct FOND {
         case kernTable
     }
 
-    private var offsetTypesToRanges:    [TableOffsetType: NSRange]
-    private var offsetsCalculated:      Bool
-    private var needsRepair:            Bool   // If this FOND resource's resourceID doesn't match the famID, we need to update the famID
+    private var offsetTypesToRanges:    [TableOffsetType: NSRange] = [:]
+    private var offsetsCalculated:      Bool = false
+    private var needsRepair:            Bool = false   // If this FOND resource's resourceID doesn't match the famID, we need to update the famID
 }
 
 extension FOND {
+    init(_ data: Data) throws {
+        let reader = BinaryDataReader(data)
+        try self.init(reader)
+    }
+
     init(_ reader: BinaryDataReader) throws {
         // FIXME: deal with FOND w/ no name error
         ffFlags         = try reader.read()
@@ -152,12 +157,13 @@ extension FOND {
 
         // Kern table
         if kernOff > 0 {
-            guard let kernRange = offsetTypesToRanges[.kernTable] else {
+            if let kernRange = offsetTypesToRanges[.kernTable] {
+                try reader.pushPosition(Int(kernOff))
+                kernTable = try KernTable(reader)
+                reader.popPosition()
+            } else {
                 NSLog("\(type(of: self)).\(#function)() *** ERROR: could not determine kernTableRange!")
             }
-            try reader.pushPosition(Int(kernOff))
-            kernTable = try KernTable(reader)
-            reader.popPosition()
         }
 
         // StyleMapping table
@@ -179,7 +185,7 @@ extension FOND {
         if wTabOff > 0 { offsetsToOffsetTypes[wTabOff] = .widthTable }
         if styleOff > 0 { offsetsToOffsetTypes[styleOff] = .styleTable }
         if kernOff > 0 { offsetsToOffsetTypes[kernOff] = .kernTable }
-        var currentOffset: Int32 = Int32(Self.fontFamilyRecordLength) + Int32(fontAssociationTable.length)
+        let currentOffset: Int32 = Int32(Self.fontFamilyRecordLength) + Int32(fontAssociationTable.length)
         var orderedOffsets: [Int32] = Array(offsetsToOffsetTypes.keys)
         orderedOffsets.sort()
         if (orderedOffsets.count == 0 && currentOffset < reader.data.count) ||

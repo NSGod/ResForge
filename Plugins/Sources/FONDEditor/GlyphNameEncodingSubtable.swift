@@ -28,7 +28,7 @@ import RFSupport
 struct GlyphNameEncodingSubtable {
     var numberOfEntries:            Int16               // actual number of entries
 
-    var charCodesToGlyphNames:      [CharCode: String]
+    var charCodesToGlyphNames:      [CharCode: String] = [:]
 
     private(set)var length: Int
 }
