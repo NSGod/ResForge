@@ -8,6 +8,7 @@ import ImageEditor
 import MenuEditor
 import NovaTools
 import SoundEditor
+import FONDEditor
 
 let plugins: [RFPlugin.Type] = [
     HexEditor.self,
@@ -17,6 +18,7 @@ let plugins: [RFPlugin.Type] = [
     MenuEditor.self,
     NovaTools.self,
     SoundEditor.self,
+    FONDEditor.self,
 ]
 
 @main

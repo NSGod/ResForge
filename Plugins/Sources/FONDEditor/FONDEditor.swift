@@ -20,6 +20,8 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
     private let manager:    RFEditorManager
     var fond:               FOND?
 
+    @IBOutlet weak var flagsBitfieldControl: BitfieldControl!
+    
     public override var windowNibName: NSNib.Name {
         "FONDEditorWindow"
     }
@@ -58,12 +60,12 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
 //
 //    }
 
-    public func saveResource(_ sender: Any) {
+    @IBAction public func saveResource(_ sender: Any) {
 
 
     }
 
-    public func revertResource(_ sender: Any) {
+    @IBAction public func revertResource(_ sender: Any) {
 
     }
 
