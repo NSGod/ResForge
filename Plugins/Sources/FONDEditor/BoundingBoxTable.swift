@@ -9,13 +9,13 @@
 import Foundation
 import RFSupport
 
-struct BoundingBoxTable {
+// will be displayed in UI, so need NSObject subclass?
+
+final class BoundingBoxTable: ResourceNode {
     var numberOfEntries:    Int16                      // number of entries - 1
     var entries:            [BoundingBoxTableEntry]
-}
 
-extension BoundingBoxTable {
-    var length: Int {
+    override var length:    Int {
         return MemoryLayout<Int16>.size + entries.count * BoundingBoxTableEntry.length
     }
 
@@ -26,20 +26,19 @@ extension BoundingBoxTable {
             let entry = try BoundingBoxTableEntry(reader)
             entries.append(entry)
         }
+        super.init()
     }
 }
 
 
-struct BoundingBoxTableEntry {
+final class BoundingBoxTableEntry: ResourceNode {
     var fontStyle:  MacFontStyle
     var left:       Fixed4Dot12
     var bottom:     Fixed4Dot12
     var right:      Fixed4Dot12
     var top:        Fixed4Dot12
-}
 
-extension BoundingBoxTableEntry {
-    static var length: Int {
+    override class var length: Int {
         return MemoryLayout<Int16>.size * 5 // 10
     }
 
@@ -49,5 +48,6 @@ extension BoundingBoxTableEntry {
         bottom = try reader.read()
         right = try reader.read()
         top = try reader.read()
+        super.init()
     }
 }

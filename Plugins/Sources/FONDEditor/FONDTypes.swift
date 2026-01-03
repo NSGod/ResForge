@@ -11,9 +11,11 @@ import RFSupport
 typealias ResID         = Int16
 
 typealias CharCode      = UInt8
-typealias UVBMP         = UInt16
 typealias EncodingID    = UInt16
 typealias LanguageID    = UInt16
+typealias UVBMP         = UInt16
+
+let UV_UNDEF: UVBMP     = 0xFFFF
 
 typealias Fixed4Dot12   = Int16
 
@@ -36,6 +38,431 @@ extension BinaryDataReader {
         }
         try setPosition(position - length)
         return bigEndian ?? self.bigEndian ? T(bigEndian: val) : T(littleEndian: val)
+    }
+}
+
+enum MacScriptID: UInt16 {
+    case roman                  = 0
+    case japanese               = 1
+    case traditionalChinese     = 2
+//  case chinese                = .traditionalChinese
+    case korean                 = 3
+    case arabic                 = 4
+    case hebrew                 = 5
+    case greek                  = 6
+    case cyrillic               = 7
+    case rightToLeftSymbol      = 8
+    case devanagari             = 9
+    case gurmukhi               = 10
+    case gujarati               = 11
+    case oriya                  = 12
+    case bengali                = 13
+    case tamil                  = 14
+    case telugu                 = 15
+    case kannada                = 16
+    case malayalam              = 17
+    case sinhalese              = 18
+    case burmese                = 19
+    case khmer                  = 20
+    case thai                   = 21
+    case laotian                = 22
+    case georgian               = 23
+    case armenian               = 24
+    case simplifiedChinese      = 25
+    case tibetan                = 26
+    case mongolian              = 27
+    case geez                   = 28
+//  case ethiopic               = .geez
+//  case amharic                = .geez
+    case ceRoman                = 29
+//  case slavic                 = .ceRoman
+    case vietnamese             = 30
+    case extendedArabic         = 31
+//  case sindhi                 = .extendedArabic
+    case uninterpreted          = 32
+    case none                   = 0xFFFF
+}
+
+extension MacScriptID: CustomStringConvertible {
+    var description: String {
+        switch self {
+            case .roman:                    return "Roman"
+            case .japanese:                 return "Japanese"
+            case .traditionalChinese:       return "Chinese (Traditional)"
+            case .korean:                   return "Korean"
+            case .arabic:                   return "Arabic"
+            case .hebrew:                   return "Hebrew"
+            case .greek:                    return "Greek"
+            case .cyrillic:                 return "Cyrillic"
+            case .rightToLeftSymbol:        return "Right-to-Left Symbols"
+            case .devanagari:               return "Devanagari"
+            case .gurmukhi:                 return "Gurmukhi"
+            case .gujarati:                 return "Gujarati"
+            case .oriya:                    return "Oriya"
+            case .bengali:                  return "Bengali"
+            case .tamil:                    return "Tamil"
+            case .telugu:                   return "Telugu"
+            case .kannada:                  return "Kannada"
+            case .malayalam:                return "Malayalam"
+            case .sinhalese:                return "Sinhalese"
+            case .burmese:                  return "Burmese"
+            case .khmer:                    return "Khmer"
+            case .thai:                     return "Thai"
+            case .laotian:                  return "Laotian"
+            case .georgian:                 return "Georgian"
+            case .armenian:                 return "Armenian"
+            case .simplifiedChinese:        return "Chinese (Simplified)"
+            case .tibetan:                  return "Tibetan"
+            case .mongolian:                return "Mongolian"
+            case .geez:                     return "Geez/Ethiopic"
+            case .ceRoman:                  return "Central European Roman"
+            case .vietnamese:               return "Vietnamese"
+            case .extendedArabic:           return "Extended Arabic"
+            case .uninterpreted:            return "Uninterpreted Symbols"
+            case .none:                     return "None"
+        }
+    }
+}
+
+/* From Appendix B, Table B-2 in Text.pdf */
+/* Script & FOND ID mapping:
+ 129      - 16383        Roman
+ 16384    - 16895        Japanese
+ 16896    - 17407        Traditional Chinese
+ 17408    - 17919        Korean
+ 17920    - 18431        Arabic
+ 18432    - 18943        Hebrew
+ 18944    - 19455        Greek
+ 19456    - 19967        Cyrillic
+ 19968    - 20479        Right-to-Left Symbols
+ 20480    - 20991        Devanagari
+ 20992    - 21503        Gurmukhi
+ 21504    - 22015        Gujarati
+ 22016    - 22527        Oriya
+ 22528    - 23039        Bengali
+ 23040    - 23551        Tamil
+ 23552    - 24063        Telugu
+ 24064    - 24575        Kannada
+ 24576    - 25087        Malayalam
+ 25088    - 25599        Sinhalese
+ 25600    - 26111        Burmese
+ 26112    - 26623        Khmer
+ 26624    - 27135        Thai
+ 27136    - 27647        Laotian
+ 27648    - 28159        Georgian
+ 28160    - 28671        Armenian
+ 28672    - 29183        Chinese (Simplified)
+ 29184    - 29695        Tibetan
+ 29696    - 30207        Mongolian
+ 30208    - 30719        Geez/Ethiopic
+ 30720    - 31231        Central European Roman
+ 31232    - 31743        Vietnamese
+ 31744    - 32255        Extended Arabic
+ 32256    - 32767        Uninterpreted Symbols  */
+
+func macScriptID(from fondID: ResID) -> MacScriptID {
+    if fondID < 16384 {
+        return .roman
+    } else if fondID < 16896 {
+        return .japanese
+    } else if fondID < 17408 {
+        return .traditionalChinese
+    } else if fondID < 17920 {
+        return .korean
+    } else if fondID < 18432 {
+        return .arabic
+    } else if fondID < 18944 {
+        return .hebrew
+    } else if fondID < 19456 {
+        return .greek
+    } else if fondID < 19968 {
+        return .cyrillic
+    } else if fondID < 20480 {
+        return .rightToLeftSymbol
+    } else if fondID < 20992 {
+        return .devanagari
+    } else if fondID < 21504 {
+        return .gurmukhi
+    } else if fondID < 22016 {
+        return .gujarati
+    } else if fondID < 22528 {
+        return .oriya
+    } else if fondID < 23040 {
+        return .bengali
+    } else if fondID < 23552 {
+        return .tamil
+    } else if fondID < 24064 {
+        return .telugu
+    } else if fondID < 24576 {
+        return .kannada
+    } else if fondID < 25088 {
+        return .malayalam
+    } else if fondID < 25600 {
+        return .sinhalese
+    } else if fondID < 26112 {
+        return .burmese
+    } else if fondID < 26624 {
+        return .khmer
+    } else if fondID < 27136 {
+        return .thai
+    } else if fondID < 27648 {
+        return .laotian
+    } else if fondID < 28160 {
+        return .georgian
+    } else if fondID < 28672 {
+        return .armenian
+    } else if fondID < 29184 {
+        return .simplifiedChinese
+    } else if fondID < 29696 {
+        return .tibetan
+    } else if fondID < 30208 {
+        return .mongolian
+    } else if fondID < 30720 {
+        return .geez
+    } else if fondID < 31232 {
+        return .ceRoman
+    } else if fondID < 31744 {
+        return .vietnamese
+    } else if fondID < 32256 {
+        return .extendedArabic
+    } else if fondID <= 32767 {
+        return .uninterpreted
+    }
+//    return .none
+}
+
+// Language codes are zero based everywhere but within a 'cmap' table
+enum MacLanguageID: UInt16 {
+    case english        = 0
+    case french         = 1
+    case german         = 2
+    case italian        = 3
+    case dutch          = 4
+    case swedish        = 5
+    case spanish        = 6
+    case danish         = 7
+    case portuguese     = 8
+    case norwegian      = 9
+    case hebrew         = 10
+    case japanese       = 11
+    case arabic         = 12
+    case finnish        = 13
+    case greek          = 14
+    case icelandic      = 15
+    case maltese        = 16
+    case turkish        = 17
+    case croatian       = 18
+    case tradChinese    = 19
+    case urdu           = 20
+    case hindi          = 21
+    case thai           = 22
+    case korean         = 23
+    case lithuanian     = 24
+    case polish         = 25
+    case hungarian      = 26
+    case estonian       = 27
+    case lettish        = 28
+//  case latvian        = .lettish
+    case saamisk        = 29
+//  case lappish        = .saamisk
+    case faeroese       = 30
+    case farsi          = 31
+//  case persian        = .farsi
+    case russian        = 32
+    case simpChinese    = 33
+    case flemish        = 34
+    case irish          = 35
+    case albanian       = 36
+    case romanian       = 37
+    case czech          = 38
+    case slovak         = 39
+    case slovenian      = 40
+    case yiddish        = 41
+    case serbian        = 42
+    case macedonian     = 43
+    case bulgarian      = 44
+    case ukrainian      = 45
+    case byelorussian   = 46
+    case uzbek          = 47
+    case kazakh         = 48
+    case azerbaijani    = 49
+    case azerbaijanAr   = 50
+    case armenian       = 51
+    case georgian       = 52
+    case moldavian      = 53
+    case kirghiz        = 54
+    case tajiki         = 55
+    case turkmen        = 56
+    case mongolian      = 57
+    case mongolianCyr   = 58
+    case pashto         = 59
+    case kurdish        = 60
+    case kashmiri       = 61
+    case sindhi         = 62
+    case tibetan        = 63
+    case nepali         = 64
+    case sanskrit       = 65
+    case marathi        = 66
+    case bengali        = 67
+    case assamese       = 68
+    case gujarati       = 69
+    case punjabi        = 70
+    case oriya          = 71
+    case malayalam      = 72
+    case kannada        = 73
+    case tamil          = 74
+    case telugu         = 75
+    case sinhalese      = 76
+    case burmese        = 77
+    case khmer          = 78
+    case lao            = 79
+    case vietnamese     = 80
+    case indonesian     = 81
+    case tagalog        = 82
+    case malayRoman     = 83
+    case malayArabic    = 84
+    case amharic        = 85
+    case tigrinya       = 86
+    case galla          = 87
+//  case oromo          = .galla
+    case somali         = 88
+    case swahili        = 89
+    case ruanda         = 90
+    case rundi          = 91
+    case chewa          = 92
+    case malagasy       = 93
+    case esperanto      = 94
+    case welsh          = 128
+    case basque         = 129
+    case catalan        = 130
+    case latin          = 131
+    case quechua        = 132
+    case guarani        = 133
+    case aymara         = 134
+    case tatar          = 135
+    case uighur         = 136
+    case dzongkha       = 137
+    case javaneseRom    = 138
+    case sundaneseRom   = 139
+    case none           = 0xFFFF
+};
+
+extension MacLanguageID: CustomStringConvertible {
+    var description: String {
+        switch self {
+            case .english:          return "English"
+            case .french:           return "French"
+            case .german:           return "German"
+            case .italian:          return "Italian"
+            case .dutch:            return "Dutch"
+            case .swedish:          return "Swedish"
+            case .spanish:          return "Spanish"
+            case .danish:           return "Danish"
+            case .portuguese:       return "Portuguese"
+            case .norwegian:        return "Norwegian"
+            case .hebrew:           return "Hebrew"
+            case .japanese:         return "Japanese"
+            case .arabic:           return "Arabic"
+            case .finnish:          return "Finnish"
+            case .greek:            return "Greek"
+            case .icelandic:        return "Icelandic"
+            case .maltese:          return "Maltese"
+            case .turkish:          return "Turkish"
+            case .croatian:         return "Croatian"
+            case .tradChinese:      return "Chinese (Traditional)"
+            case .urdu:             return "Urdu"
+            case .hindi:            return "Hindi"
+            case .thai:             return "Thai"
+            case .korean:           return "Korean"
+            case .lithuanian:       return "Lithuanian"
+            case .polish:           return "Polish"
+            case .hungarian:        return "Hungarian"
+            case .estonian:         return "Estonian"
+            case .lettish:          return "Lettish"
+//          case .latvian           return "Latvian"
+            case .saamisk:          return "Saamisk"
+//          case .lappish           return "Lappish"
+            case .faeroese:         return "Faeroese"
+            case .farsi:            return "Farsi"
+//          case .persian           return "Persian"
+            case .russian:          return "Russian"
+            case .simpChinese:      return "Chinese (Simplified)"
+            case .flemish:          return "Flemish"
+            case .irish:            return "Irish"
+            case .albanian:         return "Albanian"
+            case .romanian:         return "Romanian"
+            case .czech:            return "Czech"
+            case .slovak:           return "Slovak"
+            case .slovenian:        return "Slovenian"
+            case .yiddish:          return "Yiddish"
+            case .serbian:          return "Serbian"
+            case .macedonian:       return "Macedonian"
+            case .bulgarian:        return "Bulgarian"
+            case .ukrainian:        return "Ukrainian"
+            case .byelorussian:     return "Byelorussian"
+            case .uzbek:            return "Uzbek"
+            case .kazakh:           return "Kazakh"
+            case .azerbaijani:      return "Azerbaijani"
+            case .azerbaijanAr:     return "Azerbaijan (Armenian)"
+            case .armenian:         return "Armenian"
+            case .georgian:         return "Georgian"
+            case .moldavian:        return "Moldavian"
+            case .kirghiz:          return "Kirghiz"
+            case .tajiki:           return "Tajiki"
+            case .turkmen:          return "Turkmen"
+            case .mongolian:        return "Mongolian"
+            case .mongolianCyr:     return "Mongolian (Cyrillic)"
+            case .pashto:           return "Pashto"
+            case .kurdish:          return "Kurdish"
+            case .kashmiri:         return "Kashmiri"
+            case .sindhi:           return "Sindhi"
+            case .tibetan:          return "Tibetan"
+            case .nepali:           return "Nepali"
+            case .sanskrit:         return "Sanskrit"
+            case .marathi:          return "Marathi"
+            case .bengali:          return "Bengali"
+            case .assamese:         return "Assamese"
+            case .gujarati:         return "Gujarati"
+            case .punjabi:          return "Punjabi"
+            case .oriya:            return "Oriya"
+            case .malayalam:        return "Malayalam"
+            case .kannada:          return "Kannada"
+            case .tamil:            return "Tamil"
+            case .telugu:           return "Telugu"
+            case .sinhalese:        return "Sinhalese"
+            case .burmese:          return "Burmese"
+            case .khmer:            return "Khmer"
+            case .lao:              return "Lao"
+            case .vietnamese:       return "Vietnamese"
+            case .indonesian:       return "Indonesian"
+            case .tagalog:          return "Tagalog"
+            case .malayRoman:       return "MalayRoman"
+            case .malayArabic:      return "MalayArabic"
+            case .amharic:          return "Amharic"
+            case .tigrinya:         return "Tigrinya"
+            case .galla:            return "Galla"
+//          case .oromo             return "Oromo"
+            case .somali:           return "Somali"
+            case .swahili:          return "Swahili"
+            case .ruanda:           return "Ruanda"
+            case .rundi:            return "Rundi"
+            case .chewa:            return "Chewa"
+            case .malagasy:         return "Malagasy"
+            case .esperanto:        return "Esperanto"
+            case .welsh:            return "Welsh"
+            case .basque:           return "Basque"
+            case .catalan:          return "Catalan"
+            case .latin:            return "Latin"
+            case .quechua:          return "Quechua"
+            case .guarani:          return "Guarani"
+            case .aymara:           return "Aymara"
+            case .tatar:            return "Tatar"
+            case .uighur:           return "Uighur"
+            case .dzongkha:         return "Dzongkha"
+            case .javaneseRom:      return "Javanese"
+            case .sundaneseRom:     return "Sundanese"
+            case .none:             return "--"
+        }
     }
 }
 

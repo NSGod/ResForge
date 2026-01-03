@@ -20,7 +20,18 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
     private let manager:    RFEditorManager
     var fond:               FOND?
 
-    @IBOutlet weak var flagsBitfieldControl: BitfieldControl!
+    @IBOutlet weak var tableView:                   NSTableView!
+    @IBOutlet weak var flagsBitfieldControl:        BitfieldControl!
+    @IBOutlet weak var fontClassBitfieldControl:    BitfieldControl!
+    
+    
+    @IBAction func changeFlags(_ sender: Any) {
+        
+    }
+    
+    @IBAction func changeFontClass(_ sender: Any) {
+        
+    }
     
     public override var windowNibName: NSNib.Name {
         "FONDEditorWindow"

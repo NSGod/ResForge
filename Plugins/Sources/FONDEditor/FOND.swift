@@ -30,7 +30,7 @@ enum FONDError: LocalizedError {
     case kernTableUsability
 }
 
-struct FOND {
+class FOND: NSObject {
     static let fontFamilyRecordLength   = 52
 
     // FontFamilyRecord is the first 52 bytes of the FOND
@@ -71,15 +71,90 @@ struct FOND {
         return fontAssociationTable.entries.count
     }
 
+    var data:                   Data
     var remainingTableData:     Data
 
     // MARK: ideally, these would be lazy data structures,
     // though I'm not sure how to do that in Swift and given the current BinaryDataReader design
     var offsetTable:            OffsetTable?
-    var boundingBoxTable:       BoundingBoxTable?
-    var widthTable:             WidthTable?
-    var styleMappingTable:      StyleMappingTable?
-    var kernTable:              KernTable?
+
+    lazy var boundingBoxTable:       BoundingBoxTable? = {
+        do {
+            let reader = BinaryDataReader(data)
+            try calculateOffsetsIfNeeded(reader)
+            // can only have a Bounding Box table if we have an offset table to specify its offset
+            if let offsetTable = offsetTable {
+                // might have a bounding box table
+                let offsetTableOffset = Self.fontFamilyRecordLength + fontAssociationTable.length
+                try reader.pushPosition(offsetTableOffset + Int(offsetTable.entries[0].offsetOfTable))
+                boundingBoxTable = try BoundingBoxTable(reader)
+                reader.popPosition()
+            }
+            return boundingBoxTable
+        } catch {
+             NSLog("\(type(of: self)).\(#function)() *** error: \(error)")
+        }
+        return nil
+    }()
+
+    lazy var widthTable:             WidthTable? = {
+        if wTabOff == 0 { return nil }
+        do {
+            let reader = BinaryDataReader(data)
+            try calculateOffsetsIfNeeded(reader)
+            try reader.pushPosition(Int(wTabOff))
+            widthTable = try WidthTable(reader, fond:self)
+            reader.popPosition()
+            return widthTable
+        } catch {
+            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+        }
+        return nil
+    }()
+
+    lazy var styleMappingTable:      StyleMappingTable? = {
+        if styleOff == 0 { return nil }
+        do {
+            let reader = BinaryDataReader(data)
+            try calculateOffsetsIfNeeded(reader)
+            if let styleMappingRange = offsetTypesToRanges[.styleTable] {
+                try reader.pushPosition(Int(styleOff))
+                styleMappingTable = try StyleMappingTable(reader, range:styleMappingRange)
+                reader.popPosition()
+            } else {
+                NSLog("\(type(of: self)).\(#function)() *** ERROR: could not determine styleMappingRange!!")
+            }
+            return styleMappingTable
+        } catch {
+            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+        }
+        return nil
+    }()
+
+    lazy var kernTable:              KernTable? = {
+        if kernOff == 0 { return nil }
+        do {
+            let reader = BinaryDataReader(data)
+            try calculateOffsetsIfNeeded(reader)
+            if let kernRange = offsetTypesToRanges[.kernTable] {
+                try reader.pushPosition(Int(kernOff))
+                kernTable = try KernTable(reader, fond:self)
+                reader.popPosition()
+            } else {
+                NSLog("\(type(of: self)).\(#function)() *** ERROR: could not determine kernTableRange!")
+            }
+            return kernTable
+        } catch {
+             NSLog("\(type(of: self)).\(#function)() *** error: \(error)")
+        }
+        return nil
+    }()
+    
+    lazy var basePostScriptName:         String? = {
+        if styleOff == 0 { return nil }
+        // FIXME: finish this!
+        return nil
+    }()
 
     enum TableOffsetType {
         case offsetTable
@@ -92,10 +167,8 @@ struct FOND {
     private var offsetTypesToRanges:    [TableOffsetType: NSRange] = [:]
     private var offsetsCalculated:      Bool = false
     private var needsRepair:            Bool = false   // If this FOND resource's resourceID doesn't match the famID, we need to update the famID
-}
-
-extension FOND {
-    init(_ data: Data) throws {
+    
+    convenience init(_ data: Data) throws {
         let reader = BinaryDataReader(data)
         try self.init(reader)
     }
@@ -133,53 +206,14 @@ extension FOND {
 
         fontAssociationTable = try FontAssociationTable(reader)
 
+        // hold onto data for future parsing for lazy data structures
+        data = reader.data
         reader.pushSavedPosition()
         remainingTableData = try reader.readData(length: reader.bytesRemaining)
         reader.popPosition()
-
-        try calculateOffsetsIfNeeded(reader)
-
-        // can only have a Bounding Box table if we have an offset table to specify its offset
-        if let offsetTable = offsetTable {
-            // might have a bounding box table
-            let offsetTableOffset = Self.fontFamilyRecordLength + fontAssociationTable.length
-            try reader.pushPosition(offsetTableOffset + Int(offsetTable.entries[0].offsetOfTable))
-            boundingBoxTable = try BoundingBoxTable(reader)
-            reader.popPosition()
-        }
-
-        // Width table
-        if wTabOff > 0 {
-            try reader.pushPosition(Int(wTabOff))
-            widthTable = try WidthTable(reader, fond:self)
-            reader.popPosition()
-        }
-
-        // Kern table
-        if kernOff > 0 {
-            if let kernRange = offsetTypesToRanges[.kernTable] {
-                try reader.pushPosition(Int(kernOff))
-                kernTable = try KernTable(reader)
-                reader.popPosition()
-            } else {
-                NSLog("\(type(of: self)).\(#function)() *** ERROR: could not determine kernTableRange!")
-            }
-        }
-
-        // StyleMapping table
-        if styleOff > 0 {
-            if let styleMappingRange = offsetTypesToRanges[.styleTable] {
-                try reader.pushPosition(Int(styleOff))
-                styleMappingTable = try StyleMappingTable(reader, range:styleMappingRange)
-                reader.popPosition()
-            } else {
-                NSLog("\(type(of: self)).\(#function)() *** ERROR: could not determine styleMappingRange!!")
-            }
-        }
-
     }
 
-    private mutating func calculateOffsetsIfNeeded(_ reader: BinaryDataReader) throws {
+    private func calculateOffsetsIfNeeded(_ reader: BinaryDataReader) throws {
         if offsetsCalculated == true { return }
         var offsetsToOffsetTypes: [Int32: TableOffsetType] = [:]
         if wTabOff > 0 { offsetsToOffsetTypes[wTabOff] = .widthTable }
@@ -203,16 +237,19 @@ extension FOND {
         }
         offsetsCalculated = true
     }
+}
 
-    mutating func add(_ fontAssociationTableEntry: FontAssociationTableEntry) throws {
+extension FOND {
+
+    func add(_ fontAssociationTableEntry: FontAssociationTableEntry) throws {
 
     }
 
-    mutating func remove(_ fontAssociationTableEntry: FontAssociationTableEntry) throws {
+    func remove(_ fontAssociationTableEntry: FontAssociationTableEntry) throws {
 
     }
 
-    mutating func shiftOffsetsAndRanges(by deltaLength: Int) {
+    func shiftOffsetsAndRanges(by deltaLength: Int) {
         // the table offsets could be empty (== 0) so check before modifying their values
         if wTabOff > 0 {
 

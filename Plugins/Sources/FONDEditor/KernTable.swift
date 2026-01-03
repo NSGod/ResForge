@@ -9,22 +9,20 @@
 import Foundation
 import RFSupport
 
-struct KernTable {
+final class KernTable: FONDResourceNode {
     var numberOfEntries:                Int16              // number of entries - 1
     var entries:                        [KernTableEntry]
 
     var hasOutOfRangeCharCodes:         Bool = false
     private var fontStylesToEntries:    [MacFontStyle: KernTableEntry]
-}
 
-extension KernTable {
-    var length: Int {
+    override var length:                Int {
         var length = MemoryLayout<Int16>.size
         for entry in self.entries { length += entry.length }
         return length
     }
 
-    init(_ reader: BinaryDataReader) throws {
+    init(_ reader: BinaryDataReader, fond: FOND) throws {
         numberOfEntries = try reader.read()
         entries = []
         fontStylesToEntries = [:]
@@ -34,6 +32,7 @@ extension KernTable {
             fontStylesToEntries[entry.style] = entry
             hasOutOfRangeCharCodes = hasOutOfRangeCharCodes ? true : entry.hasOutOfRangeCharCodes
         }
+        super.init(fond:fond)
     }
 
     func entry(for fontStyle: MacFontStyle) -> KernTableEntry? {
@@ -82,6 +81,7 @@ struct KernPair: Equatable {
     var kernWidth:  Fixed4Dot12     /* kerning distance, in pixels, for the 2 glyphs at size of 1pt; fixed-point 4.12 format */
 
     var hasOutOfRangeCharCodes: Bool {
+        // FIXME: this is no longer true for the "enhanced/expanded" macRomanEncoding
         return kernFirst < 0x20 || kernSecond < 0x20 || kernFirst == 0x7F || kernSecond == 0x7F
     }
 }

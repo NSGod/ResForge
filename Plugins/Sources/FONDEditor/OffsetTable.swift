@@ -9,13 +9,13 @@
 import Foundation
 import RFSupport
 
-struct OffsetTable {
+// will be displayed in UI, so need NSObject subclass?
+
+final class OffsetTable: ResourceNode {
     var numberOfEntries:    Int16               // number of entries - 1
     var entries:            [OffsetTableEntry]
-}
 
-extension OffsetTable {
-    var length: Int {
+    override var length: Int {
         return entries.count * OffsetTableEntry.length
     }
 
@@ -26,19 +26,20 @@ extension OffsetTable {
             let entry: OffsetTableEntry = try OffsetTableEntry(reader)
             entries.append(entry)
         }
+        super.init()
     }
 }
 
-struct OffsetTableEntry {
+
+final class OffsetTableEntry: ResourceNode {
     var offsetOfTable: Int32    // number of bytes from START OF THE OFFSET TABLE to the start of the table
-}
-
-extension OffsetTableEntry {
-    static var length: Int {
-        return MemoryLayout<Int32>.size // 2
-    }
 
     init(_ reader: BinaryDataReader) throws {
         offsetOfTable = try reader.read()
+        super.init()
+    }
+
+    override class var length: Int {
+        return MemoryLayout<Int32>.size // 4
     }
 }

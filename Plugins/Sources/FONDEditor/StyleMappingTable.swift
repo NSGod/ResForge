@@ -9,8 +9,7 @@
 import Foundation
 import RFSupport
 
-//        Style-mapping table : 58 bytes
-
+// Style-mapping table : 58 bytes
 struct StyleMappingTable {
     var fontClass:                  FontClass   // UInt16
     var offset:                     Int32       // offset from the start of this table to the glyph-name-encoding subtable component

@@ -20,14 +20,14 @@
 ///       11        \pOblique
 ///       12        \pNarrow
 ///
-///       While 1, 9, 10, 11, & 12 are all valid (Pascal) strings, 2-8 aren't really
+///       While indexes 1, 9, 10, 11, & 12 are all valid (Pascal) strings, 2-8 aren't really
 ///       strings in the usual sense. Instead, they describe how to generate the
 ///       names for different styles. For example, Index 2 describes how to generate
-///       the Bold style name:
+///       the Bold style PostScript name:
 ///                 0x02 is the Pascal string length byte, so 2 more bytes follow
-///                 0x09 is a reference to Index 9, or "-"
-///                 0x0A is a reference to Index 10, or "Bold"
-///       So, the full name for the bold style is ExampleFont-Bold
+///                 0x09 is a reference to index 9, or "-"
+///                 0x0A is a reference to index 10, or "Bold"
+///       So, the full PostScript name for the bold style is ExampleFont-Bold
 ///
 
 import Foundation
@@ -50,7 +50,6 @@ extension FontNameSuffixSubtable {
         baseFontName = try reader.readPString()
         entryIndexesToPostScriptNames = [:]
         _actualStringCount = 1
-
         var stringDatas : [Data] = []
 
         /// we already have the base font name, so go with `stringCount - 1`
@@ -81,7 +80,7 @@ extension FontNameSuffixSubtable {
 
         /// Referring to the diagram at the top of this file, we're going to create a representation
         /// where Indexes 2-8 are fully expanded into the full PostScript names.
-        ///
+        /// We won't bother filling in 9 - 12 since they're no longer needed
         entryIndexesToPostScriptNames[1] = baseFontName
 
         var done = false
@@ -115,7 +114,7 @@ extension FontNameSuffixSubtable {
 
     func postScriptNameForFontEntry(at oneBasedIndex: UInt8) -> String? {
         if oneBasedIndex > _actualStringCount {
-
+            NSLog("\(type(of: self)).\(#function)() *** WARNING: fontEntryIndex of \(oneBasedIndex) is beyond total string count (\(_actualStringCount))")
             return nil
         }
         return entryIndexesToPostScriptNames[oneBasedIndex]
