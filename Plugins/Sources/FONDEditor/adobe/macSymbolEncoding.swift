@@ -159,266 +159,266 @@
 import Foundation
 
 let macSymbolEncoding: [UVBMP] = [
-    UV_UNDEF,   /* 00 */
-    UV_UNDEF,   /* 01 */
-    UV_UNDEF,   /* 02 */
-    UV_UNDEF,   /* 03 */
-    UV_UNDEF,   /* 04 */
-    UV_UNDEF,   /* 05 */
-    UV_UNDEF,   /* 06 */
-    UV_UNDEF,   /* 07 */
-    UV_UNDEF,   /* 08 */
-    UV_UNDEF,   /* 09 */
-    UV_UNDEF,   /* 0A */
-    UV_UNDEF,   /* 0B */
-    UV_UNDEF,   /* 0C */
-    UV_UNDEF,   /* 0D */
-    UV_UNDEF,   /* 0E */
-    UV_UNDEF,   /* 0F */
-    UV_UNDEF,   /* 10 */
-    UV_UNDEF,   /* 11 */
-    UV_UNDEF,   /* 12 */
-    UV_UNDEF,   /* 13 */
-    UV_UNDEF,   /* 14 */
-    UV_UNDEF,   /* 15 */
-    UV_UNDEF,   /* 16 */
-    UV_UNDEF,   /* 17 */
-    UV_UNDEF,   /* 18 */
-    UV_UNDEF,   /* 19 */
-    UV_UNDEF,   /* 1A */
-    UV_UNDEF,   /* 1B */
-    UV_UNDEF,   /* 1C */
-    UV_UNDEF,   /* 1D */
-    UV_UNDEF,   /* 1E */
-    UV_UNDEF,   /* 1F */
-    0x0020,        /* 20    SPACE */
-    0x0021,        /* 21    EXCLAMATION MARK */
-    0x2200,        /* 22    FOR ALL */
-    0x0023,        /* 23    NUMBER SIGN */
-    0x2203,        /* 24    THERE EXISTS */
-    0x0025,        /* 25    PERCENT SIGN */
-    0x0026,        /* 26    AMPERSAND */
-    0x220D,        /* 27    SMALL CONTAINS AS MEMBER */
-    0x0028,        /* 28    LEFT PARENTHESIS */
-    0x0029,        /* 29    RIGHT PARENTHESIS */
-    0x2217,        /* 2A    ASTERISK OPERATOR */
-    0x002B,        /* 2B    PLUS SIGN */
-    0x002C,        /* 2C    COMMA */
-    0x2212,        /* 2D    MINUS SIGN */
-    0x002E,        /* 2E    FULL STOP */
-    0x002F,        /* 2F    SOLIDUS */
-    0x0030,        /* 30    DIGIT ZERO */
-    0x0031,        /* 31    DIGIT ONE */
-    0x0032,        /* 32    DIGIT TWO */
-    0x0033,        /* 33    DIGIT THREE */
-    0x0034,        /* 34    DIGIT FOUR */
-    0x0035,        /* 35    DIGIT FIVE */
-    0x0036,        /* 36    DIGIT SIX */
-    0x0037,        /* 37    DIGIT SEVEN */
-    0x0038,        /* 38    DIGIT EIGHT */
-    0x0039,        /* 39    DIGIT NINE */
-    0x003A,        /* 3A    COLON */
-    0x003B,        /* 3B    SEMICOLON */
-    0x003C,        /* 3C    LESS-THAN SIGN */
-    0x003D,        /* 3D    EQUALS SIGN */
-    0x003E,        /* 3E    GREATER-THAN SIGN */
-    0x003F,        /* 3F    QUESTION MARK */
-    0x2245,        /* 40    APPROXIMATELY EQUAL TO */
-    0x0391,        /* 41    GREEK CAPITAL LETTER ALPHA */
-    0x0392,        /* 42    GREEK CAPITAL LETTER BETA */
-    0x03A7,        /* 43    GREEK CAPITAL LETTER CHI */
-    0x0394,        /* 44    GREEK CAPITAL LETTER DELTA */
-    0x0395,        /* 45    GREEK CAPITAL LETTER EPSILON */
-    0x03A6,        /* 46    GREEK CAPITAL LETTER PHI */
-    0x0393,        /* 47    GREEK CAPITAL LETTER GAMMA */
-    0x0397,        /* 48    GREEK CAPITAL LETTER ETA */
-    0x0399,        /* 49    GREEK CAPITAL LETTER IOTA */
-    0x03D1,        /* 4A    GREEK THETA SYMBOL */
-    0x039A,        /* 4B    GREEK CAPITAL LETTER KAPPA */
-    0x039B,        /* 4C    GREEK CAPITAL LETTER LAMDA */
-    0x039C,        /* 4D    GREEK CAPITAL LETTER MU */
-    0x039D,        /* 4E    GREEK CAPITAL LETTER NU */
-    0x039F,        /* 4F    GREEK CAPITAL LETTER OMICRON */
-    0x03A0,        /* 50    GREEK CAPITAL LETTER PI */
-    0x0398,        /* 51    GREEK CAPITAL LETTER THETA */
-    0x03A1,        /* 52    GREEK CAPITAL LETTER RHO */
-    0x03A3,        /* 53    GREEK CAPITAL LETTER SIGMA */
-    0x03A4,        /* 54    GREEK CAPITAL LETTER TAU */
-    0x03A5,        /* 55    GREEK CAPITAL LETTER UPSILON */
-    0x03C2,        /* 56    GREEK SMALL LETTER FINAL SIGMA */
-    0x03A9,        /* 57    GREEK CAPITAL LETTER OMEGA */
-    0x039E,        /* 58    GREEK CAPITAL LETTER XI */
-    0x03A8,        /* 59    GREEK CAPITAL LETTER PSI */
-    0x0396,        /* 5A    GREEK CAPITAL LETTER ZETA */
-    0x005B,        /* 5B    LEFT SQUARE BRACKET */
-    0x2234,        /* 5C    THEREFORE */
-    0x005D,        /* 5D    RIGHT SQUARE BRACKET */
-    0x22A5,        /* 5E    UP TACK */
-    0x005F,        /* 5F    LOW LINE */
-    0xF8E5,        /* 60    radical extender # corporate char */
-    0x03B1,        /* 61    GREEK SMALL LETTER ALPHA */
-    0x03B2,        /* 62    GREEK SMALL LETTER BETA */
-    0x03C7,        /* 63    GREEK SMALL LETTER CHI */
-    0x03B4,        /* 64    GREEK SMALL LETTER DELTA */
-    0x03B5,        /* 65    GREEK SMALL LETTER EPSILON */
-    0x03C6,        /* 66    GREEK SMALL LETTER PHI */
-    0x03B3,        /* 67    GREEK SMALL LETTER GAMMA */
-    0x03B7,        /* 68    GREEK SMALL LETTER ETA */
-    0x03B9,        /* 69    GREEK SMALL LETTER IOTA */
-    0x03D5,        /* 6A    GREEK PHI SYMBOL */
-    0x03BA,        /* 6B    GREEK SMALL LETTER KAPPA */
-    0x03BB,        /* 6C    GREEK SMALL LETTER LAMDA */
-    0x03BC,        /* 6D    GREEK SMALL LETTER MU */
-    0x03BD,        /* 6E    GREEK SMALL LETTER NU */
-    0x03BF,        /* 6F    GREEK SMALL LETTER OMICRON */
-    0x03C0,        /* 70    GREEK SMALL LETTER PI */
-    0x03B8,        /* 71    GREEK SMALL LETTER THETA */
-    0x03C1,        /* 72    GREEK SMALL LETTER RHO */
-    0x03C3,        /* 73    GREEK SMALL LETTER SIGMA */
-    0x03C4,        /* 74    GREEK SMALL LETTER TAU */
-    0x03C5,        /* 75    GREEK SMALL LETTER UPSILON */
-    0x03D6,        /* 76    GREEK PI SYMBOL */
-    0x03C9,        /* 77    GREEK SMALL LETTER OMEGA */
-    0x03BE,        /* 78    GREEK SMALL LETTER XI */
-    0x03C8,        /* 79    GREEK SMALL LETTER PSI */
-    0x03B6,        /* 7A    GREEK SMALL LETTER ZETA */
-    0x007B,        /* 7B    LEFT CURLY BRACKET */
-    0x007C,        /* 7C    VERTICAL LINE */
-    0x007D,        /* 7D    RIGHT CURLY BRACKET */
-    0x223C,        /* 7E    TILDE OPERATOR */
-    UV_UNDEF,    /* 7F */
-    UV_UNDEF,    /* 80 */
-    UV_UNDEF,    /* 81 */
-    UV_UNDEF,    /* 82 */
-    UV_UNDEF,    /* 83 */
-    UV_UNDEF,    /* 84 */
-    UV_UNDEF,    /* 85 */
-    UV_UNDEF,    /* 86 */
-    UV_UNDEF,    /* 87 */
-    UV_UNDEF,    /* 88 */
-    UV_UNDEF,    /* 89 */
-    UV_UNDEF,    /* 8A */
-    UV_UNDEF,    /* 8B */
-    UV_UNDEF,    /* 8C */
-    UV_UNDEF,    /* 8D */
-    UV_UNDEF,    /* 8E */
-    UV_UNDEF,    /* 8F */
-    UV_UNDEF,    /* 90 */
-    UV_UNDEF,    /* 91 */
-    UV_UNDEF,    /* 92 */
-    UV_UNDEF,    /* 93 */
-    UV_UNDEF,    /* 94 */
-    UV_UNDEF,    /* 95 */
-    UV_UNDEF,    /* 96 */
-    UV_UNDEF,    /* 97 */
-    UV_UNDEF,    /* 98 */
-    UV_UNDEF,    /* 99 */
-    UV_UNDEF,    /* 9A */
-    UV_UNDEF,    /* 9B */
-    UV_UNDEF,    /* 9C */
-    UV_UNDEF,    /* 9D */
-    UV_UNDEF,    /* 9E */
-    UV_UNDEF,    /* 9F */
-    0x20AC,        /* A0    EURO SIGN */
-    0x03D2,        /* A1    GREEK UPSILON WITH HOOK SYMBOL */
-    0x2032,        /* A2    PRIME # minute */
-    0x2264,        /* A3    LESS-THAN OR EQUAL TO */
-    0x2044,        /* A4    FRACTION SLASH */
-    0x221E,        /* A5    INFINITY */
-    0x0192,        /* A6    LATIN SMALL LETTER F WITH HOOK */
-    0x2663,        /* A7    BLACK CLUB SUIT */
-    0x2666,        /* A8    BLACK DIAMOND SUIT */
-    0x2665,        /* A9    BLACK HEART SUIT */
-    0x2660,        /* AA    BLACK SPADE SUIT */
-    0x2194,        /* AB    LEFT RIGHT ARROW */
-    0x2190,        /* AC    LEFTWARDS ARROW */
-    0x2191,        /* AD    UPWARDS ARROW */
-    0x2192,        /* AE    RIGHTWARDS ARROW */
-    0x2193,        /* AF    DOWNWARDS ARROW */
-    0x00B0,        /* B0    DEGREE SIGN */
-    0x00B1,        /* B1    PLUS-MINUS SIGN */
-    0x2033,        /* B2    DOUBLE PRIME # second */
-    0x2265,        /* B3    GREATER-THAN OR EQUAL TO */
-    0x00D7,        /* B4    MULTIPLICATION SIGN */
-    0x221D,        /* B5    PROPORTIONAL TO */
-    0x2202,        /* B6    PARTIAL DIFFERENTIAL */
-    0x2022,        /* B7    BULLET */
-    0x00F7,        /* B8    DIVISION SIGN */
-    0x2260,        /* B9    NOT EQUAL TO */
-    0x2261,        /* BA    IDENTICAL TO */
-    0x2248,        /* BB    ALMOST EQUAL TO */
-    0x2026,        /* BC    HORIZONTAL ELLIPSIS */
-    0x23D0,        /* BD    VERTICAL LINE EXTENSION (for arrows) # for Unicode 4.0 and later */
-    0x23AF,        /* BE    HORIZONTAL LINE EXTENSION (for arrows) # for Unicode 3.2 and later */
-    0x21B5,        /* BF    DOWNWARDS ARROW WITH CORNER LEFTWARDS */
-    0x2135,        /* C0    ALEF SYMBOL */
-    0x2111,        /* C1    BLACK-LETTER CAPITAL I */
-    0x211C,        /* C2    BLACK-LETTER CAPITAL R */
-    0x2118,        /* C3    SCRIPT CAPITAL P */
-    0x2297,        /* C4    CIRCLED TIMES */
-    0x2295,        /* C5    CIRCLED PLUS */
-    0x2205,        /* C6    EMPTY SET */
-    0x2229,        /* C7    INTERSECTION */
-    0x222A,        /* C8    UNION */
-    0x2283,        /* C9    SUPERSET OF */
-    0x2287,        /* CA    SUPERSET OF OR EQUAL TO */
-    0x2284,        /* CB    NOT A SUBSET OF */
-    0x2282,        /* CC    SUBSET OF */
-    0x2286,        /* CD    SUBSET OF OR EQUAL TO */
-    0x2208,        /* CE    ELEMENT OF */
-    0x2209,        /* CF    NOT AN ELEMENT OF */
-    0x2220,        /* D0    ANGLE */
-    0x2207,        /* D1    NABLA */
-    0x00AE,        /* D2    REGISTERED SIGN # serif */
-    0x00A9,        /* D3    COPYRIGHT SIGN # serif */
-    0x2122,        /* D4    TRADE MARK SIGN # serif */
-    0x220F,        /* D5    N-ARY PRODUCT */
-    0x221A,        /* D6    SQUARE ROOT */
-    0x22C5,        /* D7    DOT OPERATOR */
-    0x00AC,        /* D8    NOT SIGN */
-    0x2227,        /* D9    LOGICAL AND */
-    0x2228,        /* DA    LOGICAL OR */
-    0x21D4,        /* DB    LEFT RIGHT DOUBLE ARROW */
-    0x21D0,        /* DC    LEFTWARDS DOUBLE ARROW */
-    0x21D1,        /* DD    UPWARDS DOUBLE ARROW */
-    0x21D2,        /* DE    RIGHTWARDS DOUBLE ARROW */
-    0x21D3,        /* DF    DOWNWARDS DOUBLE ARROW */
-    0x25CA,        /* E0    LOZENGE # previously mapped to 0x22C4 DIAMOND OPERATOR */
-    0x3008,        /* E1    LEFT ANGLE BRACKET */
+    .undefined,   /* 00 */
+    .undefined,   /* 01 */
+    .undefined,   /* 02 */
+    .undefined,   /* 03 */
+    .undefined,   /* 04 */
+    .undefined,   /* 05 */
+    .undefined,   /* 06 */
+    .undefined,   /* 07 */
+    .undefined,   /* 08 */
+    .undefined,   /* 09 */
+    .undefined,   /* 0A */
+    .undefined,   /* 0B */
+    .undefined,   /* 0C */
+    .undefined,   /* 0D */
+    .undefined,   /* 0E */
+    .undefined,   /* 0F */
+    .undefined,   /* 10 */
+    .undefined,   /* 11 */
+    .undefined,   /* 12 */
+    .undefined,   /* 13 */
+    .undefined,   /* 14 */
+    .undefined,   /* 15 */
+    .undefined,   /* 16 */
+    .undefined,   /* 17 */
+    .undefined,   /* 18 */
+    .undefined,   /* 19 */
+    .undefined,   /* 1A */
+    .undefined,   /* 1B */
+    .undefined,   /* 1C */
+    .undefined,   /* 1D */
+    .undefined,   /* 1E */
+    .undefined,   /* 1F */
+    0x0020,       /* 20    SPACE */
+    0x0021,       /* 21    EXCLAMATION MARK */
+    0x2200,       /* 22    FOR ALL */
+    0x0023,       /* 23    NUMBER SIGN */
+    0x2203,       /* 24    THERE EXISTS */
+    0x0025,       /* 25    PERCENT SIGN */
+    0x0026,       /* 26    AMPERSAND */
+    0x220D,       /* 27    SMALL CONTAINS AS MEMBER */
+    0x0028,       /* 28    LEFT PARENTHESIS */
+    0x0029,       /* 29    RIGHT PARENTHESIS */
+    0x2217,       /* 2A    ASTERISK OPERATOR */
+    0x002B,       /* 2B    PLUS SIGN */
+    0x002C,       /* 2C    COMMA */
+    0x2212,       /* 2D    MINUS SIGN */
+    0x002E,       /* 2E    FULL STOP */
+    0x002F,       /* 2F    SOLIDUS */
+    0x0030,       /* 30    DIGIT ZERO */
+    0x0031,       /* 31    DIGIT ONE */
+    0x0032,       /* 32    DIGIT TWO */
+    0x0033,       /* 33    DIGIT THREE */
+    0x0034,       /* 34    DIGIT FOUR */
+    0x0035,       /* 35    DIGIT FIVE */
+    0x0036,       /* 36    DIGIT SIX */
+    0x0037,       /* 37    DIGIT SEVEN */
+    0x0038,       /* 38    DIGIT EIGHT */
+    0x0039,       /* 39    DIGIT NINE */
+    0x003A,       /* 3A    COLON */
+    0x003B,       /* 3B    SEMICOLON */
+    0x003C,       /* 3C    LESS-THAN SIGN */
+    0x003D,       /* 3D    EQUALS SIGN */
+    0x003E,       /* 3E    GREATER-THAN SIGN */
+    0x003F,       /* 3F    QUESTION MARK */
+    0x2245,       /* 40    APPROXIMATELY EQUAL TO */
+    0x0391,       /* 41    GREEK CAPITAL LETTER ALPHA */
+    0x0392,       /* 42    GREEK CAPITAL LETTER BETA */
+    0x03A7,       /* 43    GREEK CAPITAL LETTER CHI */
+    0x0394,       /* 44    GREEK CAPITAL LETTER DELTA */
+    0x0395,       /* 45    GREEK CAPITAL LETTER EPSILON */
+    0x03A6,       /* 46    GREEK CAPITAL LETTER PHI */
+    0x0393,       /* 47    GREEK CAPITAL LETTER GAMMA */
+    0x0397,       /* 48    GREEK CAPITAL LETTER ETA */
+    0x0399,       /* 49    GREEK CAPITAL LETTER IOTA */
+    0x03D1,       /* 4A    GREEK THETA SYMBOL */
+    0x039A,       /* 4B    GREEK CAPITAL LETTER KAPPA */
+    0x039B,       /* 4C    GREEK CAPITAL LETTER LAMDA */
+    0x039C,       /* 4D    GREEK CAPITAL LETTER MU */
+    0x039D,       /* 4E    GREEK CAPITAL LETTER NU */
+    0x039F,       /* 4F    GREEK CAPITAL LETTER OMICRON */
+    0x03A0,       /* 50    GREEK CAPITAL LETTER PI */
+    0x0398,       /* 51    GREEK CAPITAL LETTER THETA */
+    0x03A1,       /* 52    GREEK CAPITAL LETTER RHO */
+    0x03A3,       /* 53    GREEK CAPITAL LETTER SIGMA */
+    0x03A4,       /* 54    GREEK CAPITAL LETTER TAU */
+    0x03A5,       /* 55    GREEK CAPITAL LETTER UPSILON */
+    0x03C2,       /* 56    GREEK SMALL LETTER FINAL SIGMA */
+    0x03A9,       /* 57    GREEK CAPITAL LETTER OMEGA */
+    0x039E,       /* 58    GREEK CAPITAL LETTER XI */
+    0x03A8,       /* 59    GREEK CAPITAL LETTER PSI */
+    0x0396,       /* 5A    GREEK CAPITAL LETTER ZETA */
+    0x005B,       /* 5B    LEFT SQUARE BRACKET */
+    0x2234,       /* 5C    THEREFORE */
+    0x005D,       /* 5D    RIGHT SQUARE BRACKET */
+    0x22A5,       /* 5E    UP TACK */
+    0x005F,       /* 5F    LOW LINE */
+    0xF8E5,       /* 60    radical extender # corporate char */
+    0x03B1,       /* 61    GREEK SMALL LETTER ALPHA */
+    0x03B2,       /* 62    GREEK SMALL LETTER BETA */
+    0x03C7,       /* 63    GREEK SMALL LETTER CHI */
+    0x03B4,       /* 64    GREEK SMALL LETTER DELTA */
+    0x03B5,       /* 65    GREEK SMALL LETTER EPSILON */
+    0x03C6,       /* 66    GREEK SMALL LETTER PHI */
+    0x03B3,       /* 67    GREEK SMALL LETTER GAMMA */
+    0x03B7,       /* 68    GREEK SMALL LETTER ETA */
+    0x03B9,       /* 69    GREEK SMALL LETTER IOTA */
+    0x03D5,       /* 6A    GREEK PHI SYMBOL */
+    0x03BA,       /* 6B    GREEK SMALL LETTER KAPPA */
+    0x03BB,       /* 6C    GREEK SMALL LETTER LAMDA */
+    0x03BC,       /* 6D    GREEK SMALL LETTER MU */
+    0x03BD,       /* 6E    GREEK SMALL LETTER NU */
+    0x03BF,       /* 6F    GREEK SMALL LETTER OMICRON */
+    0x03C0,       /* 70    GREEK SMALL LETTER PI */
+    0x03B8,       /* 71    GREEK SMALL LETTER THETA */
+    0x03C1,       /* 72    GREEK SMALL LETTER RHO */
+    0x03C3,       /* 73    GREEK SMALL LETTER SIGMA */
+    0x03C4,       /* 74    GREEK SMALL LETTER TAU */
+    0x03C5,       /* 75    GREEK SMALL LETTER UPSILON */
+    0x03D6,       /* 76    GREEK PI SYMBOL */
+    0x03C9,       /* 77    GREEK SMALL LETTER OMEGA */
+    0x03BE,       /* 78    GREEK SMALL LETTER XI */
+    0x03C8,       /* 79    GREEK SMALL LETTER PSI */
+    0x03B6,       /* 7A    GREEK SMALL LETTER ZETA */
+    0x007B,       /* 7B    LEFT CURLY BRACKET */
+    0x007C,       /* 7C    VERTICAL LINE */
+    0x007D,       /* 7D    RIGHT CURLY BRACKET */
+    0x223C,       /* 7E    TILDE OPERATOR */
+    .undefined,   /* 7F */
+    .undefined,   /* 80 */
+    .undefined,   /* 81 */
+    .undefined,   /* 82 */
+    .undefined,   /* 83 */
+    .undefined,   /* 84 */
+    .undefined,   /* 85 */
+    .undefined,   /* 86 */
+    .undefined,   /* 87 */
+    .undefined,   /* 88 */
+    .undefined,   /* 89 */
+    .undefined,   /* 8A */
+    .undefined,   /* 8B */
+    .undefined,   /* 8C */
+    .undefined,   /* 8D */
+    .undefined,   /* 8E */
+    .undefined,   /* 8F */
+    .undefined,   /* 90 */
+    .undefined,   /* 91 */
+    .undefined,   /* 92 */
+    .undefined,   /* 93 */
+    .undefined,   /* 94 */
+    .undefined,   /* 95 */
+    .undefined,   /* 96 */
+    .undefined,   /* 97 */
+    .undefined,   /* 98 */
+    .undefined,   /* 99 */
+    .undefined,   /* 9A */
+    .undefined,   /* 9B */
+    .undefined,   /* 9C */
+    .undefined,   /* 9D */
+    .undefined,   /* 9E */
+    .undefined,   /* 9F */
+    0x20AC,       /* A0    EURO SIGN */
+    0x03D2,       /* A1    GREEK UPSILON WITH HOOK SYMBOL */
+    0x2032,       /* A2    PRIME # minute */
+    0x2264,       /* A3    LESS-THAN OR EQUAL TO */
+    0x2044,       /* A4    FRACTION SLASH */
+    0x221E,       /* A5    INFINITY */
+    0x0192,       /* A6    LATIN SMALL LETTER F WITH HOOK */
+    0x2663,       /* A7    BLACK CLUB SUIT */
+    0x2666,       /* A8    BLACK DIAMOND SUIT */
+    0x2665,       /* A9    BLACK HEART SUIT */
+    0x2660,       /* AA    BLACK SPADE SUIT */
+    0x2194,       /* AB    LEFT RIGHT ARROW */
+    0x2190,       /* AC    LEFTWARDS ARROW */
+    0x2191,       /* AD    UPWARDS ARROW */
+    0x2192,       /* AE    RIGHTWARDS ARROW */
+    0x2193,       /* AF    DOWNWARDS ARROW */
+    0x00B0,       /* B0    DEGREE SIGN */
+    0x00B1,       /* B1    PLUS-MINUS SIGN */
+    0x2033,       /* B2    DOUBLE PRIME # second */
+    0x2265,       /* B3    GREATER-THAN OR EQUAL TO */
+    0x00D7,       /* B4    MULTIPLICATION SIGN */
+    0x221D,       /* B5    PROPORTIONAL TO */
+    0x2202,       /* B6    PARTIAL DIFFERENTIAL */
+    0x2022,       /* B7    BULLET */
+    0x00F7,       /* B8    DIVISION SIGN */
+    0x2260,       /* B9    NOT EQUAL TO */
+    0x2261,       /* BA    IDENTICAL TO */
+    0x2248,       /* BB    ALMOST EQUAL TO */
+    0x2026,       /* BC    HORIZONTAL ELLIPSIS */
+    0x23D0,       /* BD    VERTICAL LINE EXTENSION (for arrows) # for Unicode 4.0 and later */
+    0x23AF,       /* BE    HORIZONTAL LINE EXTENSION (for arrows) # for Unicode 3.2 and later */
+    0x21B5,       /* BF    DOWNWARDS ARROW WITH CORNER LEFTWARDS */
+    0x2135,       /* C0    ALEF SYMBOL */
+    0x2111,       /* C1    BLACK-LETTER CAPITAL I */
+    0x211C,       /* C2    BLACK-LETTER CAPITAL R */
+    0x2118,       /* C3    SCRIPT CAPITAL P */
+    0x2297,       /* C4    CIRCLED TIMES */
+    0x2295,       /* C5    CIRCLED PLUS */
+    0x2205,       /* C6    EMPTY SET */
+    0x2229,       /* C7    INTERSECTION */
+    0x222A,       /* C8    UNION */
+    0x2283,       /* C9    SUPERSET OF */
+    0x2287,       /* CA    SUPERSET OF OR EQUAL TO */
+    0x2284,       /* CB    NOT A SUBSET OF */
+    0x2282,       /* CC    SUBSET OF */
+    0x2286,       /* CD    SUBSET OF OR EQUAL TO */
+    0x2208,       /* CE    ELEMENT OF */
+    0x2209,       /* CF    NOT AN ELEMENT OF */
+    0x2220,       /* D0    ANGLE */
+    0x2207,       /* D1    NABLA */
+    0x00AE,       /* D2    REGISTERED SIGN # serif */
+    0x00A9,       /* D3    COPYRIGHT SIGN # serif */
+    0x2122,       /* D4    TRADE MARK SIGN # serif */
+    0x220F,       /* D5    N-ARY PRODUCT */
+    0x221A,       /* D6    SQUARE ROOT */
+    0x22C5,       /* D7    DOT OPERATOR */
+    0x00AC,       /* D8    NOT SIGN */
+    0x2227,       /* D9    LOGICAL AND */
+    0x2228,       /* DA    LOGICAL OR */
+    0x21D4,       /* DB    LEFT RIGHT DOUBLE ARROW */
+    0x21D0,       /* DC    LEFTWARDS DOUBLE ARROW */
+    0x21D1,       /* DD    UPWARDS DOUBLE ARROW */
+    0x21D2,       /* DE    RIGHTWARDS DOUBLE ARROW */
+    0x21D3,       /* DF    DOWNWARDS DOUBLE ARROW */
+    0x25CA,       /* E0    LOZENGE # previously mapped to 0x22C4 DIAMOND OPERATOR */
+    0x3008,       /* E1    LEFT ANGLE BRACKET */
     /* FIXME: !! figure these out: */
     /*
     0xE2    0x00AE+0xF87F    # REGISTERED SIGN, alternate: sans serif
     0xE3    0x00A9+0xF87F    # COPYRIGHT SIGN, alternate: sans serif
     0xE4    0x2122+0xF87F    # TRADE MARK SIGN, alternate: sans serif
      */
-    0x00AE,        /* E2    REGISTERED SIGN, alternate: sans serif */
-    0x00A9,        /* E3    COPYRIGHT SIGN, alternate: sans serif */
-    0x2122,        /* E4    TRADE MARK SIGN, alternate: sans serif */
-    0x2211,        /* E5    N-ARY SUMMATION */
-    0x239B,        /* E6    LEFT PARENTHESIS UPPER HOOK # for Unicode 3.2 and later */
-    0x239C,        /* E7    LEFT PARENTHESIS EXTENSION # for Unicode 3.2 and later */
-    0x239D,        /* E8    LEFT PARENTHESIS LOWER HOOK # for Unicode 3.2 and later */
-    0x23A1,        /* E9    LEFT SQUARE BRACKET UPPER CORNER # for Unicode 3.2 and later */
-    0x23A2,        /* EA    LEFT SQUARE BRACKET EXTENSION # for Unicode 3.2 and later */
-    0x23A3,        /* EB    LEFT SQUARE BRACKET LOWER CORNER # for Unicode 3.2 and later */
-    0x23A7,        /* EC    LEFT CURLY BRACKET UPPER HOOK # for Unicode 3.2 and later */
-    0x23A8,        /* ED    LEFT CURLY BRACKET MIDDLE PIECE # for Unicode 3.2 and later */
-    0x23A9,        /* EE    LEFT CURLY BRACKET LOWER HOOK # for Unicode 3.2 and later */
-    0x23AA,        /* EF    CURLY BRACKET EXTENSION # for Unicode 3.2 and later */
-    0xF8FF,        /* F0    Apple logo */
-    0x3009,        /* F1    RIGHT ANGLE BRACKET */
-    0x222B,        /* F2    INTEGRAL */
-    0x2320,        /* F3    TOP HALF INTEGRAL */
-    0x23AE,        /* F4    INTEGRAL EXTENSION # for Unicode 3.2 and later */
-    0x2321,        /* F5    BOTTOM HALF INTEGRAL */
-    0x239E,        /* F6    RIGHT PARENTHESIS UPPER HOOK # for Unicode 3.2 and later */
-    0x239F,        /* F7    RIGHT PARENTHESIS EXTENSION # for Unicode 3.2 and later */
-    0x23A0,        /* F8    RIGHT PARENTHESIS LOWER HOOK # for Unicode 3.2 and later */
-    0x23A4,        /* F9    RIGHT SQUARE BRACKET UPPER CORNER # for Unicode 3.2 and later */
-    0x23A5,        /* FA    RIGHT SQUARE BRACKET EXTENSION # for Unicode 3.2 and later */
-    0x23A6,        /* FB    RIGHT SQUARE BRACKET LOWER CORNER # for Unicode 3.2 and later */
-    0x23AB,        /* FC    RIGHT CURLY BRACKET UPPER HOOK # for Unicode 3.2 and later */
-    0x23AC,        /* FD    RIGHT CURLY BRACKET MIDDLE PIECE # for Unicode 3.2 and later */
-    0x23AD,        /* FE    RIGHT CURLY BRACKET LOWER HOOK # for Unicode 3.2 and later */
-    UV_UNDEF,    /* FF */
+    0x00AE,       /* E2    REGISTERED SIGN, alternate: sans serif */
+    0x00A9,       /* E3    COPYRIGHT SIGN, alternate: sans serif */
+    0x2122,       /* E4    TRADE MARK SIGN, alternate: sans serif */
+    0x2211,       /* E5    N-ARY SUMMATION */
+    0x239B,       /* E6    LEFT PARENTHESIS UPPER HOOK # for Unicode 3.2 and later */
+    0x239C,       /* E7    LEFT PARENTHESIS EXTENSION # for Unicode 3.2 and later */
+    0x239D,       /* E8    LEFT PARENTHESIS LOWER HOOK # for Unicode 3.2 and later */
+    0x23A1,       /* E9    LEFT SQUARE BRACKET UPPER CORNER # for Unicode 3.2 and later */
+    0x23A2,       /* EA    LEFT SQUARE BRACKET EXTENSION # for Unicode 3.2 and later */
+    0x23A3,       /* EB    LEFT SQUARE BRACKET LOWER CORNER # for Unicode 3.2 and later */
+    0x23A7,       /* EC    LEFT CURLY BRACKET UPPER HOOK # for Unicode 3.2 and later */
+    0x23A8,       /* ED    LEFT CURLY BRACKET MIDDLE PIECE # for Unicode 3.2 and later */
+    0x23A9,       /* EE    LEFT CURLY BRACKET LOWER HOOK # for Unicode 3.2 and later */
+    0x23AA,       /* EF    CURLY BRACKET EXTENSION # for Unicode 3.2 and later */
+    0xF8FF,       /* F0    Apple logo */
+    0x3009,       /* F1    RIGHT ANGLE BRACKET */
+    0x222B,       /* F2    INTEGRAL */
+    0x2320,       /* F3    TOP HALF INTEGRAL */
+    0x23AE,       /* F4    INTEGRAL EXTENSION # for Unicode 3.2 and later */
+    0x2321,       /* F5    BOTTOM HALF INTEGRAL */
+    0x239E,       /* F6    RIGHT PARENTHESIS UPPER HOOK # for Unicode 3.2 and later */
+    0x239F,       /* F7    RIGHT PARENTHESIS EXTENSION # for Unicode 3.2 and later */
+    0x23A0,       /* F8    RIGHT PARENTHESIS LOWER HOOK # for Unicode 3.2 and later */
+    0x23A4,       /* F9    RIGHT SQUARE BRACKET UPPER CORNER # for Unicode 3.2 and later */
+    0x23A5,       /* FA    RIGHT SQUARE BRACKET EXTENSION # for Unicode 3.2 and later */
+    0x23A6,       /* FB    RIGHT SQUARE BRACKET LOWER CORNER # for Unicode 3.2 and later */
+    0x23AB,       /* FC    RIGHT CURLY BRACKET UPPER HOOK # for Unicode 3.2 and later */
+    0x23AC,       /* FD    RIGHT CURLY BRACKET MIDDLE PIECE # for Unicode 3.2 and later */
+    0x23AD,       /* FE    RIGHT CURLY BRACKET LOWER HOOK # for Unicode 3.2 and later */
+    .undefined,   /* FF */
 ]

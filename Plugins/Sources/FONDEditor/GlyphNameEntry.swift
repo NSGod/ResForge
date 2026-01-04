@@ -39,7 +39,7 @@ class GlyphNameEntry: NSObject, Comparable {
         var entries: [GlyphNameEntry] = []
         for i: CharCode in 0..<CharCode.max {
             let UV = encoding.uv(for: i)
-            if UV == UV_UNDEF { continue }
+            if UV == .undefined { continue }
             let entry = GlyphNameEntry(charCode: i, uv: UV, glyphName: encoding.glyphName(for: UV) ?? "???")
             entries.append(entry)
         }

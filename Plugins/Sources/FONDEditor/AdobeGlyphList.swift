@@ -20,7 +20,7 @@ struct AdobeGlyphList {
 
     static func uv(for glyphName: String) -> UVBMP {
         guard let uv = agl2uv[glyphName] else {
-            return UV_UNDEF
+            return .undefined
         }
         return uv
     }
@@ -34,7 +34,7 @@ struct AdobeGlyphList {
 
     static func zapfDingbatUV(for glyphName: String) -> UVBMP {
         guard let uv = zding2uv[glyphName] else {
-            return UV_UNDEF
+            return .undefined
         }
         return uv
     }

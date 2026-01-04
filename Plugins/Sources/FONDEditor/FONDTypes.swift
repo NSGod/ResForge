@@ -15,7 +15,9 @@ typealias EncodingID    = UInt16
 typealias LanguageID    = UInt16
 typealias UVBMP         = UInt16
 
-let UV_UNDEF: UVBMP     = 0xFFFF
+extension UVBMP {
+    static let undefined: UVBMP = 0xFFFF
+}
 
 typealias Fixed4Dot12   = Int16
 
@@ -281,112 +283,6 @@ extension MacScriptID: CustomStringConvertible {
     }
 }
 
-/* From Appendix B, Table B-2 in Text.pdf */
-/* Script & FOND ID mapping:
- 129      - 16383        Roman
- 16384    - 16895        Japanese
- 16896    - 17407        Traditional Chinese
- 17408    - 17919        Korean
- 17920    - 18431        Arabic
- 18432    - 18943        Hebrew
- 18944    - 19455        Greek
- 19456    - 19967        Cyrillic
- 19968    - 20479        Right-to-Left Symbols
- 20480    - 20991        Devanagari
- 20992    - 21503        Gurmukhi
- 21504    - 22015        Gujarati
- 22016    - 22527        Oriya
- 22528    - 23039        Bengali
- 23040    - 23551        Tamil
- 23552    - 24063        Telugu
- 24064    - 24575        Kannada
- 24576    - 25087        Malayalam
- 25088    - 25599        Sinhalese
- 25600    - 26111        Burmese
- 26112    - 26623        Khmer
- 26624    - 27135        Thai
- 27136    - 27647        Laotian
- 27648    - 28159        Georgian
- 28160    - 28671        Armenian
- 28672    - 29183        Chinese (Simplified)
- 29184    - 29695        Tibetan
- 29696    - 30207        Mongolian
- 30208    - 30719        Geez/Ethiopic
- 30720    - 31231        Central European Roman
- 31232    - 31743        Vietnamese
- 31744    - 32255        Extended Arabic
- 32256    - 32767        Uninterpreted Symbols  */
-
-func FFMacScriptID(from fondID: ResID) -> MacScriptID {
-    if fondID < 16384 {
-        return .roman
-    } else if fondID < 16896 {
-        return .japanese
-    } else if fondID < 17408 {
-        return .traditionalChinese
-    } else if fondID < 17920 {
-        return .korean
-    } else if fondID < 18432 {
-        return .arabic
-    } else if fondID < 18944 {
-        return .hebrew
-    } else if fondID < 19456 {
-        return .greek
-    } else if fondID < 19968 {
-        return .cyrillic
-    } else if fondID < 20480 {
-        return .rightToLeftSymbol
-    } else if fondID < 20992 {
-        return .devanagari
-    } else if fondID < 21504 {
-        return .gurmukhi
-    } else if fondID < 22016 {
-        return .gujarati
-    } else if fondID < 22528 {
-        return .oriya
-    } else if fondID < 23040 {
-        return .bengali
-    } else if fondID < 23552 {
-        return .tamil
-    } else if fondID < 24064 {
-        return .telugu
-    } else if fondID < 24576 {
-        return .kannada
-    } else if fondID < 25088 {
-        return .malayalam
-    } else if fondID < 25600 {
-        return .sinhalese
-    } else if fondID < 26112 {
-        return .burmese
-    } else if fondID < 26624 {
-        return .khmer
-    } else if fondID < 27136 {
-        return .thai
-    } else if fondID < 27648 {
-        return .laotian
-    } else if fondID < 28160 {
-        return .georgian
-    } else if fondID < 28672 {
-        return .armenian
-    } else if fondID < 29184 {
-        return .simplifiedChinese
-    } else if fondID < 29696 {
-        return .tibetan
-    } else if fondID < 30208 {
-        return .mongolian
-    } else if fondID < 30720 {
-        return .geez
-    } else if fondID < 31232 {
-        return .ceRoman
-    } else if fondID < 31744 {
-        return .vietnamese
-    } else if fondID < 32256 {
-        return .extendedArabic
-    } else if fondID <= 32767 {
-        return .uninterpreted
-    }
-//    return .none
-}
 
 // Language codes are zero based everywhere but within a 'cmap' table
 enum MacLanguageID: UInt16 {

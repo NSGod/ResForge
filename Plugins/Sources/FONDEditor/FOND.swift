@@ -136,7 +136,7 @@ class FOND: NSObject {
 
     lazy var encoding:          MacEncoding = {
         // FIXME: improve non-MacRoman encodings
-        let scriptID = FFMacScriptID(from: ResID(resource.id))
+        let scriptID = MacEncoding.macScriptID(from: ResID(resource.id))
         NSLog("\(type(of: self)).\(#function)() resID: \(resource.id), scriptID: \(scriptID)")
         var encoding = MacEncoding.macEncoding(for: scriptID, postScriptFontName: self.basePostScriptName)
         if let customGlyphs = self.styleMappingTable?.glyphNameEncodingSubtable {
