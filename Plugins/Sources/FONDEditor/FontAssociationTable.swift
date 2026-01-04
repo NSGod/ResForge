@@ -15,7 +15,7 @@ final class FontAssociationTable: ResourceNode {
     var numberOfEntries:    Int16                           // number of entries - 1
     var entries:            [FontAssociationTableEntry]
     
-    override var length: Int {
+    override var length:    Int {
         return entries.count * FontAssociationTableEntry.length
     }
 
@@ -27,6 +27,24 @@ final class FontAssociationTable: ResourceNode {
             entries.append(entry)
         }
         super.init()
+    }
+
+    func add(_ entry: FontAssociationTableEntry) throws {
+        guard !entries.contains(entry) else {
+            throw FONDError.fontAssociationTableEntriesRefSameFont
+        }
+        entries.append(entry)
+        entries.sort(by: <)
+        numberOfEntries = Int16(entries.count - 1)
+    }
+
+    func remove(_ entry: FontAssociationTableEntry) throws {
+        guard entries.contains(entry) else {
+            throw FONDError.noSuchFontAssociationTableEntry
+        }
+        entries.append(entry)
+        entries.sort(by: <)
+        numberOfEntries = Int16(entries.count - 1)
     }
 }
 
@@ -71,5 +89,10 @@ final class FontAssociationTableEntry: ResourceNode, Comparable {
         } else {
             return lhs.fontStyle < rhs.fontStyle
         }
+    }
+
+    static func == (lhs: FontAssociationTableEntry, rhs: FontAssociationTableEntry) -> Bool {
+        return lhs.fontPointSize == rhs.fontPointSize &&
+        lhs.fontStyle == rhs.fontStyle && lhs.fontID == rhs.fontID
     }
 }

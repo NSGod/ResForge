@@ -42,7 +42,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
         self.manager = manager
 //        self.fond = try FOND(resource.data)
         do {
-            self.fond = try FOND(resource.data)
+            self.fond = try FOND(resource.data, resource: self.resource)
 //            super.init(window: nil)
 
         } catch {

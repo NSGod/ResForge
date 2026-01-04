@@ -9,27 +9,6 @@
 import Foundation
 import RFSupport
 
-enum FONDError: LocalizedError {
-    case noFontAssociationTableEntries
-    case fontAssociationTableEntriesInvalid
-    case fontAssociationTableEntriesNotAscending
-    case fontAssociationTableEntriesRefSameFont
-    case firstResourceNameIsZeroLength
-    case noName
-    case invalidCharRange
-    case invalidWidthTableOffset
-    case invalidKerningTableOffset
-    case invalidStyleMappingTableOffset
-    case lengthTooShort
-    case offsetTableUsability
-    case boundingBoxTableUsability
-    case widthTableUsability
-    case styleMappingTableUsability
-    case fontNameSuffixSubtableUsability
-    case glyphNameTableUsability
-    case kernTableUsability
-}
-
 class FOND: NSObject {
     static let fontFamilyRecordLength   = 52
 
@@ -38,10 +17,10 @@ class FOND: NSObject {
     var famID:          ResID               // family ID number
     var firstChar:      Int16               // ASCII code of 1st character
     var lastChar:       Int16               // ASCII code of last character
-    var ascent:         Fixed4Dot12         // maximum ascent for 1pt font;     Fixed 4.12
-    var descent:        Fixed4Dot12         // maximum descent for 1pt font;    Fixed 4.12
-    var leading:        Fixed4Dot12         // maximum leading for 1pt font;    Fixed 4.12
-    var widMax:         Fixed4Dot12         // maximum width for 1pt font;      Fixed 4.12
+    var ascent:         Fixed4Dot12         // maximum ascent for 1pt font;  Fixed 4.12
+    var descent:        Fixed4Dot12         // maximum descent for 1pt font; Fixed 4.12
+    var leading:        Fixed4Dot12         // maximum leading for 1pt font; Fixed 4.12
+    var widMax:         Fixed4Dot12         // maximum width for 1pt font;   Fixed 4.12
 
     var wTabOff:        Int32               /* offset to family glyph-width table from beginning of font family
                                                 resource to beginning of table, in bytes */
@@ -71,17 +50,15 @@ class FOND: NSObject {
         return fontAssociationTable.entries.count
     }
 
-    var data:                   Data
+    unowned var resource:       Resource
+    private(set) var reader:    BinaryDataReader
     var remainingTableData:     Data
 
-    // MARK: ideally, these would be lazy data structures,
-    // though I'm not sure how to do that in Swift and given the current BinaryDataReader design
     var offsetTable:            OffsetTable?
 
-    lazy var boundingBoxTable:       BoundingBoxTable? = {
+    lazy var boundingBoxTable:  BoundingBoxTable? = {
         do {
-            let reader = BinaryDataReader(data)
-            try calculateOffsetsIfNeeded(reader)
+            try calculateOffsetsIfNeeded()
             // can only have a Bounding Box table if we have an offset table to specify its offset
             if let offsetTable = offsetTable {
                 // might have a bounding box table
@@ -92,16 +69,15 @@ class FOND: NSObject {
             }
             return boundingBoxTable
         } catch {
-             NSLog("\(type(of: self)).\(#function)() *** error: \(error)")
+             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
         }
         return nil
     }()
 
-    lazy var widthTable:             WidthTable? = {
+    lazy var widthTable:        WidthTable? = {
         if wTabOff == 0 { return nil }
         do {
-            let reader = BinaryDataReader(data)
-            try calculateOffsetsIfNeeded(reader)
+            try calculateOffsetsIfNeeded()
             try reader.pushPosition(Int(wTabOff))
             widthTable = try WidthTable(reader, fond:self)
             reader.popPosition()
@@ -112,11 +88,10 @@ class FOND: NSObject {
         return nil
     }()
 
-    lazy var styleMappingTable:      StyleMappingTable? = {
+    lazy var styleMappingTable: StyleMappingTable? = {
         if styleOff == 0 { return nil }
         do {
-            let reader = BinaryDataReader(data)
-            try calculateOffsetsIfNeeded(reader)
+            try calculateOffsetsIfNeeded()
             if let styleMappingRange = offsetTypesToRanges[.styleTable] {
                 try reader.pushPosition(Int(styleOff))
                 styleMappingTable = try StyleMappingTable(reader, range:styleMappingRange)
@@ -131,11 +106,10 @@ class FOND: NSObject {
         return nil
     }()
 
-    lazy var kernTable:              KernTable? = {
+    lazy var kernTable:         KernTable? = {
         if kernOff == 0 { return nil }
         do {
-            let reader = BinaryDataReader(data)
-            try calculateOffsetsIfNeeded(reader)
+            try calculateOffsetsIfNeeded()
             if let kernRange = offsetTypesToRanges[.kernTable] {
                 try reader.pushPosition(Int(kernOff))
                 kernTable = try KernTable(reader, fond:self)
@@ -145,15 +119,30 @@ class FOND: NSObject {
             }
             return kernTable
         } catch {
-             NSLog("\(type(of: self)).\(#function)() *** error: \(error)")
+             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
         }
         return nil
     }()
-    
-    lazy var basePostScriptName:         String? = {
+
+    // used to help inform encoding choice (e.g. Symbol and Dingbat fonts have special encodings)
+    lazy var basePostScriptName: String? = {
         if styleOff == 0 { return nil }
-        // FIXME: finish this!
+        guard let entry = fontAssociationTable.entries.first else { return nil }
+        if let postScriptName = self.styleMappingTable?.postScriptNameForFont(with: entry.fontStyle) {
+            return postScriptName
+        }
         return nil
+    }()
+
+    lazy var encoding:          MacEncoding = {
+        // FIXME: improve non-MacRoman encodings
+        let scriptID = FFMacScriptID(from: ResID(resource.id))
+        NSLog("\(type(of: self)).\(#function)() resID: \(resource.id), scriptID: \(scriptID)")
+        var encoding = MacEncoding.macEncoding(for: scriptID, postScriptFontName: self.basePostScriptName)
+        if let customGlyphs = self.styleMappingTable?.glyphNameEncodingSubtable {
+            encoding.add(custom: GlyphNameEntry.glyphNameEntries(with: customGlyphs.charCodesToGlyphNames))
+        }
+        return encoding
     }()
 
     enum TableOffsetType {
@@ -164,17 +153,23 @@ class FOND: NSObject {
         case kernTable
     }
 
+    // FIXME: switch to Swift Ranges
     private var offsetTypesToRanges:    [TableOffsetType: NSRange] = [:]
     private var offsetsCalculated:      Bool = false
     private var needsRepair:            Bool = false   // If this FOND resource's resourceID doesn't match the famID, we need to update the famID
     
-    convenience init(_ data: Data) throws {
+    convenience init(_ data: Data, resource: Resource) throws {
         let reader = BinaryDataReader(data)
-        try self.init(reader)
+        try self.init(reader, resource: resource)
     }
 
-    init(_ reader: BinaryDataReader) throws {
+    init(_ binReader: BinaryDataReader, resource: Resource) throws {
         // FIXME: deal with FOND w/ no name error
+        
+        /// hold onto `reader` for future parsing for lazy data structures
+        self.reader = binReader
+        self.resource = resource
+
         ffFlags         = try reader.read()
         famID           = try reader.read()
         firstChar       = try reader.read()
@@ -202,18 +197,47 @@ class FOND: NSObject {
         ffVersion       = try reader.read()
 
         // FIXME: make sure famID == this FOND's resource ID, otherwise repair it
+        if self.resource.id != famID {
+            needsRepair = true
+            famID = ResID(resource.id)
+            /* FIXME: we need some way to communicate this up the chain with
+             some sort of UI alerting user that resource was repaired and
+             needs to be saved etc. */
+        }
         // FIXME: add validation/error-checking here
 
         fontAssociationTable = try FontAssociationTable(reader)
 
-        // hold onto data for future parsing for lazy data structures
-        data = reader.data
         reader.pushSavedPosition()
         remainingTableData = try reader.readData(length: reader.bytesRemaining)
         reader.popPosition()
+        super.init()
     }
 
-    private func calculateOffsetsIfNeeded(_ reader: BinaryDataReader) throws {
+    func unitsPerEm(for fontStyle: MacFontStyle) -> UnitsPerEm {
+        /* here we'll assume that if there's a mix of entries for both TrueType
+         (fontPointSize of 0) and Bitmap fonts, that the bitmap fonts are merely for
+         screen display and don't reference possible PostScript outline fonts.
+
+         For TT fonts, if we wanted to get a more accurate measurement, we'd look
+         at the actual unitsPerEm value in the 'sfnt''s 'head' table, but that's kind of
+         outside the scope of this editor. Moreover, an 'sfnt' would likely already have
+         a 'kern' table which would take precedence over kerns defined in the 'FOND'. */
+        for entry in fontAssociationTable.entries {
+            if entry.fontStyle == fontStyle && entry.fontPointSize == 0 {
+                return .trueTypeStandard
+            }
+        }
+        // if there's no TT fonts, then assume the bitmaps are for PostScript fonts
+        return .postScriptStandard
+    }
+
+    func glyphName(for charCode: CharCode) -> String? {
+        // or should this be non-optional and return .notdef?
+        return self.encoding.glyphName(for: charCode)
+    }
+
+    private func calculateOffsetsIfNeeded() throws {
         if offsetsCalculated == true { return }
         var offsetsToOffsetTypes: [Int32: TableOffsetType] = [:]
         if wTabOff > 0 { offsetsToOffsetTypes[wTabOff] = .widthTable }
@@ -237,44 +261,48 @@ class FOND: NSObject {
         }
         offsetsCalculated = true
     }
-}
 
-extension FOND {
-
-    func add(_ fontAssociationTableEntry: FontAssociationTableEntry) throws {
-
+    func add(_ entry: FontAssociationTableEntry) throws {
+        try fontAssociationTable.add(entry)
+        shiftOffsetsAndRanges(by: entry.length)
     }
 
-    func remove(_ fontAssociationTableEntry: FontAssociationTableEntry) throws {
-
+    func remove(_ entry: FontAssociationTableEntry) throws {
+        try fontAssociationTable.remove(entry)
+        shiftOffsetsAndRanges(by: -entry.length)
     }
 
     func shiftOffsetsAndRanges(by deltaLength: Int) {
-        // the table offsets could be empty (== 0) so check before modifying their values
-        if wTabOff > 0 {
-
-        }
-
-        if kernOff > 0 {
-
-        }
-
-        if styleOff > 0 {
-
-        }
-    }
-
-    func unitsPerEm(for fontStyle: MacFontStyle) -> UnitsPerEm {
-        for entry in fontAssociationTable.entries {
-            if entry.fontStyle == fontStyle && entry.fontPointSize == 0 {
-                return .trueTypeStandard
+        do {
+            try calculateOffsetsIfNeeded()
+            // NOTE: the table offsets could be empty (== 0) so check before modifying their values
+            if wTabOff > 0 {
+                wTabOff += Int32(deltaLength)
+                if var range = offsetTypesToRanges[.widthTable] {
+                    range.length += deltaLength
+                    offsetTypesToRanges[.widthTable] = range
+                }
             }
+            if kernOff > 0 {
+                kernOff += Int32(deltaLength)
+                if var range = offsetTypesToRanges[.kernTable] {
+                    range.length += deltaLength
+                    offsetTypesToRanges[.kernTable] = range
+                }
+            }
+            if styleOff > 0 {
+                styleOff += Int32(deltaLength)
+                if var range = offsetTypesToRanges[.styleTable] {
+                    range.length += deltaLength
+                    offsetTypesToRanges[.styleTable] = range
+                }
+            }
+            /* OffsetTable entries measure the offset relative to the beginning of
+             the OffsetTable itself. Since that table is located after the font
+             association entries, no adjustments to its values are needed. */
+        } catch {
+             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
         }
-        return .postScriptStandard
     }
 
-    func glyphName(for charCode: CharCode) -> String? {
-
-        return nil
-    }
 }

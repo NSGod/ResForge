@@ -73,13 +73,13 @@ struct MacEncoding {
         isCustomEncoding = true
     }
 
-    static func macEncoding(for scriptID: MacScriptID, macLanguageID macLanguageIDPlus1: MacLanguageID = .none, postScriptFontName: String? = nil) -> MacEncoding? {
+    static func macEncoding(for scriptID: MacScriptID, macLanguageID macLanguageIDPlus1: MacLanguageID = .none, postScriptFontName: String? = nil) -> MacEncoding {
         var langID = macLanguageIDPlus1
         if (macLanguageIDPlus1 != .none && macLanguageIDPlus1 != .english) {
             // FIXME: is this safe?
             langID = MacLanguageID(rawValue: macLanguageIDPlus1.rawValue - 1)!
         }
-        // TODO: this needs work
+        // FIXME: this needs more work
         if scriptID == .roman && langID == .turkish {
             return .macTurkish
         } else if scriptID == .roman && langID == .icelandic {

@@ -46,6 +46,15 @@ class GlyphNameEntry: NSObject, Comparable {
         return entries
     }
 
+    class func glyphNameEntries(with charCodesToGlyphNames: [CharCode: String]) -> [GlyphNameEntry] {
+        var entries: [GlyphNameEntry] = []
+        for (charCode, glyphName) in charCodesToGlyphNames {
+            let entry = GlyphNameEntry(charCode: charCode, glyphName: glyphName)
+            entries.append(entry)
+        }
+        return entries
+    }
+
     @objc func compare(_ other: GlyphNameEntry) -> ComparisonResult {
         let oUV = other.uv
         if charCode == other.charCode {

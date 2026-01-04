@@ -27,7 +27,7 @@ final class KernTable: FONDResourceNode {
         entries = []
         fontStylesToEntries = [:]
         for _ in 0...numberOfEntries {
-            let entry: KernTableEntry = try KernTableEntry(reader)
+            let entry = try KernTableEntry(reader, fond: fond)
             entries.append(entry)
             fontStylesToEntries[entry.style] = entry
             hasOutOfRangeCharCodes = hasOutOfRangeCharCodes ? true : entry.hasOutOfRangeCharCodes
@@ -42,8 +42,8 @@ final class KernTable: FONDResourceNode {
 
 
 // MARK: -
-struct KernTableEntry {
-    var style:      MacFontStyle            /* style the entry applies to */
+class KernTableEntry: FONDResourceNode {
+    var style:      MacFontStyle            // style this entry applies to
 
     /// NOTE: While `numKerns` is defined as a `SInt16`, it makes no sense to have negative kern pairs,
     ///       and I *have* encountered fonts that have more than 32,767 kern pairs, so make it an `UInt16`
@@ -54,14 +54,39 @@ struct KernTableEntry {
     var kernPairs:  [KernPair]
 
     var hasOutOfRangeCharCodes: Bool = false
-}
 
-extension KernTableEntry {
-    var length: Int {
+    override var length: Int {
         return MemoryLayout<UInt16>.size * 2 + Int(numKerns) * KernPair.length
     }
 
-    init(_ reader: BinaryDataReader) throws {
+    // FIXME: add better explanation about what this method is for
+    /* This can be used to create a `feature` file used during conversion to OTF/TTF
+        by Adobe AFDKO's hotconvert/makeotf to create a `GPOS` table containing the kern pairs */
+    lazy var GPOSFeatureRepresentation: String? = {
+        var mString = "feature kern {\n"
+        var mKernPairStrings : [String] = []
+        let unitsPerEm = self.fond.unitsPerEm(for: style)
+        for kernPair in kernPairs {
+            let firstGlyphName = self.fond.glyphName(for: kernPair.kernFirst)
+            let secondGlyphName = self.fond.glyphName(for: kernPair.kernSecond)
+            /* In cases where this FOND and kern pairs reference a PostScript outline font rather than TT,
+             I'd normally parse that Mac PostScript font file and check to make sure its encoding agrees
+             with the glyph names the FOND's encoding assigned, but, again, that's a bit outside the scope
+             of this editor.
+             */
+            let value = Int16(lround(Fixed4Dot12ToDouble(kernPair.kernWidth) * Double(unitsPerEm.rawValue)))
+            if let firstGlyphName, let secondGlyphName {
+                mKernPairStrings.append("\tpos \(firstGlyphName) \(secondGlyphName) \(value);\n")
+            } else {
+                NSLog("\(type(of: self)).\(#function)() *** ERROR failed to get glyphNames for charCodes: \(kernPair.kernFirst), \(kernPair.kernSecond)")
+            }
+        }
+        mKernPairStrings.sort(by: { $0.localizedStandardCompare($1) == .orderedAscending })
+        mString += mKernPairStrings.joined(separator: "\n")
+        mString += "} kern;\n"
+        return mString
+    }()
+    init(_ reader: BinaryDataReader, fond: FOND) throws {
         style = try reader.read()
         numKerns = try reader.read()
         kernPairs = []
@@ -70,19 +95,28 @@ extension KernTableEntry {
             kernPairs.append(kernPair)
             hasOutOfRangeCharCodes = hasOutOfRangeCharCodes ? true : kernPair.hasOutOfRangeCharCodes
         }
+        super.init(fond: fond)
     }
 }
 
 
 // MARK: - KernPair
-struct KernPair: Equatable {
-    var kernFirst:  UInt8           /* 1st character of kerned pair */
-    var kernSecond: UInt8           /* 2nd character of kerned pair */
-    var kernWidth:  Fixed4Dot12     /* kerning distance, in pixels, for the 2 glyphs at size of 1pt; fixed-point 4.12 format */
+struct KernPair: Equatable, CustomStringConvertible {
+    var kernFirst:  UInt8           // 1st character of kerned pair
+    var kernSecond: UInt8           // 2nd character of kerned pair
+    var kernWidth:  Fixed4Dot12     // kerning distance, in pixels, for the 2 glyphs at size of 1pt; fixed-point 4.12 format
 
     var hasOutOfRangeCharCodes: Bool {
-        // FIXME: this is no longer true for the "enhanced/expanded" macRomanEncoding
+        // FIXME: this is no longer true for the "enhanced/expanded" macRomanEncoding?
         return kernFirst < 0x20 || kernSecond < 0x20 || kernFirst == 0x7F || kernSecond == 0x7F
+    }
+
+    var description: String {
+        return "\(kernFirst), \(kernSecond), \(Fixed4Dot12ToDouble(kernWidth))"
+    }
+
+    static func == (lhs: KernPair, rhs: KernPair) -> Bool {
+        return lhs.kernFirst == rhs.kernFirst && lhs.kernSecond == rhs.kernSecond && lhs.kernWidth == rhs.kernWidth
     }
 }
 

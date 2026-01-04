@@ -103,7 +103,15 @@
  #
  ##################
  */
-
+/*
+    MARK: I've added more low-ASCII values than are present in the official
+    Apple ROMAN.TXT referenced above and Adobe's unadulterated file at
+    https://github.com/adobe-type-tools/afdko/blob/develop/c/shared/resource/macromn0.h.
+    That is, some extra UVs are mapped for char codes below 0x0020 SPACE.
+    These values are consistent with what Fontographer 4.1.5 shows and uses as the MacRoman
+    encoding. I'm still trying to track down an explanation or official documentation of
+    where these values come from.
+ */
 import Foundation
 
 let macRomanEncoding: [UVBMP] = [
