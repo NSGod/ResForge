@@ -63,7 +63,8 @@ let package = Package(
             dependencies: [.target(name: "RFSupport"),
                            .product(name: "OrderedCollections", package: "swift-collections")]),
         .target(name: "FONDEditor",
-            dependencies: [.target(name: "RFSupport")]),
+            dependencies: [.target(name: "RFSupport"),
+                           .product(name: "CSV", package:"CSV")]),
         .target(
             name: "MenuEditor",
             dependencies: [.target(name: "RFSupport")]),

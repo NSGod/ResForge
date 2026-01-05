@@ -8,6 +8,7 @@
 
 import Foundation
 import RFSupport
+import CSV
 
 final class KernTable: FONDResourceNode {
     var numberOfEntries:                Int16              // number of entries - 1
@@ -59,22 +60,29 @@ class KernTableEntry: FONDResourceNode {
         return MemoryLayout<UInt16>.size * 2 + Int(numKerns) * KernPair.length
     }
 
+    public struct KernExportConfig {
+        public static let gposDefault: KernExportConfig = .init()
+        public static let csvDefault: KernExportConfig = KernExportConfig(resolveGlyphNames: false, scaleToUnitsPerEm: false)
+
+        public var resolveGlyphNames: Bool = true
+        public var scaleToUnitsPerEm: Bool = true
+    }
+
     // FIXME: add better explanation about what this method is for
     /* This can be used to create a `feature` file used during conversion to OTF/TTF
         by Adobe AFDKO's hotconvert/makeotf to create a `GPOS` table containing the kern pairs */
-    lazy var GPOSFeatureRepresentation: String? = {
+    public func GPOSFeatureRepresentation(using config: KernExportConfig = .gposDefault) -> String? {
         var mString = "feature kern {\n"
-        var mKernPairStrings : [String] = []
+        var mKernPairStrings: [String] = []
         let unitsPerEm = self.fond.unitsPerEm(for: style)
         for kernPair in kernPairs {
-            let firstGlyphName = self.fond.glyphName(for: kernPair.kernFirst)
-            let secondGlyphName = self.fond.glyphName(for: kernPair.kernSecond)
+            let firstGlyphName = config.resolveGlyphNames ? self.fond.glyphName(for: kernPair.kernFirst) : String(kernPair.kernFirst)
+            let secondGlyphName = config.resolveGlyphNames ? self.fond.glyphName(for: kernPair.kernSecond) : String(kernPair.kernSecond)
             /* In cases where this FOND and kern pairs reference a PostScript outline font rather than TT,
-             I'd normally parse that Mac PostScript font file and check to make sure its encoding agrees
-             with the glyph names the FOND's encoding assigned, but, again, that's a bit outside the scope
-             of this editor.
-             */
-            let value = Int16(lround(Fixed4Dot12ToDouble(kernPair.kernWidth) * Double(unitsPerEm.rawValue)))
+               I'd normally parse that Mac PostScript font file and check to make sure its encoding agrees
+               with the glyph names the FOND's encoding assigned, but, that's a bit outside the scope
+               of this editor. */
+            let value: Int16 = config.scaleToUnitsPerEm ? Int16(lround(Fixed4Dot12ToDouble(kernPair.kernWidth) * Double(unitsPerEm.rawValue))) : kernPair.kernWidth
             if let firstGlyphName, let secondGlyphName {
                 mKernPairStrings.append("\tpos \(firstGlyphName) \(secondGlyphName) \(value);\n")
             } else {
@@ -85,7 +93,35 @@ class KernTableEntry: FONDResourceNode {
         mString += mKernPairStrings.joined(separator: "\n")
         mString += "} kern;\n"
         return mString
-    }()
+    }
+
+    public func CSVRepresentation(using config: KernExportConfig = .csvDefault) -> String? {
+        let stream = OutputStream(toMemory: ())
+        do {
+            let writer = try CSVWriter(stream: stream)
+            try writer.write(row: ["Kern First", "Kern Second", "Kern Width"])
+            let unitsPerEm = self.fond.unitsPerEm(for: style)
+            for kernPair in kernPairs {
+                guard let firstGlyphName = config.resolveGlyphNames ? self.fond.glyphName(for: kernPair.kernFirst) : String(kernPair.kernFirst) else {
+                    continue
+                }
+                guard let secondGlyphName = config.resolveGlyphNames ? self.fond.glyphName(for: kernPair.kernSecond) : String(kernPair.kernSecond) else {
+                    continue
+                }
+                /* In cases where this FOND and kern pairs reference a PostScript outline font rather than TT,
+                   I'd normally parse that Mac PostScript font file and check to make sure its encoding agrees
+                   with the glyph names the FOND's encoding assigned, but, that's a bit outside the scope
+                   of this editor. */
+                let value: Int16 = config.scaleToUnitsPerEm ? Int16(lround(Fixed4Dot12ToDouble(kernPair.kernWidth) * Double(unitsPerEm.rawValue))) : kernPair.kernWidth
+                try writer.write(row: [firstGlyphName, secondGlyphName, String(value)])
+            }
+            writer.stream.close()
+        } catch {
+             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+        }
+        return nil
+    }
+
     init(_ reader: BinaryDataReader, fond: FOND) throws {
         style = try reader.read()
         numKerns = try reader.read()
