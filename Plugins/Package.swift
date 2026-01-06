@@ -39,6 +39,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-collections.git", "1.0.0"..<"2.0.0"),
+        .package(url: "https://github.com/yaslab/CSV.swift.git", "2.4.3"..<"3.0.0"),
 //        .package(url: "https://github.com/HexFiend/HexFiend.git", branch: "package"),
         .package(url: "https://github.com/pointfreeco/swift-parsing.git", "0.14.0"..<"0.15.0")
     ],
@@ -64,7 +65,7 @@ let package = Package(
                            .product(name: "OrderedCollections", package: "swift-collections")]),
         .target(name: "FONDEditor",
             dependencies: [.target(name: "RFSupport"),
-                           .product(name: "CSV", package:"CSV")]),
+                           .product(name: "CSV", package:"CSV.swift")]),
         .target(
             name: "MenuEditor",
             dependencies: [.target(name: "RFSupport")]),
