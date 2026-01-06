@@ -51,7 +51,7 @@ extension StyleMappingTable {
     }
 
     func postScriptNameForFont(with style: MacFontStyle) -> String? {
-        let entryIndex = indexes[Int(CompressMacFontStyle(fontStyle: style).rawValue)]
+        let entryIndex = indexes[Int(style.compressed().rawValue)]
         return fontNameSuffixSubtable?.postScriptNameForFontEntry(at: entryIndex)
     }
 

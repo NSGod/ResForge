@@ -142,6 +142,22 @@ struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible {
         return description
     }
 
+    /// I believe this is since `underline` wouldn't affect any calculated PostScript name?
+    /// This is used when getting the PostScript name of the font
+    func compressed() -> MacFontStyle {
+        var rawValue: UInt16 = 0
+        if self.contains(.bold) { rawValue += 1 }
+        if self.contains(.italic) { rawValue += 2 }
+        if self.contains(.outline) { rawValue += 4 }
+        if self.contains(.shadow) { rawValue += 8 }
+        if self.contains(.condensed) {
+            rawValue += 16
+        } else if self.contains(.extended) {
+            rawValue += 32
+        }
+        return MacFontStyle(rawValue: rawValue)
+    }
+
     static func == (lhs: MacFontStyle, rhs: MacFontStyle) -> Bool {
         return lhs.rawValue == rhs.rawValue
     }
@@ -149,21 +165,6 @@ struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible {
     static func < (lhs: MacFontStyle, rhs: MacFontStyle) -> Bool {
         return lhs.rawValue < rhs.rawValue
     }
-}
-
-/// I believe this is since `underline` wouldn't affect any calculated PostScript name?
-func CompressMacFontStyle(fontStyle: MacFontStyle) -> MacFontStyle {
-    var rawValue: UInt16 = 0
-    if fontStyle.contains(.bold) { rawValue += 1 }
-    if fontStyle.contains(.italic) { rawValue += 2 }
-    if fontStyle.contains(.outline) { rawValue += 4 }
-    if fontStyle.contains(.shadow) { rawValue += 8 }
-    if fontStyle.contains(.condensed) {
-        rawValue += 16
-    } else if fontStyle.contains(.extended) {
-        rawValue += 32
-    }
-    return MacFontStyle(rawValue: rawValue)
 }
 
 /********  Font Family tables component *********/
