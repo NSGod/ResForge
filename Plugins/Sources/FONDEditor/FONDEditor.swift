@@ -18,13 +18,20 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
     }
     public let resource:    Resource
     private let manager:    RFEditorManager
-    var fond:               FOND?
+    @objc var fond:                 FOND?
+
+    @objc var kernPairs:            [KernTreeNode] = []
+    @objc var glyphWidths:          [WidthTreeNode] = []
+
+    var glyphNameEntries:           [GlyphNameEntry] = []
+    var effectiveGlyphNameEntries:  [GlyphNameEntry] = []
+
 
     @IBOutlet weak var tableView:                   NSTableView!
     @IBOutlet weak var flagsBitfieldControl:        BitfieldControl!
     @IBOutlet weak var fontClassBitfieldControl:    BitfieldControl!
-    
-    
+    @IBOutlet weak var kernTableOutlineView:        NSOutlineView!
+
     @IBAction func changeFlags(_ sender: Any) {
         
     }
@@ -42,7 +49,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
         self.manager = manager
 //        self.fond = try FOND(resource.data)
         do {
-            self.fond = try FOND(resource.data, resource: self.resource)
+            fond = try FOND(resource.data, resource: self.resource)
 //            super.init(window: nil)
 
         } catch {

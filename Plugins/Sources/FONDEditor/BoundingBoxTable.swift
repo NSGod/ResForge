@@ -13,7 +13,7 @@ import RFSupport
 
 final class BoundingBoxTable: ResourceNode {
     var numberOfEntries:    Int16                      // number of entries - 1
-    var entries:            [BoundingBoxTableEntry]
+    @objc var entries:      [BoundingBoxTableEntry]
 
     override var length:    Int {
         return MemoryLayout<Int16>.size + entries.count * BoundingBoxTableEntry.length
@@ -32,22 +32,25 @@ final class BoundingBoxTable: ResourceNode {
 
 
 final class BoundingBoxTableEntry: ResourceNode {
-    var fontStyle:  MacFontStyle
-    var left:       Fixed4Dot12
-    var bottom:     Fixed4Dot12
-    var right:      Fixed4Dot12
-    var top:        Fixed4Dot12
+    var style:              MacFontStyle
+    var left:               Fixed4Dot12
+    var bottom:             Fixed4Dot12
+    var right:              Fixed4Dot12
+    var top:                Fixed4Dot12
+
+    @objc var objcStyle:    MacFontStyle.RawValue
 
     override class var length: Int {
         return MemoryLayout<Int16>.size * 5 // 10
     }
 
     init(_ reader: BinaryDataReader) throws {
-        fontStyle = try reader.read()
+        style = try reader.read()
         left = try reader.read()
         bottom = try reader.read()
         right = try reader.read()
         top = try reader.read()
+        objcStyle = style.rawValue
         super.init()
     }
 }

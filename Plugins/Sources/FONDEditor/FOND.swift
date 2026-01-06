@@ -13,50 +13,54 @@ class FOND: NSObject {
     static let fontFamilyRecordLength   = 52
 
     // FontFamilyRecord is the first 52 bytes of the FOND
-    var ffFlags:        FontFamilyFlags     // flags for family
-    var famID:          ResID               // family ID number
-    var firstChar:      Int16               // ASCII code of 1st character
-    var lastChar:       Int16               // ASCII code of last character
-    var ascent:         Fixed4Dot12         // maximum ascent for 1pt font;  Fixed 4.12
-    var descent:        Fixed4Dot12         // maximum descent for 1pt font; Fixed 4.12
-    var leading:        Fixed4Dot12         // maximum leading for 1pt font; Fixed 4.12
-    var widMax:         Fixed4Dot12         // maximum width for 1pt font;   Fixed 4.12
+    var ffFlags:                FontFamilyFlags     // flags for family
 
-    var wTabOff:        Int32               /* offset to family glyph-width table from beginning of font family
-                                                resource to beginning of table, in bytes */
-    var kernOff:        Int32               /* offset to kerning table from beginning of font family resource to
-                                                beginning of table, in bytes */
-    var styleOff:       Int32               /* offset to style mapping table from beginning of font family
-                                                resource to beginning of table, in bytes */
+    @objc var objcFFFlags:      FontFamilyFlags.RawValue
 
-    var ewSPlain:       Fixed4Dot12         // style property info; extra widths for different styles
-    var ewSBold:        Fixed4Dot12
-    var ewSItalic:      Fixed4Dot12
-    var ewSUnderline:   Fixed4Dot12
-    var ewSOutline:     Fixed4Dot12
-    var ewSShadow:      Fixed4Dot12
-    var ewSCondensed:   Fixed4Dot12
-    var ewSExtended:    Fixed4Dot12
-    var ewSUnused:      Fixed4Dot12
+    @objc var famID:            ResID               // family ID number
+    @objc var firstChar:        Int16               // ASCII code of 1st character
+    @objc var lastChar:         Int16               // ASCII code of last character
+    @objc var ascent:           Fixed4Dot12         // maximum ascent for 1pt font;  Fixed 4.12
+    @objc var descent:          Fixed4Dot12         // maximum descent for 1pt font; Fixed 4.12
+    @objc var leading:          Fixed4Dot12         // maximum leading for 1pt font; Fixed 4.12
+    @objc var widMax:           Fixed4Dot12         // maximum width for 1pt font;   Fixed 4.12
 
-    var intl0:          Int16               // for international use
-    var intl1:          Int16               // for international use
+    @objc var wTabOff:          Int32               /* offset to family glyph-width table from beginning of font family
+                                                  resource to beginning of table, in bytes */
+    @objc var kernOff:          Int32               /* offset to kerning table from beginning of font family resource to
+                                                  beginning of table, in bytes */
+    @objc var styleOff:         Int32               /* offset to style mapping table from beginning of font family
+                                                  resource to beginning of table, in bytes */
 
-    var ffVersion:      FontFamilyVersion   // version number
+    @objc var ewSPlain:         Fixed4Dot12         // style property info; extra widths for different styles
+    @objc var ewSBold:          Fixed4Dot12
+    @objc var ewSItalic:        Fixed4Dot12
+    @objc var ewSUnderline:     Fixed4Dot12
+    @objc var ewSOutline:       Fixed4Dot12
+    @objc var ewSShadow:        Fixed4Dot12
+    @objc var ewSCondensed:     Fixed4Dot12
+    @objc var ewSExtended:      Fixed4Dot12
+    @objc var ewSUnused:        Fixed4Dot12
 
-    var fontAssociationTable:   FontAssociationTable
+    @objc var intl0:            Int16               // for international use
+    @objc var intl1:            Int16               // for international use
 
-    var countOfFontAssociationTableEntries: Int {
+    var ffVersion:              FontFamilyVersion   // version number
+    @objc var objcFFVersion:    FontFamilyVersion.RawValue
+
+    @objc var fontAssociationTable:   FontAssociationTable
+
+    @objc var countOfFontAssociationTableEntries: Int {
         return fontAssociationTable.entries.count
     }
 
-    unowned var resource:       Resource
-    private(set) var reader:    BinaryDataReader
-    var remainingTableData:     Data
+    unowned var resource:           Resource
+    private(set) var reader:        BinaryDataReader
+    @objc var remainingTableData:   Data
 
-    var offsetTable:            OffsetTable?
+    @objc var offsetTable:            OffsetTable?
 
-    lazy var boundingBoxTable:  BoundingBoxTable? = {
+    @objc lazy var boundingBoxTable:  BoundingBoxTable? = {
         do {
             try calculateOffsetsIfNeeded()
             // can only have a Bounding Box table if we have an offset table to specify its offset
@@ -106,7 +110,7 @@ class FOND: NSObject {
         return nil
     }()
 
-    lazy var kernTable:         KernTable? = {
+    @objc lazy var kernTable:         KernTable? = {
         if kernOff == 0 { return nil }
         do {
             try calculateOffsetsIfNeeded()
@@ -171,6 +175,7 @@ class FOND: NSObject {
         self.resource = resource
 
         ffFlags         = try reader.read()
+        objcFFFlags     = ffFlags.rawValue
         famID           = try reader.read()
         firstChar       = try reader.read()
         lastChar        = try reader.read()
@@ -195,6 +200,7 @@ class FOND: NSObject {
         intl0           = try reader.read()
         intl1           = try reader.read()
         ffVersion       = try reader.read()
+        objcFFVersion   = ffVersion.rawValue
 
         // FIXME: make sure famID == this FOND's resource ID, otherwise repair it
         if self.resource.id != famID {

@@ -13,8 +13,8 @@ import RFSupport
 
 final class FontAssociationTable: ResourceNode {
     var numberOfEntries:    Int16                           // number of entries - 1
-    var entries:            [FontAssociationTableEntry]
-    
+    @objc var entries:      [FontAssociationTableEntry]
+
     override var length:    Int {
         return entries.count * FontAssociationTableEntry.length
     }
@@ -50,9 +50,11 @@ final class FontAssociationTable: ResourceNode {
 
 
 final class FontAssociationTableEntry: ResourceNode, Comparable {
-    var fontPointSize:  Int16
-    var fontStyle:      MacFontStyle
-    var fontID:         ResID
+    @objc var fontPointSize:    Int16
+    var fontStyle:              MacFontStyle
+    @objc var fontID:           ResID
+
+    @objc var objcFontStyle:    MacFontStyle.RawValue
 
     override class var length: Int {
         return MemoryLayout<Int16>.size + MemoryLayout<MacFontStyle>.size + MemoryLayout<ResID>.size // 6
@@ -62,6 +64,7 @@ final class FontAssociationTableEntry: ResourceNode, Comparable {
         fontPointSize = try reader.read()
         fontStyle = try reader.read()
         fontID = try reader.read()
+        objcFontStyle = fontStyle.rawValue
         super.init()
     }
 

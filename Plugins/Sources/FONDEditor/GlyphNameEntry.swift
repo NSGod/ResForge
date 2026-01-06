@@ -8,7 +8,7 @@
 import Foundation
 
 // for display
-class GlyphNameEntry: NSObject, Comparable {
+final class GlyphNameEntry: NSObject, Comparable {
     let charCode:       CharCode
     let uv:             UVBMP
     let character:      String      // glyph

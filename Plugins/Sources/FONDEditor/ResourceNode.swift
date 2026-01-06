@@ -8,9 +8,9 @@
 import Foundation
 
 class ResourceNode: NSObject {
-    private(set) var length:    Int = 0
+    @objc private(set) var length:  Int = 0
 
-    class var length:           Int {
+    class var length:               Int {
         return NSNotFound
     }
 }

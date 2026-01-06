@@ -88,7 +88,7 @@ struct FontFamilyFlags: OptionSet, Hashable {
     $0002    This record may contain the offset and bounding-box tables.
     $0003    This record definitely contains the offset and bounding-box tables.
  */
-enum FontFamilyVersion : UInt16 {
+enum FontFamilyVersion : UInt16, RawRepresentable {
     case version0    = 0,
          version1,
          version2,
@@ -96,10 +96,12 @@ enum FontFamilyVersion : UInt16 {
 }
 
 
-struct MacFontStyle: OptionSet, Hashable, Comparable {
+struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible {
     let rawValue: UInt16
 
-    static let plain            = Self([])
+    static let regular          = Self([])
+    static let plain            = Self.regular
+    static let normal           = Self.regular
     static let bold             = Self(rawValue: 1 << 0)
     static let italic           = Self(rawValue: 1 << 1)
     static let underline        = Self(rawValue: 1 << 2)
@@ -110,6 +112,34 @@ struct MacFontStyle: OptionSet, Hashable, Comparable {
 
     init(rawValue: UInt16) {
         self.rawValue = rawValue
+    }
+
+    var styleDescription: String {
+        switch self {
+            case .regular, .plain, .normal: return NSLocalizedString("Regular", comment: "")
+            case .bold: return NSLocalizedString("Bold", comment: "")
+            case .italic: return NSLocalizedString("Italic", comment: "")
+            case .underline: return NSLocalizedString("Underline", comment: "")
+            case .outline: return NSLocalizedString("Outline", comment: "")
+            case .shadow: return NSLocalizedString("Shadow", comment: "")
+            case .condensed: return NSLocalizedString("Condensed", comment: "")
+            case .extended: return NSLocalizedString("Extended", comment: "")
+            default: return NSLocalizedString("Unknown", comment: "")
+        }
+    }
+
+    var description: String {
+        if self == .regular { return styleDescription }
+        var description = ""
+        var i = Self.bold.rawValue
+        while i <= Self.extended.rawValue {
+            let style = MacFontStyle(rawValue: i)
+            if self.contains(style) {
+                description = description.isEmpty ? style.styleDescription : "\(description) \(style.styleDescription)"
+            }
+            i *= 2
+        }
+        return description
     }
 
     static func == (lhs: MacFontStyle, rhs: MacFontStyle) -> Bool {

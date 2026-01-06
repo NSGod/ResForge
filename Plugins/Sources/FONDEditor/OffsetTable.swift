@@ -12,10 +12,10 @@ import RFSupport
 // will be displayed in UI, so need NSObject subclass?
 
 final class OffsetTable: ResourceNode {
-    var numberOfEntries:    Int16               // number of entries - 1
-    var entries:            [OffsetTableEntry]
+    var numberOfEntries:        Int16               // number of entries - 1
+    @objc var entries:          [OffsetTableEntry]
 
-    override var length: Int {
+    @objc override var length:  Int {
         return entries.count * OffsetTableEntry.length
     }
 
@@ -32,7 +32,7 @@ final class OffsetTable: ResourceNode {
 
 
 final class OffsetTableEntry: ResourceNode {
-    var offsetOfTable: Int32    // number of bytes from START OF THE OFFSET TABLE to the start of the table
+    @objc var offsetOfTable: Int32    // number of bytes from START OF THE OFFSET TABLE to the start of the table
 
     init(_ reader: BinaryDataReader) throws {
         offsetOfTable = try reader.read()
