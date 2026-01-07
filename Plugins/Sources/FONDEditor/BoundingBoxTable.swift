@@ -31,10 +31,7 @@ final class BoundingBoxTable: ResourceNode {
 
 
 final class BoundingBoxTableEntry: ResourceNode {
-    var style:              MacFontStyle {
-        didSet { objcStyle = style.rawValue }
-    }
-
+    var style:              MacFontStyle
     var left:               Fixed4Dot12
     var bottom:             Fixed4Dot12
     var right:              Fixed4Dot12

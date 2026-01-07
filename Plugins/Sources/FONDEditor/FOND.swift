@@ -13,13 +13,7 @@ class FOND: NSObject {
     static let fontFamilyRecordLength   = 52
 
     // FontFamilyRecord is the first 52 bytes of the FOND
-    var ffFlags:                FontFamilyFlags {   // flags for family
-        didSet { objcFFFlags = ffFlags.rawValue }
-    }
-    @objc var objcFFFlags:      FontFamilyFlags.RawValue {
-        didSet { ffFlags = FontFamilyFlags(rawValue: objcFFFlags) }
-    }
-
+    var ffFlags:                FontFamilyFlags     // flags for family
     @objc var famID:            ResID               // family ID number
     @objc var firstChar:        Int16               // ASCII code of 1st character
     @objc var lastChar:         Int16               // ASCII code of last character
@@ -48,13 +42,11 @@ class FOND: NSObject {
     @objc var intl0:            Int16               // for international use
     @objc var intl1:            Int16               // for international use
 
-    var ffVersion:              FontFamilyVersion { // version number
-        didSet { objcFFVersion = ffVersion.rawValue }
-    }
+    var ffVersion:              FontFamilyVersion   // version number
+
+    @objc var objcFFFlags:      FontFamilyFlags.RawValue { didSet { ffFlags = FontFamilyFlags(rawValue: objcFFFlags) } }
     @objc var objcFFVersion:    FontFamilyVersion.RawValue {
-        didSet {
-            ffVersion = FontFamilyVersion(rawValue: objcFFVersion) ?? .version1
-        }
+        didSet { ffVersion = FontFamilyVersion(rawValue: objcFFVersion) ?? .version1 }
     }
 
     @objc var fontAssociationTable:     FontAssociationTable
@@ -87,7 +79,7 @@ class FOND: NSObject {
         return nil
     }()
 
-    lazy var widthTable:                WidthTable? = {
+    @objc lazy var widthTable:          WidthTable? = {
         if wTabOff == 0 { return nil }
         do {
             try calculateOffsetsIfNeeded()

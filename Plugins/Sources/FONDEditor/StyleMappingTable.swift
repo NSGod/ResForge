@@ -11,9 +11,7 @@ import RFSupport
 
 // Style-mapping table : 58 bytes
 final class StyleMappingTable: ResourceNode {
-    var fontClass:                          FontClass { // UInt16
-        didSet { objcFontClass = fontClass.rawValue }
-    }
+    var fontClass:                          FontClass   // UInt16
     var offset:                             Int32       // offset from the start of this table to the glyph-name-encoding subtable component
     var reserved:                           Int32
     var indexes:                            [UInt8]     // [48]
