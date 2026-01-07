@@ -9,9 +9,9 @@ import Cocoa
 
 // for display
 final class KernPairNode: NSObject {
-    let kernFirstGlyphName:     String
-    let kernSecondGlyphName:    String
-    let kernWidth:              Fixed4Dot12
+    @objc let kernFirstGlyphName:     String
+    @objc let kernSecondGlyphName:    String
+    @objc let kernWidth:              Fixed4Dot12
 
     init(with kernPair: KernPair, fond: FOND) {
         kernFirstGlyphName = fond.glyphName(for: kernPair.kernFirst) ?? "???"

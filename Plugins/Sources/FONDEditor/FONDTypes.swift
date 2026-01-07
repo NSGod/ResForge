@@ -199,17 +199,17 @@ struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible {
 struct FontClass: OptionSet, Hashable {
     let rawValue: UInt16
 
-    static let nameNeedsCoordinating         = Self(rawValue: 1)
-    static let reqMacVectorReEncoding        = Self(rawValue: 2)
-    static let simOutByPaintType             = Self(rawValue: 4)
-    static let noSimOutBySmearing            = Self(rawValue: 8)
-    static let noSimBoldBySmearing           = Self(rawValue: 16)
-    static let simBoldBySize                 = Self(rawValue: 32)
-    static let noSimItalic                   = Self(rawValue: 64)
-    static let noSimCondensed                = Self(rawValue: 128)
-    static let noSimExtended                 = Self(rawValue: 256)
-    static let reqOtherVectorReEncoding      = Self(rawValue: 512)
-    static let noAddSpacing                  = Self(rawValue: 1024)
+    static let nameNeedsCoordinating         = Self(rawValue: 1 << 0)
+    static let reqMacVectorReEncoding        = Self(rawValue: 1 << 1)
+    static let simOutByPaintType             = Self(rawValue: 1 << 2)
+    static let noSimOutBySmearing            = Self(rawValue: 1 << 3)
+    static let noSimBoldBySmearing           = Self(rawValue: 1 << 4)
+    static let simBoldBySize                 = Self(rawValue: 1 << 5)
+    static let noSimItalic                   = Self(rawValue: 1 << 6)
+    static let noSimCondensed                = Self(rawValue: 1 << 7)
+    static let noSimExtended                 = Self(rawValue: 1 << 8)
+    static let reqOtherVectorReEncoding      = Self(rawValue: 1 << 9)
+    static let noAddSpacing                  = Self(rawValue: 1 << 10)
 
     init(rawValue: UInt16) {
         self.rawValue = rawValue

@@ -17,10 +17,13 @@ final class KernTable: FONDResourceNode {
     var hasOutOfRangeCharCodes:         Bool = false
     private var fontStylesToEntries:    [MacFontStyle: KernTableEntry]
 
-    override var length:                Int {
-        var length = MemoryLayout<Int16>.size
-        for entry in self.entries { length += entry.length }
-        return length
+    @objc override var length:          Int {
+        get {
+            var length = MemoryLayout<Int16>.size
+            for entry in self.entries { length += entry.length }
+            return length
+        }
+        set {}
     }
 
     init(_ reader: BinaryDataReader, fond: FOND) throws {
@@ -57,7 +60,8 @@ class KernTableEntry: FONDResourceNode {
     var hasOutOfRangeCharCodes: Bool = false
 
     override var length: Int {
-        return MemoryLayout<UInt16>.size * 2 + Int(numKerns) * KernPair.length
+        get { return MemoryLayout<UInt16>.size * 2 + Int(numKerns) * KernPair.length }
+        set {}
     }
 
     public struct KernExportConfig {
@@ -147,6 +151,7 @@ struct KernPair: Equatable, CustomStringConvertible {
         return kernFirst < 0x20 || kernSecond < 0x20 || kernFirst == 0x7F || kernSecond == 0x7F
     }
 
+    /// bare-bones `description` that doesn't try to resolve glyph names or factor in unitsPerEm
     var description: String {
         return "\(kernFirst), \(kernSecond), \(Fixed4Dot12ToDouble(kernWidth))"
     }

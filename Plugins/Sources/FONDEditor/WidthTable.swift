@@ -16,9 +16,12 @@ final class WidthTable: FONDResourceNode {
     var entries:            [WidthTableEntry]
 
     override var length: Int {
+        get {
             var length = MemoryLayout<Int16>.size
             for entry in self.entries { length += entry.length }
             return length
+        }
+        set {}
     }
 
     init(_ reader: BinaryDataReader, fond: FOND) throws {
@@ -38,7 +41,8 @@ final class WidthTableEntry: FONDResourceNode {
     var widths:             [Fixed4Dot12]
 
     override var length: Int {
-        return MemoryLayout<MacFontStyle>.size + widths.count * MemoryLayout<Fixed4Dot12>.size //
+        get { return MemoryLayout<MacFontStyle>.size + widths.count * MemoryLayout<Fixed4Dot12>.size }
+        set {}
     }
 
     init(_ reader: BinaryDataReader, fond: FOND) throws {

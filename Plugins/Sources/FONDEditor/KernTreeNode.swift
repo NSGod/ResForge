@@ -40,7 +40,7 @@ final class KernTreeNode: NSTreeNode, Comparable {
         return .orderedSame
     }
 
-    static func <(lhs: KernTreeNode, rhs: KernTreeNode) -> Bool {
+    static func < (lhs: KernTreeNode, rhs: KernTreeNode) -> Bool {
         return lhs.localizedStandardCompare(rhs) == .orderedAscending
     }
 }

@@ -9,8 +9,8 @@ import Cocoa
 
 // for display
 final class GlyphWidthNode: NSObject {
-    let glyphName:  String
-    let glyphWidth: Fixed4Dot12
+    @objc let glyphName:  String
+    @objc let glyphWidth: Fixed4Dot12
 
     init(glyphName: String, glyphWidth: Fixed4Dot12) {
         self.glyphName = glyphName

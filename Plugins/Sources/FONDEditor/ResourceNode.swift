@@ -7,10 +7,10 @@
 
 import Foundation
 
-class ResourceNode: NSObject {
-    @objc private(set) var length:  Int = 0
+public class ResourceNode: NSObject {
+    @objc public var length:    Int = 0
 
-    class var length:               Int {
+    class var length:           Int {
         return NSNotFound
     }
 }

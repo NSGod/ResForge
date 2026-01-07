@@ -22,17 +22,15 @@
 ///
 ///       While indexes 1, 9, 10, 11, & 12 are all valid (Pascal) strings, 2-8 aren't really
 ///       strings in the usual sense. Instead, they describe how to generate the
-///       names for different styles. For example, Index 2 describes how to generate
-///       the Bold style PostScript name:
+///       names for different styles (I'll refer to them hereafter as "index entry strings").
+///       For example, Index 2 describes how to generate the Bold style PostScript name:
 ///                 0x02 is the Pascal string length byte, so 2 more bytes follow
 ///                 0x09 is a reference to index 9, or "-"
 ///                 0x0A is a reference to index 10, or "Bold"
 ///       So, the full PostScript name for the bold style is ExampleFont-Bold
-///
 
 import Foundation
 import RFSupport
-
 
 struct FontNameSuffixSubtable {
     var stringCount:                            Int16

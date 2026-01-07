@@ -13,9 +13,12 @@ class FOND: NSObject {
     static let fontFamilyRecordLength   = 52
 
     // FontFamilyRecord is the first 52 bytes of the FOND
-    var ffFlags:                FontFamilyFlags     // flags for family
-
-    @objc var objcFFFlags:      FontFamilyFlags.RawValue
+    var ffFlags:                FontFamilyFlags {   // flags for family
+        didSet { objcFFFlags = ffFlags.rawValue }
+    }
+    @objc var objcFFFlags:      FontFamilyFlags.RawValue {
+        didSet { ffFlags = FontFamilyFlags(rawValue: objcFFFlags) }
+    }
 
     @objc var famID:            ResID               // family ID number
     @objc var firstChar:        Int16               // ASCII code of 1st character
@@ -26,11 +29,11 @@ class FOND: NSObject {
     @objc var widMax:           Fixed4Dot12         // maximum width for 1pt font;   Fixed 4.12
 
     @objc var wTabOff:          Int32               /* offset to family glyph-width table from beginning of font family
-                                                  resource to beginning of table, in bytes */
+                                                       resource to beginning of table, in bytes */
     @objc var kernOff:          Int32               /* offset to kerning table from beginning of font family resource to
-                                                  beginning of table, in bytes */
+                                                       beginning of table, in bytes */
     @objc var styleOff:         Int32               /* offset to style mapping table from beginning of font family
-                                                  resource to beginning of table, in bytes */
+                                                       resource to beginning of table, in bytes */
 
     @objc var ewSPlain:         Fixed4Dot12         // style property info; extra widths for different styles
     @objc var ewSBold:          Fixed4Dot12
@@ -45,22 +48,28 @@ class FOND: NSObject {
     @objc var intl0:            Int16               // for international use
     @objc var intl1:            Int16               // for international use
 
-    var ffVersion:              FontFamilyVersion   // version number
-    @objc var objcFFVersion:    FontFamilyVersion.RawValue
+    var ffVersion:              FontFamilyVersion { // version number
+        didSet { objcFFVersion = ffVersion.rawValue }
+    }
+    @objc var objcFFVersion:    FontFamilyVersion.RawValue {
+        didSet {
+            ffVersion = FontFamilyVersion(rawValue: objcFFVersion) ?? .version1
+        }
+    }
 
-    @objc var fontAssociationTable:   FontAssociationTable
+    @objc var fontAssociationTable:     FontAssociationTable
 
     @objc var countOfFontAssociationTableEntries: Int {
         return fontAssociationTable.entries.count
     }
 
-    unowned var resource:           Resource
-    private(set) var reader:        BinaryDataReader
-    @objc var remainingTableData:   Data
+    unowned var resource:               Resource
+    private(set) var reader:            BinaryDataReader
+    @objc var remainingTableData:       Data
 
-    @objc var offsetTable:            OffsetTable?
+    @objc var offsetTable:              OffsetTable?
 
-    @objc lazy var boundingBoxTable:  BoundingBoxTable? = {
+    @objc lazy var boundingBoxTable:    BoundingBoxTable? = {
         do {
             try calculateOffsetsIfNeeded()
             // can only have a Bounding Box table if we have an offset table to specify its offset
@@ -78,7 +87,7 @@ class FOND: NSObject {
         return nil
     }()
 
-    lazy var widthTable:        WidthTable? = {
+    lazy var widthTable:                WidthTable? = {
         if wTabOff == 0 { return nil }
         do {
             try calculateOffsetsIfNeeded()
@@ -92,7 +101,7 @@ class FOND: NSObject {
         return nil
     }()
 
-    lazy var styleMappingTable: StyleMappingTable? = {
+    @objc lazy var styleMappingTable:   StyleMappingTable? = {
         if styleOff == 0 { return nil }
         do {
             try calculateOffsetsIfNeeded()
@@ -101,7 +110,7 @@ class FOND: NSObject {
                 styleMappingTable = try StyleMappingTable(reader, range:styleMappingRange)
                 reader.popPosition()
             } else {
-                NSLog("\(type(of: self)).\(#function)() *** ERROR: could not determine styleMappingRange!!")
+                NSLog("\(type(of: self)).\(#function)() *** ERROR: could not determine styleMappingRange!")
             }
             return styleMappingTable
         } catch {
@@ -138,7 +147,7 @@ class FOND: NSObject {
         return nil
     }()
 
-    lazy var encoding:          MacEncoding = {
+    lazy var encoding:              MacEncoding = {
         // FIXME: improve non-MacRoman encodings
         let scriptID = MacEncoding.macScriptID(from: ResID(resource.id))
         NSLog("\(type(of: self)).\(#function)() resID: \(resource.id), scriptID: \(scriptID)")
@@ -221,14 +230,23 @@ class FOND: NSObject {
     }
 
     func unitsPerEm(for fontStyle: MacFontStyle) -> UnitsPerEm {
-        /* here we'll assume that if there's a mix of entries for both TrueType
+        /* Here we'll assume that if there's a mix of entries for both TrueType
          (fontPointSize of 0) and Bitmap fonts, that the bitmap fonts are merely for
          screen display and don't reference possible PostScript outline fonts.
+
+         Currently, this value for UnitsPerEm is really just a best guess.
+
+         For PS fonts, if we wanted to get a more accurate measurement, we'd parse the
+         Mac PostScript Type 1 outline font (file type 'LWFN' w/ 'POST' resources) which holds the
+         PFA/PFB font. Inside there is the actual abfTopDict->abfSupplement->UnitsPerEm value,
+         though parsing that is a bit beyond the scope of this editor.
 
          For TT fonts, if we wanted to get a more accurate measurement, we'd look
          at the actual unitsPerEm value in the 'sfnt''s 'head' table, but that's kind of
          outside the scope of this editor. Moreover, an 'sfnt' would likely already have
-         a 'kern' table which would take precedence over kerns defined in the 'FOND'. */
+         a 'kern' or 'GPOS' table, the kern pairs of which would take precedence over
+         kerns defined here in the 'FOND'. (The data in an 'sfnt' entry is exactly what a
+         Windows .ttf contains: see my answer here https://stackoverflow.com/a/7418915/277952) */
         for entry in fontAssociationTable.entries {
             if entry.fontStyle == fontStyle && entry.fontPointSize == 0 {
                 return .trueTypeStandard
@@ -281,7 +299,7 @@ class FOND: NSObject {
     func shiftOffsetsAndRanges(by deltaLength: Int) {
         do {
             try calculateOffsetsIfNeeded()
-            // NOTE: the table offsets could be empty (== 0) so check before modifying their values
+            // NOTE: the table offsets could be empty (== 0), so check before modifying their values
             if wTabOff > 0 {
                 wTabOff += Int32(deltaLength)
                 if var range = offsetTypesToRanges[.widthTable] {

@@ -16,7 +16,8 @@ final class FontAssociationTable: ResourceNode {
     @objc var entries:      [FontAssociationTableEntry]
 
     override var length:    Int {
-        return entries.count * FontAssociationTableEntry.length
+        get { return entries.count * FontAssociationTableEntry.length }
+        set {}
     }
 
     init(_ reader: BinaryDataReader) throws {

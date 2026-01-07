@@ -9,12 +9,11 @@ import Foundation
 
 // for display
 final class GlyphNameEntry: NSObject, Comparable {
-    let charCode:       CharCode
-    let uv:             UVBMP
-    let character:      String      // glyph
-    let charName:       String      // UNICODE NAME
-    let glyphName:      String      // Adobe Glyph List glyph name
-
+    @objc let charCode:       CharCode
+    @objc let uv:             UVBMP
+    @objc let character:      String      // glyph
+    @objc let charName:       String      // UNICODE NAME
+    @objc let glyphName:      String      // Adobe Glyph List glyph name
 
     init(charCode: CharCode, glyphName: String) {
         self.charCode = charCode

@@ -25,16 +25,11 @@ import RFSupport
             This section beginning on page 4-105, provides an example of using this table.
  */
 
-struct GlyphNameEncodingSubtable {
+final class GlyphNameEncodingSubtable: ResourceNode {
     var numberOfEntries:        Int16               // actual number of entries
 
     var charCodesToGlyphNames:  [CharCode: String] = [:]
 
-    private(set)var length:     Int
-}
-
-extension GlyphNameEncodingSubtable {
-    
     init(_ reader: BinaryDataReader) throws {
         let before = reader.position
         numberOfEntries = try reader.read()
@@ -43,11 +38,11 @@ extension GlyphNameEncodingSubtable {
             let glyphName = try reader.readPString()
             charCodesToGlyphNames[charCode] = glyphName
         }
+        super.init()
         length = before - reader.position
     }
 
     func glyphName(for charCode: CharCode) -> String? {
         return charCodesToGlyphNames[charCode]
     }
-
 }

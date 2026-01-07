@@ -9,14 +9,13 @@
 import Foundation
 import RFSupport
 
-// will be displayed in UI, so need NSObject subclass?
-
 final class OffsetTable: ResourceNode {
     var numberOfEntries:        Int16               // number of entries - 1
     @objc var entries:          [OffsetTableEntry]
 
     @objc override var length:  Int {
-        return entries.count * OffsetTableEntry.length
+        get { return entries.count * OffsetTableEntry.length }
+        set {}
     }
 
     init(_ reader: BinaryDataReader) throws {

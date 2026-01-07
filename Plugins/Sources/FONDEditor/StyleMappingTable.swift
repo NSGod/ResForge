@@ -10,23 +10,29 @@ import Foundation
 import RFSupport
 
 // Style-mapping table : 58 bytes
-struct StyleMappingTable {
-    var fontClass:                  FontClass   // UInt16
-    var offset:                     Int32       // offset from the start of this table to the glyph-name-encoding subtable component
-    var reserved:                   Int32
-    var indexes:                    [UInt8]     // [48]
+final class StyleMappingTable: ResourceNode {
+    var fontClass:                          FontClass { // UInt16
+        didSet { objcFontClass = fontClass.rawValue }
+    }
+    var offset:                             Int32       // offset from the start of this table to the glyph-name-encoding subtable component
+    var reserved:                           Int32
+    var indexes:                            [UInt8]     // [48]
 
-    var fontNameSuffixSubtable:     FontNameSuffixSubtable?
-    var glyphNameEncodingSubtable:  GlyphNameEncodingSubtable?
+    @objc var objcFontClass:                FontClass.RawValue {
+        didSet { fontClass = .init(rawValue: objcFontClass) }
+    }
 
-    static let length = MemoryLayout<FontClass>.size + MemoryLayout<Int32>.size * 2 + 48 // 58 bytes
-}
+    var fontNameSuffixSubtable:             FontNameSuffixSubtable?
+    @objc var glyphNameEncodingSubtable:    GlyphNameEncodingSubtable?
 
-extension StyleMappingTable {
+    class override var length: Int {
+        MemoryLayout<FontClass>.size + MemoryLayout<Int32>.size * 2 + 48  // 58 bytes
+    }
 
     init(_ reader: BinaryDataReader, range knownRange: NSRange) throws {
         let origOffset = reader.position
         fontClass = try reader.read()
+        objcFontClass = fontClass.rawValue
         offset = try reader.read()
         reserved = try reader.read()
         indexes = []
@@ -54,5 +60,5 @@ extension StyleMappingTable {
         let entryIndex = indexes[Int(style.compressed().rawValue)]
         return fontNameSuffixSubtable?.postScriptNameForFontEntry(at: entryIndex)
     }
-
 }
+
