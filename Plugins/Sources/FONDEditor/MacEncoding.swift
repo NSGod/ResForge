@@ -35,7 +35,7 @@ struct MacEncoding {
     static let macFarsi                 = MacEncoding(name: "[4] Mac Farsi", encoding: macFarsiEncoding)
     static let macGujarati              = MacEncoding(name: "[11] Mac Gujarati", encoding: macGujaratiEncoding)
     static let macGurmukhi              = MacEncoding(name: "[10] Mac Gurmukhi", encoding: macGurmukhiEncoding)
-    static let macZapfDingbats          = MacEncoding(name: "[0] Mac Zapf Dingbats", encoding: macZapfDingbatsEncoding)
+    static let macDingbats              = MacEncoding(name: "[0] Mac Dingbats", encoding: macDingbatsEncoding)
     static let macSymbol                = MacEncoding(name: "[0] Mac Symbol", encoding: macSymbolEncoding)
 
     // primitive:
@@ -90,8 +90,8 @@ struct MacEncoding {
             return .macCroatian
         } else if scriptID == .roman, let psName = postScriptFontName, psName == symbolPSName {
             return .macSymbol
-        } else if scriptID == .roman, let psName = postScriptFontName, psName.lowercased().hasPrefix(zapfDingbatsPSName2.lowercased()) {
-            return .macZapfDingbats
+        } else if scriptID == .roman, let psName = postScriptFontName, psName.lowercased().hasPrefix(dingbatsPSName2.lowercased()) {
+            return .macDingbats
         } else if scriptID == .arabic && langID == .farsi {
             return .macFarsi
         } else if scriptID == .arabic {
@@ -224,7 +224,7 @@ struct MacEncoding {
     private var customCharCodesToGlyphNames: [CharCode: String]?
     private let encoding: [UVBMP]
 
-    fileprivate static let symbolPSName        = "Symbol"
-    fileprivate static let zapfDingbatsPSName1 = "ZapfDingbatsITC"
-    fileprivate static let zapfDingbatsPSName2 = "ZapfDingbats"
+    fileprivate static let symbolPSName     = "Symbol"
+    fileprivate static let dingbatsPSName1  = "ZapfDingbatsITC"
+    fileprivate static let dingbatsPSName2  = "ZapfDingbats"
 }

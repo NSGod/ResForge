@@ -111,6 +111,11 @@
     These values are consistent with what Fontographer 4.1.5 shows and uses as the MacRoman
     encoding. I'm still trying to track down an explanation or official documentation of
     where these values come from.
+
+    OK, some progress. On a Mac OS 9.2.1 installation, it looks like the following file is involved:
+    /System Folder/Text Encodings/Western Language Encodings
+    That contains what I take are "Unicode From Mac" 'ufrm' mappings and "Unicode To Mac" 'utom' mappings.
+ 
  */
 import Foundation
 

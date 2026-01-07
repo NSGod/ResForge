@@ -1,5 +1,5 @@
 //
-//  macZapfDingbatsEncoding.swift
+//  macDingbatsEncoding.swift
 //  FONDEditor
 //
 //  Created by Mark Douma on 1/1/2026.
@@ -76,7 +76,7 @@
 
 import Foundation
 
-let macZapfDingbatsEncoding: [UVBMP] = [
+let macDingbatsEncoding: [UVBMP] = [
     .undefined,   /* 00 */
     .undefined,   /* 01 */
     .undefined,   /* 02 */
