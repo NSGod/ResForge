@@ -9,14 +9,13 @@
 import Foundation
 import RFSupport
 
-// will be displayed in UI, so need NSObject subclass?
 
 final class FontAssociationTable: ResourceNode {
     var numberOfEntries:    Int16                           // number of entries - 1
     @objc var entries:      [FontAssociationTableEntry]
 
     override var length:    Int {
-        get { return entries.count * FontAssociationTableEntry.length }
+        get { return MemoryLayout<Int16>.size + entries.count * FontAssociationTableEntry.length }
         set {}
     }
 
