@@ -115,7 +115,7 @@
     OK, some progress. On a Mac OS 9.2.1 installation, it looks like the following file is involved:
     /System Folder/Text Encodings/Western Language Encodings
     That contains what I take are "Unicode From Mac" 'ufrm' mappings and "Unicode To Mac" 'utom' mappings.
- 
+    ResID 144 appears to be Mac OS Roman according to the 'tnam` resource.
  */
 import Foundation
 

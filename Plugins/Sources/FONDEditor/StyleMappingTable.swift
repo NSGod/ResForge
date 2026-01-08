@@ -9,12 +9,17 @@
 import Foundation
 import RFSupport
 
+// "The style-mapping table provides a flexible way to assign font classes and
+// to specify character-set encodings. The table contains the font class,
+// information about the character-encoding scheme that the font designer used,
+// and a mechanism for obtaining the name of the appropriate printer font."
+
 // Style-mapping table : 58 bytes
 final class StyleMappingTable: ResourceNode {
     var fontClass:                          FontClass   // UInt16
     var offset:                             Int32       // offset from the start of this table to the glyph-name-encoding subtable component
     var reserved:                           Int32
-    var indexes:                            [UInt8]     // [48]
+    var indexes:                            [UInt8]     // [48] Indexes into the Font Name Suffix subtable
 
     @objc var objcFontClass:                FontClass.RawValue {
         didSet { fontClass = .init(rawValue: objcFontClass) }

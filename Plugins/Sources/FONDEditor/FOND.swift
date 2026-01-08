@@ -29,7 +29,8 @@ class FOND: NSObject {
     @objc var styleOff:         Int32               /* offset to style mapping table from beginning of font family
                                                        resource to beginning of table, in bytes */
 
-    @objc var ewSPlain:         Fixed4Dot12         // style property info; extra widths for different styles
+                                                    // style property info; extra widths for different styles
+    @objc var ewSPlain:         Fixed4Dot12         // should be 0
     @objc var ewSBold:          Fixed4Dot12
     @objc var ewSItalic:        Fixed4Dot12
     @objc var ewSUnderline:     Fixed4Dot12
@@ -37,7 +38,7 @@ class FOND: NSObject {
     @objc var ewSShadow:        Fixed4Dot12
     @objc var ewSCondensed:     Fixed4Dot12
     @objc var ewSExtended:      Fixed4Dot12
-    @objc var ewSUnused:        Fixed4Dot12
+    @objc var ewSUnused:        Fixed4Dot12         // unused; should be 0
 
     @objc var intl0:            Int16               // for international use
     @objc var intl1:            Int16               // for international use

@@ -6,6 +6,9 @@
 //
 //  https://developer.apple.com/library/archive/documentation/mac/pdf/Text.pdf#page=490
 
+import Foundation
+import RFSupport
+
 ///       Index     Contents
 ///       1         \pExampleFont
 ///       2         0x02 0x09 0x0A
@@ -28,17 +31,17 @@
 ///                 0x09 is a reference to index 9, or "-"
 ///                 0x0A is a reference to index 10, or "Bold"
 ///       So, the full PostScript name for the bold style is ExampleFont-Bold
-
-import Foundation
-import RFSupport
+///       
 
 struct FontNameSuffixSubtable {
-    var stringCount:                            Int16
+    var stringCount:                            Int16       // actual string count
 
     var baseFontName:                           String      // Index 1 shown above
+                                                            // This is documented as always being a 256 byte long Pascal string,
+                                                            // but that's not the case.
 
     private var entryIndexesToPostScriptNames:  [UInt8: String]
-    private var _actualStringCount:             Int16
+    private var _actualStringCount:             Int16       // actual actual string count
 }
 
 // of all the FOND tables, this is the one I've encountered the most variation and issues with, hence all the debug logging
@@ -73,12 +76,13 @@ extension FontNameSuffixSubtable {
         }
 
         if _actualStringCount != stringCount {
+            // I've encountered weird values here, hence the logging...
             NSLog("\(type(of: self)).\(#function)() *** WARNING: string count of \(stringCount) (byte-swapped: \(stringCount.byteSwapped)) appears to be wrong; actual string count: \(_actualStringCount)")
         }
 
         /// Referring to the diagram at the top of this file, we're going to create a representation
         /// where Indexes 2-8 are fully expanded into the full PostScript names.
-        /// We won't bother filling in 9 - 12 since they're no longer needed
+        /// We won't bother filling in 9 - 12 since they'll no longer be needed
         entryIndexesToPostScriptNames[1] = baseFontName
 
         var done = false

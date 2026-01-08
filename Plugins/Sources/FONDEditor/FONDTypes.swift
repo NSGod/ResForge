@@ -102,13 +102,13 @@ struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible {
     static let regular          = Self([])
     static let plain            = Self.regular
     static let normal           = Self.regular
-    static let bold             = Self(rawValue: 1 << 0)
-    static let italic           = Self(rawValue: 1 << 1)
-    static let underline        = Self(rawValue: 1 << 2)
-    static let outline          = Self(rawValue: 1 << 3)
-    static let shadow           = Self(rawValue: 1 << 4)
-    static let condensed        = Self(rawValue: 1 << 5)
-    static let extended         = Self(rawValue: 1 << 6)
+    static let bold             = Self(rawValue: 1 << 0)    // 1
+    static let italic           = Self(rawValue: 1 << 1)    // 2
+    static let underline        = Self(rawValue: 1 << 2)    // 4
+    static let outline          = Self(rawValue: 1 << 3)    // 8
+    static let shadow           = Self(rawValue: 1 << 4)    // 16
+    static let condensed        = Self(rawValue: 1 << 5)    // 32
+    static let extended         = Self(rawValue: 1 << 6)    // 64
 
     init(rawValue: UInt16) {
         self.rawValue = rawValue
@@ -142,7 +142,10 @@ struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible {
         return description
     }
 
-    /// I believe this is since `underline` wouldn't affect any calculated PostScript name?
+    /// Assuming Condensed and Extended are mutually-exclusive, that makes the maximum value
+    /// of all possible combination of styles to be 32 + 8 + 4 + 2 + 1 = 47. Add 1 for no
+    /// style and you have 48. So, when trying to look up the PostScript name in the
+    /// StyleMappingTable, we compress the style value first before finding the index in indexes UInt8[48].
     /// This is used when getting the PostScript name of the font
     func compressed() -> MacFontStyle {
         var rawValue: UInt16 = 0
