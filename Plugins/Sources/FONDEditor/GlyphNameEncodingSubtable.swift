@@ -39,7 +39,7 @@ final class GlyphNameEncodingSubtable: ResourceNode {
             charCodesToGlyphNames[charCode] = glyphName
         }
         super.init()
-        length = before - reader.position
+        length = reader.position - before
     }
 
     func glyphName(for charCode: CharCode) -> String? {

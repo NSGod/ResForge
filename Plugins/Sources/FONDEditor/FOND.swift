@@ -10,7 +10,9 @@ import Foundation
 import RFSupport
 
 class FOND: NSObject {
-    static let fontFamilyRecordLength   = 52
+    struct FontFamilyRecord {
+        static let length = 52
+    }
 
     // FontFamilyRecord is the first 52 bytes of the FOND
     var ffFlags:                FontFamilyFlags     // flags for family
@@ -68,7 +70,7 @@ class FOND: NSObject {
             // can only have a Bounding Box table if we have an offset table to specify its offset
             if let offsetTable = offsetTable {
                 // might have a bounding box table
-                let offsetTableOffset = Self.fontFamilyRecordLength + fontAssociationTable.length
+                let offsetTableOffset = Self.FontFamilyRecord.length + fontAssociationTable.length
                 try reader.pushPosition(offsetTableOffset + Int(offsetTable.entries[0].offsetOfTable))
                 boundingBoxTable = try BoundingBoxTable(reader)
                 reader.popPosition()
@@ -260,7 +262,7 @@ class FOND: NSObject {
         if wTabOff > 0 { offsetsToOffsetTypes[wTabOff] = .widthTable }
         if styleOff > 0 { offsetsToOffsetTypes[styleOff] = .styleTable }
         if kernOff > 0 { offsetsToOffsetTypes[kernOff] = .kernTable }
-        let currentOffset: Int32 = Int32(Self.fontFamilyRecordLength) + Int32(fontAssociationTable.length)
+        let currentOffset: Int32 = Int32(Self.FontFamilyRecord.length) + Int32(fontAssociationTable.length)
         var orderedOffsets: [Int32] = Array(offsetsToOffsetTypes.keys)
         orderedOffsets.sort()
         if (orderedOffsets.count == 0 && currentOffset < reader.data.count) ||

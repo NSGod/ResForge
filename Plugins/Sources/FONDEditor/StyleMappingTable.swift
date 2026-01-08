@@ -25,7 +25,7 @@ final class StyleMappingTable: ResourceNode {
         didSet { fontClass = .init(rawValue: objcFontClass) }
     }
 
-    var fontNameSuffixSubtable:             FontNameSuffixSubtable?
+    var fontNameSuffixSubtable:             FontNameSuffixSubtable
     @objc var glyphNameEncodingSubtable:    GlyphNameEncodingSubtable?
 
     class override var length: Int {
@@ -61,7 +61,7 @@ final class StyleMappingTable: ResourceNode {
 
     func postScriptNameForFont(with style: MacFontStyle) -> String? {
         let entryIndex = indexes[Int(style.compressed().rawValue)]
-        return fontNameSuffixSubtable?.postScriptNameForFontEntry(at: entryIndex)
+        return fontNameSuffixSubtable.postScriptNameForFontEntry(at: entryIndex)
     }
 }
 
