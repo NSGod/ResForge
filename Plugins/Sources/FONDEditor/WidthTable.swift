@@ -9,7 +9,6 @@
 import Foundation
 import RFSupport
 
-// will be displayed in UI, so need NSObject subclass?
 
 final class WidthTable: FONDResourceNode {
     var numberOfEntries:    Int16               // number of entries - 1
@@ -41,7 +40,7 @@ final class WidthTableEntry: FONDResourceNode {
     var widths:             [Fixed4Dot12]
 
     override var length: Int {
-        get { return MemoryLayout<MacFontStyle>.size + widths.count * MemoryLayout<Fixed4Dot12>.size }
+        get { return MemoryLayout<MacFontStyle.RawValue>.size + widths.count * MemoryLayout<Fixed4Dot12>.size }
         set {}
     }
 

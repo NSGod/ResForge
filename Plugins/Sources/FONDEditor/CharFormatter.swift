@@ -13,7 +13,6 @@ class CharFormatter: NumberFormatter, @unchecked Sendable {
         guard let asciicode = obj as? UInt8 else {
             return nil
         }
-
         let string = String(bytes: [asciicode], encoding: .macOSRoman)
         return string
     }

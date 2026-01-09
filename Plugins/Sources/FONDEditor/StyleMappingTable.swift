@@ -29,7 +29,7 @@ final class StyleMappingTable: ResourceNode {
     @objc var glyphNameEncodingSubtable:    GlyphNameEncodingSubtable?
 
     class override var length: Int {
-        MemoryLayout<FontClass>.size + MemoryLayout<Int32>.size * 2 + 48  // 58 bytes
+        MemoryLayout<FontClass.RawValue>.size + MemoryLayout<Int32>.size * 2 + 48  // 58 bytes
     }
 
     init(_ reader: BinaryDataReader, range knownRange: NSRange) throws {

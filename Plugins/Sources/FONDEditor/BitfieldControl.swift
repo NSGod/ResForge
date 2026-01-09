@@ -10,28 +10,25 @@ import Cocoa
 /// A convient control that allows setting bitmasks
 /// via objectValue. You should place checkboxes with tags set to each value
 
-open class BitfieldControl: NSControl {
-    open var backgroundColor:   NSColor? {
+public class BitfieldControl: NSControl {
+    @IBInspectable public var backgroundColor:   NSColor? = nil {
         didSet {
             self.needsDisplay = true
         }
     }
 
-    open var numberOfBits:      Int = 16         // 16 or 32
+    public var numberOfBits:      Int = 16         // 16 or 32
 
-    open var enabledMask:       Int = 0 {
+    // to allow disabling or enabling of specific checkboxes via a mask
+    public var enabledMask:       Int = 0 {
         didSet {
             var i = 1
-            if numberOfBits == 16 {
-                while i < UInt16.max {
-                    (self.viewWithTag(i) as! NSButton).state = (enabledMask & i) != 0 ? .on : .off
-                    i *= 2
+            let max = numberOfBits == 16 ? UInt32(UInt16.max) : UInt32.max
+            while i < max {
+                if let button = self.viewWithTag(i) as? NSButton {
+                    button.isEnabled = (enabledMask & i) != 0
                 }
-            } else if numberOfBits == 32 {
-                while i < UInt32.max {
-                    (self.viewWithTag(i) as! NSButton).state = (enabledMask & i) != 0 ? .on : .off
-                    i *= 2
-                }
+                i *= 2
             }
         }
     }
@@ -45,9 +42,7 @@ open class BitfieldControl: NSControl {
     }
 
     override open var objectValue: Any? {
-        get {
-            return super.objectValue
-        }
+        get { return super.objectValue }
         set {
             super.objectValue = newValue
             if objectValue == nil {
@@ -62,20 +57,17 @@ open class BitfieldControl: NSControl {
                 return
             }
             var i = 1
-            if numberOfBits == 16 {
-                while i <= UInt16.max {
-                    (self.viewWithTag(i) as! NSButton).state = (bitfield & i) != 0 ? .on : .off
-                    i *= 2
+            let max = numberOfBits == 16 ? UInt32(UInt16.max) : UInt32.max
+            while i <= max {
+                if let button = self.viewWithTag(i) as? NSButton {
+                    button.state = (bitfield & i) != 0 ? .on : .off
                 }
-            } else if numberOfBits == 32 {
-                while i <= UInt32.max {
-                    (self.viewWithTag(i) as! NSButton).state = (bitfield & i) != 0 ? .on : .off
-                    i *= 2
-                }
+                i *= 2
             }
         }
     }
 
+    // override to exclude ourself
     override open func viewWithTag(_ tag: Int) -> NSView? {
         let view = super.viewWithTag(tag)
         if view != self { return view }
@@ -96,7 +88,4 @@ open class BitfieldControl: NSControl {
         }
     }
 
-}
-
-extension BitfieldControl {
 }

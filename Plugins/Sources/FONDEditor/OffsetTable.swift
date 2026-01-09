@@ -9,12 +9,13 @@
 import Foundation
 import RFSupport
 
+
 final class OffsetTable: ResourceNode {
     var numberOfEntries:        Int16               // number of entries - 1
     @objc var entries:          [OffsetTableEntry]
 
     @objc override var length:  Int {
-        get { return entries.count * OffsetTableEntry.length }
+        get { return MemoryLayout<Int16>.size + entries.count * OffsetTableEntry.length }
         set {}
     }
 
