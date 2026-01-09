@@ -47,7 +47,9 @@ class FOND: NSObject {
 
     var ffVersion:              FontFamilyVersion   // version number
 
-    @objc var objcFFFlags:      FontFamilyFlags.RawValue { didSet { ffFlags = FontFamilyFlags(rawValue: objcFFFlags) } }
+    @objc var objcFFFlags:      FontFamilyFlags.RawValue {
+        didSet { ffFlags = FontFamilyFlags(rawValue: objcFFFlags) }
+    }
     @objc var objcFFVersion:    FontFamilyVersion.RawValue {
         didSet { ffVersion = FontFamilyVersion(rawValue: objcFFVersion) ?? .version1 }
     }
@@ -144,9 +146,9 @@ class FOND: NSObject {
 
     lazy var encoding:              MacEncoding = {
         // FIXME: improve non-MacRoman encodings
-        let scriptID = MacEncoding.macScriptID(from: ResID(resource.id))
+        let scriptID = MacEncoding.scriptID(for: ResID(resource.id))
         NSLog("\(type(of: self)).\(#function)() resID: \(resource.id), scriptID: \(scriptID)")
-        var encoding = MacEncoding.macEncoding(for: scriptID, postScriptFontName: self.basePostScriptName)
+        var encoding = MacEncoding.encodingFor(scriptID: scriptID, postScriptFontName: basePostScriptName)
         if let customGlyphs = self.styleMappingTable?.glyphNameEncodingSubtable {
             encoding.add(custom: GlyphNameEntry.glyphNameEntries(with: customGlyphs.charCodesToGlyphNames))
         }

@@ -64,6 +64,18 @@ class KernTableEntry: FONDResourceNode {
         set {}
     }
 
+    init(_ reader: BinaryDataReader, fond: FOND) throws {
+        style = try reader.read()
+        numKerns = try reader.read()
+        kernPairs = []
+        for _ in 0..<numKerns {
+            let kernPair: KernPair = try KernPair(reader)
+            kernPairs.append(kernPair)
+            hasOutOfRangeCharCodes = hasOutOfRangeCharCodes ? true : kernPair.hasOutOfRangeCharCodes
+        }
+        super.init(fond: fond)
+    }
+
     public struct KernExportConfig {
         public static let gposDefault: KernExportConfig = .init()
         public static let csvDefault: KernExportConfig = KernExportConfig(resolveGlyphNames: false, scaleToUnitsPerEm: false)
@@ -124,18 +136,6 @@ class KernTableEntry: FONDResourceNode {
              NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
         }
         return nil
-    }
-
-    init(_ reader: BinaryDataReader, fond: FOND) throws {
-        style = try reader.read()
-        numKerns = try reader.read()
-        kernPairs = []
-        for _ in 0..<numKerns {
-            let kernPair: KernPair = try KernPair(reader)
-            kernPairs.append(kernPair)
-            hasOutOfRangeCharCodes = hasOutOfRangeCharCodes ? true : kernPair.hasOutOfRangeCharCodes
-        }
-        super.init(fond: fond)
     }
 }
 

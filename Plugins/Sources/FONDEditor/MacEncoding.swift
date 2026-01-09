@@ -73,7 +73,7 @@ struct MacEncoding {
         isCustomEncoding = true
     }
 
-    static func macEncoding(for scriptID: MacScriptID, macLanguageID macLanguageIDPlus1: MacLanguageID = .none, postScriptFontName: String? = nil) -> MacEncoding {
+    static func encodingFor(scriptID: MacScriptID, languageID macLanguageIDPlus1: MacLanguageID = .none, postScriptFontName: String? = nil) -> MacEncoding {
         var langID = macLanguageIDPlus1
         if (macLanguageIDPlus1 != .none && macLanguageIDPlus1 != .english) {
             // FIXME: is this safe?
@@ -151,7 +151,7 @@ struct MacEncoding {
      31232    - 31743        Vietnamese
      31744    - 32255        Extended Arabic
      32256    - 32767        Uninterpreted Symbols  */
-    static func macScriptID(from fondID: ResID) -> MacScriptID {
+    static func scriptID(for fondID: ResID) -> MacScriptID {
         if fondID < 16384 {
             return .roman
         } else if fondID < 16896 {

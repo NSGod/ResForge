@@ -219,6 +219,45 @@ struct FontClass: OptionSet, Hashable {
     }
 }
 
+extension FontClass: CustomStringConvertible, CustomDebugStringConvertible {
+
+    var classDescription: String {
+        switch self {
+            case .nameNeedsCoordinating:                   return "nameNeedsCoordinating"
+            case .reqMacVectorReEncoding:                  return "reqMacVectorReEncoding"
+            case .simOutByPaintType:                       return "simOutByPaintType"
+            case .noSimOutBySmearing:                      return "noSimOutBySmearing"
+            case .noSimBoldBySmearing:                     return "noSimBoldBySmearing"
+            case .simBoldBySize:                           return "simBoldBySize"
+            case .noSimItalic:                             return "noSimItalic"
+            case .noSimCondensed:                          return "noSimCondensed"
+            case .noSimExtended:                           return "noSimExtended"
+            case .reqOtherVectorReEncoding:                return "reqOtherVectorReEncoding"
+            case .noAddSpacing:                            return "noAddSpacing"
+            default:
+                return "unknown (rawValue: \(rawValue))"
+        }
+    }
+
+    var description: String {
+        if self.rawValue == 0 { return "none" }
+        var description = ""
+        var i = Self.nameNeedsCoordinating.rawValue
+        while i <= Self.noAddSpacing.rawValue {
+            let fClass = Self(rawValue: i)
+            if self.contains(fClass) {
+                description = description.isEmpty ? fClass.classDescription : "\(description), \(fClass.classDescription)"
+            }
+        }
+        return description
+    }
+
+    var debugDescription: String {
+        return description
+    }
+}
+
+
 enum UnitsPerEm {
     case custom(Int)
     case postScriptStandard,
