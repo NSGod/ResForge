@@ -79,6 +79,10 @@ extension FontNameSuffixSubtable {
             // I've encountered weird values here, hence the logging...
             NSLog("\(type(of: self)).\(#function)() *** WARNING: string count of \(stringCount) (byte-swapped: \(stringCount.byteSwapped)) appears to be wrong; actual string count: \(_actualStringCount)")
         }
+//        let descs = stringDatas.map { data in
+//            "{ length = \(data.count), bytes = 0x\(data.hexadecimal) }"
+//        }
+//        NSLog("\(type(of: self)).\(#function)() stringDatas == \(descs.joined(separator: "\n"))")
 
         /// Referring to the diagram at the top of this file, we're going to create a representation
         /// where Indexes 2-8 are fully expanded into the full PostScript names.
@@ -89,14 +93,15 @@ extension FontNameSuffixSubtable {
         for i in 0..<Int(_actualStringCount) - 1 {
             var fullName = baseFontName
             let entryData = stringDatas[i]
-            let length: UInt8 = entryData[0]
+            let length: UInt8 = entryData[entryData.startIndex]
+
             /// now parse the index entries in the string, starting at index 1 (since index 0 is
             /// the length byte of the Pascal string)
-            for j in 1..<Int(length) {
+            for j in 1...Int(length) {
                 /// we need to subtract 2 here because:
                 /// a) these are 1-indexed rather than 0-indexed, and
                 /// b) we don't have baseFontName included, which would be the first item
-                let nameIndex: UInt8 = entryData[j] - 2
+                let nameIndex: UInt8 = entryData[entryData.startIndex + j] - 2
                 if nameIndex > _actualStringCount {
                     // we're probably at the end of the index entry strings and at the start of the actual name strings
                     // FIXME: is there a better way for this?
@@ -111,7 +116,7 @@ extension FontNameSuffixSubtable {
             }
             entryIndexesToPostScriptNames[UInt8(i) + 2] = fullName
         }
-        NSLog("\(type(of: self)).\(#function)() entryIndexesToPostScriptNames == \(entryIndexesToPostScriptNames)")
+//        NSLog("\(type(of: self)).\(#function)() entryIndexesToPostScriptNames == \(entryIndexesToPostScriptNames)")
     }
 
     func postScriptNameForFontEntry(at oneBasedIndex: UInt8) -> String? {
