@@ -55,7 +55,7 @@ extension FontNameSuffixSubtable {
 
         /// we already have the base font name, so go with `stringCount - 1`
         for _ in 0..<stringCount - 1 {
-            if NSMaxRange(knownRange) == reader.position {
+            if NSMaxRange(knownRange) == reader.bytesRead {
                 NSLog("\(type(of: self)).\(#function)() *** NOTICE: appear to have hit end of data; breaking")
                 break
             }

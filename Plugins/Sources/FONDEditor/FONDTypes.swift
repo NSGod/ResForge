@@ -38,7 +38,7 @@ extension BinaryDataReader {
         let val = data.withUnsafeBytes {
             $0.loadUnaligned(fromByteOffset: position-length-data.startIndex, as: T.self)
         }
-        try setPosition(position - length)
+        try self.advance(-length)
         return bigEndian ?? self.bigEndian ? T(bigEndian: val) : T(littleEndian: val)
     }
 }
