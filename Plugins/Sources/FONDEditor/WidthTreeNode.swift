@@ -1,6 +1,6 @@
 //
 //  WidthTreeNode.swift
-//  Plugins
+//  FONDEditor
 //
 //  Created by Mark Douma on 1/5/2026.
 //
@@ -15,8 +15,8 @@ class WidthTreeNode: NSTreeNode {
 
     init(with widthTableEntry: WidthTableEntry) {
         var mTreeNodes: [WidthTreeNode] = []
-        let glyphWidthNodes = GlyphWidthNode.glyphWidthNodes(widthTableEntry: widthTableEntry)
-        for node in glyphWidthNodes {
+        let widthNodes = WidthNode.widthNodes(widthTableEntry: widthTableEntry)
+        for node in widthNodes {
             let treeNode = WidthTreeNode(representedObject:node)
             mTreeNodes.append(treeNode)
         }

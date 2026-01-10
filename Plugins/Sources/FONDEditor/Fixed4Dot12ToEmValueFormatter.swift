@@ -5,7 +5,7 @@
 //  Created by Mark Douma on 1/6/2026.
 //
 
-import Cocoa
+import Foundation
 
 final class Fixed4Dot12ToEmValueFormatter: NumberFormatter, @unchecked Sendable {
 

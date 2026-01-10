@@ -5,7 +5,7 @@
 //  Created by Mark Douma on 1/1/2026.
 //
 
-import Cocoa
+import Foundation
 
 // for display
 final class KernPairNode: NSObject {

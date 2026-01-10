@@ -1,6 +1,6 @@
 //
 //  macCEEncoding.swift
-//  Plugins
+//  FONDEditor
 //
 //  Created by Mark Douma on 1/1/2026.
 //

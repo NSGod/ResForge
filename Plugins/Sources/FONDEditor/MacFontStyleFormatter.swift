@@ -5,7 +5,7 @@
 //  Created by Mark Douma on 1/5/2026.
 //
 
-import Cocoa
+import Foundation
 
 class MacFontStyleFormatter: NumberFormatter, @unchecked Sendable {
 

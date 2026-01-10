@@ -216,7 +216,7 @@ struct MacEncoding {
             return .vietnamese
         } else if fondID < 32256 {
             return .extendedArabic
-        } else if fondID <= 32767 {
+        } else if fondID <= ResID.max {
             return .uninterpreted
         }
     }

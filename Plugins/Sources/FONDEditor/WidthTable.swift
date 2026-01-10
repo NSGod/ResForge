@@ -48,6 +48,7 @@ final class WidthTableEntry: FONDResourceNode {
         style = try reader.read()
         widths = []
         // I'm not exactly sure why this is + 3, but that's what FontForge does
+        // https://github.com/fontforge/fontforge/blob/7195402701ace7783753ef9424153eff48c9af44/fontforge/macbinary.c#L2342
         let numGlyphs = fond.lastChar - fond.firstChar + 3
         for _ in 0..<numGlyphs {
             let width: Fixed4Dot12 = try reader.read()

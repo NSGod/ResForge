@@ -1,11 +1,11 @@
 //
 //  CharFormatter.swift
-//  Plugins
+//  FONDEditor
 //
 //  Created by Mark Douma on 1/6/2026.
 //
 
-import Cocoa
+import Foundation
 
 class CharFormatter: NumberFormatter, @unchecked Sendable {
 

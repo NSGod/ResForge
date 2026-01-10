@@ -11,8 +11,11 @@ import RFSupport
 typealias ResID         = Int16
 
 typealias CharCode      = UInt8
-typealias EncodingID    = UInt16
-typealias LanguageID    = UInt16
+typealias CharCode16    = UInt16
+
+//typealias EncodingID    = UInt16
+//typealias LanguageID    = UInt16
+
 typealias UVBMP         = UInt16
 
 extension UVBMP {
@@ -248,6 +251,7 @@ extension FontClass: CustomStringConvertible, CustomDebugStringConvertible {
             if self.contains(fClass) {
                 description = description.isEmpty ? fClass.classDescription : "\(description), \(fClass.classDescription)"
             }
+            i += 1
         }
         return description
     }

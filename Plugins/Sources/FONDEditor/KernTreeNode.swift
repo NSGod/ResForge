@@ -25,7 +25,8 @@ final class KernTreeNode: NSTreeNode, Comparable {
         }
         let kernPairNodes = mKernPairNodes.sorted(by: <)
         super.init(representedObject: entry)
-        self.mutableChildren.add(kernPairNodes)
+        self.mutableChildren.addObjects(from: kernPairNodes)
+        entry.fond.encoding.logsInvalidCharCodes = false
     }
 
     var countOfChildNodes: Int {
