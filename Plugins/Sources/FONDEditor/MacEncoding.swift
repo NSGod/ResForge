@@ -7,16 +7,27 @@
 
 import Foundation
 
-struct MacEncoding {
+struct MacEncoding: CustomStringConvertible {
     let name:                               String
     private(set) var isCustomEncoding:      Bool = false
     var logsInvalidCharCodes:               Bool = false
 
     private(set) lazy var glyphNameEntries: [GlyphNameEntry] = GlyphNameEntry.glyphNameEntries(with: self)
 
+    private(set) var coveredCharCodes:      IndexSet
+
+
     init(name: String, encoding: [UVBMP]) {
         self.name = name
         self.encoding = encoding
+        var covCharCodes = IndexSet()
+        for i in 0..<CharCode.max {
+            let uv = encoding[Int(i)]
+            if uv != .undefined {
+                covCharCodes.insert(Int(i))
+            }
+        }
+        coveredCharCodes = covCharCodes
     }
 
     // The numbers in the brackets are MacScriptIDs...
@@ -66,6 +77,7 @@ struct MacEncoding {
         if var customEntries = customCharCodesToGlyphNames {
             for entry in glyphNameEntries {
                 customEntries[entry.charCode] = entry.glyphName
+                coveredCharCodes.insert(Int(entry.charCode))
             }
         }
         self.glyphNameEntries.append(contentsOf: glyphNameEntries)
@@ -219,6 +231,16 @@ struct MacEncoding {
         } else if fondID <= ResID.max {
             return .uninterpreted
         }
+    }
+
+    var description: String {
+        var descriptions: [String] = []
+        for i in 0..<CharCode.max {
+            if let glyphName = customCharCodesToGlyphNames?[CharCode(i)] {
+                descriptions.append("\(i): \(glyphName)")
+            }
+        }
+        return "MacEncoding(\(descriptions.count) glyphs): [\(descriptions.joined(separator: ",\n"))]"
     }
 
     private var customCharCodesToGlyphNames: [CharCode: String]?

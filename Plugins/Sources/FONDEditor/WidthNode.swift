@@ -9,8 +9,8 @@ import Foundation
 
 // for display
 final class WidthNode: NSObject {
-    @objc let glyphName:  String
-    @objc let glyphWidth: Fixed4Dot12
+    @objc let glyphName:    String
+    @objc let glyphWidth:   Fixed4Dot12
 
     init(glyphName: String, glyphWidth: Fixed4Dot12) {
         self.glyphName = glyphName
@@ -26,6 +26,7 @@ final class WidthNode: NSObject {
                 let node = WidthNode(glyphName: glyphName, glyphWidth: glyphWidth)
                 nodes.append(node)
             }
+            if charCode == CharCode.max { break }
             charCode += 1
         }
         return nodes

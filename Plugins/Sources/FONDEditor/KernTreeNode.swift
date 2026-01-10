@@ -29,7 +29,7 @@ final class KernTreeNode: NSTreeNode, Comparable {
         entry.fond.encoding.logsInvalidCharCodes = false
     }
 
-    var countOfChildNodes: Int {
+    @objc var countOfChildNodes: Int {
         return self.children?.count ?? 0
     }
 

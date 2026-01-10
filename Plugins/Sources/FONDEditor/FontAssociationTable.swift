@@ -54,10 +54,12 @@ final class FontAssociationTableEntry: ResourceNode, Comparable {
     var fontStyle:              MacFontStyle
     @objc var fontID:           ResID
 
-    @objc var objcFontStyle:    MacFontStyle.RawValue
+    @objc var objcFontStyle:    MacFontStyle.RawValue {
+        didSet { fontStyle = .init(rawValue: objcFontStyle) }
+    }
 
     override class var length: Int {
-        return MemoryLayout<Int16>.size + MemoryLayout<MacFontStyle>.size + MemoryLayout<ResID>.size // 6
+        return MemoryLayout<Int16>.size + MemoryLayout<MacFontStyle.RawValue>.size + MemoryLayout<ResID>.size // 6
     }
 
     init(_ reader: BinaryDataReader) throws {

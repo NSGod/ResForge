@@ -47,25 +47,30 @@ final class KernTable: FONDResourceNode {
 
 // MARK: -
 class KernTableEntry: FONDResourceNode {
-    var style:      MacFontStyle            // style this entry applies to
+    var style:              MacFontStyle            // style this entry applies to
 
     /// NOTE: While `numKerns` is defined as a `SInt16`, it makes no sense to have negative kern pairs,
     ///       and I *have* encountered fonts that have more than 32,767 kern pairs, so make it an `UInt16`
     ///
-    var numKerns:   UInt16  /// Number of kern entries that follow (and NOT the entryLength/length
-                            /// of the data that follows this struct as is documented).
+    var numKerns:           UInt16  /// Number of kern entries that follow (and NOT the entryLength/length
+                                    /// of the data that follows this struct as is documented).
 
-    var kernPairs:  [KernPair]
+    var kernPairs:          [KernPair]
 
     var hasOutOfRangeCharCodes: Bool = false
 
-    override var length: Int {
+    @objc var objcStyle:    MacFontStyle.RawValue {
+        didSet { style = .init(rawValue: objcStyle) }
+    }
+    
+    override var length:    Int {
         get { return MemoryLayout<UInt16>.size * 2 + Int(numKerns) * KernPair.length }
         set {}
     }
 
     init(_ reader: BinaryDataReader, fond: FOND) throws {
         style = try reader.read()
+        objcStyle = style.rawValue
         numKerns = try reader.read()
         kernPairs = []
         for _ in 0..<numKerns {

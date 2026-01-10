@@ -24,7 +24,7 @@ class WidthTreeNode: NSTreeNode {
         self.mutableChildren.addObjects(from: mTreeNodes)
     }
 
-    var countOfChildNodes: Int {
+    @objc var countOfChildNodes: Int {
         return self.children?.count ?? 0
     }
 }

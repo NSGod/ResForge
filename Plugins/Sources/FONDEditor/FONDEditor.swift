@@ -118,8 +118,10 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
             if let id = tableColumn?.identifier, id.rawValue == "style" { return view }
             /// need to set the unitsPerEm of the Fixed4Dot12ToEmValueFormatter
             if let bboxEntries = boundingBoxTableEntriesController.arrangedObjects as? [BoundingBoxTableEntry] {
-                if let formatter = (view.textField?.formatter)! as? Fixed4Dot12ToEmValueFormatter {
-
+                if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
+                    let entry = bboxEntries[row]
+                    formatter.unitsPerEm = fond?.unitsPerEm(for: entry.style) ?? .postScriptStandard
+                    return view
                 }
             }
         }
@@ -127,7 +129,48 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
     }
 
     // MARK: - <NSOutlineViewDelegate>
-
+    public func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
+        if outlineView == kernTableOutlineView {
+            guard let representedObject = ((item as? NSTreeNode)?.representedObject as? KernTreeNode)?.representedObject else { return nil }
+            if representedObject is KernTableEntry {
+                if tableColumn?.identifier.rawValue == "style"{
+                    return outlineView.makeView(withIdentifier: tableColumn!.identifier, owner: self)
+                } else if tableColumn?.identifier.rawValue == "kernWidth" {
+                    return outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("kernPairCount"), owner: self)
+                }
+                return nil
+            } else if representedObject is KernPairNode {
+                if tableColumn?.identifier.rawValue == "style" { return nil }
+                let view: NSTableCellView = outlineView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
+                if let entry: KernTableEntry = ((item as? NSTreeNode)?.representedObject as? KernTreeNode)?.parent?.representedObject as? KernTableEntry {
+                    if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
+                        formatter.unitsPerEm = fond?.unitsPerEm(for: entry.style) ?? .postScriptStandard
+                        return view
+                    }
+                }
+            }
+        } else if outlineView == glyphWidthsOutlineView {
+            if let item = item as? NSTreeNode, item.isLeaf {
+                if tableColumn?.identifier.rawValue == "style" { return nil }
+                let view: NSTableCellView = outlineView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
+                if tableColumn?.identifier.rawValue == "glyphWidth" {
+                    if let entry: WidthTableEntry = (item.representedObject as? KernTreeNode)?.parent?.representedObject as? WidthTableEntry {
+                        if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
+                            formatter.unitsPerEm = fond?.unitsPerEm(for: entry.style) ?? .postScriptStandard
+                        }
+                    }
+                }
+                return view
+            } else {
+                if tableColumn?.identifier.rawValue == "style" {
+                    return outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("style"), owner: self)
+                } else if tableColumn?.identifier.rawValue == "glyphWidth" {
+                    return outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("glyphWidthCount"), owner: self)
+                }
+            }
+        }
+        return nil
+    }
 
     @IBAction public func saveResource(_ sender: Any) {
 
