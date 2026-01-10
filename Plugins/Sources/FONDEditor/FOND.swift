@@ -259,6 +259,7 @@ class FOND: NSObject {
     }
 
     private func calculateOffsetsIfNeeded() throws {
+        // FIXME: switch to Swift Ranges
         if offsetsCalculated == true { return }
         var offsetsToOffsetTypes: [Int32: TableOffsetType] = [:]
         if wTabOff > 0 { offsetsToOffsetTypes[wTabOff] = .widthTable }
@@ -277,8 +278,9 @@ class FOND: NSObject {
             let firstOffset = orderedOffsets[i]
             let secondOffset = (i == orderedOffsets.count - 1 ? Int32(reader.data.count) : orderedOffsets[i + 1])
             let range = NSMakeRange(Int(firstOffset), Int(secondOffset - firstOffset))
-            // FIXME: I don't know what's going on here with the ! being necessary:
-            offsetTypesToRanges[offsetsToOffsetTypes[firstOffset]!] = range
+            if let offsetType = offsetsToOffsetTypes[firstOffset] {
+                offsetTypesToRanges[offsetType] = range
+            }
         }
         offsetsCalculated = true
     }
