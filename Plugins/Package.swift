@@ -45,7 +45,8 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "RFSupport"),
+            name: "RFSupport",
+            dependencies: [.product(name: "OrderedCollections", package: "swift-collections")]),
 //        .target(
 //            name: "HexEditor",
 //            dependencies: [.target(name: "RFSupport"),

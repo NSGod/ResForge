@@ -1,4 +1,5 @@
 import AppKit
+import RFSupport
 
 class OpenPanelDelegate: NSDocumentController, NSOpenSavePanelDelegate {
     @IBOutlet var accessoryView: NSView!

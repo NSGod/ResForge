@@ -16,15 +16,11 @@
 		49655DF824DE6D5600D6AFF6 /* ResourceDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49655DF724DE6D5600D6AFF6 /* ResourceDocument.swift */; };
 		49655DFA24DE6DA200D6AFF6 /* ResourceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49655DF924DE6DA200D6AFF6 /* ResourceExtension.swift */; };
 		49655DFC24DF94B500D6AFF6 /* ResourceDirectory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49655DFB24DF94B500D6AFF6 /* ResourceDirectory.swift */; };
-		496669C12A8B5D71008DCC36 /* ExtendedFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496669C02A8B5D71008DCC36 /* ExtendedFormat.swift */; };
 		4968368924F224FB009BDBBE /* ResourceItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2B3CEA816B9DCE90027F33F /* ResourceItem.xib */; };
 		4968C03724C67B6E00716AB9 /* ApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F6C76124C577440078EB55 /* ApplicationDelegate.swift */; };
 		4968C03B24C6808200716AB9 /* EditorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4968C03424C66D8B00716AB9 /* EditorManager.swift */; };
 		497A93DE255F371100900C7B /* SelectTemplate.xib in Resources */ = {isa = PBXBuildFile; fileRef = 497A93E0255F371100900C7B /* SelectTemplate.xib */; };
 		498001B12DC05A6F006C39BE /* DialogEditor in Frameworks */ = {isa = PBXBuildFile; productRef = 498001B02DC05A6F006C39BE /* DialogEditor */; };
-		4982C09E2A97F653006B7404 /* AppleSingleFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4982C09D2A97F653006B7404 /* AppleSingleFormat.swift */; };
-		4982C0AA2A9844BB006B7404 /* AppleDoubleFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4982C0A92A9844BB006B7404 /* AppleDoubleFormat.swift */; };
-		498F2D712A9344AF001EC34E /* MacBinaryFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498F2D702A9344AF001EC34E /* MacBinaryFormat.swift */; };
 		499216EE24CB914F0054A390 /* CreateResourceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499216ED24CB914F0054A390 /* CreateResourceController.swift */; };
 		4992491A26C3B527005F69A7 /* TypeAttributesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4992491926C3B527005F69A7 /* TypeAttributesEditor.swift */; };
 		49964E1924D12FFC00BAB902 /* ResourceDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49964E1824D12FFC00BAB902 /* ResourceDataSource.swift */; };
@@ -46,9 +42,6 @@
 		49F4648E2E487A15003C732F /* HexFiend.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 49F464802E4879EC003C732F /* HexFiend.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		49F464952E487B72003C732F /* HexEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F464922E487B72003C732F /* HexEditor.swift */; };
 		49F464962E487B72003C732F /* HexWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 49F464932E487B72003C732F /* HexWindow.xib */; };
-		49F56FCE2A830C4E00953A17 /* ClassicFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F56FCD2A830C4E00953A17 /* ClassicFormat.swift */; };
-		49F570032A844EFF00953A17 /* ResourceFileFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F570022A844EFF00953A17 /* ResourceFileFormat.swift */; };
-		49F570062A845D5E00953A17 /* RezFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F570052A845D5E00953A17 /* RezFormat.swift */; };
 		49F6C76324C579820078EB55 /* PrefsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F6C76024C577430078EB55 /* PrefsController.swift */; };
 		559DE9B4189D665000D55D3A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 559DE9B3189D665000D55D3A /* Assets.xcassets */; };
 		B229EEF515A4FB6F0032C12C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = B229EEEA15A4FB6F0032C12C /* MainMenu.xib */; };
@@ -149,15 +142,11 @@
 		49655DF724DE6D5600D6AFF6 /* ResourceDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceDocument.swift; sourceTree = "<group>"; usesTabs = 0; };
 		49655DF924DE6DA200D6AFF6 /* ResourceExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceExtension.swift; sourceTree = "<group>"; usesTabs = 0; };
 		49655DFB24DF94B500D6AFF6 /* ResourceDirectory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceDirectory.swift; sourceTree = "<group>"; usesTabs = 0; };
-		496669C02A8B5D71008DCC36 /* ExtendedFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedFormat.swift; sourceTree = "<group>"; usesTabs = 0; };
 		4968C03424C66D8B00716AB9 /* EditorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorManager.swift; sourceTree = "<group>"; usesTabs = 0; };
 		4968C03E24C78D7400716AB9 /* SupportRegistry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportRegistry.swift; sourceTree = "<group>"; usesTabs = 0; };
 		497A93DF255F371100900C7B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SelectTemplate.xib; sourceTree = "<group>"; };
 		498001AB2DC0568E006C39BE /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
-		4982C09D2A97F653006B7404 /* AppleSingleFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSingleFormat.swift; sourceTree = "<group>"; usesTabs = 0; };
-		4982C0A92A9844BB006B7404 /* AppleDoubleFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleDoubleFormat.swift; sourceTree = "<group>"; usesTabs = 0; };
 		498A02C225C3E4B500783776 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		498F2D702A9344AF001EC34E /* MacBinaryFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacBinaryFormat.swift; sourceTree = "<group>"; usesTabs = 0; };
 		499216ED24CB914F0054A390 /* CreateResourceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateResourceController.swift; sourceTree = "<group>"; usesTabs = 0; };
 		4992491926C3B527005F69A7 /* TypeAttributesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeAttributesEditor.swift; sourceTree = "<group>"; usesTabs = 0; };
 		49964E1824D12FFC00BAB902 /* ResourceDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceDataSource.swift; sourceTree = "<group>"; usesTabs = 0; };
@@ -174,9 +163,6 @@
 		49F464712E4879EC003C732F /* HexFiend_2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = HexFiend_2.xcodeproj; path = HexFiend/HexFiend_2.xcodeproj; sourceTree = "<group>"; };
 		49F464922E487B72003C732F /* HexEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexEditor.swift; sourceTree = "<group>"; };
 		49F464932E487B72003C732F /* HexWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HexWindow.xib; sourceTree = "<group>"; };
-		49F56FCD2A830C4E00953A17 /* ClassicFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassicFormat.swift; sourceTree = "<group>"; usesTabs = 0; };
-		49F570022A844EFF00953A17 /* ResourceFileFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceFileFormat.swift; sourceTree = "<group>"; usesTabs = 0; };
-		49F570052A845D5E00953A17 /* RezFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RezFormat.swift; sourceTree = "<group>"; usesTabs = 0; };
 		49F6C76024C577430078EB55 /* PrefsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefsController.swift; sourceTree = "<group>"; usesTabs = 0; };
 		49F6C76124C577440078EB55 /* ApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationDelegate.swift; sourceTree = "<group>"; usesTabs = 0; };
 		550B9046189A0360005AC38D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -259,13 +245,6 @@
 		49F56FCC2A830C3600953A17 /* Formats */ = {
 			isa = PBXGroup;
 			children = (
-				49F570022A844EFF00953A17 /* ResourceFileFormat.swift */,
-				49F56FCD2A830C4E00953A17 /* ClassicFormat.swift */,
-				49F570052A845D5E00953A17 /* RezFormat.swift */,
-				496669C02A8B5D71008DCC36 /* ExtendedFormat.swift */,
-				498F2D702A9344AF001EC34E /* MacBinaryFormat.swift */,
-				4982C09D2A97F653006B7404 /* AppleSingleFormat.swift */,
-				4982C0A92A9844BB006B7404 /* AppleDoubleFormat.swift */,
 			);
 			path = Formats;
 			sourceTree = "<group>";
@@ -496,31 +475,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49F570032A844EFF00953A17 /* ResourceFileFormat.swift in Sources */,
 				4968C03724C67B6E00716AB9 /* ApplicationDelegate.swift in Sources */,
 				49F2EAA526D50F4B0020D70E /* BulkController.swift in Sources */,
 				49F2EAAB26D5AB5E0020D70E /* StandardController.swift in Sources */,
 				49F6C76324C579820078EB55 /* PrefsController.swift in Sources */,
 				49655DFA24DE6DA200D6AFF6 /* ResourceExtension.swift in Sources */,
 				491EDA5324E37E34008E58CB /* SelectTemplateController.swift in Sources */,
-				498F2D712A9344AF001EC34E /* MacBinaryFormat.swift in Sources */,
 				49DB6A1E24F377A400BE0F0F /* CollectionController.swift in Sources */,
 				49655DF824DE6D5600D6AFF6 /* ResourceDocument.swift in Sources */,
-				496669C12A8B5D71008DCC36 /* ExtendedFormat.swift in Sources */,
-				49F56FCE2A830C4E00953A17 /* ClassicFormat.swift in Sources */,
 				4968C03B24C6808200716AB9 /* EditorManager.swift in Sources */,
 				49F416EB2879330400404BA1 /* ImportPanel.swift in Sources */,
 				49F464952E487B72003C732F /* HexEditor.swift in Sources */,
 				49DB6A1C24F375A100BE0F0F /* OutlineController.swift in Sources */,
-				4982C09E2A97F653006B7404 /* AppleSingleFormat.swift in Sources */,
 				4962BCD324C6D19A00990DA0 /* OpenPanelDelegate.swift in Sources */,
 				493074172BF09624001FFB76 /* TemplateDocument.swift in Sources */,
 				49AA1E662DC06EA80065E1C7 /* SupportRegistry.swift in Sources */,
 				49964E1924D12FFC00BAB902 /* ResourceDataSource.swift in Sources */,
-				49F570062A845D5E00953A17 /* RezFormat.swift in Sources */,
 				49655DFC24DF94B500D6AFF6 /* ResourceDirectory.swift in Sources */,
 				499216EE24CB914F0054A390 /* CreateResourceController.swift in Sources */,
-				4982C0AA2A9844BB006B7404 /* AppleDoubleFormat.swift in Sources */,
 				492722AC24CF89C200819E32 /* InfoWindowController.swift in Sources */,
 				4992491A26C3B527005F69A7 /* TypeAttributesEditor.swift in Sources */,
 				49E56F7C26DA22FB005FA18B /* ConflictResolver.swift in Sources */,
