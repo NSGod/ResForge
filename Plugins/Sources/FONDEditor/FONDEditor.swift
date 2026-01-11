@@ -145,8 +145,8 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
                 if let entry: KernTableEntry = ((item as? NSTreeNode)?.representedObject as? KernTreeNode)?.parent?.representedObject as? KernTableEntry {
                     if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
                         formatter.unitsPerEm = fond?.unitsPerEm(for: entry.style) ?? .postScriptStandard
-                        return view
                     }
+                    return view
                 }
             }
         } else if outlineView == glyphWidthsOutlineView {

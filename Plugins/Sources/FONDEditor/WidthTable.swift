@@ -37,7 +37,7 @@ final class WidthTable: FONDResourceNode {
 
 final class WidthTableEntry: FONDResourceNode {
     var style:              MacFontStyle        // style entry applies to
-    var widths:             [Fixed4Dot12]
+    @objc var widths:       [Fixed4Dot12]
 
     @objc var objcStyle:    MacFontStyle.RawValue {
         didSet { style = .init(rawValue: self.objcStyle) }
