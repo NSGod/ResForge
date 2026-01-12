@@ -267,6 +267,16 @@ enum UnitsPerEm {
     case postScriptStandard,
          trueTypeStandard
 
+    init(rawValue: Int) {
+        if rawValue == 1000 {
+            self = .postScriptStandard
+        } else if rawValue == 2048 {
+            self = .trueTypeStandard
+        } else {
+            self = .custom(rawValue)
+        }
+    }
+
     var rawValue: Int {
         switch self {
             case .custom(let v): return v
