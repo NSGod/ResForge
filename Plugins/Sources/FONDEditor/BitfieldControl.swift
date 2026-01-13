@@ -41,9 +41,10 @@ public class BitfieldControl: NSControl {
         super.init(coder: coder)
     }
 
-    override open var objectValue: Any? {
+    @objc dynamic override open var objectValue: Any? {
         get { return super.objectValue }
         set {
+            NSLog("\(type(of: self)).\(#function)() newValue == \(String(describing: newValue))")
             super.objectValue = newValue
             if objectValue == nil {
                 self.enabledMask = 0

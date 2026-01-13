@@ -22,7 +22,6 @@ class HexNumberFormatter: NumberFormatter, @unchecked Sendable {
         return nil
     }
 
-    // TODO: make this "Swiftier"?
     override func getObjectValue(_ obj: AutoreleasingUnsafeMutablePointer<AnyObject?>?, for string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool {
         guard let obj else { return false }
         let scanner = Scanner(string: string)
@@ -31,7 +30,7 @@ class HexNumberFormatter: NumberFormatter, @unchecked Sendable {
             return true
         } else {
             if let error = error {
-                error.pointee = "Not a hex number"
+                error.pointee = NSLocalizedString("Not a hex number.", comment: "") as NSString
             }
         }
         return false

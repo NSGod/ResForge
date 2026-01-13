@@ -36,32 +36,14 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
 
     @IBOutlet weak var tableView:                       NSTableView!
 
+    @IBOutlet var popover:                              NSPopover!
+    @IBOutlet weak var popoverButton:                   NSButton!
+
     @IBOutlet var boundingBoxTableEntriesController:    NSArrayController!
 
     @objc var objcFontClass:                            FontClass.RawValue = 0
 
 
-    @IBAction func changeFlags(_ sender: Any) {
-        guard let sender = sender as? NSButton else { return }
-        guard let fond = fond else { return }
-        let isOn = sender.state == .on
-        if isOn {
-            fond.objcFFFlags = fond.objcFFFlags | UInt16(sender.tag)
-        } else {
-            fond.objcFFFlags = fond.objcFFFlags & ~UInt16(sender.tag)
-        }
-    }
-    
-    @IBAction func changeFontClass(_ sender: Any) {
-        guard let sender = sender as? NSButton else { return }
-        let isOn = sender.state == .on
-        if isOn {
-            self.objcFontClass = objcFontClass | UInt16(sender.tag)
-        } else {
-            self.objcFontClass = objcFontClass & ~UInt16(sender.tag)
-        }
-    }
-    
     public override var windowNibName: NSNib.Name {
         "FONDEditorWindow"
     }
@@ -109,6 +91,33 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
         flagsBitfieldControl.bind(NSBindingName(rawValue: "objectValue"), to: self, withKeyPath: "fond.objcFFFlags")
         fontClassBitfieldControl.bind(NSBindingName(rawValue: "objectValue"), to: self, withKeyPath: "objcFontClass")
         fond?.styleMappingTable?.bind(NSBindingName(rawValue: "objcFontClass"), to: self, withKeyPath: "objcFontClass")
+    }
+
+    @IBAction func showPopover(_ sender: Any) {
+        popover.show(relativeTo: popoverButton.bounds, of: popoverButton, preferredEdge: .maxX)
+    }
+
+    @IBAction func changeFlags(_ sender: Any) {
+        guard let sender = sender as? NSButton else { return }
+        guard let fond = fond else { return }
+        let isOn = sender.state == .on
+//        self.willChangeValue(forKey: "fond.objcFFFlags")
+        if isOn {
+            fond.objcFFFlags = fond.objcFFFlags | UInt16(sender.tag)
+        } else {
+            fond.objcFFFlags = fond.objcFFFlags & ~UInt16(sender.tag)
+        }
+//        self.didChangeValue(forKey: "fond.objcFFFlags")
+    }
+
+    @IBAction func changeFontClass(_ sender: Any) {
+        guard let sender = sender as? NSButton else { return }
+        let isOn = sender.state == .on
+        if isOn {
+            self.objcFontClass = objcFontClass | UInt16(sender.tag)
+        } else {
+            self.objcFontClass = objcFontClass & ~UInt16(sender.tag)
+        }
     }
 
     // MARK: - <NSTableViewDelegate>
