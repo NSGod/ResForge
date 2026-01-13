@@ -14,6 +14,7 @@
                 <outlet property="boundingBoxTableView" destination="AHz-R9-Qcv" id="pwS-BS-Li6"/>
                 <outlet property="flagsBitfieldControl" destination="6a3-Jj-uPW" id="GMA-I7-C0U"/>
                 <outlet property="fontClassBitfieldControl" destination="32O-8D-vlx" id="KlW-OE-5N9"/>
+                <outlet property="fontClassField" destination="fKf-NA-GCs" id="4iL-wJ-RRs"/>
                 <outlet property="glyphWidthsOutlineView" destination="3Vq-Ol-tJo" id="3Zw-Cg-fmL"/>
                 <outlet property="kernTableOutlineView" destination="pFf-hf-b0S" id="Pq5-yo-Zxg"/>
                 <outlet property="popover" destination="YYp-IR-VTk" id="PYk-Nw-pZe"/>
@@ -235,6 +236,11 @@
                                 </connections>
                             </button>
                         </subviews>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="numberOfBits">
+                                <integer key="value" value="16"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
                     </customView>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="crE-aZ-eKK">
                         <rect key="frame" x="65" y="519" width="121" height="14"/>
@@ -1871,6 +1877,11 @@
                                 </connections>
                             </button>
                         </subviews>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="numberOfBits">
+                                <integer key="value" value="16"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
                     </customView>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5hl-LP-dcm">
                         <rect key="frame" x="462" y="519" width="63" height="14"/>

@@ -19,7 +19,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
 
     public let resource:                    Resource
     private let manager:                    RFEditorManager
-    @objc var fond:                         FOND?
+    @objc var fond:                         FOND
 
     @objc var kernPairs:                    [KernTreeNode] = []
     @objc var glyphWidths:                  [WidthTreeNode] = []
@@ -33,6 +33,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
     @IBOutlet weak var glyphWidthsOutlineView:          NSOutlineView!
     @IBOutlet weak var flagsBitfieldControl:            BitfieldControl!
     @IBOutlet weak var fontClassBitfieldControl:        BitfieldControl!
+    @IBOutlet weak var fontClassField:                  NSTextField!
 
     @IBOutlet weak var tableView:                       NSTableView!
 
@@ -48,13 +49,13 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
         "FONDEditorWindow"
     }
 
-    public required init(resource: Resource, manager: RFEditorManager) {
+    public required init?(resource: Resource, manager: RFEditorManager) {
         self.resource = resource
         self.manager = manager
         do {
             fond = try FOND(resource.data, resource: self.resource)
-            objcFontClass = fond?.styleMappingTable?.objcFontClass ?? 0
-            if let kernEntries = fond?.kernTable?.entries {
+            objcFontClass = fond.styleMappingTable?.objcFontClass ?? 0
+            if let kernEntries = fond.kernTable?.entries {
                 for kernEntry in kernEntries {
                     let node = KernTreeNode(kernEntry)
                     kernPairs.append(node)
@@ -63,7 +64,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
 //                kernPairs.sort
 //                kernPairs.sort { $0.left.value < $1.left.value }
             }
-            if let widthEntries = fond?.widthTable?.entries {
+            if let widthEntries = fond.widthTable?.entries {
                 for widthEntry in widthEntries {
                     let node = WidthTreeNode(with: widthEntry)
                     glyphWidths.append(node)
@@ -71,14 +72,15 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
                 // FIXME: figure out sorting here
 
             }
-            if let charCodesToGlyphNames = fond?.styleMappingTable?.glyphNameEncodingSubtable?.charCodesToGlyphNames, charCodesToGlyphNames.count > 0 {
+            if let charCodesToGlyphNames = fond.styleMappingTable?.glyphNameEncodingSubtable?.charCodesToGlyphNames, charCodesToGlyphNames.count > 0 {
                 let entries = GlyphNameEntry.glyphNameEntries(with: charCodesToGlyphNames)
                 glyphNameEntries.append(contentsOf: entries)
             }
-            effectiveGlyphNameEntries.append(contentsOf: fond!.encoding.glyphNameEntries)
+            effectiveGlyphNameEntries.append(contentsOf: fond.encoding.glyphNameEntries)
 
         } catch {
-             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            return nil
         }
         super.init(window: nil)
     }
@@ -90,7 +92,9 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
     public override func windowDidLoad() {
         flagsBitfieldControl.bind(NSBindingName(rawValue: "objectValue"), to: self, withKeyPath: "fond.objcFFFlags")
         fontClassBitfieldControl.bind(NSBindingName(rawValue: "objectValue"), to: self, withKeyPath: "objcFontClass")
-        fond?.styleMappingTable?.bind(NSBindingName(rawValue: "objcFontClass"), to: self, withKeyPath: "objcFontClass")
+        fond.styleMappingTable?.bind(NSBindingName(rawValue: "objcFontClass"), to: self, withKeyPath: "objcFontClass")
+        fontClassBitfieldControl.isEnabled = fond.styleOff != 0
+        fontClassField.isEnabled = fond.styleOff != 0
     }
 
     @IBAction func showPopover(_ sender: Any) {
@@ -99,7 +103,6 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
 
     @IBAction func changeFlags(_ sender: Any) {
         guard let sender = sender as? NSButton else { return }
-        guard let fond = fond else { return }
         let isOn = sender.state == .on
 //        self.willChangeValue(forKey: "fond.objcFFFlags")
         if isOn {
@@ -129,7 +132,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
             if let bboxEntries = boundingBoxTableEntriesController.arrangedObjects as? [BoundingBoxTableEntry] {
                 if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
                     let entry = bboxEntries[row]
-                    formatter.unitsPerEm = fond?.unitsPerEm(for: entry.style) ?? .postScriptStandard
+                    formatter.unitsPerEm = fond.unitsPerEm(for: entry.style)
                     return view
                 }
             }
@@ -153,7 +156,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
                 let view: NSTableCellView = outlineView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
                 if let entry: KernTableEntry = ((item as? NSTreeNode)?.representedObject as? KernTreeNode)?.parent?.representedObject as? KernTableEntry {
                     if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
-                        formatter.unitsPerEm = fond?.unitsPerEm(for: entry.style) ?? .postScriptStandard
+                        formatter.unitsPerEm = fond.unitsPerEm(for: entry.style)
                     }
                     return view
                 }
@@ -165,7 +168,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
                 if tableColumn?.identifier.rawValue == "glyphWidth" {
                     if let entry: WidthTableEntry = (item.representedObject as? KernTreeNode)?.parent?.representedObject as? WidthTableEntry {
                         if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
-                            formatter.unitsPerEm = fond?.unitsPerEm(for: entry.style) ?? .postScriptStandard
+                            formatter.unitsPerEm = fond.unitsPerEm(for: entry.style)
                         }
                     }
                 }

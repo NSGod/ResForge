@@ -17,11 +17,23 @@ public class BitfieldControl: NSControl {
         }
     }
 
-    public var numberOfBits:      Int = 16         // 16 or 32
+    override public var isEnabled: Bool {
+        didSet {
+            if isEnabled == false {
+                enabledMask = 0
+            } else {
+                enabledMask = 0xFFFF_FFFF
+            }
+        }
+    }
+
+    @IBInspectable public var numberOfBits:      Int = 16         // 16 or 32
 
     // to allow disabling or enabling of specific checkboxes via a mask
     public var enabledMask:       Int = 0 {
         didSet {
+            NSLog("\(type(of: self)).\(#function)() enabledMask == \(enabledMask)")
+
             var i = 1
             let max = numberOfBits == 16 ? UInt32(UInt16.max) : UInt32.max
             while i < max {
@@ -39,6 +51,11 @@ public class BitfieldControl: NSControl {
 
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
+    }
+
+    public override class func awakeFromNib() {
+        NSLog("\(type(of: self)).\(#function)()")
+        super.awakeFromNib()
     }
 
     @objc dynamic override open var objectValue: Any? {
