@@ -70,13 +70,12 @@ class FOND: NSObject {
         do {
             try calculateOffsetsIfNeeded()
             // can only have a Bounding Box table if we have an offset table to specify its offset
-            if let offsetTable = offsetTable {
-                // might have a bounding box table
-                let offsetTableOffset = Self.FontFamilyRecord.length + fontAssociationTable.length
-                try reader.pushPosition(offsetTableOffset + Int(offsetTable.entries[0].offsetOfTable))
-                boundingBoxTable = try BoundingBoxTable(reader)
-                reader.popPosition()
-            }
+            guard let offsetTable = offsetTable else { return nil }
+            // might have a bounding box table
+            let offsetTableOffset = Self.FontFamilyRecord.length + fontAssociationTable.length
+            try reader.pushPosition(offsetTableOffset + Int(offsetTable.entries[0].offsetOfTable))
+            boundingBoxTable = try BoundingBoxTable(reader)
+            reader.popPosition()
             return boundingBoxTable
         } catch {
              NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
@@ -102,13 +101,13 @@ class FOND: NSObject {
         if styleOff == 0 { return nil }
         do {
             try calculateOffsetsIfNeeded()
-            if let styleMappingRange = offsetTypesToRanges[.styleTable] {
-                try reader.pushPosition(Int(styleOff))
-                styleMappingTable = try StyleMappingTable(reader, range:styleMappingRange)
-                reader.popPosition()
-            } else {
+            guard let styleMappingRange = offsetTypesToRanges[.styleTable] else {
                 NSLog("\(type(of: self)).\(#function)() *** ERROR: could not determine styleMappingRange!")
+                return nil
             }
+            try reader.pushPosition(Int(styleOff))
+            styleMappingTable = try StyleMappingTable(reader, range:styleMappingRange)
+            reader.popPosition()
             return styleMappingTable
         } catch {
             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
@@ -121,12 +120,12 @@ class FOND: NSObject {
         do {
             try calculateOffsetsIfNeeded()
             if let kernRange = offsetTypesToRanges[.kernTable] {
-                try reader.pushPosition(Int(kernOff))
-                kernTable = try KernTable(reader, fond:self)
-                reader.popPosition()
             } else {
-                NSLog("\(type(of: self)).\(#function)() *** ERROR: could not determine kernTableRange!")
+                NSLog("\(type(of: self)).\(#function)() *** WARNING: could not determine kernTableRange; attempting parse anyway...")
             }
+            try reader.pushPosition(Int(kernOff))
+            kernTable = try KernTable(reader, fond:self)
+            reader.popPosition()
             return kernTable
         } catch {
              NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
@@ -155,7 +154,7 @@ class FOND: NSObject {
         return encoding
     }()
 
-    enum TableOffsetType {
+    private enum TableOffsetType {
         case offsetTable
         case bboxTable
         case widthTable
