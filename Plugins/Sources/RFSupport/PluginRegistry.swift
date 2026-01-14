@@ -130,7 +130,7 @@ public class PluginRegistry {
             "exclamationmark.circle"
         case "finf":
             "f.cursive.circle"
-        case "FOND", "NFNT", "FONT", "sfnt":
+        case "FOND", "NFNT", "FONT", "sfnt", "POST":
             "f.cursive"
         case "GIFf", "jpeg", "PICT", "PNG ", "PNGf", "pxm#":
             "photo"
