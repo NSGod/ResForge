@@ -25,6 +25,9 @@ let package = Package(
             name: "FONDEditor",
             targets: ["FONDEditor"]),
         .library(
+            name: "FontEditor",
+            targets: ["FontEditor"]),
+        .library(
             name: "ImageEditor",
             targets: ["ImageEditor"]),
         .library(
@@ -67,6 +70,9 @@ let package = Package(
         .target(name: "FONDEditor",
             dependencies: [.target(name: "RFSupport"),
                            .product(name: "CSV", package:"CSV.swift")]),
+        .target(name: "FontEditor",
+            dependencies: [.target(name: "RFSupport"),
+                           .product(name: "OrderedCollections", package:"swift-collections")]),
         .target(
             name: "MenuEditor",
             dependencies: [.target(name: "RFSupport")]),
