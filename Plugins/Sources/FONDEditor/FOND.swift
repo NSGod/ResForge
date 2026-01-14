@@ -47,6 +47,7 @@ class FOND: NSObject {
 
     var ffVersion:              FontFamilyVersion   // version number
 
+    // MARK: -
     @objc var objcFFFlags:      FontFamilyFlags.RawValue {
         didSet { ffFlags = FontFamilyFlags(rawValue: objcFFFlags) }
     }
@@ -166,7 +167,8 @@ class FOND: NSObject {
     private var offsetTypesToRanges:    [TableOffsetType: NSRange] = [:]
     private var offsetsCalculated:      Bool = false
     private var needsRepair:            Bool = false   // If this FOND resource's resourceID doesn't match the famID, we need to update the famID
-    
+
+    // MARK: -
     convenience init(_ data: Data, resource: Resource) throws {
         let reader = BinaryDataReader(data)
         try self.init(reader, resource: resource)
@@ -243,6 +245,8 @@ class FOND: NSObject {
          a 'kern' or 'GPOS' table, the kern pairs of which would take precedence over
          kerns defined here in the 'FOND'. (The data in an 'sfnt' entry is exactly what a
          Windows .ttf contains: see my answer here https://stackoverflow.com/a/7418915/277952) */
+
+        // TODO: use POST and OTFFontFile to get actual units per em
         for entry in fontAssociationTable.entries {
             if entry.fontStyle == fontStyle && entry.fontPointSize == 0 {
                 return .trueTypeStandard

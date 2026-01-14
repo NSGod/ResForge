@@ -1,6 +1,6 @@
 //
 //  MacPostScriptType1FontFile.swift
-//  Plugins
+//  FONDEditor
 //
 //  Created by Mark Douma on 1/11/2026.
 //
