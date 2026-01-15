@@ -45,14 +45,14 @@ class FOND: NSObject {
     @objc var intl0:            Int16               // for international use
     @objc var intl1:            Int16               // for international use
 
-    var ffVersion:              FontFamilyVersion   // version number
+    var ffVersion:              Version   // version number
 
     // MARK: -
     @objc var objcFFFlags:      FontFamilyFlags.RawValue {
         didSet { ffFlags = FontFamilyFlags(rawValue: objcFFFlags) }
     }
-    @objc var objcFFVersion:    FontFamilyVersion.RawValue {
-        didSet { ffVersion = FontFamilyVersion(rawValue: objcFFVersion) ?? .version1 }
+    @objc var objcFFVersion:    Version.RawValue {
+        didSet { ffVersion = Version(rawValue: objcFFVersion) ?? .version1 }
     }
 
     @objc var fontAssociationTable:     FontAssociationTable
@@ -116,7 +116,7 @@ class FOND: NSObject {
         return nil
     }()
 
-    @objc lazy var kernTable:         KernTable? = {
+    @objc lazy var kernTable:           KernTable? = {
         if kernOff == 0 { return nil }
         do {
             try calculateOffsetsIfNeeded()
@@ -135,7 +135,7 @@ class FOND: NSObject {
     }()
 
     // used to help inform encoding choice (e.g. Symbol and Dingbat fonts have special encodings)
-    lazy var basePostScriptName: String? = {
+    lazy var basePostScriptName:        String? = {
         if styleOff == 0 { return nil }
         guard let entry = fontAssociationTable.entries.first else { return nil }
         if let postScriptName = self.styleMappingTable?.postScriptNameForFont(with: entry.fontStyle) {
@@ -144,7 +144,7 @@ class FOND: NSObject {
         return nil
     }()
 
-    lazy var encoding:              MacEncoding = {
+    lazy var encoding:                  MacEncoding = {
         // FIXME: improve non-MacRoman encodings
         let scriptID = MacEncoding.scriptID(for: ResID(resource.id))
         NSLog("\(type(of: self)).\(#function)() resID: \(resource.id), scriptID: \(scriptID)")
@@ -154,6 +154,56 @@ class FOND: NSObject {
         }
         return encoding
     }()
+
+     /// `Font family flags`. An integer value, the bits of which specify general characteristics
+     /// of the font family. This value is represented by the ffFlags field in the FamRec data type.
+     /// The bits in the ffFlags field have the following meanings:
+     ///
+     /// Bit    Meaning
+     /// 0      This bit is reserved by Apple and should be cleared to 0.
+     /// 1      This bit is set to 1 if the resource contains a glyph-width table.
+     /// 2–11   These bits are reserved by Apple and should be cleared to 0.
+     /// 12     This bit is set to 1 if the font family ignores the value of the FractEnable
+     ///          global variable when deciding whether to use fixed-point values for stylistic variations;
+     ///          the value of bit 13 is then the deciding factor. The value of the FractEnable global
+     ///          variable is set by the SetFractEnable procedure.
+     /// 13     This bit is set to 1 if the font family should use integer extra width for stylistic variations.
+     ///          If not set, the font family should compute the fixed-point extra width from the family
+     ///          style-mapping table, but only if the FractEnable global variable has a value of TRUE.
+     /// 14     This bit is set to 1 if the family fractional-width table is not used, and is cleared to 0 if the table is used.
+     /// 15     This bit is set to 1 if the font family describes fixed-width fonts, and is cleared to 0 if the font describes proportional fonts.
+
+    public struct FontFamilyFlags: OptionSet, Hashable {
+        public let rawValue: UInt16
+
+        static let hasGlyphWidthTable       = Self(rawValue: 1 << 1)
+        static let ignoreFractEnable        = Self(rawValue: 1 << 12)
+        static let useIntegerWidths         = Self(rawValue: 1 << 13)
+        static let dontUseFractWidthTable   = Self(rawValue: 1 << 14)
+        static let isFixedWidth             = Self(rawValue: 1 << 15)
+
+        public init(rawValue: UInt16) {
+            self.rawValue = rawValue
+        }
+    }
+
+    /// `Version`. An integer value that specifies the version number of the font family resource, which
+    ///   indicates whether certain tables are available. This value is represented by the ffVersion field
+    ///   in the FamRec data type. Because this field has been used inconsistently in the system software,
+    ///   it is better to analyze the data in the resource itself instead of relying on the version number.
+    ///   The possible values are as follows:
+    ///   Value     Meaning
+    ///   0x0000    Created by the Macintosh system software. The font family resource will not have the glyph-width tables and the fields will contain 0.
+    ///   0x0001    Original format as designed by the font developer. This font family record probably has the width tables and most of the fields are filled.
+    ///   0x0002    This record may contain the offset and bounding-box tables.
+    ///   0x0003    This record definitely contains the offset and bounding-box tables.
+
+    public enum Version : UInt16, RawRepresentable {
+        case version0    = 0,
+             version1,
+             version2,
+             version3
+    }
 
     private enum TableOffsetType {
         case offsetTable
@@ -168,7 +218,7 @@ class FOND: NSObject {
     private var offsetsCalculated:      Bool = false
     private var needsRepair:            Bool = false   // If this FOND resource's resourceID doesn't match the famID, we need to update the famID
 
-    // MARK: -
+    // MARK: - init
     convenience init(_ data: Data, resource: Resource) throws {
         let reader = BinaryDataReader(data)
         try self.init(reader, resource: resource)

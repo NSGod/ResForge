@@ -58,11 +58,10 @@ public struct PSFontMetrics : FontMetrics {
     }
 }
 
-
 // represents a PFA/PFB file
 public struct PostScriptType1FontFile {
-    public let data:           Data          // stored in PFA format
-    var fileUrl:        URL?
+    public let data:            Data          // stored in PFA format
+    var fileUrl:                URL?
 
     public enum Format {
         case ascii      /// supported

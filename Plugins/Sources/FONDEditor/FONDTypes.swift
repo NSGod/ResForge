@@ -13,6 +13,14 @@ public typealias ResID         = Int16
 public typealias CharCode      = UInt8
 public typealias CharCode16    = UInt16
 
+public extension CharCode {
+    static let space: CharCode = 0x20
+}
+
+public extension CharCode16 {
+    static let space: CharCode16 = 0x20
+}
+
 //typealias EncodingID    = UInt16
 //typealias LanguageID    = UInt16
 
@@ -45,59 +53,6 @@ public extension BinaryDataReader {
         return bigEndian ?? self.bigEndian ? T(bigEndian: val) : T(littleEndian: val)
     }
 }
-
-
-/* Font family flags. An integer value, the bits of which specify general characteristics
- of the font family. This value is represented by the ffFlags field in the FamRec data type.
- The bits in the ffFlags field have the following meanings:
-
- Bit    Meaning
- 0        This bit is reserved by Apple and should be cleared to 0.
- 1        This bit is set to 1 if the resource contains a glyph-width table.
- 2–11    These bits are reserved by Apple and should be cleared to 0.
- 12        This bit is set to 1 if the font family ignores the value of the FractEnable
-            global variable when deciding whether to use fixed-point values for stylistic variations;
-            the value of bit 13 is then the deciding factor. The value of the FractEnable global
-            variable is set by the SetFractEnable procedure.
- 13        This bit is set to 1 if the font family should use integer extra width for stylistic variations.
-            If not set, the font family should compute the fixed-point extra width from the family
-            style-mapping table, but only if the FractEnable global variable has a value of TRUE.
- 14        This bit is set to 1 if the family fractional-width table is not used, and is cleared to 0 if the table is used.
- 15        This bit is set to 1 if the font family describes fixed-width fonts, and is cleared to 0 if the font describes proportional fonts.
- */
-
-public struct FontFamilyFlags: OptionSet, Hashable {
-    public let rawValue: UInt16
-
-    static let hasGlyphWidthTable       = Self(rawValue: 1 << 1)
-    static let ignoreFractEnable        = Self(rawValue: 1 << 12)
-    static let useIntegerWidths         = Self(rawValue: 1 << 13)
-    static let dontUseFractWidthTable   = Self(rawValue: 1 << 14)
-    static let isFixedWidth             = Self(rawValue: 1 << 15)
-
-    public init(rawValue: UInt16) {
-        self.rawValue = rawValue
-    }
-}
-
-/* Version. An integer value that specifies the version number of the font family resource, which
-    indicates whether certain tables are available. This value is represented by the ffVersion field
-    in the FamRec data type. Because this field has been used inconsistently in the system software,
-    it is better to analyze the data in the resource itself instead of relying on the version number.
-    The possible values are as follows:
-    Value    Meaning
-    $0000    Created by the Macintosh system software. The font family resource will not have the glyph-width tables and the fields will contain 0.
-    $0001    Original format as designed by the font developer. This font family record probably has the width tables and most of the fields are filled.
-    $0002    This record may contain the offset and bounding-box tables.
-    $0003    This record definitely contains the offset and bounding-box tables.
- */
-public enum FontFamilyVersion : UInt16, RawRepresentable {
-    case version0    = 0,
-         version1,
-         version2,
-         version3
-}
-
 
 public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible {
     public let rawValue: UInt16
@@ -173,95 +128,6 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
     }
 }
 
-/********  Font Family tables component *********/
-
-/* Font class. An integer value that specifies a collection of flags that alert
- the printer driver to what type of PostScript font this font family is. This value
- is represented by the fontClass field of the StyleTable data type.
- The default font class definition is 0, which has settings that indicate
- the printer driver should derive the bold, italic, condense, and extend
- styles from the plain font. Intrinsic fonts are assigned classes (bits 2 through 8)
- that prevent these derivations from occurring. The meanings of the 16 bits of the
- fontClass word are as follows:
-
- Bit    Meaning
- 0        This bit is set to 1 if the font name needs coordinating.
- 1        This bit is set to 1 if the Macintosh vector reencoding scheme is required.
-          Some glyphs in the Apple character set, such as the Apple glyph, do not occur
-          in the standard Adobe character set. This glyph must be mapped in from a font
-          that has it, such as the Symbol font, to a font that does not, like Helvetica.
- 2        This bit is set to 1 if the font family creates the outline style by changing PaintType, a PostScript variable, to 2.
- 3        This bit is set to 1 if the font family disallows simulating the outline style by smearing the glyph and whiting out the middle.
- 4        This bit is set to 1 if the font family does not allow simulation of the bold style by smearing the glyphs.
- 5        This bit is set to 1 if the font family simulates the bold style by increasing point size.
- 6        This bit is set to 1 if the font family disallows simulating the italic style.
- 7        This bit is set to 1 if the font family disallows automatic simulation of the condense style.
- 8        This bit is set to 1 if the font family disallows automatic simulation of the extend style.
- 9        This bit is set to 1 if the font family requires reencoding other than Macintosh vector encoding, in which case the glyph-encoding table is present.
- 10       This bit is set to 1 if the font family should have no additional intercharacter spacing other than the space character.
- 11–15    Reserved. Should be set to 0.
- */
-
-public struct FontClass: OptionSet, Hashable {
-    public let rawValue: UInt16
-
-    static let nameNeedsCoordinating         = Self(rawValue: 1 << 0)
-    static let reqMacVectorReEncoding        = Self(rawValue: 1 << 1)
-    static let simOutByPaintType             = Self(rawValue: 1 << 2)
-    static let noSimOutBySmearing            = Self(rawValue: 1 << 3)
-    static let noSimBoldBySmearing           = Self(rawValue: 1 << 4)
-    static let simBoldBySize                 = Self(rawValue: 1 << 5)
-    static let noSimItalic                   = Self(rawValue: 1 << 6)
-    static let noSimCondensed                = Self(rawValue: 1 << 7)
-    static let noSimExtended                 = Self(rawValue: 1 << 8)
-    static let reqOtherVectorReEncoding      = Self(rawValue: 1 << 9)
-    static let noAddSpacing                  = Self(rawValue: 1 << 10)
-
-    public init(rawValue: UInt16) {
-        self.rawValue = rawValue
-    }
-}
-
-extension FontClass: CustomStringConvertible, CustomDebugStringConvertible {
-
-    var classDescription: String {
-        switch self {
-            case .nameNeedsCoordinating:                   return "nameNeedsCoordinating"
-            case .reqMacVectorReEncoding:                  return "reqMacVectorReEncoding"
-            case .simOutByPaintType:                       return "simOutByPaintType"
-            case .noSimOutBySmearing:                      return "noSimOutBySmearing"
-            case .noSimBoldBySmearing:                     return "noSimBoldBySmearing"
-            case .simBoldBySize:                           return "simBoldBySize"
-            case .noSimItalic:                             return "noSimItalic"
-            case .noSimCondensed:                          return "noSimCondensed"
-            case .noSimExtended:                           return "noSimExtended"
-            case .reqOtherVectorReEncoding:                return "reqOtherVectorReEncoding"
-            case .noAddSpacing:                            return "noAddSpacing"
-            default:
-                return "unknown (rawValue: \(rawValue))"
-        }
-    }
-
-    public var description: String {
-        if self.rawValue == 0 { return "none" }
-        var description = ""
-        var i = Self.nameNeedsCoordinating.rawValue
-        while i <= Self.noAddSpacing.rawValue {
-            let fClass = Self(rawValue: i)
-            if self.contains(fClass) {
-                description = description.isEmpty ? fClass.classDescription : "\(description), \(fClass.classDescription)"
-            }
-            i += 1
-        }
-        return description
-    }
-
-    public var debugDescription: String {
-        return description
-    }
-}
-
-
 public enum UnitsPerEm {
     case custom(Int)
     case postScriptStandard,
@@ -285,7 +151,6 @@ public enum UnitsPerEm {
         }
     }
 }
-
 
 public enum MacScriptID: UInt16 {
     case roman                  = 0

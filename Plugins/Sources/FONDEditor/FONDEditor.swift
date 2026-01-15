@@ -42,7 +42,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
 
     @IBOutlet var boundingBoxTableEntriesController:    NSArrayController!
 
-    @objc var objcFontClass:                            FontClass.RawValue = 0
+    @objc var objcFontClass:                            StyleMappingTable.FontClass.RawValue = 0
 
 
     public override var windowNibName: NSNib.Name {
