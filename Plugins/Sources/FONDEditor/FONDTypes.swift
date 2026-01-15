@@ -8,34 +8,34 @@
 import Foundation
 import RFSupport
 
-typealias ResID         = Int16
+public typealias ResID         = Int16
 
-typealias CharCode      = UInt8
-typealias CharCode16    = UInt16
+public typealias CharCode      = UInt8
+public typealias CharCode16    = UInt16
 
 //typealias EncodingID    = UInt16
 //typealias LanguageID    = UInt16
 
-typealias UVBMP         = UInt16
+public typealias UVBMP         = UInt16
 
-extension UVBMP {
+public extension UVBMP {
     static let undefined: UVBMP = 0xFFFF
 }
 
-typealias Fixed4Dot12   = Int16
+public typealias Fixed4Dot12   = Int16
 
 fileprivate let fixed4: UInt16 = 1 << 12
 
-func Fixed4Dot12ToDouble(_ x: Fixed4Dot12) -> Double {
+public func Fixed4Dot12ToDouble(_ x: Fixed4Dot12) -> Double {
     Double(x) * 1.0/Double(fixed4)
 }
 
-func DoubleToFixed4Dot12(_ x: Double) -> Fixed4Dot12 {
+public func DoubleToFixed4Dot12(_ x: Double) -> Fixed4Dot12 {
     Fixed4Dot12(x * Double(fixed4) + (x < 0 ? -0.5 : 0.5))
 }
 
-extension BinaryDataReader {
-    public func peek<T: FixedWidthInteger>(bigEndian: Bool? = nil) throws -> T {
+public extension BinaryDataReader {
+    func peek<T: FixedWidthInteger>(bigEndian: Bool? = nil) throws -> T {
         let length = T.bitWidth / 8
         try self.advance(length)
         let val = data.withUnsafeBytes {
@@ -66,8 +66,8 @@ extension BinaryDataReader {
  15        This bit is set to 1 if the font family describes fixed-width fonts, and is cleared to 0 if the font describes proportional fonts.
  */
 
-struct FontFamilyFlags: OptionSet, Hashable {
-    let rawValue: UInt16
+public struct FontFamilyFlags: OptionSet, Hashable {
+    public let rawValue: UInt16
 
     static let hasGlyphWidthTable       = Self(rawValue: 1 << 1)
     static let ignoreFractEnable        = Self(rawValue: 1 << 12)
@@ -75,7 +75,7 @@ struct FontFamilyFlags: OptionSet, Hashable {
     static let dontUseFractWidthTable   = Self(rawValue: 1 << 14)
     static let isFixedWidth             = Self(rawValue: 1 << 15)
 
-    init(rawValue: UInt16) {
+    public init(rawValue: UInt16) {
         self.rawValue = rawValue
     }
 }
@@ -91,7 +91,7 @@ struct FontFamilyFlags: OptionSet, Hashable {
     $0002    This record may contain the offset and bounding-box tables.
     $0003    This record definitely contains the offset and bounding-box tables.
  */
-enum FontFamilyVersion : UInt16, RawRepresentable {
+public enum FontFamilyVersion : UInt16, RawRepresentable {
     case version0    = 0,
          version1,
          version2,
@@ -99,8 +99,8 @@ enum FontFamilyVersion : UInt16, RawRepresentable {
 }
 
 
-struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible {
-    let rawValue: UInt16
+public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible {
+    public let rawValue: UInt16
 
     static let regular          = Self([])
     static let plain            = Self.regular
@@ -113,7 +113,7 @@ struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible {
     static let condensed        = Self(rawValue: 1 << 5)    // 32
     static let extended         = Self(rawValue: 1 << 6)    // 64
 
-    init(rawValue: UInt16) {
+    public init(rawValue: UInt16) {
         self.rawValue = rawValue
     }
 
@@ -131,7 +131,7 @@ struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible {
         }
     }
 
-    var description: String {
+    public var description: String {
         if self == .regular { return styleDescription }
         var description = ""
         var i = Self.bold.rawValue
@@ -150,7 +150,7 @@ struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible {
     /// style and you have 48. So, when trying to look up the PostScript name in the
     /// StyleMappingTable, we compress the style value first before finding the index in indexes UInt8[48].
     /// This is used when getting the PostScript name of the font
-    func compressed() -> MacFontStyle {
+    public func compressed() -> MacFontStyle {
         var rawValue: UInt16 = 0
         if self.contains(.bold) { rawValue += 1 }
         if self.contains(.italic) { rawValue += 2 }
@@ -164,11 +164,11 @@ struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible {
         return MacFontStyle(rawValue: rawValue)
     }
 
-    static func == (lhs: MacFontStyle, rhs: MacFontStyle) -> Bool {
+    public static func == (lhs: MacFontStyle, rhs: MacFontStyle) -> Bool {
         return lhs.rawValue == rhs.rawValue
     }
 
-    static func < (lhs: MacFontStyle, rhs: MacFontStyle) -> Bool {
+    public static func < (lhs: MacFontStyle, rhs: MacFontStyle) -> Bool {
         return lhs.rawValue < rhs.rawValue
     }
 }
@@ -202,8 +202,8 @@ struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible {
  11–15    Reserved. Should be set to 0.
  */
 
-struct FontClass: OptionSet, Hashable {
-    let rawValue: UInt16
+public struct FontClass: OptionSet, Hashable {
+    public let rawValue: UInt16
 
     static let nameNeedsCoordinating         = Self(rawValue: 1 << 0)
     static let reqMacVectorReEncoding        = Self(rawValue: 1 << 1)
@@ -217,7 +217,7 @@ struct FontClass: OptionSet, Hashable {
     static let reqOtherVectorReEncoding      = Self(rawValue: 1 << 9)
     static let noAddSpacing                  = Self(rawValue: 1 << 10)
 
-    init(rawValue: UInt16) {
+    public init(rawValue: UInt16) {
         self.rawValue = rawValue
     }
 }
@@ -242,7 +242,7 @@ extension FontClass: CustomStringConvertible, CustomDebugStringConvertible {
         }
     }
 
-    var description: String {
+    public var description: String {
         if self.rawValue == 0 { return "none" }
         var description = ""
         var i = Self.nameNeedsCoordinating.rawValue
@@ -256,18 +256,18 @@ extension FontClass: CustomStringConvertible, CustomDebugStringConvertible {
         return description
     }
 
-    var debugDescription: String {
+    public var debugDescription: String {
         return description
     }
 }
 
 
-enum UnitsPerEm {
+public enum UnitsPerEm {
     case custom(Int)
     case postScriptStandard,
          trueTypeStandard
 
-    init(rawValue: Int) {
+    public init(rawValue: Int) {
         if rawValue == 1000 {
             self = .postScriptStandard
         } else if rawValue == 2048 {
@@ -277,7 +277,7 @@ enum UnitsPerEm {
         }
     }
 
-    var rawValue: Int {
+    public var rawValue: Int {
         switch self {
             case .custom(let v): return v
             case .postScriptStandard: return 1000
@@ -287,7 +287,7 @@ enum UnitsPerEm {
 }
 
 
-enum MacScriptID: UInt16 {
+public enum MacScriptID: UInt16 {
     case roman                  = 0
     case japanese               = 1
     case traditionalChinese     = 2
@@ -330,7 +330,7 @@ enum MacScriptID: UInt16 {
 }
 
 extension MacScriptID: CustomStringConvertible {
-    var description: String {
+    public var description: String {
         switch self {
             case .roman:                    return "Roman"
             case .japanese:                 return "Japanese"
@@ -372,7 +372,7 @@ extension MacScriptID: CustomStringConvertible {
 
 
 // Language codes are zero based everywhere but within a 'cmap' table
-enum MacLanguageID: UInt16 {
+public enum MacLanguageID: UInt16 {
     case english        = 0
     case french         = 1
     case german         = 2
@@ -488,7 +488,7 @@ enum MacLanguageID: UInt16 {
 };
 
 extension MacLanguageID: CustomStringConvertible {
-    var description: String {
+    public var description: String {
         switch self {
             case .english:          return "English"
             case .french:           return "French"

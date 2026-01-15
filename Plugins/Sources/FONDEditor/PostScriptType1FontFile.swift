@@ -18,7 +18,7 @@ import Dispatch
 //NSString * const MDUTTypePFBOutlineFont           = @"com.adobe.postscript-pfb-font";
 //NSString * const MDPFBOutlineFontType             = @"PostScript Type 1 (Binary) outline font";
 
-protocol FontMetrics {
+public protocol FontMetrics {
     var unitsPerEm:         UnitsPerEm  { get }
     var ascender:           CGFloat     { get }
     var descender:          CGFloat     { get }
@@ -32,19 +32,19 @@ protocol FontMetrics {
     var isFixedPitch:       Bool        { get }
 }
 
-struct PSFontMetrics : FontMetrics {
-    let unitsPerEm:         UnitsPerEm
-    let ascender:           CGFloat
-    let descender:          CGFloat
-    let leading:            CGFloat
-    let underlinePosition:  CGFloat
-    let underlineThickness: CGFloat
-    let italicAngle:        CGFloat
-    let capHeight:          CGFloat
-    let xHeight:            CGFloat
-    let isFixedPitch:       Bool
+public struct PSFontMetrics : FontMetrics {
+    public let unitsPerEm:         UnitsPerEm
+    public let ascender:           CGFloat
+    public let descender:          CGFloat
+    public let leading:            CGFloat
+    public let underlinePosition:  CGFloat
+    public let underlineThickness: CGFloat
+    public let italicAngle:        CGFloat
+    public let capHeight:          CGFloat
+    public let xHeight:            CGFloat
+    public let isFixedPitch:       Bool
 
-    init(font: NSFont) {
+    public init(font: NSFont) {
         ascender = font.ascender
         descender = font.descender
         leading = font.leading
@@ -60,22 +60,22 @@ struct PSFontMetrics : FontMetrics {
 
 
 // represents a PFA/PFB file
-struct PostScriptType1FontFile {
-    let data:           Data          // stored in PFA format
+public struct PostScriptType1FontFile {
+    public let data:           Data          // stored in PFA format
     var fileUrl:        URL?
 
-    enum Format {
+    public enum Format {
         case ascii      /// supported
         case binary     /// - Note: not currently supported
     }
 
-    let fullName:           String      // Frutiger 55 Roman    /FullName
-    let familyName:         String      // Frutiger             /FamilyName
-    let postScriptName:     String      // Frutiger-Roman       /FontName
+    public let fullName:           String      // Frutiger 55 Roman    /FullName
+    public let familyName:         String      // Frutiger             /FamilyName
+    public let postScriptName:     String      // Frutiger-Roman       /FontName
 
-    let metrics:            PSFontMetrics
-    let encoding:           CFStringEncoding
-    let characterSet:       CharacterSet
+    public let metrics:            PSFontMetrics
+    public let encoding:           CFStringEncoding
+    public let characterSet:       CharacterSet
 
     /// A set of options that control what additional information is parsed from a PostScript Type 1 font file.
     ///
@@ -84,44 +84,44 @@ struct PostScriptType1FontFile {
     ///
     /// - Note: Options marked as “not currently supported” are placeholders for future functionality.
     ///   Supplying them will not change behavior at this time.
-    struct ParseOptions: OptionSet {
+    public struct ParseOptions: OptionSet {
         /// The raw bitmask value backing the option set.
         ///
         /// Each distinct option corresponds to a unique bit in this value.
-        let rawValue: Int
+        public let rawValue: Int
         /// Creates a new set of parsing options from a raw bitmask.
         ///
         /// - Parameter rawValue: The raw bitmask representing one or more options.
-        init(rawValue: Int) { self.rawValue = rawValue }
-        
+        public init(rawValue: Int) { self.rawValue = rawValue }
+
         /// Performs no additional parsing beyond loading the font data.
         ///
         /// This is the default, fastest, and currently, the only supported behavior.
-        static let none:    ParseOptions = []
-        
+        public static let none:    ParseOptions = []
+
         /// Requests parsing of font and naming metadata (e.g., family name, style, PostScript name).
         ///
         /// - Important: Not currently supported. Supplying this option has no effect yet.
-        static let names:   ParseOptions = Self(rawValue: 1 << 0)   /// not currently supported
-        
+        public static let names:   ParseOptions = Self(rawValue: 1 << 0)   /// not currently supported
+
         /// Requests parsing of glyph-related data (e.g., glyph list, mappings).
         ///
         /// - Important: Not currently supported. Supplying this option has no effect yet.
-        static let glyphs:  ParseOptions = Self(rawValue: 1 << 1)   /// not currently supported
-        
+        public static let glyphs:  ParseOptions = Self(rawValue: 1 << 1)   /// not currently supported
+
         /// Convenience option that combines `.names` and `.glyphs` for comprehensive parsing.
         ///
         /// - Important: Not currently supported. Supplying this option has no effect yet.
-        static let full:    ParseOptions = [.names, .glyphs]        /// not currently supported
+        public static let full:    ParseOptions = [.names, .glyphs]        /// not currently supported
     }
 
-    init(contentsOf url: URL, options: ParseOptions = .none) throws {
+    public init(contentsOf url: URL, options: ParseOptions = .none) throws {
         let data = try Data(contentsOf: url)
         try self.init(data: data)
         self.fileUrl = url
     }
 
-    init(data: Data, options: ParseOptions = .none) throws {
+    public init(data: Data, options: ParseOptions = .none) throws {
         if !options.isEmpty {
             // FIXME: log error/warning
         }

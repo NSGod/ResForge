@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct AdobeGlyphList {
+public struct AdobeGlyphList {
 
-    static func glyphName(for UV: UVBMP) -> String? {
+    public static func glyphName(for UV: UVBMP) -> String? {
         guard let glyphName = uv2agl[UV] else {
             return nil
         }
@@ -18,21 +18,21 @@ struct AdobeGlyphList {
         return glyphName.trimmingCharacters(in: percentSet)
     }
 
-    static func uv(for glyphName: String) -> UVBMP {
+    public static func uv(for glyphName: String) -> UVBMP {
         guard let uv = agl2uv[glyphName] else {
             return .undefined
         }
         return uv
     }
 
-    static func zapfDingbatGlyphName(for UV: UVBMP) -> String? {
+    public static func zapfDingbatGlyphName(for UV: UVBMP) -> String? {
         guard let glyphName = uv2zding[UV] else {
             return nil
         }
         return glyphName
     }
 
-    static func zapfDingbatUV(for glyphName: String) -> UVBMP {
+    public static func zapfDingbatUV(for glyphName: String) -> UVBMP {
         guard let uv = zding2uv[glyphName] else {
             return .undefined
         }

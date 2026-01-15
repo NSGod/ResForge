@@ -11,28 +11,28 @@ import RFSupport
 //NSString * const MDUTTypeMacOutlineFont                = @"com.adobe.postscript-lwfn-font";
 //const OSType     MDOSTypeMacOutlineFont                = 'LWFN';
 
-enum MacPostScriptType1FontFileError: Error {
+public enum MacPostScriptType1FontFileError: Error {
     case notAPostScriptFont
 }
 
 
-struct MacPostScriptType1FontFile {
+public struct MacPostScriptType1FontFile {
 
-    var postScriptFontFile:     PostScriptType1FontFile?     // PFA/PFB file
+    public var postScriptFontFile:     PostScriptType1FontFile?     // PFA/PFB file
     private var resourceFile:   ClassicFormat!
 
     /// 99% of 'LWFN' files will be resource-fork-based, but Apple's Multiple Master
     /// substitution fonts (/System/Library/Fonts/TimesLTMM &&
     /// /System/Library/Fonts/HelveLTMM) are data-fork-based.
     /// So, default to resource-fork, but also try data fork as a last resort.
-    init(contentsOf url: URL) throws {
+    public init(contentsOf url: URL) throws {
         let values = try url.resourceValues(forKeys: [.fileSizeKey, .totalFileSizeKey])
         let hasRsrc = (values.totalFileSize! - values.fileSize!) > 0
         let data = try Data(contentsOf: (hasRsrc ? url.appendingPathComponent("..namedfork/rsrc") : url))
         try self.init(data: data)
     }
 
-    init(data: Data) throws {
+    public init(data: Data) throws {
         resourceFile = ClassicFormat()
         let resourceMap: ResourceMap = try resourceFile.read(data)
         guard var resources: [Resource] = resourceMap[ResourceType("POST")], resources.count > 0 else {

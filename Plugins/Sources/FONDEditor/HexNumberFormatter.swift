@@ -7,9 +7,9 @@
 
 import Foundation
 
-class HexNumberFormatter: NumberFormatter, @unchecked Sendable {
+public class HexNumberFormatter: NumberFormatter, @unchecked Sendable {
 
-    override func string(for obj: Any?) -> String? {
+    public override func string(for obj: Any?) -> String? {
         guard let numberValue = obj as? UInt32 else { return nil }
         let maxValue = self.maximum?.uint32Value ?? 0
         if maxValue == UInt32.max {
@@ -22,7 +22,7 @@ class HexNumberFormatter: NumberFormatter, @unchecked Sendable {
         return nil
     }
 
-    override func getObjectValue(_ obj: AutoreleasingUnsafeMutablePointer<AnyObject?>?, for string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool {
+    public override func getObjectValue(_ obj: AutoreleasingUnsafeMutablePointer<AnyObject?>?, for string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool {
         guard let obj else { return false }
         let scanner = Scanner(string: string)
         if let value = scanner.scanInt(representation: .hexadecimal) {
