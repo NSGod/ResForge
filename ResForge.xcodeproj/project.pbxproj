@@ -49,6 +49,7 @@
 		B229EEF715A4FB6F0032C12C /* InfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = B229EEEE15A4FB6F0032C12C /* InfoWindow.xib */; };
 		B229EEF815A4FB6F0032C12C /* PrefsWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = B229EEF015A4FB6F0032C12C /* PrefsWindow.xib */; };
 		B229EEF915A4FB6F0032C12C /* ResourceDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = B229EEF215A4FB6F0032C12C /* ResourceDocument.xib */; };
+		C11C2A3A2F15E368002AEBAB /* BitmapFontEditor in Frameworks */ = {isa = PBXBuildFile; productRef = C11C2A392F15E368002AEBAB /* BitmapFontEditor */; };
 		C1960C4C2F049DBC003BC1E4 /* FONDEditor in Frameworks */ = {isa = PBXBuildFile; productRef = C1960C4B2F049DBC003BC1E4 /* FONDEditor */; };
 		C1DD00B32F134D03006188B0 /* FontEditor in Frameworks */ = {isa = PBXBuildFile; productRef = C1DD00B22F134D03006188B0 /* FontEditor */; };
 /* End PBXBuildFile section */
@@ -189,6 +190,7 @@
 				498001B12DC05A6F006C39BE /* DialogEditor in Frameworks */,
 				49D6D349271BAA9F002DEA97 /* OrderedCollections in Frameworks */,
 				496107642DC0E71000D73B44 /* TemplateEditor in Frameworks */,
+				C11C2A3A2F15E368002AEBAB /* BitmapFontEditor in Frameworks */,
 				49AA91E02DC08054007944F6 /* NovaTools in Frameworks */,
 				C1DD00B32F134D03006188B0 /* FontEditor in Frameworks */,
 				49AA91E42DC08DE1007944F6 /* MenuEditor in Frameworks */,
@@ -346,6 +348,7 @@
 				496107632DC0E71000D73B44 /* TemplateEditor */,
 				C1960C4B2F049DBC003BC1E4 /* FONDEditor */,
 				C1DD00B22F134D03006188B0 /* FontEditor */,
+				C11C2A392F15E368002AEBAB /* BitmapFontEditor */,
 			);
 			productInstallPath = "$(USER_APPS_DIR)";
 			productName = ResForge;
@@ -778,6 +781,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 493CC3A9270AE8CA00A9173E /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = OrderedCollections;
+		};
+		C11C2A392F15E368002AEBAB /* BitmapFontEditor */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BitmapFontEditor;
 		};
 		C1960C4B2F049DBC003BC1E4 /* FONDEditor */ = {
 			isa = XCSwiftPackageProductDependency;

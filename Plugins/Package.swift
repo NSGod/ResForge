@@ -28,6 +28,9 @@ let package = Package(
             name: "FontEditor",
             targets: ["FontEditor"]),
         .library(
+            name: "BitmapFontEditor",
+            targets: ["BitmapFontEditor"]),
+        .library(
             name: "ImageEditor",
             targets: ["ImageEditor"]),
         .library(
@@ -73,6 +76,10 @@ let package = Package(
         .target(name: "FontEditor",
             dependencies: [.target(name: "RFSupport"),
                            .product(name: "OrderedCollections", package:"swift-collections")]),
+        .target(name: "BitmapFontEditor",
+            dependencies: [.target(name: "RFSupport"),
+                           .target(name: "FONDEditor"),
+                           ]),
         .target(
             name: "MenuEditor",
             dependencies: [.target(name: "RFSupport")]),
