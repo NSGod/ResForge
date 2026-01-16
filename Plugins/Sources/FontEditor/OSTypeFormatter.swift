@@ -29,7 +29,7 @@ class OSTypeFormatter: Formatter {
 
     override func getObjectValue(_ obj: AutoreleasingUnsafeMutablePointer<AnyObject?>?, for string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool {
         guard let obj else { return false }
-        var string = string
+        let string = string
         obj.pointee = Tag(fourCharString: string) as AnyObject
         return true
     }
