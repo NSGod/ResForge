@@ -46,7 +46,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
 
 
     public override var windowNibName: NSNib.Name {
-        "FONDEditorWindow"
+        "FONDEditor"
     }
 
     public required init?(resource: Resource, manager: RFEditorManager) {
