@@ -203,7 +203,7 @@ public class NFNT: NSObject {
         }
         for i in 0..<length {
             // NOTE: here, each byte represents 8 pixels worth of data, & we're flipping all 8 bits at the same time
-            bitmapData[i] = ~bitmapImageData[i]
+            bitmapData[i] = ~bitmapImageData[bitmapImageData.startIndex + i]
         }
         /// We might as well make an RGBA image of this properly padded image so that the `vImageConvert_AnyToAny()`
         /// function will work properly. In more recent versions of OS X, trying to draw the B&W bitmap image for every
