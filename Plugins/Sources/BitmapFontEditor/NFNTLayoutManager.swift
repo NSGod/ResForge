@@ -31,7 +31,7 @@ class NFNTLayoutManager {
         typesetter.layoutManager = self
     }
 
-    // called by `NFNTTextStorage` to notify of changes to model:
+    /// called by `NFNTTextStorage` to notify of changes to model:
     func stringDidChange() {
         self.invalidateLayout()
     }

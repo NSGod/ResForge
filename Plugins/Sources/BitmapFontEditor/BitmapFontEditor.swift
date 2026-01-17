@@ -9,7 +9,7 @@ import Cocoa
 import RFSupport
 import FONDEditor
 
-public class BitmapFontEditor: AbstractEditor, ResourceEditor, NSTableViewDelegate {
+public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvider, NSTableViewDelegate {
     public static var bundle: Bundle { .module }
     public static let supportedTypes = [
         "NFNT",
@@ -73,6 +73,11 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, NSTableViewDelega
         nfnt.bind(NSBindingName(rawValue:"objcFontType"), to: self, withKeyPath: "objcFontType")
         bitDepthPopUpButton.selectItem(withTag: NFNT.FontType.viewTag(forFontBitDepth: nfnt.fontType))
         super.windowDidLoad()
+    }
+
+    public static func placeholderName(for resource: Resource) -> String? {
+        // TODO: parse FONDs and label NFNTs according to font association entries?
+        return nil
     }
 
     @IBAction func showPopover(_ sender: Any) {

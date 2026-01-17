@@ -11,7 +11,7 @@ import RFSupport
 class NFNTTextContainer {
     var size:                   NSSize {
         didSet {
-//            NSLog("\(type(of: self)).\(#function)")
+//            NSLog("\(type(of: self)).\(#function) size did change: \(size)")
             guard let layoutManager else { return }
             layoutManager.textContainerChangedGeometry(self)
         }

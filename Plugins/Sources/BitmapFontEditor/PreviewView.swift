@@ -20,7 +20,7 @@ public class PreviewView: NSView {
         }
     }
 
-    public var alignment:      NSTextAlignment {
+    public var alignment:       NSTextAlignment {
         set {
             textStorage.alignment = newValue
             self.needsDisplay = true
@@ -30,7 +30,7 @@ public class PreviewView: NSView {
         }
     }
 
-    public var nfnt:           NFNT? {
+    public var nfnt:            NFNT? {
         set {
             textStorage.nfnt = newValue
             self.needsDisplay = true
@@ -43,7 +43,7 @@ public class PreviewView: NSView {
     /// padding the text is inset from the edge, in px
     public var padding:         CGFloat = 10
 
-    var textStorage: NFNTTextStorage
+    var textStorage:            NFNTTextStorage
 
     public override init(frame frameRect: NSRect) {
         NSLog("\(type(of: self)).\(#function)")
@@ -87,7 +87,6 @@ public class PreviewView: NSView {
     public override var isFlipped: Bool { true }
 
     @objc private func viewFrameChanged(_ notification: Notification) {
-        NSLog("\(type(of: self)).\(#function)")
         syncSize()
         // ??
         // self.needsDisplay = true

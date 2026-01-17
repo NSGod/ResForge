@@ -49,6 +49,7 @@ class NFNTTypesetter {
                     isBeginningOfLine = true
                 }
                 if !isBeginningOfLine {
+                    // FIXME: this is not safe!!
                     let spaceGlyph = nfnt.glyphEntries[" "]!
                     currentLineFragment.add(spaceGlyph)
                     drawPoint.x += CGFloat(nfnt.kernMax + Int16(spaceGlyph.offset)) + CGFloat(spaceGlyph.width)
@@ -95,7 +96,7 @@ class NFNTTypesetter {
         var widths: [CGFloat] = []
         for char: Character in string {
             if let glyph = nfnt.glyphEntries["\(char)"] {
-                widths.append(CGFloat(nfnt.kernMax + Int16(glyph.offset)))
+                widths.append(CGFloat(nfnt.kernMax + Int16(glyph.offset) + Int16(glyph.width)))
             }
         }
         return widths
