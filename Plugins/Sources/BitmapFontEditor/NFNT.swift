@@ -29,7 +29,9 @@ public class NFNT: NSObject {
     @objc var leading:          Int16           // leading
     @objc var rowWords:         Int16           // row width of bit image / 2
 
-    @objc var objcFontType:     FontType.RawValue { fontType.rawValue }
+    @objc var objcFontType:     FontType.RawValue {
+        didSet { fontType = FontType(rawValue: objcFontType) }
+    }
 
     var lineHeight:             CGFloat { CGFloat(fRectHeight + leading) }
 
@@ -83,6 +85,15 @@ public class NFNT: NSObject {
         static let reserved12               = FontType(rawValue: 1 << 12)   // reserved, should be 1
         static let isFixedWidthFont         = FontType(rawValue: 1 << 13)
         static let expandFontHeight         = FontType(rawValue: 1 << 14)
+
+        static func viewTag(forFontBitDepth: FontType) -> Int {
+            switch forFontBitDepth {
+                case .font8BitDepth:      return 3
+                case .font4BitDepth:      return 2
+                case .font2BitDepth:      return 1
+                default:                  return 0
+            }
+        }
     }
 
     struct Glyph {
@@ -143,6 +154,7 @@ public class NFNT: NSObject {
         descent = try reader.read()
         leading = try reader.read()
         rowWords = try reader.read()
+        objcFontType = fontType.rawValue
     }
 
     private func buildImageAndGlyphsIfNeeded() throws {
@@ -213,7 +225,13 @@ public class NFNT: NSObject {
         /// of OS X, we'll do the conversion ourselves.
 
         let sRGBRef = CGColorSpace.init(name: CGColorSpace.sRGB)!
-        let bitmapContext = CGContext(data: nil, width: Int(rowWords) * 16, height: Int(fRectHeight), bitsPerComponent: 8, bytesPerRow: Int(rowWords) * 16 * 4, space: sRGBRef, bitmapInfo: CGBitmapInfo(alpha: .noneSkipLast))
+        let bitmapContext = CGContext(data: nil,
+                                      width: Int(rowWords) * 16,
+                                      height: Int(fRectHeight),
+                                      bitsPerComponent: 8,
+                                      bytesPerRow: Int(rowWords) * 16 * 4,
+                                      space: sRGBRef,
+                                      bitmapInfo: CGBitmapInfo(alpha: .noneSkipLast))
         guard let imageRef = bitmapImageRep.cgImage else {
             NSLog("\(type(of: self)).\(#function)() *** ERROR: failed to get CGImage from bitmapImageRep == \(bitmapImageRep)")
             throw CocoaError(.fileReadCorruptFile)

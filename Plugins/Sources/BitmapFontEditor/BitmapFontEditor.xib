@@ -3,14 +3,17 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24506"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="BitmapFontEditor" customModule="BitmapFontEditor">
             <connections>
+                <outlet property="bitDepthPopUpButton" destination="hd4-0v-R7c" id="sia-XS-MIA"/>
                 <outlet property="box" destination="gbN-Oc-2O2" id="xEc-Dx-otj"/>
-                <outlet property="colorFontPopUpButton" destination="hd4-0v-R7c" id="sia-XS-MIA"/>
                 <outlet property="fontTypeBitfieldControl" destination="5aj-GY-zA2" id="5Na-aW-uHY"/>
+                <outlet property="popover" destination="XSO-mT-6GH" id="FcX-hM-DiG"/>
+                <outlet property="popoverButton" destination="2jR-1S-GSs" id="UC9-Yl-VhR"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -23,11 +26,11 @@
         <numberFormatter formatterBehavior="default10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="WuE-8k-2k5" userLabel="f4Dot12Formatter" customClass="Fixed4Dot12NumberFormatter" customModule="FONDEditor"/>
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5" userLabel="window">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="240" width="676" height="624"/>
+            <rect key="contentRect" x="196" y="240" width="661" height="624"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1169"/>
+            <value key="minSize" type="size" width="661" height="624"/>
             <view key="contentView" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="0.0" width="676" height="624"/>
+                <rect key="frame" x="0.0" y="0.0" width="661" height="624"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fBR-67-WOU">
@@ -147,6 +150,9 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="changeFontType:" target="-2" id="MAS-bE-jEY"/>
+                                </connections>
                             </button>
                             <button tag="16384" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X1l-CC-jTL">
                                 <rect key="frame" x="-1" y="16" width="174" height="16"/>
@@ -180,6 +186,9 @@
                                         </items>
                                     </menu>
                                 </popUpButtonCell>
+                                <connections>
+                                    <action selector="changeBitDepth:" target="-2" id="Ipq-VP-dlr"/>
+                                </connections>
                             </popUpButton>
                         </subviews>
                         <userDefinedRuntimeAttributes>
@@ -491,29 +500,67 @@
                             <outlet property="formatter" destination="KzF-GY-0HX" id="VSi-MQ-BQY"/>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="204" translatesAutoresizingMaskIntoConstraints="NO" id="ChK-01-RVP">
-                        <rect key="frame" x="259" y="168" width="208" height="27"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" controlSize="mini" selectable="YES" alignment="left" title="If this is &gt; 0, it is the high-order word of the offset to the Offset/Width table in the font." id="cQV-Rn-FMl">
-                            <font key="font" metaFont="miniSystem"/>
-                            <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <box fixedFrame="YES" boxType="custom" borderType="none" cornerRadius="4" translatesAutoresizingMaskIntoConstraints="NO" id="gbN-Oc-2O2">
+                    <box fixedFrame="YES" boxType="custom" borderType="line" cornerRadius="4" translatesAutoresizingMaskIntoConstraints="NO" id="gbN-Oc-2O2">
                         <rect key="frame" x="275" y="326" width="366" height="269"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <view key="contentView" id="dFe-6A-TlH">
-                            <rect key="frame" x="0.0" y="0.0" width="366" height="269"/>
+                            <rect key="frame" x="1" y="1" width="364" height="267"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         </view>
                     </box>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2jR-1S-GSs">
+                        <rect key="frame" x="257" y="174" width="15" height="20"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="center" controlSize="small" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" id="J3w-af-Hkl">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                            <imageReference key="image" image="questionmark.circle.fill" catalog="system" symbolScale="medium" renderingMode="hierarchical-single">
+                                <hierarchicalColors>
+                                    <color name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                    <color name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                </hierarchicalColors>
+                            </imageReference>
+                        </buttonCell>
+                        <connections>
+                            <action selector="showPopover:" target="-2" id="PUH-lA-w7L"/>
+                        </connections>
+                    </button>
                 </subviews>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="111" y="-94"/>
+            <point key="canvasLocation" x="103.5" y="-94"/>
         </window>
+        <viewController id="TX3-FV-B6h" userLabel="popoverViewController">
+            <connections>
+                <outlet property="view" destination="h5U-zp-qTR" id="WiU-IN-act"/>
+            </connections>
+        </viewController>
+        <popover behavior="t" id="XSO-mT-6GH" userLabel="popover">
+            <connections>
+                <outlet property="contentViewController" destination="TX3-FV-B6h" id="te9-Xt-Ftn"/>
+            </connections>
+        </popover>
+        <customView id="h5U-zp-qTR" userLabel="popoverView">
+            <rect key="frame" x="0.0" y="0.0" width="235" height="76"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="204" translatesAutoresizingMaskIntoConstraints="NO" id="ChK-01-RVP">
+                    <rect key="frame" x="14" y="18" width="207" height="42"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <textFieldCell key="cell" controlSize="small" selectable="YES" alignment="left" title="If this is &gt; 0, it is the high-order word of the offset to the Offset/Width table in the font." id="cQV-Rn-FMl">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <point key="canvasLocation" x="665.5" y="-137"/>
+        </customView>
     </objects>
+    <resources>
+        <image name="questionmark.circle.fill" catalog="system" width="15" height="15"/>
+    </resources>
 </document>

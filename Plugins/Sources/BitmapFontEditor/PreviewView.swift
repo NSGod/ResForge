@@ -1,6 +1,6 @@
 //
 //  PreviewView.swift
-//  Plugins
+//  BitmapFontEditor
 //
 //  Created by Mark Douma on 1/15/2026.
 //
@@ -40,13 +40,16 @@ public class PreviewView: NSView {
         }
     }
 
+    /// padding the text is inset from the edge, in px
+    public var padding:         CGFloat = 10
+
     var textStorage: NFNTTextStorage
 
     public override init(frame frameRect: NSRect) {
         NSLog("\(type(of: self)).\(#function)")
         textStorage = NFNTTextStorage()
         let layoutManager = NFNTLayoutManager()
-        let container = NFNTTextContainer(size: frameRect.size)
+        let container = NFNTTextContainer(size: NSInsetRect(frameRect, padding, padding).size)
         textStorage.layoutManager = layoutManager
         layoutManager.textContainer = container
         super.init(frame: frameRect)
@@ -66,23 +69,39 @@ public class PreviewView: NSView {
         NotificationCenter.default.removeObserver(self)
     }
 
+    /// actually, this won't be called unless we're in the nib, which we aren't
     public override func awakeFromNib() {
-//        NSLog("\(type(of: self)).\(#function)")
+        NSLog("\(type(of: self)).\(#function)")
+        syncSize()
         NotificationCenter.default.addObserver(self, selector: #selector(viewFrameChanged), name: Self.frameDidChangeNotification, object: self)
-        textStorage.layoutManager.textContainer.size = self.bounds.size
+        self.needsDisplay = true
+    }
+
+    public override func viewDidMoveToWindow() {
+        NSLog("\(type(of: self)).\(#function)")
+        syncSize()
+        NotificationCenter.default.addObserver(self, selector: #selector(viewFrameChanged), name: Self.frameDidChangeNotification, object: self)
         self.needsDisplay = true
     }
 
     public override var isFlipped: Bool { true }
 
     @objc private func viewFrameChanged(_ notification: Notification) {
-        textStorage.layoutManager.textContainer.size = self.bounds.size
+        NSLog("\(type(of: self)).\(#function)")
+        syncSize()
         // ??
         // self.needsDisplay = true
     }
 
+    private func syncSize() {
+        textStorage.layoutManager.textContainer.size = NSInsetRect(self.bounds, padding, padding).size
+    }
+
     public override func draw(_ dirtyRect: NSRect) {
-        textStorage.layoutManager.drawGlyphs(at: self.bounds.origin)
+        NSBezierPath.defaultLineWidth = 2.0
+        NSColor.red.setStroke()
+        NSBezierPath(rect: self.bounds).stroke()
+        textStorage.layoutManager.drawGlyphs(at: NSInsetRect(self.bounds, padding, padding).origin)
     }
     
 }
