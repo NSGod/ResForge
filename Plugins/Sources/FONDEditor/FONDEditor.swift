@@ -35,6 +35,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
     @IBOutlet weak var fontClassBitfieldControl:        BitfieldControl!
     @IBOutlet weak var fontClassField:                  NSTextField!
 
+    @IBOutlet weak var tabView:                         NSTabView!
     @IBOutlet weak var tableView:                       NSTableView!
 
     @IBOutlet var popover:                              NSPopover!
@@ -52,6 +53,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
     public required init?(resource: Resource, manager: RFEditorManager) {
         self.resource = resource
         self.manager = manager
+        UserDefaults.standard.register(defaults: ["FONDEditor.selectedTabIndex": 0])
         do {
             fond = try FOND(resource.data, resource: self.resource)
             objcFontClass = fond.styleMappingTable?.objcFontClass ?? 0
@@ -95,6 +97,11 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
         fond.styleMappingTable?.bind(NSBindingName(rawValue: "objcFontClass"), to: self, withKeyPath: "objcFontClass")
         fontClassBitfieldControl.isEnabled = fond.styleOff != 0
         fontClassField.isEnabled = fond.styleOff != 0
+        tabView.selectTabViewItem(at: UserDefaults.standard.integer(forKey: "FONDEditor.selectedTabIndex"))
+    }
+
+    public func windowWillClose(_ notification: Notification) {
+        UserDefaults.standard.set(tabView.indexOfTabViewItem(tabView.selectedTabViewItem!), forKey: "FONDEditor.selectedTabIndex")
     }
 
     @IBAction func showPopover(_ sender: Any) {

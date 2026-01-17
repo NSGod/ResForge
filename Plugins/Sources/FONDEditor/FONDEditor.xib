@@ -19,6 +19,7 @@
                 <outlet property="kernTableOutlineView" destination="pFf-hf-b0S" id="Pq5-yo-Zxg"/>
                 <outlet property="popover" destination="YYp-IR-VTk" id="PYk-Nw-pZe"/>
                 <outlet property="popoverButton" destination="keH-Ko-cqR" id="hbH-jU-ebc"/>
+                <outlet property="tabView" destination="QOJ-t2-8QG" id="I8l-Ge-wJB"/>
                 <outlet property="tableView" destination="sK8-fL-P4L" id="19s-dm-3s4"/>
                 <outlet property="window" destination="4Uc-O3-eRj" id="xAs-5T-EYy"/>
             </connections>

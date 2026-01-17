@@ -28,7 +28,7 @@ public final class StyleMappingTable: ResourceNode {
     var fontNameSuffixSubtable:             FontNameSuffixSubtable
     @objc var glyphNameEncodingSubtable:    GlyphNameEncodingSubtable?
 
-    class override var length: Int {
+    class public override var length: Int {
         MemoryLayout<FontClass.RawValue>.size + MemoryLayout<Int32>.size * 2 + 48  // 58 bytes
     }
 

@@ -15,11 +15,11 @@ public enum MacPostScriptType1FontFileError: Error {
     case notAPostScriptFont
 }
 
-
+// represents an 'LWFN' file w/ an "embedded" PFA/PFB file split into 'POST' resources
 public struct MacPostScriptType1FontFile {
 
-    public var postScriptFontFile:     PostScriptType1FontFile?     // PFA/PFB file
-    private var resourceFile:   ClassicFormat!
+    public var postScriptFontFile:      PostScriptType1FontFile?     // "embedded" PFA/PFB file
+    private var resourceFile:           ClassicFormat!
 
     /// 99% of 'LWFN' files will be resource-fork-based, but Apple's Multiple Master
     /// substitution fonts (/System/Library/Fonts/TimesLTMM &&

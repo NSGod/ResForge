@@ -10,7 +10,7 @@ import Foundation
 public class ResourceNode: NSObject {
     @objc public var length:    Int = 0
 
-    class var length:           Int {
+    public class var length:           Int {
         return NSNotFound
     }
 }
