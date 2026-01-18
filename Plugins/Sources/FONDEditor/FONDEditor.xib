@@ -12,10 +12,12 @@
             <connections>
                 <outlet property="boundingBoxTableEntriesController" destination="w7R-rF-7U5" id="EfC-o7-kZf"/>
                 <outlet property="boundingBoxTableView" destination="AHz-R9-Qcv" id="pwS-BS-Li6"/>
+                <outlet property="exportKernPairButton" destination="q14-pX-jPe" id="cjS-6g-kf4"/>
                 <outlet property="flagsBitfieldControl" destination="6a3-Jj-uPW" id="GMA-I7-C0U"/>
                 <outlet property="fontClassBitfieldControl" destination="32O-8D-vlx" id="KlW-OE-5N9"/>
                 <outlet property="fontClassField" destination="fKf-NA-GCs" id="4iL-wJ-RRs"/>
                 <outlet property="glyphWidthsOutlineView" destination="3Vq-Ol-tJo" id="3Zw-Cg-fmL"/>
+                <outlet property="kernPairsTreeController" destination="Gk8-7C-LRq" id="UmJ-wM-Ax3"/>
                 <outlet property="kernTableOutlineView" destination="pFf-hf-b0S" id="Pq5-yo-Zxg"/>
                 <outlet property="popover" destination="YYp-IR-VTk" id="PYk-Nw-pZe"/>
                 <outlet property="popoverButton" destination="keH-Ko-cqR" id="hbH-jU-ebc"/>
@@ -1051,9 +1053,9 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F89-mP-qQV">
-                                            <rect key="frame" x="434" y="353" width="147" height="14"/>
+                                            <rect key="frame" x="224" y="353" width="147" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="12345 bytes" id="nmX-fD-6SS">
+                                            <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="center" title="12345 bytes" id="nmX-fD-6SS">
                                                 <byteCountFormatter key="formatter" countStyle="memory" allowsNonnumericFormatting="NO" includesActualByteCount="YES" zeroPadsFractionDigits="YES" id="Mkq-hN-LTI"/>
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
@@ -1072,9 +1074,9 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" id="RjT-Ek-YbF">
                                                 <rect key="frame" x="1" y="1" width="560" height="326"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" autosaveName="FONDEditor.kernTableOutlineView" rowHeight="22" headerView="Aza-f6-hI3" viewBased="YES" indentationPerLevel="13" outlineTableColumn="SLG-F7-ntA" id="pFf-hf-b0S" userLabel="kernTableOutlineView">
+                                                    <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" autosaveName="FONDEditor.kernTableOutlineView" rowHeight="22" headerView="Aza-f6-hI3" viewBased="YES" indentationPerLevel="13" outlineTableColumn="SLG-F7-ntA" id="pFf-hf-b0S" userLabel="kernTableOutlineView" customClass="OutlineView" customModule="FONDEditor">
                                                         <rect key="frame" x="0.0" y="0.0" width="563" height="298"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <size key="intercellSpacing" width="17" height="0.0"/>
@@ -1094,7 +1096,7 @@
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <prototypeCellViews>
                                                                     <tableCellView identifier="style" id="etv-eS-67l">
-                                                                        <rect key="frame" x="18" y="0.0" width="174" height="22"/>
+                                                                        <rect key="frame" x="8" y="0.0" width="174" height="22"/>
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         <subviews>
                                                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iBo-Bu-diu">
@@ -1130,7 +1132,7 @@
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <prototypeCellViews>
                                                                     <tableCellView identifier="kernFirst" id="kAI-mP-a1s">
-                                                                        <rect key="frame" x="209" y="0.0" width="89" height="22"/>
+                                                                        <rect key="frame" x="199" y="0.0" width="89" height="22"/>
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         <subviews>
                                                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mii-oL-3uN">
@@ -1165,7 +1167,7 @@
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <prototypeCellViews>
                                                                     <tableCellView identifier="kernSecond" id="EX5-5M-Ot4">
-                                                                        <rect key="frame" x="315" y="0.0" width="92" height="22"/>
+                                                                        <rect key="frame" x="305" y="0.0" width="92" height="22"/>
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         <subviews>
                                                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yd7-OU-GpC">
@@ -1200,7 +1202,7 @@
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <prototypeCellViews>
                                                                     <tableCellView identifier="kernWidth" id="7bh-uu-VnA">
-                                                                        <rect key="frame" x="424" y="0.0" width="140" height="22"/>
+                                                                        <rect key="frame" x="414" y="0.0" width="140" height="22"/>
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         <subviews>
                                                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zXR-xc-Ac3">
@@ -1222,7 +1224,7 @@
                                                                         </connections>
                                                                     </tableCellView>
                                                                     <tableCellView identifier="kernPairCount" id="mdn-1G-eyK">
-                                                                        <rect key="frame" x="424" y="22" width="140" height="22"/>
+                                                                        <rect key="frame" x="414" y="22" width="140" height="22"/>
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         <subviews>
                                                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4gl-mM-h6g">
@@ -1253,6 +1255,7 @@
                                                             <binding destination="Gk8-7C-LRq" name="content" keyPath="arrangedObjects" id="fuR-NY-eW5"/>
                                                             <binding destination="Gk8-7C-LRq" name="selectionIndexPaths" keyPath="selectionIndexPaths" previousBinding="fuR-NY-eW5" id="WW1-Qh-wjc"/>
                                                             <outlet property="delegate" destination="-2" id="scR-WG-hbv"/>
+                                                            <outlet property="menu" destination="gTM-X2-lvr" id="TP8-yW-1SA"/>
                                                         </connections>
                                                     </outlineView>
                                                 </subviews>
@@ -1271,7 +1274,7 @@
                                             </tableHeaderView>
                                         </scrollView>
                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kNP-Vl-GDC">
-                                            <rect key="frame" x="15" y="353" width="208" height="14"/>
+                                            <rect key="frame" x="15" y="353" width="145" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="left" title="1 kern table entry" id="7CV-BW-DoQ">
                                                 <font key="font" metaFont="smallSystem"/>
@@ -1286,6 +1289,17 @@
                                                 </binding>
                                             </connections>
                                         </textField>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="q14-pX-jPe">
+                                            <rect key="frame" x="412" y="352" width="167" height="20"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="push" title="Export Kern Pair Entry…" bezelStyle="rounded" alignment="center" controlSize="small" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="UOv-Fa-ScE">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="smallSystem"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="exportKernPairs:" target="-2" id="JbL-n4-ock"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                 </view>
                             </tabViewItem>
@@ -2283,6 +2297,20 @@
             </subviews>
             <point key="canvasLocation" x="-416.5" y="-338"/>
         </customView>
+        <menu id="gTM-X2-lvr" userLabel="kernMenu">
+            <items>
+                <menuItem title="Export Kern Pair Entry…" id="oxl-rA-JGO">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="exportKernPairs:" target="-2" id="mQa-5J-LtM"/>
+                    </connections>
+                </menuItem>
+            </items>
+            <connections>
+                <outlet property="delegate" destination="-2" id="lSa-lT-522"/>
+            </connections>
+            <point key="canvasLocation" x="164" y="776"/>
+        </menu>
     </objects>
     <resources>
         <image name="questionmark.circle.fill" catalog="system" width="15" height="15"/>

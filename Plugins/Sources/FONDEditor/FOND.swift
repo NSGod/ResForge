@@ -306,6 +306,10 @@ public class FOND: NSObject {
         return .postScriptStandard
     }
 
+    public func postScriptNameForFont(with style: MacFontStyle) -> String? {
+        return styleMappingTable?.postScriptNameForFont(with: style)
+    }
+
     func glyphName(for charCode: CharCode) -> String? {
         // or should this be non-optional and return .notdef?
         return self.encoding.glyphName(for: charCode)

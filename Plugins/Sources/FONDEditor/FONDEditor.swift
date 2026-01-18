@@ -34,13 +34,15 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
     @IBOutlet weak var flagsBitfieldControl:            BitfieldControl!
     @IBOutlet weak var fontClassBitfieldControl:        BitfieldControl!
     @IBOutlet weak var fontClassField:                  NSTextField!
+    @IBOutlet weak var tableView:                       NSTableView! // font assoc. table entries
 
+    @IBOutlet var kernPairsTreeController:              NSTreeController!
     @IBOutlet weak var tabView:                         NSTabView!
-    @IBOutlet weak var tableView:                       NSTableView!
 
     @IBOutlet var popover:                              NSPopover!
     @IBOutlet weak var popoverButton:                   NSButton!
 
+    @IBOutlet weak var exportKernPairButton:            NSButton!
     @IBOutlet var boundingBoxTableEntriesController:    NSArrayController!
 
     @objc var objcFontClass:                            StyleMappingTable.FontClass.RawValue = 0
@@ -130,6 +132,44 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
         }
     }
 
+    @IBAction func exportKernPairs(_ sender: Any) {
+        NSLog("\(type(of: self)).\(#function)")
+        
+
+
+    }
+
+    private func selectedKernTableEntries() -> [KernTableEntry] {
+        let objs = kernPairsTreeController.selectedObjects as? [KernTreeNode] ?? []
+        let entries: [KernTableEntry] = objs.compactMap { kernTreeNode in
+            kernTreeNode.representedObject as? KernTableEntry
+        }
+        return entries
+    }
+
+    // MARK: - <NSMenuItemValidation>
+    public override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+        guard let action = menuItem.action else { return false }
+        if action == #selector(exportKernPairs) {
+            let entries = selectedKernTableEntries()
+            if entries.isEmpty {
+                menuItem.title = NSLocalizedString("Export Kern Pair Entry…", comment: "")
+                return false
+            }
+            if entries.count == 1 {
+                if let name = fond.postScriptNameForFont(with: entries.first!.style) {
+                    menuItem.title = NSLocalizedString("Export “\(name)” Kern Pairs…", comment: "")
+                } else {
+                    menuItem.title = NSLocalizedString("Export Kern Pair Entry…", comment: "")
+                }
+            } else {
+                menuItem.title = NSLocalizedString("Export \(entries.count) Kern Pair Entries…", comment: "")
+            }
+            return true
+        }
+        return false
+    }
+
     // MARK: - <NSTableViewDelegate>
     public func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         if tableView == boundingBoxTableView {
@@ -148,6 +188,20 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
     }
 
     // MARK: - <NSOutlineViewDelegate>
+    public func outlineViewSelectionDidChange(_ notification: Notification) {
+        guard let outlineView = notification.object as? NSOutlineView else { return }
+        if outlineView == kernTableOutlineView {
+            let selectedEntries = selectedKernTableEntries()
+            if selectedEntries.isEmpty {
+                exportKernPairButton.title = NSLocalizedString("Export Kern Pair Entry…", comment: "")
+                exportKernPairButton.isEnabled = false
+            } else {
+                exportKernPairButton.title = selectedEntries.count == 1 ? NSLocalizedString("Export Kern Pair Entry…", comment: "") : NSLocalizedString("Export \(selectedEntries.count) Kern Pair Entries…", comment: "")
+                exportKernPairButton.isEnabled = true
+            }
+        }
+    }
+
     public func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         if outlineView == kernTableOutlineView {
             guard let representedObject = ((item as? NSTreeNode)?.representedObject as? KernTreeNode)?.representedObject else { return nil }
