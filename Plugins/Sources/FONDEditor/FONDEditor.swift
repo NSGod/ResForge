@@ -93,10 +93,16 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        flagsBitfieldControl.unbind(NSBindingName("objectValue"))
+        fontClassBitfieldControl.unbind(NSBindingName("objectValue"))
+        fond.styleMappingTable?.unbind(NSBindingName("objcFontClass"))
+    }
+
     public override func windowDidLoad() {
-        flagsBitfieldControl.bind(NSBindingName(rawValue: "objectValue"), to: self, withKeyPath: "fond.objcFFFlags")
-        fontClassBitfieldControl.bind(NSBindingName(rawValue: "objectValue"), to: self, withKeyPath: "objcFontClass")
-        fond.styleMappingTable?.bind(NSBindingName(rawValue: "objcFontClass"), to: self, withKeyPath: "objcFontClass")
+        flagsBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "fond.objcFFFlags")
+        fontClassBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFontClass")
+        fond.styleMappingTable?.bind(NSBindingName("objcFontClass"), to: self, withKeyPath: "objcFontClass")
         fontClassBitfieldControl.isEnabled = fond.styleOff != 0
         fontClassField.isEnabled = fond.styleOff != 0
         tabView.selectTabViewItem(at: UserDefaults.standard.integer(forKey: "FONDEditor.selectedTabIndex"))
