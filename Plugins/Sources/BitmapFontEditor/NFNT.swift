@@ -9,7 +9,6 @@ import Cocoa
 import RFSupport
 import FONDEditor
 
-
 public class NFNT: NSObject {
     struct FontRec {
         static let length = 26
@@ -65,7 +64,7 @@ public class NFNT: NSObject {
         return _bitmapImage
     }()
 
-    // FIXME: figure out something better for this
+    // FIXME: figure out something better for this?
     private var _glyphs:                [Glyph] = []
     private var _glyphEntries:          [String: Glyph] = [:]
     private var _bitmapImage:           NSImage?
@@ -176,7 +175,7 @@ public class NFNT: NSObject {
             // this contains no bitmap data
             NSLog("\(type(of: self)).\(#function)() **** NOTICE: rowWords == 0 && this NFNT contains no bitmap data. Resource length: \(resource.data.count)")
             if reader.bytesRemaining > 0 {
-                NSLog("\(type(of: self)).\(#function)() **** NFNT contains more data!")
+                NSLog("\(type(of: self)).\(#function)() **** yet NFNT contains more data!")
             }
             haveBuiltGlyphs = true
             return
@@ -191,22 +190,21 @@ public class NFNT: NSObject {
         // avoid overflow
         let length: Int = Int(fRectHeight) * Int(rowWords * 16) * Int(fontBitDepth)/8
         let bitmapImageData: Data = try reader.readData(length: length)
-        guard let bitmapImageRep: NSBitmapImageRep = NSBitmapImageRep(bitmapDataPlanes: nil,
-                                                                      pixelsWide: Int(rowWords * 16),
-                                                                      pixelsHigh: Int(fRectHeight),
-                                                                      bitsPerSample: Int(fontBitDepth),
-                                                                      samplesPerPixel: 1,
-                                                                      hasAlpha: false,
-                                                                      isPlanar: false,
-                                                                      colorSpaceName: NSColorSpaceName.calibratedWhite,
-                                                                      bytesPerRow: Int(rowWords) * 2,
-                                                                      bitsPerPixel: Int(fontBitDepth)) else {
-
+        guard let bitmapImageRep = NSBitmapImageRep(bitmapDataPlanes: nil,
+                                                    pixelsWide: Int(rowWords * 16),
+                                                    pixelsHigh: Int(fRectHeight),
+                                                    bitsPerSample: Int(fontBitDepth),
+                                                    samplesPerPixel: 1,
+                                                    hasAlpha: false,
+                                                    isPlanar: false,
+                                                    colorSpaceName: NSColorSpaceName.calibratedWhite,
+                                                    bytesPerRow: Int(rowWords) * 2,
+                                                    bitsPerPixel: Int(fontBitDepth)) else {
             // FIXME: throw real error
             NSLog("\(type(of: self)).\(#function)() *** ERROR: bitmapImageRep == nil")
             throw CocoaError(.fileReadCorruptFile)
         }
-        // FIXME: add better support for higher font bit depths? Though I've never encountered them in the wild
+        // FIXME: add better support for higher font bit depths? Though I've never encountered them in the wild...
         // Since black colorspaces are deprecated, we'll use white but need to flip the bits
         guard let bitmapData: UnsafeMutablePointer<UInt8> = bitmapImageRep.bitmapData else {
             NSLog("\(type(of: self)).\(#function)() *** ERROR: bitmapImageRep.bitmapData == nil")
@@ -264,24 +262,20 @@ public class NFNT: NSObject {
             pixelOffsets.append(pixelOffset)
         }
 
-        // FIXME: !! fix this for long font tables?
-        /* Offset to width/offset table. An integer value that specifies the offset to the
-         offset/ width table from this point in the font record, in words. If this font has
-         very large tables, this value is only the low word of the offset and the
-         negated descent value is the high word, as explained in the section
-         “The Offset to the Width/Offset Table” on page 4-71. This value is represented
-         by the owTLoc field in the FontRec data type. */
+        /// `Offset to width/offset table`. An integer value that specifies the offset to the
+        /// offset/ width table from this point in the font record, in words. If this font has
+        /// very large tables, this value is only the low word of the offset, and the
+        /// negated descent value is the high word, as explained in the following section:
+        /// The offset to the width/offset table element of the bitmapped font resource is
+        /// represented as the `owtLoc` field in the FontRec data type. This field defines
+        /// the offset from the beginning of the resource to the beginning of the
+        /// width/offset table. The value of nDescent, when positive, is used as the high-order 16 bits
+        /// in the 32-bit value that is used to store the offset of the width table from the beginning of
+        /// the resource. To compute the actual offset, the Font Manager uses this computation:
 
-        /* The Offset to the Width/Offset Table: The offset to the width/offset table element of the
-         bitmapped font resource is represented as the `owtLoc` field in the FontRec data type. This
-         field defines the offset from the beginning of the resource to the beginning of the
-         width/offset table. The value of nDescent, when positive, is used as the high-order 16 bits
-         in the 32-bit value that is used to store the offset of the width table from the beginning of
-         the resource. To compute the actual offset, the Font Manager uses this computation:
+        /// `actualOffsetWord := BSHL(nDescent, 16) + owTLoc;`
 
-         actualOffsetWord := BSHL(nDescent, 16) + owTLoc; */
-
-         // NOTE: here, (8 * sizeof(SInt16)) is the partial size of the first 8 elements of the FFFontRecord (fontType thru fRectHeight)
+        // NOTE: here, (8 * MemoryLayout<Int16>.size) is the partial size of the first 8 elements of the FFFontRecord (fontType thru fRectHeight)
         let widthTableOffset: UInt32 = UInt32(nDescent > 0 ? nDescent << 16 : 0) + UInt32(owTLoc)
         try reader.pushPosition(Int(8 * MemoryLayout<Int16>.size) + Int(widthTableOffset) * MemoryLayout<Int16>.size)
         defer { reader.popPosition() }
@@ -322,7 +316,7 @@ public class NFNT: NSObject {
                 _glyphEntries[asciiEntryKey] = entry
                 _glyphs.append(entry)
             } else if i >= lastChar {
-                // FIXME: figure this out, not sure what I was thinking
+                // FIXME: figure this out, I'm not really sure what I was thinking
                 _glyphEntries[asciiEntryKey] = Glyph.nullGlyph
                 _glyphs.append(Glyph.nullGlyph)
             }

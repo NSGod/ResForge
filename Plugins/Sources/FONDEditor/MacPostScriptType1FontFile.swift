@@ -38,7 +38,7 @@ public struct MacPostScriptType1FontFile {
         guard var resources: [Resource] = resourceMap[ResourceType("POST")], resources.count > 0 else {
             throw MacPostScriptType1FontFileError.notAPostScriptFont
         }
-        // MARK: make sure to sort the 'POST' resources by ID in case they're out of order in the font file
+        // MARK: make sure to sort the 'POST' resources by ID in case they're out of order (by indexes) in the font file
         resources.sort { $0.id < $1.id }
         let postResources = try POST.postResources(from: resources)
         guard let postScriptData = try POST.data(from: postResources, outputFormat: .ascii) else {

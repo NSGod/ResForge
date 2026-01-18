@@ -26,7 +26,6 @@ class FFsfntDirectoryEntry: OTFFontFileNode, Comparable {
         }
     }
 
-
     static var nodeLength:  UInt32    = UInt32(MemoryLayout<UInt32>.size * 4) // 16
 
     init(_ reader: BinaryDataReader) throws {

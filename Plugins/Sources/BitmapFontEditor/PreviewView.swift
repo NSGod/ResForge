@@ -100,7 +100,7 @@ public class PreviewView: NSView {
         NSBezierPath.defaultLineWidth = 2.0
         NSColor.red.setStroke()
         NSBezierPath(rect: self.bounds).stroke()
-        textStorage.layoutManager.drawGlyphs(at: NSInsetRect(self.bounds, padding, padding).origin)
+        textStorage.layoutManager.drawGlyphs(at: NSMakePoint(padding, padding))
     }
     
 }

@@ -14,7 +14,6 @@ class NFNTLayoutManager {
 
     var textContainer:          NFNTTextContainer! {
         didSet {
-            NSLog("\(type(of: self)).\(#function)")
             textContainer.layoutManager = self
             typesetter.currentTextContainer = textContainer
         }
@@ -62,6 +61,9 @@ class NFNTLayoutManager {
         drawRect.origin = point
         for lineFragment in lineFragments {
             drawRect.origin = lineFragment.alignedFrame.origin
+            // add in the padding
+            drawRect.origin.x += point.x
+            drawRect.origin.y += point.y
             for glyph in lineFragment.generatedGlyphs {
                 drawRect.origin.x += CGFloat(glyph.nfnt.kernMax + Int16(glyph.offset))
                 drawRect.size.height = NSHeight(glyph.glyphRect)

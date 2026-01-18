@@ -46,7 +46,7 @@ final class KernTable: FONDResourceNode {
 
 
 // MARK: -
-class KernTableEntry: FONDResourceNode {
+final class KernTableEntry: FONDResourceNode {
     var style:              MacFontStyle            // style this entry applies to
 
     /// NOTE: While `numKerns` is defined as a `SInt16`, it makes no sense to have negative kern pairs,

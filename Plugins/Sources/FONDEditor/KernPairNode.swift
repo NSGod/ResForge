@@ -8,7 +8,7 @@
 import Foundation
 
 // for display
-final class KernPairNode: NSObject {
+final class KernPairNode: NSObject, Comparable {
     @objc let kernFirstGlyphName:     String
     @objc let kernSecondGlyphName:    String
     @objc let kernWidth:              Fixed4Dot12
@@ -20,7 +20,7 @@ final class KernPairNode: NSObject {
         super.init()
     }
 
-    func localizedStandardCompare(_ otherNode: KernPairNode) -> ComparisonResult {
+    @objc func localizedStandardCompare(_ otherNode: KernPairNode) -> ComparisonResult {
         if kernFirstGlyphName == otherNode.kernFirstGlyphName {
             if kernSecondGlyphName == otherNode.kernSecondGlyphName {
                 return (Fixed4Dot12ToDouble(kernWidth) as NSNumber).compare(Fixed4Dot12ToDouble(otherNode.kernWidth) as NSNumber)
@@ -32,5 +32,13 @@ final class KernPairNode: NSObject {
             // or localizedStandardCompare:?
             return kernFirstGlyphName.compare(otherNode.kernFirstGlyphName)
         }
+    }
+
+    static func < (lhs: KernPairNode, rhs: KernPairNode) -> Bool {
+        return lhs.localizedStandardCompare(rhs) == .orderedAscending
+    }
+
+    static func == (lhs: KernPairNode, rhs: KernPairNode) -> Bool {
+        return lhs.localizedStandardCompare(rhs) == .orderedSame
     }
 }

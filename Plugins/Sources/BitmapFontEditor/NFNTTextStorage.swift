@@ -25,7 +25,6 @@ class NFNTTextStorage {
 
     var nfnt:           NFNT! {
         didSet {
-            NSLog("\(type(of: self)).\(#function)")
             guard let layoutManager else { return }
             layoutManager.fontDidChange()
         }

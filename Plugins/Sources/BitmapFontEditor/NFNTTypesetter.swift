@@ -49,10 +49,11 @@ class NFNTTypesetter {
                     isBeginningOfLine = true
                 }
                 if !isBeginningOfLine {
-                    // FIXME: this is not safe!!
-                    let spaceGlyph = nfnt.glyphEntries[" "]!
-                    currentLineFragment.add(spaceGlyph)
-                    drawPoint.x += CGFloat(nfnt.kernMax + Int16(spaceGlyph.offset)) + CGFloat(spaceGlyph.width)
+                    // FIXME: figure out what to do for a space if font doesn't have one
+                    if let spaceGlyph = nfnt.glyphEntries[" "] {
+                        currentLineFragment.add(spaceGlyph)
+                        drawPoint.x += CGFloat(nfnt.kernMax + Int16(spaceGlyph.offset)) + CGFloat(spaceGlyph.width)
+                    }
                 }
                 for char: Character in word {
                     if let glyph = nfnt.glyphEntries["\(char)"] {

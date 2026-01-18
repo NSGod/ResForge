@@ -22,7 +22,7 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
     @IBOutlet weak var fontTypeBitfieldControl:     BitfieldControl!
     @IBOutlet weak var bitDepthPopUpButton:         NSPopUpButton!
     /// Not sure why, but creating a custom PreviewView in the nib file was
-    /// not working without crashing. So create it programatically and set the box's contentView.
+    /// not working without crashing. So create it programatically and set the box's `contentView`
     @IBOutlet weak var box:                         NSBox!
     @IBOutlet weak var previewView:                 PreviewView!
 
