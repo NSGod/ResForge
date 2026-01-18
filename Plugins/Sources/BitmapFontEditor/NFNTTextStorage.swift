@@ -53,8 +53,4 @@ class NFNTTextStorage {
         }
     }
 
-    init() {
-        NSLog("\(type(of: self)).\(#function)")
-    }
-
 }

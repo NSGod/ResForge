@@ -25,7 +25,6 @@ class NFNTLayoutManager {
     private var lineFragments:  [NFNTLineFragment] = []
 
     init() {
-        NSLog("\(type(of: self)).\(#function)")
         typesetter = NFNTTypesetter()
         typesetter.layoutManager = self
     }

@@ -46,7 +46,7 @@ public class PreviewView: NSView {
     var textStorage:            NFNTTextStorage
 
     public override init(frame frameRect: NSRect) {
-        NSLog("\(type(of: self)).\(#function)")
+//        NSLog("\(type(of: self)).\(#function)")
         textStorage = NFNTTextStorage()
         let layoutManager = NFNTLayoutManager()
         let container = NFNTTextContainer(size: NSInsetRect(frameRect, padding, padding).size)
@@ -56,7 +56,7 @@ public class PreviewView: NSView {
     }
 
     public required init?(coder: NSCoder) {
-        NSLog("\(type(of: self)).\(#function)")
+//        NSLog("\(type(of: self)).\(#function)")
         textStorage = NFNTTextStorage()
         let layoutManager = NFNTLayoutManager()
         let container = NFNTTextContainer(size: .zero)
@@ -71,14 +71,14 @@ public class PreviewView: NSView {
 
     /// actually, this won't be called unless we're in the nib, which we aren't
     public override func awakeFromNib() {
-        NSLog("\(type(of: self)).\(#function)")
+//        NSLog("\(type(of: self)).\(#function)")
         syncSize()
         NotificationCenter.default.addObserver(self, selector: #selector(viewFrameChanged), name: Self.frameDidChangeNotification, object: self)
         self.needsDisplay = true
     }
 
     public override func viewDidMoveToWindow() {
-        NSLog("\(type(of: self)).\(#function)")
+//        NSLog("\(type(of: self)).\(#function)")
         syncSize()
         NotificationCenter.default.addObserver(self, selector: #selector(viewFrameChanged), name: Self.frameDidChangeNotification, object: self)
         self.needsDisplay = true

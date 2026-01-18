@@ -35,8 +35,7 @@ public class BitfieldControl: NSControl {
     // to allow disabling or enabling of specific checkboxes via a mask
     public var enabledMask:       Int = 0 {
         didSet {
-            NSLog("\(type(of: self)).\(#function)() enabledMask == \(enabledMask)")
-
+//            NSLog("\(type(of: self)).\(#function)() enabledMask == \(enabledMask)")
             var i = 1
             let max = numberOfBits == 16 ? UInt32(UInt16.max) : UInt32.max
             while i < max {
@@ -64,7 +63,7 @@ public class BitfieldControl: NSControl {
     @objc dynamic override open var objectValue: Any? {
         get { return super.objectValue }
         set {
-            NSLog("\(type(of: self)).\(#function)() newValue == \(String(describing: newValue))")
+//            NSLog("\(type(of: self)).\(#function)() newValue == \(String(describing: newValue))")
             super.objectValue = newValue
             if objectValue == nil {
                 self.enabledMask = 0
