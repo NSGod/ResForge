@@ -8,6 +8,7 @@
 
 import Foundation
 import RFSupport
+import CoreFont
 
 public class FOND: NSObject {
     struct FontFamilyRecord {

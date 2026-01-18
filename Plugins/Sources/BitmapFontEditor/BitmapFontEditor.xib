@@ -23,7 +23,7 @@
             <real key="minimum" value="-32767"/>
             <real key="maximum" value="32767"/>
         </numberFormatter>
-        <numberFormatter formatterBehavior="default10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="WuE-8k-2k5" userLabel="f4Dot12Formatter" customClass="Fixed4Dot12NumberFormatter" customModule="FONDEditor"/>
+        <numberFormatter formatterBehavior="default10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="WuE-8k-2k5" userLabel="f4Dot12Formatter" customClass="Fixed4Dot12NumberFormatter" customModule="CoreFont"/>
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5" userLabel="window">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <rect key="contentRect" x="196" y="240" width="661" height="624"/>
@@ -42,7 +42,7 @@
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5aj-GY-zA2" customClass="BitfieldControl" customModule="FONDEditor">
+                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5aj-GY-zA2" customClass="BitfieldControl" customModule="CoreFont">
                         <rect key="frame" x="20" y="326" width="236" height="269"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <subviews>

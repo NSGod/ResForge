@@ -7,7 +7,7 @@
 
 import Cocoa
 import RFSupport
-import FONDEditor
+import CoreFont
 
 public class NFNT: NSObject {
     struct FontRec {

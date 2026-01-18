@@ -9,7 +9,6 @@
 import Foundation
 import RFSupport
 
-
 final class OffsetTable: ResourceNode {
     var numberOfEntries:        Int16               // number of entries - 1
     @objc var entries:          [OffsetTableEntry]

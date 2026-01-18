@@ -7,7 +7,7 @@
 
 import Cocoa
 import RFSupport
-import FONDEditor
+import CoreFont
 
 class NFNTLayoutManager {
     weak var textStorage:       NFNTTextStorage!

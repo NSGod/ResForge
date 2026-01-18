@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreFont
 
 // for display
 final class KernPairNode: NSObject, Comparable {

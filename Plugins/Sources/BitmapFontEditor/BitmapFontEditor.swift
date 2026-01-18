@@ -7,7 +7,7 @@
 
 import Cocoa
 import RFSupport
-import FONDEditor
+import CoreFont
 
 public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvider, NSTableViewDelegate {
     public static var bundle: Bundle { .module }

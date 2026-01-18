@@ -8,7 +8,7 @@
 
 import Foundation
 import RFSupport
-
+import CoreFont
 
 final class FontAssociationTable: ResourceNode {
     var numberOfEntries:    Int16                           // number of entries - 1

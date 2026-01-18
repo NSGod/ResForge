@@ -22,6 +22,9 @@ let package = Package(
             name: "DialogEditor",
             targets: ["DialogEditor"]),
         .library(
+            name: "CoreFont",
+            targets: ["CoreFont"]),
+        .library(
             name: "FONDEditor",
             targets: ["FONDEditor"]),
         .library(
@@ -70,14 +73,20 @@ let package = Package(
             name: "ImageEditor",
             dependencies: [.target(name: "RFSupport"),
                            .product(name: "OrderedCollections", package: "swift-collections")]),
+        .target(name: "CoreFont",
+            dependencies: [.target(name: "RFSupport"),
+                           .product(name: "OrderedCollections", package:"swift-collections")]),
         .target(name: "FONDEditor",
             dependencies: [.target(name: "RFSupport"),
+                           .target(name: "CoreFont"),
                            .product(name: "CSV", package:"CSV.swift")]),
         .target(name: "FontEditor",
             dependencies: [.target(name: "RFSupport"),
+                           .target(name: "CoreFont"),
                            .product(name: "OrderedCollections", package:"swift-collections")]),
         .target(name: "BitmapFontEditor",
             dependencies: [.target(name: "RFSupport"),
+                           .target(name: "CoreFont"),
                            .target(name: "FONDEditor"),
                            ]),
         .target(

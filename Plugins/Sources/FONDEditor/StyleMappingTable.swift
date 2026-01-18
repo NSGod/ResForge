@@ -8,6 +8,7 @@
 
 import Foundation
 import RFSupport
+import CoreFont
 
 // "The style-mapping table provides a flexible way to assign font classes and
 // to specify character-set encodings. The table contains the font class,

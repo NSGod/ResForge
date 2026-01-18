@@ -8,6 +8,7 @@
 
 import Foundation
 import RFSupport
+import CoreFont
 
 /*   The glyph-name encoding subtable of the style-mapping table allows the
      font family designer to map 8-bit character codes to PostScript glyph names.

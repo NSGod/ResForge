@@ -7,6 +7,7 @@
 
 import Cocoa
 import RFSupport
+import CoreFont
 
 public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, NSOutlineViewDelegate {
     public static var bundle: Bundle { .module }

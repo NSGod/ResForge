@@ -8,7 +8,6 @@
 import Cocoa
 
 final class KernTreeNode: NSTreeNode, Comparable {
-
     override init(representedObject modelObject: Any?) {
         super.init(representedObject: modelObject)
     }

@@ -8,6 +8,7 @@
 
 import Foundation
 import RFSupport
+import CoreFont
 import CSV
 
 final class KernTable: FONDResourceNode {
