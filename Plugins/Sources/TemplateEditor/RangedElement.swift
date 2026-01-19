@@ -40,9 +40,10 @@ class RangedElement<T: FixedWidthInteger>: CasedElement, RangedController {
     @objc private var currentCase: ElementCASR?
     private var suppressDidSet = false
     var hasPopup: Bool { casrs.count > 1 }
-    var popupWidth: Double = 240
+    var popupWidth: Double = 0
 
     override func configure() throws {
+        popupWidth = Self.blockSize * 8
         // Read CASR elements
         while let casr = parentList.pop("CASR") as? ElementCASR {
             if casrs == nil {
@@ -51,7 +52,7 @@ class RangedElement<T: FixedWidthInteger>: CasedElement, RangedController {
             try casr.configure(for: self)
             casrs.append(casr)
             if casr.min != casr.max {
-                popupWidth = 180 // Shrink pop-up menu if any CASR needs a field
+                popupWidth = Self.blockSize * 6 // Shrink pop-up menu if any CASR needs a field
             }
         }
         if let casrs {
@@ -81,11 +82,14 @@ class RangedElement<T: FixedWidthInteger>: CasedElement, RangedController {
         if hasPopup {
             let orig = view.frame
             var frame = view.frame
-            frame.origin.x -= 2
-            frame.size.width = popupWidth + 1
-            frame.size.height = 25
-            if #unavailable(macOS 11) {
-                frame.size.height -= 1
+            if #available(macOS 26, *) {
+                frame.origin.y -= 1
+                frame.size.width = popupWidth - 4
+                frame.size.height = 24
+            } else {
+                frame.origin.x -= 2
+                frame.size.width = popupWidth + 1
+                frame.size.height = 25
             }
             let select = NSPopUpButton(frame: frame)
             select.target = self

@@ -9,21 +9,20 @@ class LinkingComboBox: NSComboBox {
     }
 
     private let linkButton: NSButton
-    var linkIcon: NSImage.Name? {
+    var linkIcon: String? {
         (delegate as? LinkingComboBoxDelegate)?.linkIcon
     }
 
     override init(frame frameRect: NSRect) {
-        // To accommodate the touch bar add icon on macOS 10.14, we need to allow a height of 22
-        let buttonFrame = NSRect(x: frameRect.size.width - 36, y: 1, width: 12, height: 22)
+        var buttonFrame = NSRect(x: frameRect.width - 38, y: 4, width: 16, height: 16)
+        if #available(macOS 26, *) {
+            buttonFrame.origin.x -= 1
+        }
         linkButton = NSButton(frame: buttonFrame)
         super.init(frame: frameRect)
         linkButton.isBordered = false
         linkButton.bezelStyle = .inline
-        linkButton.image = NSImage(named: NSImage.followLinkFreestandingTemplateName)
-        if #unavailable(macOS 11) {
-            linkButton.imageScaling = .scaleProportionallyDown
-        }
+        linkButton.image = NSImage(systemSymbolName: "arrow.right.circle", accessibilityDescription: nil)
         linkButton.target = self
         linkButton.action = #selector(followLink(_:))
         self.addSubview(linkButton)
@@ -35,13 +34,13 @@ class LinkingComboBox: NSComboBox {
 
     override func draw(_ dirtyRect: NSRect) {
         if let linkIcon {
-            linkButton.image = NSImage(named: linkIcon)
+            linkButton.image = NSImage(systemSymbolName: linkIcon, accessibilityDescription: nil)
         }
         if linkButton.isHidden != (linkIcon == nil) {
             // Toggle the button visibility
             linkButton.isHidden = !linkButton.isHidden
             // If currently editing the field, the clip view frame will need updating
-            if let clip = subviews.last as? NSClipView {
+            for clip in subviews where clip is NSClipView {
                 var frame = clip.frame
                 frame.size.width += linkButton.isHidden ? 16 : -16
                 clip.frame = frame
@@ -67,9 +66,19 @@ class LinkingComboBoxCell: NSComboBoxCell {
         }
         return dRect
     }
+
+    // On macOS 26 we need to adjust both the drawingRect (when editing) and the interior (when not editing)
+    // On earlier versions, we only need to adjust one
+    override func drawInterior(withFrame cellFrame: NSRect, in controlView: NSView) {
+        var dRect = cellFrame
+        if #available(macOS 26, *), let control = controlView as? LinkingComboBox, control.linkIcon != nil {
+            dRect.size.width -= 16
+        }
+        super.drawInterior(withFrame: dRect, in: controlView)
+    }
 }
 
 @objc protocol LinkingComboBoxDelegate: NSComboBoxDelegate {
-    var linkIcon: NSImage.Name? { get }
+    var linkIcon: String? { get }
     func followLink(_ sender: Any)
 }

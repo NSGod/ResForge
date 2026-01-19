@@ -33,7 +33,7 @@ class ElementRREF: BaseElement {
         } else {
             buttonLabel = scanner.string[scanner.currentIndex...].trimmingCharacters(in: .whitespaces)
         }
-        width = 120
+        blockWidth = 4
     }
 
     override func configure(view: NSView) {
@@ -42,17 +42,18 @@ class ElementRREF: BaseElement {
         frame.size.width = width - 4
         frame.size.height = 19
         let button = NSButton(frame: frame)
-        button.bezelStyle = .inline
+        if #available(macOS 26, *) {
+            button.bezelStyle = .roundRect
+            button.controlSize = .small
+            button.font = .systemFont(ofSize: 11)
+        } else {
+            button.bezelStyle = .inline
+            button.font = .boldSystemFont(ofSize: 11)
+        }
         button.title = buttonLabel
-        button.font = .boldSystemFont(ofSize: 11)
         // Show add icon if resource does not exist, otherwise follow link icon
         let resource = manager.findResource(type: .init(resType), id: id)
-        button.image = NSImage(named: resource == nil ? NSImage.touchBarAddDetailTemplateName : NSImage.followLinkFreestandingTemplateName)
-        if resource == nil {
-            // The add icon isn't strictly supposed to be used outside of the touch bar -
-            // It works fine on macOS 11 but for appropriate sizing on 10.14 we need to set the size explicitly (default is 18x30)
-            button.image?.size = NSSize(width: 14, height: 24)
-        }
+        button.image = NSImage(systemSymbolName: resource == nil ? "plus.circle" : "arrow.right.circle", accessibilityDescription: nil)
         button.imagePosition = .imageRight
         button.target = self
         button.action = #selector(openResource(_:))
@@ -63,7 +64,7 @@ class ElementRREF: BaseElement {
         parentList.controller.openOrCreateResource(typeCode: resType, id: id) { [weak self] resource, _ in
             // Update button image
             if let button = sender as? NSButton, resource.id == self?.id {
-                button.image = NSImage(named: NSImage.followLinkFreestandingTemplateName)
+                button.image = NSImage(systemSymbolName: "arrow.right.circle", accessibilityDescription: nil)
             }
         }
     }

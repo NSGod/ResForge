@@ -32,7 +32,7 @@ class ElementRSID<T: FixedWidthInteger & SignedInteger>: CasedElement, LinkingCo
     private var offset: Int = 0
     private var range: ClosedRange<Int>?
     private var fixedMap: OrderedDictionary<AnyHashable, ElementCASE> = [:]
-    private(set) var linkIcon: NSImage.Name?
+    private(set) var linkIcon: String?
 
     deinit {
         self.unbind(NSBindingName("resType"))
@@ -50,7 +50,7 @@ class ElementRSID<T: FixedWidthInteger & SignedInteger>: CasedElement, LinkingCo
         }
 
         try super.configure()
-        width = 240
+        blockWidth = 8
         fixedMap = cases
 
         // Setting the resType will load the cases so we need to do this last
@@ -114,13 +114,13 @@ class ElementRSID<T: FixedWidthInteger & SignedInteger>: CasedElement, LinkingCo
             linkIcon = nil
         } else if cases[tValue]?.label.isEmpty == true {
             // If resource exists in case list (empty label implies a resource), show link icon
-            linkIcon = NSImage.followLinkFreestandingTemplateName
+            linkIcon = "arrow.right.circle"
         } else if manager.findResource(type: .init(resType), id: id) != nil {
             // If found in directory (as a last resort), show link icon
-            linkIcon = NSImage.followLinkFreestandingTemplateName
+            linkIcon = "arrow.right.circle"
         } else {
             // Resource doesn't exist, show add icon
-            linkIcon = NSImage.touchBarAddDetailTemplateName
+            linkIcon = "plus.circle"
         }
     }
 
@@ -129,13 +129,12 @@ class ElementRSID<T: FixedWidthInteger & SignedInteger>: CasedElement, LinkingCo
         parentList.controller.openOrCreateResource(typeCode: resType, id: id) { [weak self] resource, isNew in
             guard let self else { return }
             // If this is new resource with a valid id, reload the cases
-            let resID = resource.id - self.offset
-            if isNew && self.range?.contains(resID) != false {
+            if isNew && range?.contains(resource.id) != false {
                 self.loadCases()
                 // Check if the value changed
                 if resource.id != id {
-                    self.value = resID as NSNumber
-                    self.parentList.controller.itemValueUpdated(sender)
+                    value = (resource.id - offset) as NSNumber
+                    parentList.controller.itemValueUpdated(sender)
                 }
             }
         }

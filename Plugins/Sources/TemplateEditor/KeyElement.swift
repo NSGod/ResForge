@@ -13,7 +13,7 @@ class KeyElement: CasedElement, CollectionElement {
 
     override func configure() throws {
         try self.readSections()
-        width = 240
+        blockWidth = 8
 
         // Set initial state
         if let value = self.defaultValue(), let section = keyedSections[value] {
@@ -60,11 +60,14 @@ class KeyElement: CasedElement, CollectionElement {
 
     override func configure(view: NSView) {
         var frame = view.frame
-        frame.origin.x -= 2
-        frame.size.width = width + 1
-        frame.size.height = 25
-        if #unavailable(macOS 11) {
-            frame.size.height -= 1
+        if #available(macOS 26, *) {
+            frame.origin.y -= 1
+            frame.size.width = width - 4
+            frame.size.height = 24
+        } else {
+            frame.origin.x -= 2
+            frame.size.width = width + 1
+            frame.size.height = 25
         }
         let keySelect = NSPopUpButton(frame: frame)
         keySelect.target = self
