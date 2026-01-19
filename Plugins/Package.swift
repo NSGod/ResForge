@@ -87,7 +87,6 @@ let package = Package(
         .target(name: "BitmapFontEditor",
             dependencies: [.target(name: "RFSupport"),
                            .target(name: "CoreFont"),
-                           .target(name: "FONDEditor"),
                            ]),
         .target(
             name: "MenuEditor",
