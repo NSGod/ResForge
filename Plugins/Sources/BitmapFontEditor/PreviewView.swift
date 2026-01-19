@@ -102,5 +102,5 @@ public class PreviewView: NSView {
         NSBezierPath(rect: self.bounds).stroke()
         textStorage.layoutManager.drawGlyphs(at: NSMakePoint(padding, padding))
     }
-    
+
 }

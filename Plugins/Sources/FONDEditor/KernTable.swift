@@ -84,7 +84,7 @@ final class KernTableEntry: FONDResourceNode {
 
     public struct KernExportConfig {
         public static let gposDefault: KernExportConfig = .init()
-        public static let csvDefault: KernExportConfig = KernExportConfig(resolveGlyphNames: false, scaleToUnitsPerEm: false)
+        public static let csvDefault: KernExportConfig = .init()
 
         public var resolveGlyphNames: Bool = true
         public var scaleToUnitsPerEm: Bool = true

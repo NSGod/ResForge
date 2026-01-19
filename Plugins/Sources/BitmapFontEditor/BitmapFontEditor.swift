@@ -57,11 +57,11 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
     }
 
     public override func awakeFromNib() {
-        NSLog("\(type(of: self)).\(#function)")
+//        NSLog("\(type(of: self)).\(#function)")
     }
 
     public override func windowDidLoad() {
-        NSLog("\(type(of: self)).\(#function)")
+//        NSLog("\(type(of: self)).\(#function)")
         let bounds = box.bounds
         let previewView = PreviewView(frame: bounds)
         previewView.autoresizingMask = [.width, .height]
@@ -69,8 +69,8 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
         self.previewView = previewView
         box.contentView = previewView
         self.previewView.stringValue = "Spinhx of black quartz, judge my vow!"
-        fontTypeBitfieldControl.bind(NSBindingName(rawValue: "objectValue"), to: self, withKeyPath: "objcFontType")
-        nfnt.bind(NSBindingName(rawValue:"objcFontType"), to: self, withKeyPath: "objcFontType")
+        fontTypeBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFontType")
+        nfnt.bind(NSBindingName("objcFontType"), to: self, withKeyPath: "objcFontType")
         bitDepthPopUpButton.selectItem(withTag: NFNT.FontType.viewTag(forFontBitDepth: nfnt.fontType))
         super.windowDidLoad()
     }

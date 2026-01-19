@@ -10,6 +10,12 @@ import RFSupport
 
 public typealias GlyphID   = UInt16
 public typealias Glyph32ID = UInt32
+
+public extension GlyphID {
+    static let notDef:      GlyphID = 0x0000       // GID of .notdef glyph
+//    static let undefined:   GlyphID = 0xFFFF    // GID of undefined glyph
+}
+
 public typealias Tag       = UInt32
 
 public struct OTFsfntFormat: RawRepresentable, Equatable {

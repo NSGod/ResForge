@@ -32,7 +32,7 @@ final class GlyphNameEncodingSubtable: ResourceNode {
     var charCodesToGlyphNames:  [CharCode: String] = [:]
 
     init(_ reader: BinaryDataReader) throws {
-        let before = reader.position
+        let before = reader.bytesRead
         numberOfEntries = try reader.read()
         for _ in 0..<numberOfEntries {
             let charCode: CharCode = try reader.read()
@@ -40,7 +40,7 @@ final class GlyphNameEncodingSubtable: ResourceNode {
             charCodesToGlyphNames[charCode] = glyphName
         }
         super.init()
-        length = reader.position - before
+        length = reader.bytesRead - before
     }
 
     func glyphName(for charCode: CharCode) -> String? {

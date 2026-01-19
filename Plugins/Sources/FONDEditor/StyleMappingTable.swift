@@ -118,7 +118,7 @@ public final class StyleMappingTable: ResourceNode {
 
     // MARK: - init
     public init(_ reader: BinaryDataReader, range knownRange: NSRange) throws {
-        let origOffset = reader.position
+        let origOffset = reader.bytesRead
         fontClass = try reader.read()
         objcFontClass = fontClass.rawValue
         offset = try reader.read()
