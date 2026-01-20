@@ -45,16 +45,12 @@ class KernPairSaveAccessoryViewController: NSViewController {
                         Self.ScaleToUnitsPerEmKey: true]
         UserDefaults.standard.register(defaults: defaults)
         NSUserDefaultsController.shared.initialValues = defaults
-        guard let ourBundleURL = Bundle.main.url(forResource: "Plugins_FONDEditor", withExtension: "bundle") else {
-            return nil
-        }
-        let ourBundle = Bundle(url: ourBundleURL)
         self.savePanel = savePanel
         self.allowedFileTypes = allowedFileTypes
         selectedFileType = UserDefaults.standard.string(forKey: Self.SaveFileTypeKey)!
         shouldResolveGlyphNames = UserDefaults.standard.bool(forKey: Self.ResolveGlyphNamesKey)
         scaleToUnitsPerEm = UserDefaults.standard.bool(forKey: Self.ScaleToUnitsPerEmKey)
-        super.init(nibName: "KernPairSaveAccessoryViewController", bundle: ourBundle)
+        super.init(nibName: "KernPairSaveAccessoryViewController", bundle: Bundle.module)
     }
 
     required init?(coder: NSCoder) {

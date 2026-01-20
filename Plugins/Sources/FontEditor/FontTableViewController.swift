@@ -12,11 +12,7 @@ import CoreFont
 public class FontTableViewController: NSViewController {
 
     required init?(with fontTable: FontTable) {
-        guard let ourBundleURL = Bundle.main.url(forResource: "Plugins_FontEditor", withExtension: "bundle") else {
-            return nil
-        }
-        let ourBundle = Bundle(url: ourBundleURL)
-        super.init(nibName: (NSStringFromClass(Self.self) as NSString).pathExtension, bundle: ourBundle)
+        super.init(nibName: (NSStringFromClass(Self.self) as NSString).pathExtension, bundle: Bundle.module)
         self.representedObject = fontTable
     }
     
