@@ -10,7 +10,6 @@ import Foundation
 final public class Fixed4Dot12NumberFormatter: NumberFormatter, @unchecked Sendable {
 
     public override func string(for obj: Any?) -> String? {
-//        NSLog("\(type(of: self)).\(#function)() obj == \(obj.debugDescription)")
         guard let numValue = (obj as? NSNumber)?.int16Value else {
             return nil
         }

@@ -8,6 +8,10 @@
 import Foundation
 import RFSupport
 
+/// `REQUIRES`: no other tables
+/// `DEPENDS ON`: no other tables
+/// `DISPLAY DEPENDS ON`: no other tables
+
 final public class FontTable_head: FontTable {
 
     @objc public enum Version: Fixed {
@@ -71,6 +75,18 @@ final public class FontTable_head: FontTable {
     @objc public var createdDate:           Date!
     @objc public var modifiedDate:          Date!
 
+    @objc public var objcFlags:             Flags.RawValue = 0 {
+        didSet { flags = Flags(rawValue: objcFlags) }
+    }
+    @objc public var objcMacStyle:          MacFontStyle.RawValue = 0 {
+        didSet { macStyle = MacFontStyle(rawValue: objcMacStyle) }
+    }
+    @objc public var objcUnitsPerEm:        UInt16 = 0 {
+        didSet {
+            unitsPerEm = UnitsPerEm(rawValue: objcUnitsPerEm)
+        }
+    }
+
     required public init(with tableData: Data, tag: TableTag) throws {
         try super.init(with: tableData, tag: tag)
         version = Version(rawValue: try reader.read()) ?? .default1_0
@@ -78,6 +94,7 @@ final public class FontTable_head: FontTable {
         checkSumAdjustment = try reader.read()
         magicNumber = try reader.read()
         flags = Flags(rawValue: try reader.read())
+        objcFlags = flags.rawValue
         unitsPerEm = UnitsPerEm(rawValue: try reader.read())
         created = try reader.read()
         modified = try reader.read()

@@ -27,11 +27,11 @@
         </numberFormatter>
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" frameAutosaveName="sfntEditor" animationBehavior="default" id="F0z-JX-Cv5" userLabel="window">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-            <rect key="contentRect" x="196" y="240" width="800" height="662"/>
+            <rect key="contentRect" x="196" y="240" width="721" height="662"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1169"/>
-            <value key="minSize" type="size" width="351" height="662"/>
+            <value key="minSize" type="size" width="721" height="662"/>
             <view key="contentView" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="0.0" width="800" height="662"/>
+                <rect key="frame" x="0.0" y="0.0" width="721" height="662"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TFb-9Q-MUk">
@@ -343,17 +343,17 @@
                         </textFieldCell>
                     </textField>
                     <box fixedFrame="YES" boxType="custom" borderType="none" cornerRadius="4" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="ZQm-Fk-V6h">
-                        <rect key="frame" x="344" y="22" width="436" height="610"/>
+                        <rect key="frame" x="344" y="22" width="357" height="610"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <view key="contentView" id="ene-y2-0pE">
-                            <rect key="frame" x="0.0" y="0.0" width="436" height="610"/>
+                            <rect key="frame" x="0.0" y="0.0" width="357" height="610"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         </view>
                     </box>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="u2i-p1-3oQ">
                         <rect key="frame" x="343" y="634" width="120" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="YeF-HK-ItX">
+                        <textFieldCell key="cell" lineBreakMode="clipping" id="YeF-HK-ItX">
                             <font key="font" usesAppearanceFont="YES"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -365,7 +365,7 @@
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
                 <outlet property="initialFirstResponder" destination="c03-kG-D9e" id="U5t-No-KCe"/>
             </connections>
-            <point key="canvasLocation" x="293" y="-47"/>
+            <point key="canvasLocation" x="277" y="-47"/>
         </window>
     </objects>
 </document>

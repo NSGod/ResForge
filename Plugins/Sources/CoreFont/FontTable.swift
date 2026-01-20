@@ -8,6 +8,7 @@
 import Foundation
 import RFSupport
 
+/// abstract superclass
 open class FontTable: NSObject {
     public weak var fontFile:       OTFFontFile?
 

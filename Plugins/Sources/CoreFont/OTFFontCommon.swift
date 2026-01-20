@@ -26,6 +26,9 @@ public func FixedToDouble(_ x: Fixed) -> Double {
 public func DoubleToFixed(_ x: Double) -> Fixed {
     Fixed(x * Double(fixedScale) + (x < 0 ? -0.5 : 0.5))
 }
+public func FixedToFloat(_ x: Fixed) -> Float {
+    Float(x) * 1.0/Float(fixedScale)
+}
 
 public typealias Tag       = UInt32
 
