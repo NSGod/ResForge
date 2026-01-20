@@ -141,9 +141,23 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
 
     @IBAction func exportKernPairs(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
-        
+        let entries = selectedKernTableEntries()
+        if entries.isEmpty { return }
+        let panel = NSSavePanel()
+        guard let viewController = KernPairSaveAccessoryViewController(with: panel,
+                                                           allowedFileTypes: [KernTableEntry.GPOSFeatureFileType,
+                                                                              KernTableEntry.CSVFileType]) else {
+            return
+        }
+        panel.accessoryView = viewController.view
+        panel.beginSheetModal(for: self.window!) { (result) in
+            if result == .OK {
+                viewController.saveOptions()
+                let kernExportConfig = viewController.kernExportConfig
 
 
+            }
+        }
     }
 
     private func selectedKernTableEntries() -> [KernTableEntry] {

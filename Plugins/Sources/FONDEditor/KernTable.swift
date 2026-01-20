@@ -69,6 +69,11 @@ final class KernTableEntry: FONDResourceNode {
         set {}
     }
 
+    static let GPOSFeatureFileType: String = NSLocalizedString("'GPOS' Feature File", comment: "")
+    static let GPOSFeatureUTType:   String = kUTTypeUTF8PlainText as String
+    static let CSVFileType:         String = NSLocalizedString("Comma-Separated Values (CSV)", comment: "")
+    static let CSVUTType:           String = kUTTypeCommaSeparatedText as String
+
     init(_ reader: BinaryDataReader, fond: FOND) throws {
         style = try reader.read()
         objcStyle = style.rawValue
