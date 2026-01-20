@@ -28,3 +28,14 @@ public extension BinaryDataReader {
     }
 
 }
+
+public extension Date {
+    init(secondsSince1904: Int64) {
+        self.init(timeIntervalSinceReferenceDate: Double(secondsSince1904) - kCFAbsoluteTimeIntervalSince1904)
+    }
+
+    var secondsSince1904: Int64 {
+        Int64((self.timeIntervalSinceReferenceDate + kCFAbsoluteTimeIntervalSince1904))
+    }
+}
+

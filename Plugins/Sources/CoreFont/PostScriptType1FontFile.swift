@@ -39,7 +39,7 @@ public struct PSFontMetrics : FontMetrics {
         capHeight = font.capHeight
         xHeight = font.xHeight
         isFixedPitch = font.isFixedPitch
-        unitsPerEm = UnitsPerEm(rawValue: Int(CTFontGetUnitsPerEm(font as CTFont)))
+        unitsPerEm = UnitsPerEm(rawValue: UInt16(CTFontGetUnitsPerEm(font as CTFont)))
     }
 }
 

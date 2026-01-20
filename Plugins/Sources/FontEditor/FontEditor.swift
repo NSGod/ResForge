@@ -9,7 +9,7 @@ import Cocoa
 import RFSupport
 import CoreFont
 
-public class FontEditor: AbstractEditor, ResourceEditor, NSTableViewDelegate, NSTableViewDataSource {
+public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, NSTableViewDelegate, NSTableViewDataSource {
     public static var bundle: Bundle { .module }
     public static let supportedTypes = [
         "sfnt",
@@ -18,14 +18,27 @@ public class FontEditor: AbstractEditor, ResourceEditor, NSTableViewDelegate, NS
         PluginRegistry.register(self)
     }
 
-    @IBOutlet weak var directoryEntriesTableView: NSTableView!
-    
+    @IBOutlet weak var directoryEntriesTableView:   NSTableView!
+    @IBOutlet weak var tableTagField:               NSTextField!
+    @IBOutlet weak var box:                         NSBox!
+
     public var resource: 		Resource
     let manager: 		        RFEditorManager
     @objc var fontFile:         OTFFontFile
 
+    private var tableTagsToViewControllers: [TableTag: FontTableViewController] = [:]
+
     public override var windowNibName: NSNib.Name {
         return "FontEditor"
+    }
+
+    public static func filenameExtension(for resourceType: String) -> String {
+        return resourceType == "sfnt" ? "ttf" : resourceType
+    }
+
+    public static func export(_ resource: Resource, to url: URL) throws {
+        let data = resource.data
+        try data.write(to: url)
     }
 
     public required init?(resource: Resource, manager: RFEditorManager) {
@@ -46,7 +59,7 @@ public class FontEditor: AbstractEditor, ResourceEditor, NSTableViewDelegate, NS
 
     public override func windowDidLoad() {
         super.windowDidLoad()
-
+        window?.makeFirstResponder(directoryEntriesTableView)
     }
 
     // MARK: - <NSTableViewDataSource>
@@ -62,6 +75,35 @@ public class FontEditor: AbstractEditor, ResourceEditor, NSTableViewDelegate, NS
             return fontFile.directory.entries[row]
         }
     }
+
+    // MARK: <NSTableViewDelegate>
+    public func tableViewSelectionDidChange(_ notification: Notification) {
+        let indexes = directoryEntriesTableView.selectedRowIndexes
+        if indexes.count != 1 {
+            box.contentView = Self.emptyView
+            tableTagField.stringValue = ""
+            return
+        }
+        let selectedDirEntry: OTFsfntDirectoryEntry = fontFile.directory.entries[indexes.first!]
+        let tag: TableTag = selectedDirEntry.table.tableTag
+        if let existingViewController = tableTagsToViewControllers[tag] {
+            box.contentView = existingViewController.view
+            tableTagField.stringValue = tag.fourCharString
+            return
+        } else {
+            let viewControllerClass: FontTableViewController.Type = FontTableViewController.class(for: tag).self
+            guard let viewController = viewControllerClass.init(with: selectedDirEntry.table) else {
+                NSLog("\(type(of: self)).\(#function) failed to create a controller for \(tag)")
+                box.contentView = Self.emptyView
+                tableTagField.stringValue = ""
+                return
+            }
+            box.contentView = viewController.view
+            tableTagsToViewControllers[tag] = viewController
+            tableTagField.stringValue = tag.fourCharString
+        }
+    }
+
     // MARK: -
     public func saveResource(_ sender: Any) {
 
@@ -70,4 +112,7 @@ public class FontEditor: AbstractEditor, ResourceEditor, NSTableViewDelegate, NS
     public func revertResource(_ sender: Any) {
 
     }
+
+    static var emptyView: NSView = NSView(frame: NSMakeRect(0, 0, 400, 600))
+
 }

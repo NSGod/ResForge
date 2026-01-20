@@ -15,22 +15,27 @@ public class OTFFontFile: NSObject {
     public var tables:              OrderedSet<FontTable>
 
     private var data:               Data
-    private let dataHandle:         BinaryDataReader
+    private let reader:             BinaryDataReader
 //    private var
 
     public init(_ data: Data) throws {
         self.data = data
-        dataHandle = BinaryDataReader(data)
-        directory = try OTFsfntDirectory(dataHandle)
+        reader = BinaryDataReader(data)
+        directory = try OTFsfntDirectory(reader)
         tables = OrderedSet()
         for entry in directory.entries {
             let range = entry.offset..<entry.offset + entry.length
-            let tableData = try dataHandle.subdata(with: range)
-            let table: FontTable = try FontTable(with: tableData, tag:entry.tableTag)
+            let tableData = try reader.subdata(with: range)
+            let tableClass: FontTable.Type = FontTable.class(for: entry.tableTag).self
+            let table = try tableClass.init(with: tableData, tag: entry.tableTag)
             tables.append(table)
             entry.table = table
         }
         super.init()
+        for entry in directory.entries {
+            entry.fontFile = self
+            entry.table.fontFile = self
+        }
     }
 
 //    private func table(for entry: OTFsfntDirectoryEntry) throws -> FontTable {

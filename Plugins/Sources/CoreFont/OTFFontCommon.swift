@@ -16,6 +16,17 @@ public extension GlyphID {
 //    static let undefined:   GlyphID = 0xFFFF    // GID of undefined glyph
 }
 
+public typealias Fixed = Int32
+
+fileprivate let fixedScale: UInt32 = 1 << 16
+
+public func FixedToDouble(_ x: Fixed) -> Double {
+    Double(x) * 1.0/Double(fixedScale)
+}
+public func DoubleToFixed(_ x: Double) -> Fixed {
+    Fixed(x * Double(fixedScale) + (x < 0 ? -0.5 : 0.5))
+}
+
 public typealias Tag       = UInt32
 
 public struct OTFsfntFormat: RawRepresentable, Equatable {
@@ -36,7 +47,7 @@ public struct OTFsfntFormat: RawRepresentable, Equatable {
     public static let vt1b:    OTFsfntFormat = .init(rawValue: 0x498182F0) // VT100-Bold
 }
 
-public struct TableTag: RawRepresentable, Equatable {
+public struct TableTag: RawRepresentable, Hashable, CustomStringConvertible {
     public let rawValue: Tag
 
     public init(rawValue: Tag) {
@@ -143,4 +154,16 @@ public struct TableTag: RawRepresentable, Equatable {
     public static let vmtx = Self(rawValue: Tag(fourCharString: "vmtx")) // Vertical metrics table         TT (opt)
 
     public static let Zapf = Self(rawValue: Tag(fourCharString: "Zapf")) //                                AAT (opt)
+
+    public var fourCharString: String {
+        return rawValue.fourCharString
+    }
+
+    public var byteSwapped: TableTag {
+        return .init(rawValue: rawValue.byteSwapped)
+    }
+
+    public var description: String {
+        return fourCharString
+    }
 }

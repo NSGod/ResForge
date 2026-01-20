@@ -10,10 +10,10 @@ import RFSupport
 
 final public class OTFsfntDirectory: OTFFontFileNode {
     public var format:                     OTFsfntFormat            // 0x00010000, 'OTTO', 'true', etc.
-    @objc public var numberOfTables:       UInt16                  // number of tables
-    @objc public var searchRange:          UInt16                  // (max power of 2 <= numberOfTables) x 16
-    @objc public var entrySelector:        UInt16                  // log2(max power of 2 <= numberOfTables)
-    @objc public var rangeShift:           UInt16                  // numberOfTables * (16 - searchRange)
+    @objc public var numberOfTables:       UInt16                   // number of tables
+    @objc public var searchRange:          UInt16                   // (max power of 2 <= numberOfTables) x 16
+    @objc public var entrySelector:        UInt16                   // log2(max power of 2 <= numberOfTables)
+    @objc public var rangeShift:           UInt16                   // numberOfTables * (16 - searchRange)
 
     @objc public var entries:              [OTFsfntDirectoryEntry]  // [numberOfTables]
 
@@ -33,5 +33,12 @@ final public class OTFsfntDirectory: OTFFontFileNode {
             entries.append(try OTFsfntDirectoryEntry(reader))
         }
         try super.init(fontFile: nil)
+    }
+
+    public override var description: String {
+        var description = "OTFsfntDirectory:\n"
+        description += "  format: \(format.rawValue.fourCharString)\n"
+        description += entries.map(\.description).joined(separator: "\n")
+        return description
     }
 }

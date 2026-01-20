@@ -124,11 +124,11 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
 }
 
 public enum UnitsPerEm {
-    case custom(Int)
+    case custom(UInt16)
     case postScriptStandard,
          trueTypeStandard
 
-    public init(rawValue: Int) {
+    public init(rawValue: UInt16) {
         if rawValue == 1000 {
             self = .postScriptStandard
         } else if rawValue == 2048 {
@@ -138,7 +138,7 @@ public enum UnitsPerEm {
         }
     }
 
-    public var rawValue: Int {
+    public var rawValue: UInt16 {
         switch self {
             case .custom(let v): return v
             case .postScriptStandard: return 1000

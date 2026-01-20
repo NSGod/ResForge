@@ -39,4 +39,8 @@ final public class OTFsfntDirectoryEntry: OTFFontFileNode, Comparable {
     public static func < (lhs: OTFsfntDirectoryEntry, rhs: OTFsfntDirectoryEntry) -> Bool {
         lhs.tableTag.rawValue < rhs.tableTag.rawValue
     }
+
+    public override var description: String {
+        "OTFsfntDirectoryEntry('\(tableTagString)', checksum: \(String(format: "0x%08x", checksum)), offset: \(offset), length: \(length))"
+    }
 }
