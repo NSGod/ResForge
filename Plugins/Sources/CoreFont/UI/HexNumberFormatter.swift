@@ -12,11 +12,11 @@ public class HexNumberFormatter: NumberFormatter, @unchecked Sendable {
         guard let numberValue = obj as? UInt32 else { return nil }
         let maxValue = self.maximum?.uint32Value ?? 0
         if maxValue == UInt32.max {
-            return String(format: "0x%08x", numberValue)
+            return String(format: "0x%08X", numberValue)
         } else if maxValue == UInt16.max {
-            return String(format: "0x%04x", UInt16(numberValue))
+            return String(format: "0x%04X", UInt16(numberValue))
         } else if maxValue == UInt8.max {
-            return String(format: "0x%02x", UInt8(numberValue))
+            return String(format: "0x%02X", UInt8(numberValue))
         }
         return nil
     }

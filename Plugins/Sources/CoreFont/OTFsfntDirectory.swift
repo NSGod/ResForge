@@ -32,7 +32,7 @@ final public class OTFsfntDirectory: OTFFontFileNode {
         for _ in 0..<Int(numberOfTables) {
             entries.append(try OTFsfntDirectoryEntry(reader))
         }
-        try super.init(fontFile: nil)
+        try super.init()
     }
 
     public override var description: String {

@@ -10,7 +10,7 @@ import Foundation
 import RFSupport
 import CoreFont
 
-public class FOND: NSObject {
+final public class FOND: NSObject {
     struct FontFamilyRecord {
         static let length = 52
     }
@@ -297,7 +297,7 @@ public class FOND: NSObject {
          kerns defined here in the 'FOND'. (The data in an 'sfnt' entry is exactly what a
          Windows .ttf contains: see my answer here https://stackoverflow.com/a/7418915/277952) */
 
-        // TODO: use POST and OTFFontFile to get actual units per em
+        // TODO: use POST and OTFFontFile to get actual Units Per Em
         for entry in fontAssociationTable.entries {
             if entry.fontStyle == fontStyle && entry.fontPointSize == 0 {
                 return .trueTypeStandard

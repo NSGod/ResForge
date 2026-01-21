@@ -16,7 +16,6 @@ public struct MacEncoding: CustomStringConvertible {
 
     public private(set) var coveredCharCodes:      IndexSet
 
-
     public init(name: String, encoding: [UVBMP]) {
         self.name = name
         self.encoding = encoding

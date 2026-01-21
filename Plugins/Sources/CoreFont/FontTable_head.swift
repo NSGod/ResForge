@@ -107,10 +107,7 @@ final public class FontTable_head: FontTable {
         fontDirectionHint = FontDirectionHint(rawValue: try reader.read()) ?? .rightToLeftWithNeutrals
         indexToLocFormat = try reader.read()
         glyphDataFormat = try reader.read()
-
         createdDate = Date(secondsSince1904: created)
         modifiedDate = Date(secondsSince1904: modified)
     }
-
-
 }

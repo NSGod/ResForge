@@ -33,7 +33,7 @@ final public class OTFsfntDirectoryEntry: OTFFontFileNode, Comparable {
         checksum = try reader.read()
         offset = try reader.read()
         length = try reader.read()
-        try super.init(fontFile: nil)
+        try super.init()
     }
 
     public static func < (lhs: OTFsfntDirectoryEntry, rhs: OTFsfntDirectoryEntry) -> Bool {

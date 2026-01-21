@@ -15,7 +15,7 @@ open class OTFFontFileNode: NSObject {
 
     public weak var fontFile:      OTFFontFile?        // weak
 
-    public init(fontFile: OTFFontFile?) throws {
+    public init(fontFile: OTFFontFile? = nil) throws {
         self.fontFile = fontFile
     }
 }

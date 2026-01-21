@@ -15,10 +15,25 @@ open class FontTable: NSObject {
     public let tableTag:            TableTag
 
     public var tableData:           Data
-    public var paddedTableData:     Data?
+    public var paddedTableData:     Data {
+        var paddedData = tableData
+        paddedData.count = (paddedData.count + 3 ) & -4
+        return paddedData
+    }
 
     public var tableLength:         Int { tableData.count }
-    public var paddedTableLength:   Int { paddedTableData?.count ?? 0 }
+    public var paddedTableLength:   Int { paddedTableData.count }
+
+    public var calculatedChecksum: UInt32 {
+        let tableLongs: [UInt32] = paddedTableData.withUnsafeBytes{ rawBuffer in
+            return rawBuffer.bindMemory(to: UInt32.self).map(\.bigEndian)
+        }
+        var calcChecksum: UInt32 = 0
+        for long in tableLongs {
+            calcChecksum &+= long
+        }
+        return calcChecksum
+    }
 
     var reader:    BinaryDataReader
 

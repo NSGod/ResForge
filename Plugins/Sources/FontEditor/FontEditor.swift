@@ -77,6 +77,17 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, NSTable
     }
 
     // MARK: <NSTableViewDelegate>
+    public func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+        let view: NSTableCellView = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
+        guard let tableColumn, tableColumn.identifier.rawValue == "checksum" else { return view }
+        let entry = fontFile.directory.entries[row]
+        let calcChecksum = entry.table.calculatedChecksum
+        let isGood = entry.checksum == calcChecksum
+        view.textField?.textColor = isGood ? NSColor.labelColor : NSColor(srgbRed: 183.0/255.0, green: 130.0/255.0, blue: 0, alpha: 1.0)
+        view.textField?.toolTip = isGood ? "" : String(format: "0x%08X", calcChecksum)
+        return view
+    }
+
     public func tableViewSelectionDidChange(_ notification: Notification) {
         let indexes = directoryEntriesTableView.selectedRowIndexes
         if indexes.count != 1 {
