@@ -530,6 +530,7 @@
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
+                <outlet property="initialFirstResponder" destination="0QR-Ro-MbD" id="nN3-rk-aW6"/>
             </connections>
             <point key="canvasLocation" x="103.5" y="-94"/>
         </window>

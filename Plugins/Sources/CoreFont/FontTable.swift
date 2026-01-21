@@ -8,6 +8,11 @@
 import Foundation
 import RFSupport
 
+public enum FontTableError: LocalizedError {
+    case unknownVersion
+    case parseError
+}
+
 /// abstract superclass
 open class FontTable: NSObject {
     public weak var fontFile:       OTFFontFile?

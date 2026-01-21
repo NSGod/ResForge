@@ -87,7 +87,7 @@ final public class FontTable_head: FontTable {
         }
     }
 
-    required public init(with tableData: Data, tag: TableTag) throws {
+    public required init(with tableData: Data, tag: TableTag) throws {
         try super.init(with: tableData, tag: tag)
         version = Version(rawValue: try reader.read()) ?? .default1_0
         fontRevision = try reader.read()
