@@ -39,3 +39,47 @@ public extension Date {
     }
 }
 
+public extension URL {
+    // FIXME: need to make sure this doesn't exceed NAME_MAX
+    func assuringUniqueFilename() -> URL {
+        do {
+            if try !checkResourceIsReachable() { return self }
+            let parentDirURL = self.deletingLastPathComponent()
+            let filename = self.lastPathComponent
+            let ext = self.pathExtension
+            let basename = (filename as NSString).deletingPathExtension
+            var targetBasename = basename
+            var index = 0
+            let components = basename.components(separatedBy: " ")
+            if components.count > 1 {
+                // "blah blah" or "blah blah 2"
+                let lastWord = components.last!
+                index = abs(Int(lastWord) ?? 0)
+                if index == 0 {
+                    // "blah blah"
+                    index = 2
+                } else {
+                    // "blah blah #"
+                    index += 1
+                    // make targetBasename be everything before the number
+                    let endIndex: String.Index = basename.index(basename.endIndex, offsetBy: -(lastWord.count + 1))
+                    targetBasename = String(basename[..<endIndex])
+                }
+            }
+            while true {
+                let extLength = ext.count != 0 ? ext.count + 1 : 0
+                if index == 0 { index = 2 }
+                var targetName = "\(targetBasename) \(index)"
+                if extLength != 0 { targetName += ".\(ext)" }
+                let targetURL = parentDirURL.appendingPathComponent(targetName, isDirectory: false)
+                if !(try targetURL.checkResourceIsReachable()) { return targetURL }
+                if index == 0 {
+                    index = 2
+                } else { index += 1 }
+            }
+        } catch {
+
+        }
+        return self
+    }
+}

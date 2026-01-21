@@ -66,8 +66,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
                     kernPairs.append(node)
                 }
                 // FIXME: figure out sorting here
-//                kernPairs.sort
-//                kernPairs.sort { $0.left.value < $1.left.value }
+//                kernPairs.sort(by: <)
             }
             if let widthEntries = fond.widthTable?.entries {
                 for widthEntry in widthEntries {
@@ -81,6 +80,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
                 let entries = GlyphNameEntry.glyphNameEntries(with: charCodesToGlyphNames)
                 glyphNameEntries.append(contentsOf: entries)
             }
+            // FIXME: should this be replacing rather than appending?
             effectiveGlyphNameEntries.append(contentsOf: fond.encoding.glyphNameEntries)
 
         } catch {
@@ -143,19 +143,50 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
         NSLog("\(type(of: self)).\(#function)")
         let entries = selectedKernTableEntries()
         if entries.isEmpty { return }
-        let panel = NSSavePanel()
-        guard let viewController = KernPairSaveAccessoryViewController(with: panel,
-                                                           allowedFileTypes: [KernTableEntry.GPOSFeatureFileType,
-                                                                              KernTableEntry.CSVFileType]) else {
-            return
+        var panel: NSSavePanel!
+        if entries.count == 1 {
+            panel = NSSavePanel()
+            panel.allowedFileTypes = [KernTableEntry.GPOSFeatureUTType,
+                                      KernTableEntry.CSVUTType]
+        } else {
+            // if more than one entry, we need to export multiple files
+            let oPanel = NSOpenPanel()
+            oPanel.allowsMultipleSelection = false
+            oPanel.canChooseFiles = false
+            oPanel.canChooseDirectories = true
+            oPanel.prompt = NSLocalizedString("Choose", comment: "")
+            oPanel.message = NSLocalizedString("Choose the folder to export the kern pair files to", comment: "")
+            panel = oPanel
         }
+        panel.isExtensionHidden = false
+        let viewController = KernPairSaveAccessoryViewController(with: panel)
         panel.accessoryView = viewController.view
-        panel.beginSheetModal(for: self.window!) { (result) in
+        (panel as? NSOpenPanel)?.isAccessoryViewDisclosed = true
+        panel.beginSheetModal(for: self.window!) { [self] (result) in
             if result == .OK {
                 viewController.saveOptions()
-                let kernExportConfig = viewController.kernExportConfig
-
-
+                let config = viewController.config
+                if entries.count == 1 {
+                    guard let rep: String = entries.first!.representation(using: config) else { return }
+                    do {
+                        try rep.write(to: panel.url!, atomically: true, encoding: .utf8)
+                    } catch {
+                        NSLog("\(type(of: self)).\(#function) *** ERROR == \(error)")
+                    }
+                } else {
+                    guard let parentDirURL = panel.url else { return }
+                    for entry in entries {
+                        if let name = fond.postScriptNameForFont(with: entry.style) {
+                            guard let rep = entry.representation(using: config) else { continue }
+                            let url = parentDirURL.appendingPathComponent(name).appendingPathExtension(config.pathExtension).assuringUniqueFilename()
+                            do {
+                                try rep.write(to: url, atomically: true, encoding: .utf8)
+                            } catch {
+                                 NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+                            }
+                        }
+                    }
+                }
             }
         }
     }

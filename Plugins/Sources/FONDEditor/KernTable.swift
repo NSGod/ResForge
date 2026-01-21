@@ -58,6 +58,7 @@ final class KernTableEntry: FONDResourceNode {
 
     var kernPairs:          [KernPair]
 
+    // MARK: AUX
     var hasOutOfRangeCharCodes: Bool = false
 
     @objc var objcStyle:    MacFontStyle.RawValue {
@@ -71,7 +72,7 @@ final class KernTableEntry: FONDResourceNode {
 
     static let GPOSFeatureFileType: String = NSLocalizedString("'GPOS' Feature File", comment: "")
     static let GPOSFeatureUTType:   String = kUTTypeUTF8PlainText as String
-    static let CSVFileType:         String = NSLocalizedString("Comma-Separated Values (CSV)", comment: "")
+    static let CSVFileType:         String = NSLocalizedString("Comma-Separated Variables (CSV)", comment: "")
     static let CSVUTType:           String = kUTTypeCommaSeparatedText as String
 
     init(_ reader: BinaryDataReader, fond: FOND) throws {
@@ -88,18 +89,44 @@ final class KernTableEntry: FONDResourceNode {
     }
 
     public struct KernExportConfig {
+        public enum Format {
+            case GPOS
+            case CSV
+        }
         public static let gposDefault: KernExportConfig = .init()
         public static let csvDefault: KernExportConfig = .init()
 
-        public var resolveGlyphNames: Bool = true
-        public var scaleToUnitsPerEm: Bool = true
+        public var format:              Format = .GPOS
+        public var resolveGlyphNames:   Bool = true
+        public var scaleToUnitsPerEm:   Bool = true
+
+        public var pathExtension: String {
+            switch format {
+                case .GPOS: return "txt"
+                case .CSV: return "csv"
+            }
+        }
+    }
+
+    public func representation(using config: KernExportConfig = .gposDefault) -> String? {
+        if config.format == .GPOS {
+            return GPOSFeatureRepresentation(using: config)
+        } else {
+            return CSVRepresentation(using: config)
+        }
     }
 
     // FIXME: add better explanation about what this method is for
     /* This can be used to create a `feature` file used during conversion to OTF/TTF
         by Adobe AFDKO's hotconvert/makeotf to create a `GPOS` table containing the kern pairs */
     public func GPOSFeatureRepresentation(using config: KernExportConfig = .gposDefault) -> String? {
-        var mString = "feature kern {\n"
+        var mString = """
+languagesystem DFLT dflt;
+languagesystem latn dflt;
+
+feature kern {\n
+"""
+//        var mString = "feature kern {\n"
         var mKernPairStrings: [String] = []
         let unitsPerEm = self.fond.unitsPerEm(for: style)
         for kernPair in kernPairs {
@@ -111,7 +138,7 @@ final class KernTableEntry: FONDResourceNode {
                of this editor. */
             let value: Int16 = config.scaleToUnitsPerEm ? Int16(lround(Fixed4Dot12ToDouble(kernPair.kernWidth) * Double(unitsPerEm.rawValue))) : kernPair.kernWidth
             if let firstGlyphName, let secondGlyphName {
-                mKernPairStrings.append("\tpos \(firstGlyphName) \(secondGlyphName) \(value);\n")
+                mKernPairStrings.append("\tpos \(firstGlyphName) \(secondGlyphName) \(value);")
             } else {
                 NSLog("\(type(of: self)).\(#function)() *** ERROR failed to get glyphNames for charCodes: \(kernPair.kernFirst), \(kernPair.kernSecond)")
             }
@@ -145,6 +172,9 @@ final class KernTableEntry: FONDResourceNode {
             writer.stream.close()
         } catch {
              NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+        }
+        if let data = stream.property(forKey: .dataWrittenToMemoryStreamKey) as? Data {
+            return String(data: data, encoding: .utf8)
         }
         return nil
     }
