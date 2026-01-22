@@ -16,7 +16,7 @@ final public class FOND: NSObject {
     }
 
     // FontFamilyRecord is the first 52 bytes of the FOND
-    var ffFlags:                FontFamilyFlags     // flags for family
+    var ffFlags:                FontFamilyFlags     // UInt16; flags for family
     @objc var famID:            ResID               // family ID number
     @objc var firstChar:        Int16               // ASCII code of 1st character
     @objc var lastChar:         Int16               // ASCII code of last character
@@ -46,14 +46,11 @@ final public class FOND: NSObject {
     @objc var intl0:            Int16               // for international use
     @objc var intl1:            Int16               // for international use
 
-    var ffVersion:              Version   // version number
+    @objc var ffVersion:        Version             // version number
 
     // MARK: -
     @objc var objcFFFlags:      FontFamilyFlags.RawValue {
         didSet { ffFlags = FontFamilyFlags(rawValue: objcFFFlags) }
-    }
-    @objc var objcFFVersion:    Version.RawValue {
-        didSet { ffVersion = Version(rawValue: objcFFVersion) ?? .version1 }
     }
 
     @objc var fontAssociationTable:     FontAssociationTable
@@ -199,7 +196,7 @@ final public class FOND: NSObject {
     ///   0x0002    This record may contain the offset and bounding-box tables.
     ///   0x0003    This record definitely contains the offset and bounding-box tables.
 
-    public enum Version : UInt16, RawRepresentable {
+    @objc public enum Version : UInt16, RawRepresentable {
         case version0    = 0,
              version1,
              version2,
@@ -258,7 +255,6 @@ final public class FOND: NSObject {
         intl0           = try reader.read()
         intl1           = try reader.read()
         ffVersion       = try reader.read()
-        objcFFVersion   = ffVersion.rawValue
 
         // FIXME: make sure famID == this FOND's resource ID, otherwise repair it
         if self.resource.id != famID {
