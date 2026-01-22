@@ -9,14 +9,15 @@ import Foundation
 import RFSupport
 import OrderedCollections
 
-public class OTFFontFile: NSObject {
+final public class OTFFontFile: NSObject {
     @objc public var directory:     OTFsfntDirectory
 
     public var tables:              OrderedSet<FontTable>
 
     private var data:               Data
     private let reader:             BinaryDataReader
-//    private var
+
+    var tableTagsToTables:          [TableTag: FontTable] = [:]
 
     public init(_ data: Data) throws {
         self.data = data
@@ -36,6 +37,35 @@ public class OTFFontFile: NSObject {
             entry.fontFile = self
             entry.table.fontFile = self
         }
+    }
+
+    public var headTable: FontTable_head? {
+        return table(for: .head) as? FontTable_head
+    }
+
+    public var maxpTable: FontTable_maxp? {
+        return table(for: .maxp) as? FontTable_maxp
+    }
+
+    public var postTable: FontTable_post? {
+        return table(for: .post) as? FontTable_post
+    }
+
+    public var nameTable: FontTable_name? {
+        return table(for: .name) as? FontTable_name
+    }
+
+    public func table(for tableTag: TableTag) -> FontTable? {
+        return tableTagsToTables[tableTag]
+    }
+
+    private enum GlyphNameLookupType {
+
+        case post
+        case cmap
+        case CFF
+        case TYP1
+        case CID
     }
 
 //    private func table(for entry: OTFsfntDirectoryEntry) throws -> FontTable {

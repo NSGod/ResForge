@@ -11,7 +11,7 @@ import Foundation
 /// `DEPENDS ON`: no other tables
 /// `DISPLAY DEPENDS ON`: no other tables
 
-final class FontTable_name: FontTable {
+final public class FontTable_name: FontTable {
 
 
     
