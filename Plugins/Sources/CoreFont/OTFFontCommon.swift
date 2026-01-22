@@ -16,6 +16,7 @@ public extension GlyphID {
 //    static let undefined:   GlyphID = 0xFFFF    // GID of undefined glyph
 }
 
+// Fixed: 16-bit signed integer plus 16-bit fraction
 public typealias Fixed = Int32
 
 fileprivate let fixedScale: UInt32 = 1 << 16
@@ -28,6 +29,12 @@ public func DoubleToFixed(_ x: Double) -> Fixed {
 }
 public func FixedToFloat(_ x: Fixed) -> Float {
     Float(x) * 1.0/Float(fixedScale)
+}
+
+public extension Fixed {
+    func makeVersion(_ major: Int32, _ minor: Int32) -> Fixed {
+        return Fixed(major << 16 | minor << 12) // "Strange but true, thanks Apple"
+    }
 }
 
 public typealias Tag       = UInt32
