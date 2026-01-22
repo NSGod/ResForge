@@ -13,10 +13,10 @@ final public class ViewController_head: FontTableViewController {
     @IBOutlet weak var flagsControl:        BitfieldControl!
     @IBOutlet weak var macStyleControl:     BitfieldControl!
 
-    var fontTable:      FontTable_head
+    var table:      						FontTable_head
 
     required init?(with fontTable: FontTable) {
-        self.fontTable = fontTable as! FontTable_head
+        self.table = fontTable as! FontTable_head
         super.init(with: fontTable)
     }
 

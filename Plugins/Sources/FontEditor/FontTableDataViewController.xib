@@ -29,21 +29,5 @@
             </subviews>
             <point key="canvasLocation" x="164" y="-181.5"/>
         </customView>
-        <numberFormatter formatterBehavior="custom10_4" allowsFloats="NO" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="vsa-ky-xyl" userLabel="hexNumberFormatter" customClass="HexNumberFormatter" customModule="CoreFont">
-            <real key="minimum" value="0.0"/>
-            <real key="maximum" value="4294967295"/>
-        </numberFormatter>
-        <numberFormatter formatterBehavior="custom10_4" allowsFloats="NO" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="waH-CX-fFD" userLabel="signedShortNumberFormatter">
-            <real key="minimum" value="-32768"/>
-            <real key="maximum" value="32768"/>
-        </numberFormatter>
-        <numberFormatter formatterBehavior="custom10_4" allowsFloats="NO" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="I9P-tZ-Nje" userLabel="unsignedIntNumberFormatter">
-            <real key="minimum" value="0.0"/>
-            <real key="maximum" value="4294967295"/>
-        </numberFormatter>
-        <numberFormatter formatterBehavior="custom10_4" allowsFloats="NO" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="kiP-8j-O3o" userLabel="unsignedShortNumberFormatter">
-            <real key="minimum" value="0.0"/>
-            <real key="maximum" value="65535"/>
-        </numberFormatter>
     </objects>
 </document>

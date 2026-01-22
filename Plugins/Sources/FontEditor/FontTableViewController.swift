@@ -1,6 +1,6 @@
 //
 //  FontTableViewController.swift
-//  Plugins
+//  FontEditor
 //
 //  Created by Mark Douma on 1/19/2026.
 //
