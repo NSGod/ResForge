@@ -14,9 +14,7 @@ public enum FontTableError: LocalizedError {
 }
 
 /// abstract superclass
-open class FontTable: NSObject {
-    public weak var fontFile:       OTFFontFile?
-
+open class FontTable: OTFFontFileNode {
     public let tableTag:            TableTag
 
     public var tableData:           Data
@@ -46,7 +44,7 @@ open class FontTable: NSObject {
         self.tableData = tableData
         tableTag = tag
         reader = BinaryDataReader(tableData)
-        super.init()
+        try super.init()
     }
 
     public static func `class`(for tableTag: TableTag) -> FontTable.Type {
@@ -62,4 +60,14 @@ open class FontTable: NSObject {
         }
         return FontTable.self
     }
+
+    public func table(for tableTag: TableTag) -> FontTable? {
+        return fontFile?.table(for: tableTag)
+    }
+
+    public var headTable: FontTable_head? { table(for: .head) as? FontTable_head }
+    public var maxpTable: FontTable_maxp? { table(for: .maxp) as? FontTable_maxp }
+    public var postTable: FontTable_post? { table(for: .post) as? FontTable_post }
+    public var nameTable: FontTable_name? { table(for: .name) as? FontTable_name }
+
 }

@@ -7,9 +7,9 @@
 
 import Foundation
 
-/// `REQUIRES`: no other tables
-/// `DEPENDS ON`: no other tables
-/// `DISPLAY DEPENDS ON`: no other tables
+/// `REQUIRES`:
+/// `DEPENDS ON`:
+/// `DISPLAY DEPENDS ON`:
 
 final public class FontTable_name: FontTable {
 

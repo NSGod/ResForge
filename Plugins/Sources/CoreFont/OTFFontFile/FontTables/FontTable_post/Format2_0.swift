@@ -21,8 +21,7 @@ public extension FontTable_post {
                 let glyphID: GlyphID = try reader.read()
                 glyphNameIndexes.append(glyphID)
             }
-            let end = reader.data.count
-            while (reader.bytesRemaining < end) {
+            while (reader.bytesRemaining > 0) {
                 let glyphName = try reader.readPString()
                 glyphNames.append(glyphName)
             }

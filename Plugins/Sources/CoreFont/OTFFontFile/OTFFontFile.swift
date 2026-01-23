@@ -60,7 +60,7 @@ final public class OTFFontFile: NSObject {
     }
 
     private enum GlyphNameLookupType {
-
+        case undetermined
         case post
         case cmap
         case CFF

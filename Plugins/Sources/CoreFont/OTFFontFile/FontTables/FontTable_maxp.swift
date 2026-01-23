@@ -8,10 +8,10 @@
 import Foundation
 import RFSupport
 
-/// `REQUIRES`: no other tables
-/// `DEPENDS ON`: no other tables
-/// `DISPLAY DEPENDS ON`: no other tables
-///
+/// `REQUIRES`:
+/// `DEPENDS ON`:
+/// `DISPLAY DEPENDS ON`: 
+
 final public class FontTable_maxp: FontTable {
     @objc public enum Version: Fixed {
         case version0_5     = 0x00005000 // 20480
