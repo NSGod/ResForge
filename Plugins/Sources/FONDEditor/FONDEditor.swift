@@ -37,6 +37,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
     @IBOutlet weak var fontClassField:                  NSTextField!
     @IBOutlet weak var tableView:                       NSTableView! // font assoc. table entries
 
+    @IBOutlet var fontAssocTableEntriesController:      NSArrayController!
     @IBOutlet var kernPairsTreeController:              NSTreeController!
     @IBOutlet weak var tabView:                         NSTabView!
 
@@ -127,6 +128,18 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
             fond.objcFFFlags = fond.objcFFFlags & ~UInt16(sender.tag)
         }
 //        self.didChangeValue(forKey: "fond.objcFFFlags")
+    }
+
+    @IBAction func openFont(_ sender: Any) {
+        // try to get the row of the button we clicked.
+        guard let loc = NSApp.currentEvent?.locationInWindow else { return }
+        let revLoc = tableView.convert(loc, from: nil)
+        let row = tableView.row(at: revLoc)
+        if row < 0 { return }
+        let entry = (fontAssocTableEntriesController.arrangedObjects as! [FontAssociationTableEntry])[row]
+        if let font: Resource = manager.findResource(type: ResourceType(entry.fontPointSize == 0 ? "sfnt" : "NFNT"), id: Int(entry.fontID), currentDocumentOnly: true) {
+            manager.open(resource: font)
+        }
     }
 
     @IBAction func changeFontClass(_ sender: Any) {
@@ -235,6 +248,9 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
                     return view
                 }
             }
+        } else if tableView == self.tableView {
+            let view: NSTableCellView = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
+            return view
         }
         return nil
     }
@@ -306,7 +322,4 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
 
     }
 
-
-
-    
 }
