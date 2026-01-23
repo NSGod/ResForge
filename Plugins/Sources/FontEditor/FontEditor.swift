@@ -84,7 +84,7 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, NSTable
         let calcChecksum = entry.table.calculatedChecksum
         let isGood = entry.checksum == calcChecksum
         view.textField?.textColor = isGood ? NSColor.labelColor : NSColor(srgbRed: 183.0/255.0, green: 130.0/255.0, blue: 0, alpha: 1.0)
-        view.textField?.toolTip = isGood ? "" : String(format: "0x%08X", calcChecksum)
+        view.textField?.toolTip = isGood ? "" : String(format: NSLocalizedString("The calculated checksum is 0x%08X", comment: ""), calcChecksum)
         return view
     }
 

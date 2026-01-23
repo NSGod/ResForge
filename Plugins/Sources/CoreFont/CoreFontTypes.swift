@@ -161,7 +161,12 @@ public protocol FontMetrics {
     var isFixedPitch:       Bool        { get }
 }
 
-public enum MacScriptID: UInt16 {
+// see CarbonCore/TextCommon.h
+// and CoreFoundation/CFStringEncodingExt.h
+//#include <CoreFoundation/CFStringEncodingExt.h>
+//#include <CoreServices/CoreServices.h>
+//#include <CoreText/SFNTTypes.h>
+@objc public enum MacScriptID: UInt16 {
     case roman                  = 0
     case japanese               = 1
     case traditionalChinese     = 2
@@ -244,9 +249,8 @@ extension MacScriptID: CustomStringConvertible {
     }
 }
 
-
 // Language codes are zero based everywhere but within a 'cmap' table
-public enum MacLanguageID: UInt16 {
+@objc public enum MacLanguageID: UInt16 {
     case english        = 0
     case french         = 1
     case german         = 2

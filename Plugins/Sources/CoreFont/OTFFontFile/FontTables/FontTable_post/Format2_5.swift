@@ -29,6 +29,7 @@ public extension FontTable_post {
                     glyphEntries.append(entry)
                     glyphIDsToEntries[Glyph32ID(i)] = entry
                 }
+#warning("Incomplete")
 
 //                iOffs
             }
