@@ -50,6 +50,7 @@
 		B229EEF815A4FB6F0032C12C /* PrefsWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = B229EEF015A4FB6F0032C12C /* PrefsWindow.xib */; };
 		B229EEF915A4FB6F0032C12C /* ResourceDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = B229EEF215A4FB6F0032C12C /* ResourceDocument.xib */; };
 		C11C2A3A2F15E368002AEBAB /* BitmapFontEditor in Frameworks */ = {isa = PBXBuildFile; productRef = C11C2A392F15E368002AEBAB /* BitmapFontEditor */; };
+		C14989422F22D81B0059329A /* postScriptA.pdf in Resources */ = {isa = PBXBuildFile; fileRef = C14989412F22D81B0059329A /* postScriptA.pdf */; };
 		C1960C4C2F049DBC003BC1E4 /* FONDEditor in Frameworks */ = {isa = PBXBuildFile; productRef = C1960C4B2F049DBC003BC1E4 /* FONDEditor */; };
 		C1D84C8D2F1D501400DB8BB7 /* CoreFont in Frameworks */ = {isa = PBXBuildFile; productRef = C1D84C8C2F1D501400DB8BB7 /* CoreFont */; };
 		C1DD00B32F134D03006188B0 /* FontEditor in Frameworks */ = {isa = PBXBuildFile; productRef = C1DD00B22F134D03006188B0 /* FontEditor */; };
@@ -175,6 +176,7 @@
 		550B904A189A0360005AC38D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ResourceDocument.xib; sourceTree = "<group>"; };
 		550B904B189A0360005AC38D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ResourceItem.xib; sourceTree = "<group>"; };
 		559DE9B3189D665000D55D3A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C14989412F22D81B0059329A /* postScriptA.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = postScriptA.pdf; sourceTree = "<group>"; };
 		E18BF58C069FEA1400F076B8 /* ResForge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ResForge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E18BF9D706A01A2200F076B8 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -308,6 +310,7 @@
 		F5B588350156D40B01000001 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				C14989412F22D81B0059329A /* postScriptA.pdf */,
 				4996B90725DB6C2F0027FA39 /* Credits.rtf */,
 				B229EEEA15A4FB6F0032C12C /* MainMenu.xib */,
 				B229EEEC15A4FB6F0032C12C /* CreateResource.xib */,
@@ -471,6 +474,7 @@
 				559DE9B4189D665000D55D3A /* Assets.xcassets in Resources */,
 				4996B90925DB6C2F0027FA39 /* Credits.rtf in Resources */,
 				B229EEF715A4FB6F0032C12C /* InfoWindow.xib in Resources */,
+				C14989422F22D81B0059329A /* postScriptA.pdf in Resources */,
 				B229EEF815A4FB6F0032C12C /* PrefsWindow.xib in Resources */,
 				497A93DE255F371100900C7B /* SelectTemplate.xib in Resources */,
 				B229EEF915A4FB6F0032C12C /* ResourceDocument.xib in Resources */,
