@@ -161,6 +161,12 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
             panel = NSSavePanel()
             panel.allowedFileTypes = [KernTableEntry.GPOSFeatureUTType,
                                       KernTableEntry.CSVUTType]
+			let entry = entries[0]
+			if let name = fond.postScriptNameForFont(with: entry.style) {
+				if let filename = (name as NSString).appendingPathExtension("txt") {
+					panel.nameFieldStringValue = filename
+				}
+			}
         } else {
             // if more than one entry, we need to export multiple files
             let oPanel = NSOpenPanel()

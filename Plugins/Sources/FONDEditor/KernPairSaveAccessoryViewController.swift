@@ -20,19 +20,9 @@ class KernPairSaveAccessoryViewController: NSViewController {
         didSet {
             guard let panel else { return }
             /// try to change filename extension in save panel's field
-            /// by limiting the allowed UT types. It works for automatically for .csv, but
-            /// need to do .txt manually
+            /// by limiting the allowed UT types to the currently selected one.
             if selectedFileType == KernTableEntry.GPOSFeatureFileType {
                 panel.allowedFileTypes = [KernTableEntry.GPOSFeatureUTType]
-                // try to add .txt filename extension
-                if !(panel is NSOpenPanel) {
-                    let filename = panel.nameFieldStringValue as NSString
-                    if filename.pathExtension != "txt" {
-                        if let withTxtExtension = filename.appendingPathExtension("txt") {
-                            panel.nameFieldStringValue = withTxtExtension
-                        }
-                    }
-                }
                 shouldResolveGlyphNames = true
                 scaleToUnitsPerEm = true
             } else {

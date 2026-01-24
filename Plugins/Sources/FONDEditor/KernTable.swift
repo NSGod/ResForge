@@ -71,7 +71,7 @@ final class KernTableEntry: FONDResourceNode {
     }
 
     static let GPOSFeatureFileType: String = NSLocalizedString("'GPOS' Feature File", comment: "")
-    static let GPOSFeatureUTType:   String = kUTTypeUTF8PlainText as String
+    static let GPOSFeatureUTType:   String = kUTTypePlainText as String
     static let CSVFileType:         String = NSLocalizedString("Comma-Separated Variables (CSV)", comment: "")
     static let CSVUTType:           String = kUTTypeCommaSeparatedText as String
 
