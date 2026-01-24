@@ -136,7 +136,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
         let revLoc = tableView.convert(loc, from: nil)
         let row = tableView.row(at: revLoc)
         if row < 0 { return }
-        let entry = (fontAssocTableEntriesController.arrangedObjects as! [FontAssociationTableEntry])[row]
+        let entry = (fontAssocTableEntriesController.arrangedObjects as! [FontAssociationTable.Entry])[row]
         if let font: Resource = manager.findResource(type: ResourceType(entry.fontPointSize == 0 ? "sfnt" : "NFNT"), id: Int(entry.fontID), currentDocumentOnly: true) {
             manager.open(resource: font)
         }
@@ -256,6 +256,16 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
             }
         } else if tableView == self.tableView {
             let view: NSTableCellView = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
+            if let id = tableColumn?.identifier, id.rawValue != "fontName" { return view }
+            if let entries = fontAssocTableEntriesController.arrangedObjects as? [FontAssociationTable.Entry] {
+                let entry = entries[row]
+                if let fontName = fond.postScriptNameForFont(with: entry.fontStyle) {
+                    let name = (entry.fontPointSize == 0 ? fontName : "\(fontName) \(entry.fontPointSize)")
+                    view.textField?.stringValue = name
+                } else {
+                    view.textField?.stringValue = "--"
+                }
+            }
             return view
         }
         return nil

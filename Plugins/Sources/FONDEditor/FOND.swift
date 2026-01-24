@@ -339,12 +339,12 @@ final public class FOND: NSObject {
         offsetsCalculated = true
     }
 
-    func add(_ entry: FontAssociationTableEntry) throws {
+    func add(_ entry: FontAssociationTable.Entry) throws {
         try fontAssociationTable.add(entry)
         shiftOffsetsAndRanges(by: entry.length)
     }
 
-    func remove(_ entry: FontAssociationTableEntry) throws {
+    func remove(_ entry: FontAssociationTable.Entry) throws {
         try fontAssociationTable.remove(entry)
         shiftOffsetsAndRanges(by: -entry.length)
     }
