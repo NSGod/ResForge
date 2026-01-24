@@ -161,16 +161,11 @@ public protocol FontMetrics {
     var isFixedPitch:       Bool        { get }
 }
 
-// see CarbonCore/TextCommon.h
-// and CoreFoundation/CFStringEncodingExt.h
-//#include <CoreFoundation/CFStringEncodingExt.h>
-//#include <CoreServices/CoreServices.h>
-//#include <CoreText/SFNTTypes.h>
+// See CoreServices/CarbonCore/Script.h
 @objc public enum MacScriptID: UInt16 {
     case roman                  = 0
     case japanese               = 1
-    case traditionalChinese     = 2
-//  case chinese                = .traditionalChinese
+    case tradChinese            = 2
     case korean                 = 3
     case arabic                 = 4
     case hebrew                 = 5
@@ -190,22 +185,18 @@ public protocol FontMetrics {
     case burmese                = 19
     case khmer                  = 20
     case thai                   = 21
-    case laotian                = 22
+    case lao                    = 22
     case georgian               = 23
     case armenian               = 24
-    case simplifiedChinese      = 25
+    case simpChinese            = 25
     case tibetan                = 26
     case mongolian              = 27
-    case geez                   = 28
-//  case ethiopic               = .geez
-//  case amharic                = .geez
+    case ethiopic               = 28
     case ceRoman                = 29
-//  case slavic                 = .ceRoman
     case vietnamese             = 30
     case extendedArabic         = 31
-//  case sindhi                 = .extendedArabic
     case uninterpreted          = 32
-    case none                   = 0xFFFF
+    case none                   = 0xFFFF // mine
 }
 
 extension MacScriptID: CustomStringConvertible {
@@ -213,7 +204,7 @@ extension MacScriptID: CustomStringConvertible {
         switch self {
             case .roman:                    return "Roman"
             case .japanese:                 return "Japanese"
-            case .traditionalChinese:       return "Chinese (Traditional)"
+            case .tradChinese:              return "Chinese (Traditional)"
             case .korean:                   return "Korean"
             case .arabic:                   return "Arabic"
             case .hebrew:                   return "Hebrew"
@@ -233,13 +224,13 @@ extension MacScriptID: CustomStringConvertible {
             case .burmese:                  return "Burmese"
             case .khmer:                    return "Khmer"
             case .thai:                     return "Thai"
-            case .laotian:                  return "Laotian"
+            case .lao:                      return "Laotian"
             case .georgian:                 return "Georgian"
             case .armenian:                 return "Armenian"
-            case .simplifiedChinese:        return "Chinese (Simplified)"
+            case .simpChinese:              return "Chinese (Simplified)"
             case .tibetan:                  return "Tibetan"
             case .mongolian:                return "Mongolian"
-            case .geez:                     return "Geez/Ethiopic"
+            case .ethiopic:                 return "Ethiopic"
             case .ceRoman:                  return "Central European Roman"
             case .vietnamese:               return "Vietnamese"
             case .extendedArabic:           return "Extended Arabic"
@@ -249,120 +240,130 @@ extension MacScriptID: CustomStringConvertible {
     }
 }
 
+// See CoreServices/CarbonCore/Script.h
 // Language codes are zero based everywhere but within a 'cmap' table
 @objc public enum MacLanguageID: UInt16 {
-    case english        = 0
-    case french         = 1
-    case german         = 2
-    case italian        = 3
-    case dutch          = 4
-    case swedish        = 5
-    case spanish        = 6
-    case danish         = 7
-    case portuguese     = 8
-    case norwegian      = 9
-    case hebrew         = 10
-    case japanese       = 11
-    case arabic         = 12
-    case finnish        = 13
-    case greek          = 14
-    case icelandic      = 15
-    case maltese        = 16
-    case turkish        = 17
-    case croatian       = 18
-    case tradChinese    = 19
-    case urdu           = 20
-    case hindi          = 21
-    case thai           = 22
-    case korean         = 23
-    case lithuanian     = 24
-    case polish         = 25
-    case hungarian      = 26
-    case estonian       = 27
-    case lettish        = 28
-//  case latvian        = .lettish
-    case saamisk        = 29
-//  case lappish        = .saamisk
-    case faeroese       = 30
-    case farsi          = 31
-//  case persian        = .farsi
-    case russian        = 32
-    case simpChinese    = 33
-    case flemish        = 34
-    case irish          = 35
-    case albanian       = 36
-    case romanian       = 37
-    case czech          = 38
-    case slovak         = 39
-    case slovenian      = 40
-    case yiddish        = 41
-    case serbian        = 42
-    case macedonian     = 43
-    case bulgarian      = 44
-    case ukrainian      = 45
-    case byelorussian   = 46
-    case uzbek          = 47
-    case kazakh         = 48
-    case azerbaijani    = 49
-    case azerbaijanAr   = 50
-    case armenian       = 51
-    case georgian       = 52
-    case moldavian      = 53
-    case kirghiz        = 54
-    case tajiki         = 55
-    case turkmen        = 56
-    case mongolian      = 57
-    case mongolianCyr   = 58
-    case pashto         = 59
-    case kurdish        = 60
-    case kashmiri       = 61
-    case sindhi         = 62
-    case tibetan        = 63
-    case nepali         = 64
-    case sanskrit       = 65
-    case marathi        = 66
-    case bengali        = 67
-    case assamese       = 68
-    case gujarati       = 69
-    case punjabi        = 70
-    case oriya          = 71
-    case malayalam      = 72
-    case kannada        = 73
-    case tamil          = 74
-    case telugu         = 75
-    case sinhalese      = 76
-    case burmese        = 77
-    case khmer          = 78
-    case lao            = 79
-    case vietnamese     = 80
-    case indonesian     = 81
-    case tagalog        = 82
-    case malayRoman     = 83
-    case malayArabic    = 84
-    case amharic        = 85
-    case tigrinya       = 86
-    case galla          = 87
-//  case oromo          = .galla
-    case somali         = 88
-    case swahili        = 89
-    case ruanda         = 90
-    case rundi          = 91
-    case chewa          = 92
-    case malagasy       = 93
-    case esperanto      = 94
-    case welsh          = 128
-    case basque         = 129
-    case catalan        = 130
-    case latin          = 131
-    case quechua        = 132
-    case guarani        = 133
-    case aymara         = 134
-    case tatar          = 135
-    case uighur         = 136
-    case dzongkha       = 137
-    case javaneseRom    = 138
-    case sundaneseRom   = 139
-    case none           = 0xFFFF
+    case english            = 0     // .roman script
+    case french             = 1     // .roman script
+    case german             = 2     // .roman script
+    case italian            = 3     // .roman script
+    case dutch              = 4     // .roman script
+    case swedish            = 5     // .roman script
+    case spanish            = 6     // .roman script
+    case danish             = 7     // .roman script
+    case portuguese         = 8     // .roman script
+    case norwegian          = 9     // .roman script
+    case hebrew             = 10    // .hebrew script
+    case japanese           = 11    // .japanese script
+    case arabic             = 12    // .arabic script
+    case finnish            = 13    // .roman script
+    case greek              = 14    // Greek script (monotonic) using .roman script
+    case icelandic          = 15    // modified .roman/Icelandic script
+    case maltese            = 16    // .roman script
+    case turkish            = 17    // modified .roman/Turkish script
+    case croatian           = 18    // modified .roman/Croatian script
+    case tradChinese        = 19    // Mandarin in .tradChinese script
+    case urdu               = 20    // .arabic script
+    case hindi              = 21    // .devanagari script
+    case thai               = 22    // .thai script
+    case korean             = 23    // .korean script
+    case lithuanian         = 24    // .ceRoman script
+    case polish             = 25    // .ceRoman script
+    case hungarian          = 26    // .ceRoman script
+    case estonian           = 27    // .ceRoman script
+    case latvian            = 28    // .ceRoman script
+    case sami               = 29    // .ceRoman script
+    case faroese            = 30    // modified .roman/Icelandic script
+    case farsi              = 31    // modified .arabic/Farsi script
+//  case persian            = .farsi
+    case russian            = 32    // .cyrillic script
+    case simpChinese        = 33    // .simpChinese script
+    case flemish            = 34    // .roman script
+    case irishGaelic        = 35    // .roman or modified .roman/Celtic script (without dot above)
+    case albanian           = 36    // .roman script
+    case romanian           = 37    // modified .roman/Romanian script
+    case czech              = 38    // .ceRoman script
+    case slovak             = 39    // .ceRoman script
+    case slovenian          = 40    // modified .roman/Croatian script
+    case yiddish            = 41    // .hebrew script
+    case serbian            = 42    // .cyrillic script
+    case macedonian         = 43    // .cyrillic script
+    case bulgarian          = 44    // .cyrillic script
+    case ukrainian          = 45    // modified .cyrillic/Ukranian script
+    case byelorussian       = 46    // .cyrillic script
+    case uzbek              = 47    // .cyrillic script
+    case kazakh             = 48    // .cyrillic script
+    case azerbaijani        = 49    // Azerbaijani in .cyrillic script
+    case azerbaijanAr       = 50    // Azerbaijani in .arabic script
+    case armenian           = 51    // .armenian script
+    case georgian           = 52    // .georgian script
+    case moldavian          = 53    // .cyrillic script
+    case kirghiz            = 54    // .cyrillic script
+    case tajiki             = 55    // .cyrillic script
+    case turkmen            = 56    // .cyrillic script
+    case mongolian          = 57    // Mongolian in .mongolian script
+    case mongolianCyr       = 58    // Mongolian in .cyrillic script
+    case pashto             = 59    // .arabic script
+    case kurdish            = 60    // .arabic script
+    case kashmiri           = 61    // .arabic script
+    case sindhi             = 62    // .arabic script
+    case tibetan            = 63    // .tibetan script
+    case nepali             = 64    // .devanagari script
+    case sanskrit           = 65    // .devanagari script
+    case marathi            = 66    // .devanagari script
+    case bengali            = 67    // .bengali script
+    case assamese           = 68    // .bengali script
+    case gujarati           = 69    // .gujarati script
+    case punjabi            = 70    // .gurmukhi script
+    case oriya              = 71    // .oriya script
+    case malayalam          = 72    // .malayalam script
+    case kannada            = 73    // .kannada script
+    case tamil              = 74    // .tamil script
+    case telugu             = 75    // .telugu script
+    case sinhalese          = 76    // .sinhalese script
+    case burmese            = 77    // .burmese script
+    case khmer              = 78    // .khmer script
+    case lao                = 79    // .lao script
+    case vietnamese         = 80    // .vietnamese script
+    case indonesian         = 81    // .roman script
+    case tagalog            = 82    // .roman script
+    case malayRoman         = 83    // Malay in .roman script
+    case malayArabic        = 84    // Malay in .arabic script
+    case amharic            = 85    // .ethiopic script
+    case tigrinya           = 86    // .ethiopic script
+    case oromo              = 87    // .ethiopic script
+    case somali             = 88    // .roman script
+    case swahili            = 89    // .roman script
+    case ruanda             = 90    // .roman script
+    case rundi              = 91    // .roman script
+    case nyanja             = 92    // .roman script
+    case malagasy           = 93    // .roman script
+    case esperanto          = 94    // .roman script
+    case welsh              = 128   // modified .roman/Celtic script
+    case basque             = 129   // .roman script
+    case catalan            = 130   // .roman script
+    case latin              = 131   // .roman script
+    case quechua            = 132   // .roman script
+    case guarani            = 133   // .roman script
+    case aymara             = 134   // .roman script
+    case tatar              = 135   // .cyrllic script
+    case uighur             = 136   // .arabic script
+    case dzongkha           = 137   // .tibetan script
+    case javaneseRom        = 138   // javanese in .roman script
+    case sundaneseRom       = 139   // sudanese in .roman script
+    case galician           = 140   // .roman script
+    case afrikaans          = 141   // .roman script
+    case breton             = 142   // .roman or modified .roman/Celtic script
+    case inuktitut          = 143   // Intuit using .ethiopic script
+    case scottishGaelic     = 144   // .roman or modified .roman/Celtic script
+    case manxGaelic         = 145   // .roman or modified .roman/Celtic script
+    case irishGaelicDot     = 146   // modified .roman/Gaelic (with dot above) script
+    case tongan             = 147   // .roman script
+    case greekAncient       = 148   // Classical Greek, polytonic orthography; script == ?
+    case greenlandic        = 149   // .roman script
+    case azerbaijanRoman    = 150   // Azerbaijani in .roman script
+    case nynorsk            = 151   // Norwegian Nyorsk in .roman script
+    case none               = 0xFFFF
 };
 
 extension MacLanguageID: CustomStringConvertible {
@@ -396,17 +397,15 @@ extension MacLanguageID: CustomStringConvertible {
             case .polish:           return "Polish"
             case .hungarian:        return "Hungarian"
             case .estonian:         return "Estonian"
-            case .lettish:          return "Lettish"
-//          case .latvian           return "Latvian"
-            case .saamisk:          return "Saamisk"
-//          case .lappish           return "Lappish"
-            case .faeroese:         return "Faeroese"
+            case .latvian:          return "Latvian"
+            case .sami:             return "Sami"
+            case .faroese:          return "Faroese"
             case .farsi:            return "Farsi"
 //          case .persian           return "Persian"
             case .russian:          return "Russian"
             case .simpChinese:      return "Chinese (Simplified)"
             case .flemish:          return "Flemish"
-            case .irish:            return "Irish"
+            case .irishGaelic:      return "Irish Gaelic"
             case .albanian:         return "Albanian"
             case .romanian:         return "Romanian"
             case .czech:            return "Czech"
@@ -454,17 +453,16 @@ extension MacLanguageID: CustomStringConvertible {
             case .vietnamese:       return "Vietnamese"
             case .indonesian:       return "Indonesian"
             case .tagalog:          return "Tagalog"
-            case .malayRoman:       return "MalayRoman"
-            case .malayArabic:      return "MalayArabic"
+            case .malayRoman:       return "Malay (Roman)"
+            case .malayArabic:      return "Malay (Arabic)"
             case .amharic:          return "Amharic"
             case .tigrinya:         return "Tigrinya"
-            case .galla:            return "Galla"
-//          case .oromo             return "Oromo"
+            case .oromo:            return "Oromo"
             case .somali:           return "Somali"
             case .swahili:          return "Swahili"
             case .ruanda:           return "Ruanda"
             case .rundi:            return "Rundi"
-            case .chewa:            return "Chewa"
+            case .nyanja:           return "Nyanja"
             case .malagasy:         return "Malagasy"
             case .esperanto:        return "Esperanto"
             case .welsh:            return "Welsh"
@@ -477,8 +475,20 @@ extension MacLanguageID: CustomStringConvertible {
             case .tatar:            return "Tatar"
             case .uighur:           return "Uighur"
             case .dzongkha:         return "Dzongkha"
-            case .javaneseRom:      return "Javanese"
-            case .sundaneseRom:     return "Sundanese"
+            case .javaneseRom:      return "Javanese (Roman)"
+            case .sundaneseRom:     return "Sundanese (Roman)"
+            case .galician:         return "Galician"
+            case .afrikaans:		return "Afrikaans"
+            case .breton:			return "Breton"
+            case .inuktitut:		return "Inuktitut"
+            case .scottishGaelic:	return "Scottish Gaelic"
+            case .manxGaelic:		return "Manx Gaelic"
+            case .irishGaelicDot:   return "Irish Gaelic (with dot above)"
+            case .tongan:			return "Tongan"
+            case .greekAncient:		return "Greek (polytonic)"
+            case .greenlandic:		return "Greenlandic"
+            case .azerbaijanRoman:	return "Azerbaijani (Roman)"
+            case .nynorsk:			return "Nynorsk"
             case .none:             return "--"
         }
     }

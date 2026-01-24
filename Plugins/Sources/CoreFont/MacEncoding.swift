@@ -168,7 +168,7 @@ public struct MacEncoding: CustomStringConvertible {
         } else if fondID < 16896 {
             return .japanese
         } else if fondID < 17408 {
-            return .traditionalChinese
+            return .tradChinese
         } else if fondID < 17920 {
             return .korean
         } else if fondID < 18432 {
@@ -208,19 +208,19 @@ public struct MacEncoding: CustomStringConvertible {
         } else if fondID < 27136 {
             return .thai
         } else if fondID < 27648 {
-            return .laotian
+            return .lao
         } else if fondID < 28160 {
             return .georgian
         } else if fondID < 28672 {
             return .armenian
         } else if fondID < 29184 {
-            return .simplifiedChinese
+            return .simpChinese
         } else if fondID < 29696 {
             return .tibetan
         } else if fondID < 30208 {
             return .mongolian
         } else if fondID < 30720 {
-            return .geez
+            return .ethiopic
         } else if fondID < 31232 {
             return .ceRoman
         } else if fondID < 31744 {

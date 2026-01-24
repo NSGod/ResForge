@@ -27,6 +27,7 @@ public class BitmapFontPreviewView: NSView {
 			self.needsDisplay = true
 		}
 	}
+	
     @IBInspectable public var stringValue:    String {
         set {
             textStorage.string = newValue
