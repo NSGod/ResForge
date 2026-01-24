@@ -218,7 +218,6 @@
 			children = (
 				E18BF9D706A01A2200F076B8 /* Info.plist */,
 				559DE9B3189D665000D55D3A /* Assets.xcassets */,
-				49F56FCC2A830C3600953A17 /* Formats */,
 				F5B5881C0156D40B01000001 /* Classes */,
 				F5B588350156D40B01000001 /* Resources */,
 				49F464942E487B72003C732F /* HexEditor */,
@@ -248,13 +247,6 @@
 				49F464932E487B72003C732F /* HexWindow.xib */,
 			);
 			path = HexEditor;
-			sourceTree = "<group>";
-		};
-		49F56FCC2A830C3600953A17 /* Formats */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Formats;
 			sourceTree = "<group>";
 		};
 		F5B588100156D2A601000001 = {
