@@ -21,10 +21,10 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
 
     @IBOutlet weak var fontTypeBitfieldControl:     BitfieldControl!
     @IBOutlet weak var bitDepthPopUpButton:         NSPopUpButton!
-    /// Not sure why, but creating a custom PreviewView in the nib file was
+    /// Not sure why, but creating a custom BitmapFontPreviewView in the nib file was
     /// not working without crashing. So create it programatically and set the box's `contentView`
     @IBOutlet weak var box:                         NSBox!
-    @IBOutlet weak var previewView:                 PreviewView!
+    @IBOutlet weak var previewView:                 BitmapFontPreviewView!
 
     @IBOutlet var popover:                          NSPopover!
     @IBOutlet weak var popoverButton:               NSButton!
@@ -63,8 +63,11 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
     public override func windowDidLoad() {
 //        NSLog("\(type(of: self)).\(#function)")
         let bounds = box.bounds
-        let prevView = PreviewView(frame: bounds)
+        let prevView = BitmapFontPreviewView(frame: bounds)
         prevView.autoresizingMask = [.width, .height]
+		prevView.padding = 10
+		prevView.borderThickness = 2
+		prevView.borderColor = .red
         prevView.nfnt = nfnt
         self.previewView = prevView
         box.contentView = prevView
@@ -105,17 +108,47 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
     @IBAction func changeBitDepth(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
         guard let sender = sender as? NSPopUpButton else { return }
-
     }
 
     public func saveResource(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)()")
-
     }
 
     public func revertResource(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)()")
-
     }
 
+}
+
+// MARK: <PreviewProvider>
+extension BitmapFontEditor: PreviewProvider {
+	static var previewView: BitmapFontPreviewView = BitmapFontPreviewView(frame: NSMakeRect(0, 0, 64, 64))
+	static var isSetup = false
+	
+	public static func image(for resource: Resource) -> NSImage? {
+		let image: NSImage = NSImage()
+		DispatchQueue.main.async {
+			do {
+				if !isSetup {
+					previewView.backgroundColor = .white
+					previewView.borderThickness = 1
+					previewView.borderColor = .secondaryLabelColor
+					previewView.alignment = .center
+					previewView.stringValue = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcde12345"
+					isSetup = true
+				}
+				let nfnt: NFNT = try NFNT(resource.data, resource: resource)
+				previewView.nfnt = nfnt
+				if let bitmapRep = previewView.bitmapImageRepForCachingDisplay(in: previewView.bounds) {
+					previewView.cacheDisplay(in: previewView.bounds, to: bitmapRep)
+					image.addRepresentation(bitmapRep)
+				}
+			} catch { }
+		}
+		return image
+	}
+	
+	public static func maxThumbnailSize(for resourceType: String) -> Int? {
+		return 64
+	}
 }

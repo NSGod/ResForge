@@ -1,5 +1,5 @@
 //
-//  PreviewView.swift
+//  BitmapFontPreviewView.swift
 //  BitmapFontEditor
 //
 //  Created by Mark Douma on 1/15/2026.
@@ -8,8 +8,25 @@
 import Cocoa
 import RFSupport
 
-public class PreviewView: NSView {
+public class BitmapFontPreviewView: NSView {
 
+	@IBInspectable public var backgroundColor:	NSColor? {
+		didSet {
+			self.needsDisplay = true
+		}
+	}
+	
+	@IBInspectable public var borderColor:		NSColor? {
+		didSet {
+			self.needsDisplay = true
+		}
+	}
+	
+	@IBInspectable public var borderThickness: CGFloat = 0 {
+		didSet {
+			self.needsDisplay = true
+		}
+	}
     @IBInspectable public var stringValue:    String {
         set {
             textStorage.string = newValue
@@ -41,12 +58,16 @@ public class PreviewView: NSView {
     }
 
     /// padding the text is inset from the edge, in px
-    public var padding:         CGFloat = 10
+	public var padding:         CGFloat = 0 {
+		didSet {
+			syncSize()
+			self.needsDisplay = true
+		}
+	}
 
     var textStorage:            NFNTTextStorage
 
     public override init(frame frameRect: NSRect) {
-//        NSLog("\(type(of: self)).\(#function)")
         textStorage = NFNTTextStorage()
         let layoutManager = NFNTLayoutManager()
         let container = NFNTTextContainer(size: NSInsetRect(frameRect, padding, padding).size)
@@ -56,7 +77,6 @@ public class PreviewView: NSView {
     }
 
     public required init?(coder: NSCoder) {
-//        NSLog("\(type(of: self)).\(#function)")
         textStorage = NFNTTextStorage()
         let layoutManager = NFNTLayoutManager()
         let container = NFNTTextContainer(size: .zero)
@@ -71,14 +91,12 @@ public class PreviewView: NSView {
 
     /// actually, this won't be called unless we're in the nib, which we aren't
     public override func awakeFromNib() {
-//        NSLog("\(type(of: self)).\(#function)")
         syncSize()
         NotificationCenter.default.addObserver(self, selector: #selector(viewFrameChanged), name: Self.frameDidChangeNotification, object: self)
         self.needsDisplay = true
     }
 
     public override func viewDidMoveToWindow() {
-//        NSLog("\(type(of: self)).\(#function)")
         syncSize()
         NotificationCenter.default.addObserver(self, selector: #selector(viewFrameChanged), name: Self.frameDidChangeNotification, object: self)
         self.needsDisplay = true
@@ -97,9 +115,15 @@ public class PreviewView: NSView {
     }
 
     public override func draw(_ dirtyRect: NSRect) {
-        NSBezierPath.defaultLineWidth = 2.0
-        NSColor.red.setStroke()
-        NSBezierPath(rect: self.bounds).stroke()
+		if let backgroundColor {
+			backgroundColor.set()
+			NSBezierPath(rect: self.bounds).fill()
+		}
+        NSBezierPath.defaultLineWidth = borderThickness
+		if borderThickness > 0, let borderColor {
+			borderColor.setStroke()
+			NSBezierPath(rect: self.bounds).stroke()
+		}
         textStorage.layoutManager.drawGlyphs(at: NSMakePoint(padding, padding))
     }
 
