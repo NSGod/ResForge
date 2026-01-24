@@ -92,6 +92,8 @@ class EditorManager: RFEditorManager {
                 }
             } else if let image = NSImage(systemSymbolName: icon, accessibilityDescription: nil) {
                 return image
+            } else if let image = NSImage(named: icon) {
+                return image
             }
         }
 
