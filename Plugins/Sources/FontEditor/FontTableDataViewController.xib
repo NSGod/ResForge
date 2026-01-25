@@ -175,7 +175,7 @@ Gw
                                 <constraint firstAttribute="trailing" secondItem="Esg-2K-hiU" secondAttribute="trailing" constant="-1" id="sp4-sQ-W6B"/>
                             </constraints>
                         </view>
-                        <customView translatesAutoresizingMaskIntoConstraints="NO" id="KzM-4e-AId" userLabel="textView" customClass="HFTextView" customModule="HexFiend">
+                        <customView translatesAutoresizingMaskIntoConstraints="NO" id="KzM-4e-AId" userLabel="textView" customClass="HFTextView">
                             <rect key="frame" x="0.0" y="0.0" width="471" height="256"/>
                         </customView>
                     </subviews>

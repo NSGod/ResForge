@@ -49,7 +49,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/apple/swift-collections.git", "1.0.0"..<"2.0.0"),
         .package(url: "https://github.com/yaslab/CSV.swift.git", "2.4.3"..<"3.0.0"),
-        .package(url: "https://github.com/HexFiend/HexFiend.git", branch: "package"),
+//        .package(url: "https://github.com/HexFiend/HexFiend.git", branch: "package"),
         .package(url: "https://github.com/pointfreeco/swift-parsing.git", "0.14.0"..<"0.15.0")
     ],
     targets: [
@@ -84,7 +84,7 @@ let package = Package(
         .target(name: "FontEditor",
             dependencies: [.target(name: "RFSupport"),
                            .target(name: "CoreFont"),
-                           .product(name: "HexFiend", package: "HexFiend"),
+//                           .product(name: "HexFiend", package: "HexFiend"),
                            .product(name: "OrderedCollections", package:"swift-collections")]),
         .target(name: "BitmapFontEditor",
             dependencies: [.target(name: "RFSupport"),
