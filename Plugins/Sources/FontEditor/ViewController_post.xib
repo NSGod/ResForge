@@ -354,10 +354,10 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </searchFieldCell>
                     <connections>
-                        <binding destination="mtm-Aa-hea" name="predicate" keyPath="filterPredicate" id="mLI-ey-ZVc">
+                        <binding destination="mtm-Aa-hea" name="predicate" keyPath="filterPredicate" id="m6Y-8H-Am0">
                             <dictionary key="options">
                                 <string key="NSDisplayName">predicate</string>
-                                <string key="NSPredicateFormat">keyPath contains $value</string>
+                                <string key="NSPredicateFormat">glyphName contains[cd] $value</string>
                             </dictionary>
                         </binding>
                     </connections>
