@@ -17,25 +17,46 @@ final public class OTFFontFile: NSObject {
     private var data:               Data
     private let reader:             BinaryDataReader
 
-    var tableTagsToTables:          [TableTag: FontTable] = [:]
+    private var tableTagsToTables:  [TableTag: FontTable] = [:]
+
+    // this is to help determine table indexes for display in UI:
+    private var rangesToFontTables: [Range<UInt32>: FontTable] = [:]
 
     public init(_ data: Data) throws {
         self.data = data
         reader = BinaryDataReader(data)
         directory = try OTFsfntDirectory(reader)
         tables = OrderedSet()
+        super.init()
+        // FIXME: load/font tables in a specified order
         for entry in directory.entries {
             let range = entry.offset..<entry.offset + entry.length
             let tableData = try reader.subdata(with: range)
             let tableClass: FontTable.Type = FontTable.class(for: entry.tableTag).self
-            let table = try tableClass.init(with: tableData, tag: entry.tableTag)
+            let table = try tableClass.init(with: tableData, tableTag: entry.tableTag, fontFile: self)
             tables.append(table)
+            rangesToFontTables[range] = table
             entry.table = table
         }
-        super.init()
         for entry in directory.entries {
             entry.fontFile = self
             entry.table.fontFile = self
+        }
+        // sort for display
+        tables.sort { table1, table2 in
+            var offset1: UInt32 = 0
+            var offset2: UInt32 = 0
+            for (range, table) in rangesToFontTables {
+                if table == table1 {
+                    offset1 = range.lowerBound
+                } else if table == table2 {
+                    offset2 = range.lowerBound
+                }
+                if offset1 > 0 && offset2 > 0 { break }
+            }
+            // allow corrupt font to succeed w/o crashing
+            // assert(offset1 != 0 && offset2 != 0)
+            return offset1 < offset2
         }
     }
 
