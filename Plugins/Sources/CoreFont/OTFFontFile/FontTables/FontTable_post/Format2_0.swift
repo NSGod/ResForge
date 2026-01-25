@@ -14,7 +14,7 @@ public extension FontTable_post {
         public var numberOfGlyphs:          UInt16 = 0      // must be synched with maxp.numGlyphs
         public var glyphNameIndexes:        [GlyphID] = []
 
-        required public init(_ reader: BinaryDataReader!, offset: Int? = nil, table: FontTable? = nil) throws {
+        required public init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable? = nil) throws {
             try super.init(reader, offset: offset, table: table)
             numberOfGlyphs = try reader.read()
             for _ in 0..<numberOfGlyphs {
@@ -37,7 +37,7 @@ public extension FontTable_post {
                     let altIndex: UInt16 = index - UInt16(appleStdGlyphNames.count)
                     if altIndex > glyphNamesCount {
                         // FIXME: better error
-                        throw FontTableError.parseError
+                        throw FontTableError.parseError(nil)
                     } else {
                         entry = GlyphEntry(glyphID: i, glyphName: glyphNames[Int(altIndex)])
                     }

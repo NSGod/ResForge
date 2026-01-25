@@ -11,11 +11,17 @@ import RFSupport
 open class FontTableNode: NSObject {
     public weak var table:         FontTable?
 
-    // the following 2 properties must be overridden by subclasses
-    public var nodeLength:         UInt32 = UInt32.max
-    public var totalNodeLength:    UInt32 = UInt32.max
+    /// the following 2 properties must be overridden by any subclasses who
+    /// intend to have them called
+    public var nodeLength:         UInt32 {
+        fatalError("subclasses must override")
+    }
 
-    public init(_ reader: BinaryDataReader!, offset: Int? = nil, table: FontTable? = nil) throws {
+    public var totalNodeLength:    UInt32 {
+        fatalError("subclasses must override")
+    }
+
+    public init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable? = nil) throws {
         super.init()
     }
 

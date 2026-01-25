@@ -19,7 +19,7 @@ public extension FontTable_post {
         // for display?
         @objc public var glyphEntries: [GlyphEntry] = []
 
-        public required override init(_ reader: BinaryDataReader!, offset: Int? = nil, table: FontTable? = nil) throws {
+        public required override init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable? = nil) throws {
             try super.init(reader, offset: offset, table: table)
         }
 

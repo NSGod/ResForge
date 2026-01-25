@@ -1,22 +1,22 @@
 //
-//  ViewController_post.swift
+//  ViewController_name.swift
 //  FontEditor
 //
-//  Created by Mark Douma on 1/22/2026.
+//  Created by Mark Douma on 1/25/2026.
 //
 
 import Cocoa
 import CoreFont
 
-final public class ViewController_post: FontTableViewController {
-    var table:                FontTable_post
+final public class ViewController_name: FontTableViewController {
+    var table:    FontTable_name
 
     required init?(with fontTable: FontTable) {
-        self.table = fontTable as! FontTable_post
+        table = fontTable as! FontTable_name
         super.init(with: fontTable)
     }
     
-    required init?(coder: NSCoder) {
+    @MainActor required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     

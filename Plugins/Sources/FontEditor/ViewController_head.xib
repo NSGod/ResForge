@@ -195,6 +195,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.fontRevision" id="d88-DC-a8m"/>
+                        <outlet property="formatter" destination="Kld-Rl-Mgm" id="YWb-aZ-Lui"/>
                     </connections>
                 </textField>
                 <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jIb-wt-pN3">
@@ -395,9 +396,9 @@
                     <rect key="frame" x="251" y="238" width="166" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <datePickerCell key="cell" controlSize="small" borderStyle="bezel" alignment="left" useCurrentDate="YES" id="oIT-jX-Dp6">
-                        <font key="font" metaFont="system" size="11"/>
-                        <date key="date" timeIntervalSinceReferenceDate="790571641.37935996">
-                            <!--2026-01-20 03:14:01 +0000-->
+                        <font key="font" metaFont="smallSystem"/>
+                        <date key="date" timeIntervalSinceReferenceDate="791051035.520491">
+                            <!--2026-01-25 16:23:55 +0000-->
                         </date>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -411,9 +412,9 @@
                     <rect key="frame" x="251" y="216" width="166" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <datePickerCell key="cell" controlSize="small" borderStyle="bezel" alignment="left" useCurrentDate="YES" id="gII-fu-7Tf">
-                        <font key="font" metaFont="system" size="11"/>
-                        <date key="date" timeIntervalSinceReferenceDate="790571641.37440503">
-                            <!--2026-01-20 03:14:01 +0000-->
+                        <font key="font" metaFont="smallSystem"/>
+                        <date key="date" timeIntervalSinceReferenceDate="791051035.52320397">
+                            <!--2026-01-25 16:23:55 +0000-->
                         </date>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -735,6 +736,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.fontRevision" id="bX7-Oy-nxV"/>
+                        <outlet property="formatter" destination="kru-CD-XrG" id="rBI-oZ-r0g"/>
                     </connections>
                 </textField>
             </subviews>

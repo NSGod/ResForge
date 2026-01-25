@@ -9,7 +9,7 @@ import Cocoa
 import RFSupport
 import CoreFont
 
-public class NFNT: NSObject {
+public final class NFNT: NSObject {
     struct FontRec {
         static let length = 26
     }

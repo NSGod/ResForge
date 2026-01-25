@@ -14,6 +14,8 @@ import RFSupport
 
 final public class FontTable_head: FontTable {
 
+    public override class var usesLazyParsing: Bool { false }
+
     @objc public enum Version: Fixed {
         case default1_0 = 0x00010000
     }
@@ -87,8 +89,8 @@ final public class FontTable_head: FontTable {
         }
     }
 
-    public required init(with tableData: Data, tag: TableTag) throws {
-        try super.init(with: tableData, tag: tag)
+    public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
+        try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
         version = Version(rawValue: try reader.read()) ?? .default1_0
         fontRevision = try reader.read()
         checkSumAdjustment = try reader.read()
@@ -107,6 +109,10 @@ final public class FontTable_head: FontTable {
         fontDirectionHint = FontDirectionHint(rawValue: try reader.read()) ?? .rightToLeftWithNeutrals
         indexToLocFormat = try reader.read()
         glyphDataFormat = try reader.read()
+
+        objcFlags = flags.rawValue
+        objcUnitsPerEm = unitsPerEm.rawValue
+        objcMacStyle = macStyle.rawValue
         createdDate = Date(secondsSince1904: created)
         modifiedDate = Date(secondsSince1904: modified)
     }

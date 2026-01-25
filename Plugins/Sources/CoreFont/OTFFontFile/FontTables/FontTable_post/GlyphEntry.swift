@@ -53,5 +53,4 @@ public extension FontTable_post {
 
         public static var defaultNameStyle: NameStyle = .aHex
     }
-
 }

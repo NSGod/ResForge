@@ -9,9 +9,9 @@ import Cocoa
 import CoreFont
 
 final public class ViewController_maxp: FontTableViewController {
-	@IBOutlet weak var version1View: NSView!
+	@IBOutlet weak var version1View:    NSView!
 
-	var table:				FontTable_maxp
+	var table:                          FontTable_maxp
 
 	required init?(with fontTable: FontTable) {
 		self.table = fontTable as! FontTable_maxp

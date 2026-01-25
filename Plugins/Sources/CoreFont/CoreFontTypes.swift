@@ -162,7 +162,7 @@ public protocol FontMetrics {
 }
 
 // See CoreServices/CarbonCore/Script.h
-@objc public enum MacScriptID: UInt16 {
+@objc public enum MacScriptID: UInt16, Comparable {
     case roman                  = 0
     case japanese               = 1
     case tradChinese            = 2
@@ -197,52 +197,60 @@ public protocol FontMetrics {
     case extendedArabic         = 31
     case uninterpreted          = 32
     case none                   = 0xFFFF // mine
+
+    public static func < (lhs: MacScriptID, rhs: MacScriptID) -> Bool {
+        return lhs.rawValue < rhs.rawValue
+    }
+
+    public static func == (lhs: MacScriptID, rhs: MacScriptID) -> Bool {
+        return lhs.rawValue == rhs.rawValue
+    }
 }
 
 extension MacScriptID: CustomStringConvertible {
     public var description: String {
         switch self {
-            case .roman:                    return "Roman"
-            case .japanese:                 return "Japanese"
-            case .tradChinese:              return "Chinese (Traditional)"
-            case .korean:                   return "Korean"
-            case .arabic:                   return "Arabic"
-            case .hebrew:                   return "Hebrew"
-            case .greek:                    return "Greek"
-            case .cyrillic:                 return "Cyrillic"
-            case .rightToLeftSymbol:        return "Right-to-Left Symbols"
-            case .devanagari:               return "Devanagari"
-            case .gurmukhi:                 return "Gurmukhi"
-            case .gujarati:                 return "Gujarati"
-            case .oriya:                    return "Oriya"
-            case .bengali:                  return "Bengali"
-            case .tamil:                    return "Tamil"
-            case .telugu:                   return "Telugu"
-            case .kannada:                  return "Kannada"
-            case .malayalam:                return "Malayalam"
-            case .sinhalese:                return "Sinhalese"
-            case .burmese:                  return "Burmese"
-            case .khmer:                    return "Khmer"
-            case .thai:                     return "Thai"
-            case .lao:                      return "Laotian"
-            case .georgian:                 return "Georgian"
-            case .armenian:                 return "Armenian"
-            case .simpChinese:              return "Chinese (Simplified)"
-            case .tibetan:                  return "Tibetan"
-            case .mongolian:                return "Mongolian"
-            case .ethiopic:                 return "Ethiopic"
-            case .ceRoman:                  return "Central European Roman"
-            case .vietnamese:               return "Vietnamese"
-            case .extendedArabic:           return "Extended Arabic"
-            case .uninterpreted:            return "Uninterpreted Symbols"
-            case .none:                     return "None"
+            case .roman:                    return NSLocalizedString("Roman", comment: "")
+            case .japanese:                 return NSLocalizedString("Japanese", comment: "")
+            case .tradChinese:              return NSLocalizedString("Chinese (Traditional)", comment: "")
+            case .korean:                   return NSLocalizedString("Korean", comment: "")
+            case .arabic:                   return NSLocalizedString("Arabic", comment: "")
+            case .hebrew:                   return NSLocalizedString("Hebrew", comment: "")
+            case .greek:                    return NSLocalizedString("Greek", comment: "")
+            case .cyrillic:                 return NSLocalizedString("Cyrillic", comment: "")
+            case .rightToLeftSymbol:        return NSLocalizedString("Right-to-Left Symbols", comment: "")
+            case .devanagari:               return NSLocalizedString("Devanagari", comment: "")
+            case .gurmukhi:                 return NSLocalizedString("Gurmukhi", comment: "")
+            case .gujarati:                 return NSLocalizedString("Gujarati", comment: "")
+            case .oriya:                    return NSLocalizedString("Oriya", comment: "")
+            case .bengali:                  return NSLocalizedString("Bengali", comment: "")
+            case .tamil:                    return NSLocalizedString("Tamil", comment: "")
+            case .telugu:                   return NSLocalizedString("Telugu", comment: "")
+            case .kannada:                  return NSLocalizedString("Kannada", comment: "")
+            case .malayalam:                return NSLocalizedString("Malayalam", comment: "")
+            case .sinhalese:                return NSLocalizedString("Sinhalese", comment: "")
+            case .burmese:                  return NSLocalizedString("Burmese", comment: "")
+            case .khmer:                    return NSLocalizedString("Khmer", comment: "")
+            case .thai:                     return NSLocalizedString("Thai", comment: "")
+            case .lao:                      return NSLocalizedString("Laotian", comment: "")
+            case .georgian:                 return NSLocalizedString("Georgian", comment: "")
+            case .armenian:                 return NSLocalizedString("Armenian", comment: "")
+            case .simpChinese:              return NSLocalizedString("Chinese (Simplified)", comment: "")
+            case .tibetan:                  return NSLocalizedString("Tibetan", comment: "")
+            case .mongolian:                return NSLocalizedString("Mongolian", comment: "")
+            case .ethiopic:                 return NSLocalizedString("Ethiopic", comment: "")
+            case .ceRoman:                  return NSLocalizedString("Central European Roman", comment: "")
+            case .vietnamese:               return NSLocalizedString("Vietnamese", comment: "")
+            case .extendedArabic:           return NSLocalizedString("Extended Arabic", comment: "")
+            case .uninterpreted:            return NSLocalizedString("Uninterpreted Symbols", comment: "")
+            case .none:                     return NSLocalizedString("None", comment: "")
         }
     }
 }
 
 // See CoreServices/CarbonCore/Script.h
 // Language codes are zero based everywhere but within a 'cmap' table
-@objc public enum MacLanguageID: UInt16 {
+@objc public enum MacLanguageID: UInt16, Comparable {
     case english            = 0     // .roman script
     case french             = 1     // .roman script
     case german             = 2     // .roman script
@@ -364,132 +372,140 @@ extension MacScriptID: CustomStringConvertible {
     case azerbaijanRoman    = 150   // Azerbaijani in .roman script
     case nynorsk            = 151   // Norwegian Nyorsk in .roman script
     case none               = 0xFFFF
-};
+
+    public static func < (lhs: MacLanguageID, rhs: MacLanguageID) -> Bool {
+        return lhs.rawValue < rhs.rawValue
+    }
+    
+    public static func == (lhs: MacLanguageID, rhs: MacLanguageID) -> Bool {
+        return lhs.rawValue == rhs.rawValue
+    }
+}
 
 extension MacLanguageID: CustomStringConvertible {
     public var description: String {
         switch self {
-            case .english:          return "English"
-            case .french:           return "French"
-            case .german:           return "German"
-            case .italian:          return "Italian"
-            case .dutch:            return "Dutch"
-            case .swedish:          return "Swedish"
-            case .spanish:          return "Spanish"
-            case .danish:           return "Danish"
-            case .portuguese:       return "Portuguese"
-            case .norwegian:        return "Norwegian"
-            case .hebrew:           return "Hebrew"
-            case .japanese:         return "Japanese"
-            case .arabic:           return "Arabic"
-            case .finnish:          return "Finnish"
-            case .greek:            return "Greek"
-            case .icelandic:        return "Icelandic"
-            case .maltese:          return "Maltese"
-            case .turkish:          return "Turkish"
-            case .croatian:         return "Croatian"
-            case .tradChinese:      return "Chinese (Traditional)"
-            case .urdu:             return "Urdu"
-            case .hindi:            return "Hindi"
-            case .thai:             return "Thai"
-            case .korean:           return "Korean"
-            case .lithuanian:       return "Lithuanian"
-            case .polish:           return "Polish"
-            case .hungarian:        return "Hungarian"
-            case .estonian:         return "Estonian"
-            case .latvian:          return "Latvian"
-            case .sami:             return "Sami"
-            case .faroese:          return "Faroese"
-            case .farsi:            return "Farsi"
+            case .english:          return NSLocalizedString("English", comment: "")
+            case .french:           return NSLocalizedString("French", comment: "")
+            case .german:           return NSLocalizedString("German", comment: "")
+            case .italian:          return NSLocalizedString("Italian", comment: "")
+            case .dutch:            return NSLocalizedString("Dutch", comment: "")
+            case .swedish:          return NSLocalizedString("Swedish", comment: "")
+            case .spanish:          return NSLocalizedString("Spanish", comment: "")
+            case .danish:           return NSLocalizedString("Danish", comment: "")
+            case .portuguese:       return NSLocalizedString("Portuguese", comment: "")
+            case .norwegian:        return NSLocalizedString("Norwegian", comment: "")
+            case .hebrew:           return NSLocalizedString("Hebrew", comment: "")
+            case .japanese:         return NSLocalizedString("Japanese", comment: "")
+            case .arabic:           return NSLocalizedString("Arabic", comment: "")
+            case .finnish:          return NSLocalizedString("Finnish", comment: "")
+            case .greek:            return NSLocalizedString("Greek", comment: "")
+            case .icelandic:        return NSLocalizedString("Icelandic", comment: "")
+            case .maltese:          return NSLocalizedString("Maltese", comment: "")
+            case .turkish:          return NSLocalizedString("Turkish", comment: "")
+            case .croatian:         return NSLocalizedString("Croatian", comment: "")
+            case .tradChinese:      return NSLocalizedString("Chinese (Traditional)", comment: "")
+            case .urdu:             return NSLocalizedString("Urdu", comment: "")
+            case .hindi:            return NSLocalizedString("Hindi", comment: "")
+            case .thai:             return NSLocalizedString("Thai", comment: "")
+            case .korean:           return NSLocalizedString("Korean", comment: "")
+            case .lithuanian:       return NSLocalizedString("Lithuanian", comment: "")
+            case .polish:           return NSLocalizedString("Polish", comment: "")
+            case .hungarian:        return NSLocalizedString("Hungarian", comment: "")
+            case .estonian:         return NSLocalizedString("Estonian", comment: "")
+            case .latvian:          return NSLocalizedString("Latvian", comment: "")
+            case .sami:             return NSLocalizedString("Sami", comment: "")
+            case .faroese:          return NSLocalizedString("Faroese", comment: "")
+            case .farsi:            return NSLocalizedString("Farsi", comment: "")
 //          case .persian           return "Persian"
-            case .russian:          return "Russian"
-            case .simpChinese:      return "Chinese (Simplified)"
-            case .flemish:          return "Flemish"
-            case .irishGaelic:      return "Irish Gaelic"
-            case .albanian:         return "Albanian"
-            case .romanian:         return "Romanian"
-            case .czech:            return "Czech"
-            case .slovak:           return "Slovak"
-            case .slovenian:        return "Slovenian"
-            case .yiddish:          return "Yiddish"
-            case .serbian:          return "Serbian"
-            case .macedonian:       return "Macedonian"
-            case .bulgarian:        return "Bulgarian"
-            case .ukrainian:        return "Ukrainian"
-            case .byelorussian:     return "Byelorussian"
-            case .uzbek:            return "Uzbek"
-            case .kazakh:           return "Kazakh"
-            case .azerbaijani:      return "Azerbaijani"
-            case .azerbaijanAr:     return "Azerbaijan (Armenian)"
-            case .armenian:         return "Armenian"
-            case .georgian:         return "Georgian"
-            case .moldavian:        return "Moldavian"
-            case .kirghiz:          return "Kirghiz"
-            case .tajiki:           return "Tajiki"
-            case .turkmen:          return "Turkmen"
-            case .mongolian:        return "Mongolian"
-            case .mongolianCyr:     return "Mongolian (Cyrillic)"
-            case .pashto:           return "Pashto"
-            case .kurdish:          return "Kurdish"
-            case .kashmiri:         return "Kashmiri"
-            case .sindhi:           return "Sindhi"
-            case .tibetan:          return "Tibetan"
-            case .nepali:           return "Nepali"
-            case .sanskrit:         return "Sanskrit"
-            case .marathi:          return "Marathi"
-            case .bengali:          return "Bengali"
-            case .assamese:         return "Assamese"
-            case .gujarati:         return "Gujarati"
-            case .punjabi:          return "Punjabi"
-            case .oriya:            return "Oriya"
-            case .malayalam:        return "Malayalam"
-            case .kannada:          return "Kannada"
-            case .tamil:            return "Tamil"
-            case .telugu:           return "Telugu"
-            case .sinhalese:        return "Sinhalese"
-            case .burmese:          return "Burmese"
-            case .khmer:            return "Khmer"
-            case .lao:              return "Lao"
-            case .vietnamese:       return "Vietnamese"
-            case .indonesian:       return "Indonesian"
-            case .tagalog:          return "Tagalog"
-            case .malayRoman:       return "Malay (Roman)"
-            case .malayArabic:      return "Malay (Arabic)"
-            case .amharic:          return "Amharic"
-            case .tigrinya:         return "Tigrinya"
-            case .oromo:            return "Oromo"
-            case .somali:           return "Somali"
-            case .swahili:          return "Swahili"
-            case .ruanda:           return "Ruanda"
-            case .rundi:            return "Rundi"
-            case .nyanja:           return "Nyanja"
-            case .malagasy:         return "Malagasy"
-            case .esperanto:        return "Esperanto"
-            case .welsh:            return "Welsh"
-            case .basque:           return "Basque"
-            case .catalan:          return "Catalan"
-            case .latin:            return "Latin"
-            case .quechua:          return "Quechua"
-            case .guarani:          return "Guarani"
-            case .aymara:           return "Aymara"
-            case .tatar:            return "Tatar"
-            case .uighur:           return "Uighur"
-            case .dzongkha:         return "Dzongkha"
-            case .javaneseRom:      return "Javanese (Roman)"
-            case .sundaneseRom:     return "Sundanese (Roman)"
-            case .galician:         return "Galician"
-            case .afrikaans:		return "Afrikaans"
-            case .breton:			return "Breton"
-            case .inuktitut:		return "Inuktitut"
-            case .scottishGaelic:	return "Scottish Gaelic"
-            case .manxGaelic:		return "Manx Gaelic"
-            case .irishGaelicDot:   return "Irish Gaelic (with dot above)"
-            case .tongan:			return "Tongan"
-            case .greekAncient:		return "Greek (polytonic)"
-            case .greenlandic:		return "Greenlandic"
-            case .azerbaijanRoman:	return "Azerbaijani (Roman)"
-            case .nynorsk:			return "Nynorsk"
-            case .none:             return "--"
+            case .russian:          return NSLocalizedString("Russian", comment: "")
+            case .simpChinese:      return NSLocalizedString("Chinese (Simplified)", comment: "")
+            case .flemish:          return NSLocalizedString("Flemish", comment: "")
+            case .irishGaelic:      return NSLocalizedString("Irish Gaelic", comment: "")
+            case .albanian:         return NSLocalizedString("Albanian", comment: "")
+            case .romanian:         return NSLocalizedString("Romanian", comment: "")
+            case .czech:            return NSLocalizedString("Czech", comment: "")
+            case .slovak:           return NSLocalizedString("Slovak", comment: "")
+            case .slovenian:        return NSLocalizedString("Slovenian", comment: "")
+            case .yiddish:          return NSLocalizedString("Yiddish", comment: "")
+            case .serbian:          return NSLocalizedString("Serbian", comment: "")
+            case .macedonian:       return NSLocalizedString("Macedonian", comment: "")
+            case .bulgarian:        return NSLocalizedString("Bulgarian", comment: "")
+            case .ukrainian:        return NSLocalizedString("Ukrainian", comment: "")
+            case .byelorussian:     return NSLocalizedString("Byelorussian", comment: "")
+            case .uzbek:            return NSLocalizedString("Uzbek", comment: "")
+            case .kazakh:           return NSLocalizedString("Kazakh", comment: "")
+            case .azerbaijani:      return NSLocalizedString("Azerbaijani", comment: "")
+            case .azerbaijanAr:     return NSLocalizedString("Azerbaijan (Armenian)", comment: "")
+            case .armenian:         return NSLocalizedString("Armenian", comment: "")
+            case .georgian:         return NSLocalizedString("Georgian", comment: "")
+            case .moldavian:        return NSLocalizedString("Moldavian", comment: "")
+            case .kirghiz:          return NSLocalizedString("Kirghiz", comment: "")
+            case .tajiki:           return NSLocalizedString("Tajiki", comment: "")
+            case .turkmen:          return NSLocalizedString("Turkmen", comment: "")
+            case .mongolian:        return NSLocalizedString("Mongolian", comment: "")
+            case .mongolianCyr:     return NSLocalizedString("Mongolian (Cyrillic)", comment: "")
+            case .pashto:           return NSLocalizedString("Pashto", comment: "")
+            case .kurdish:          return NSLocalizedString("Kurdish", comment: "")
+            case .kashmiri:         return NSLocalizedString("Kashmiri", comment: "")
+            case .sindhi:           return NSLocalizedString("Sindhi", comment: "")
+            case .tibetan:          return NSLocalizedString("Tibetan", comment: "")
+            case .nepali:           return NSLocalizedString("Nepali", comment: "")
+            case .sanskrit:         return NSLocalizedString("Sanskrit", comment: "")
+            case .marathi:          return NSLocalizedString("Marathi", comment: "")
+            case .bengali:          return NSLocalizedString("Bengali", comment: "")
+            case .assamese:         return NSLocalizedString("Assamese", comment: "")
+            case .gujarati:         return NSLocalizedString("Gujarati", comment: "")
+            case .punjabi:          return NSLocalizedString("Punjabi", comment: "")
+            case .oriya:            return NSLocalizedString("Oriya", comment: "")
+            case .malayalam:        return NSLocalizedString("Malayalam", comment: "")
+            case .kannada:          return NSLocalizedString("Kannada", comment: "")
+            case .tamil:            return NSLocalizedString("Tamil", comment: "")
+            case .telugu:           return NSLocalizedString("Telugu", comment: "")
+            case .sinhalese:        return NSLocalizedString("Sinhalese", comment: "")
+            case .burmese:          return NSLocalizedString("Burmese", comment: "")
+            case .khmer:            return NSLocalizedString("Khmer", comment: "")
+            case .lao:              return NSLocalizedString("Lao", comment: "")
+            case .vietnamese:       return NSLocalizedString("Vietnamese", comment: "")
+            case .indonesian:       return NSLocalizedString("Indonesian", comment: "")
+            case .tagalog:          return NSLocalizedString("Tagalog", comment: "")
+            case .malayRoman:       return NSLocalizedString("Malay (Roman)", comment: "")
+            case .malayArabic:      return NSLocalizedString("Malay (Arabic)", comment: "")
+            case .amharic:          return NSLocalizedString("Amharic", comment: "")
+            case .tigrinya:         return NSLocalizedString("Tigrinya", comment: "")
+            case .oromo:            return NSLocalizedString("Oromo", comment: "")
+            case .somali:           return NSLocalizedString("Somali", comment: "")
+            case .swahili:          return NSLocalizedString("Swahili", comment: "")
+            case .ruanda:           return NSLocalizedString("Ruanda", comment: "")
+            case .rundi:            return NSLocalizedString("Rundi", comment: "")
+            case .nyanja:           return NSLocalizedString("Nyanja", comment: "")
+            case .malagasy:         return NSLocalizedString("Malagasy", comment: "")
+            case .esperanto:        return NSLocalizedString("Esperanto", comment: "")
+            case .welsh:            return NSLocalizedString("Welsh", comment: "")
+            case .basque:           return NSLocalizedString("Basque", comment: "")
+            case .catalan:          return NSLocalizedString("Catalan", comment: "")
+            case .latin:            return NSLocalizedString("Latin", comment: "")
+            case .quechua:          return NSLocalizedString("Quechua", comment: "")
+            case .guarani:          return NSLocalizedString("Guarani", comment: "")
+            case .aymara:           return NSLocalizedString("Aymara", comment: "")
+            case .tatar:            return NSLocalizedString("Tatar", comment: "")
+            case .uighur:           return NSLocalizedString("Uighur", comment: "")
+            case .dzongkha:         return NSLocalizedString("Dzongkha", comment: "")
+            case .javaneseRom:      return NSLocalizedString("Javanese (Roman)", comment: "")
+            case .sundaneseRom:     return NSLocalizedString("Sundanese (Roman)", comment: "")
+            case .galician:         return NSLocalizedString("Galician", comment: "")
+            case .afrikaans:		return NSLocalizedString("Afrikaans", comment: "")
+            case .breton:			return NSLocalizedString("Breton", comment: "")
+            case .inuktitut:		return NSLocalizedString("Inuktitut", comment: "")
+            case .scottishGaelic:	return NSLocalizedString("Scottish Gaelic", comment: "")
+            case .manxGaelic:		return NSLocalizedString("Manx Gaelic", comment: "")
+            case .irishGaelicDot:   return NSLocalizedString("Irish Gaelic (with dot above)", comment: "")
+            case .tongan:			return NSLocalizedString("Tongan", comment: "")
+            case .greekAncient:		return NSLocalizedString("Greek (polytonic)", comment: "")
+            case .greenlandic:		return NSLocalizedString("Greenlandic", comment: "")
+            case .azerbaijanRoman:	return NSLocalizedString("Azerbaijani (Roman)", comment: "")
+            case .nynorsk:			return NSLocalizedString("Nynorsk", comment: "")
+            case .none:             return NSLocalizedString("--", comment: "")
         }
     }
 }

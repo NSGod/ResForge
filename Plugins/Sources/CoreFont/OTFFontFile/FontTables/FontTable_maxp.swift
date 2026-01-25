@@ -13,6 +13,9 @@ import RFSupport
 /// `DISPLAY DEPENDS ON`: 
 
 final public class FontTable_maxp: FontTable {
+
+    public override class var usesLazyParsing: Bool { false }
+
     @objc public enum Version: Fixed {
         case version0_5     = 0x00005000 // 20480
         case version1_0     = 0x00010000 // 65536
@@ -37,8 +40,8 @@ final public class FontTable_maxp: FontTable {
     @objc public var maxComponentDepth:     UInt16 = 0  // levels of recursion; set to 0 if font only has simple glyphs; max is 16;
                                                         // set to 1 if all compound glyphs are simple
 
-    required public init(with tableData: Data, tag: TableTag) throws {
-        try super.init(with: tableData, tag: tag)
+    required public init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
+        try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
         guard let vers = Version(rawValue: try reader.read()) else {
             throw FontTableError.unknownVersion
         }

@@ -19,7 +19,7 @@ final public class FontTable_post: FontTable {
         case version2_0     = 0x00020000  // TT & TTOT
         case version2_5     = 0x00025000  // TT & TTOT
         case version3_0     = 0x00030000  // TT, TTOT, & PS/CFF OTF fonts
-        case version4_0     = 0x00040000  // MD_VERSION(4, 0); for CID fonts?
+        case version4_0     = 0x00040000  // for CID fonts?
     }
 
     @objc public var version:               Version = .version1_0
@@ -34,8 +34,8 @@ final public class FontTable_post: FontTable {
 
     @objc public var format:                Format? // nil for .version3_0/format 3
 
-    public required init(with tableData: Data, tag: TableTag) throws {
-        try super.init(with: tableData, tag: tag)
+    public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
+        try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
         version = Version(rawValue: try reader.read()) ?? .version1_0
         italicAngle = try reader.read()
         underlinePosition = try reader.read()

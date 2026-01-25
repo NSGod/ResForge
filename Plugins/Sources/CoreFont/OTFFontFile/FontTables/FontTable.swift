@@ -10,7 +10,8 @@ import RFSupport
 
 public enum FontTableError: LocalizedError {
     case unknownVersion
-    case parseError
+    case unknownFormat
+    case parseError(String?)
 }
 
 /// abstract superclass
@@ -24,10 +25,11 @@ open class FontTable: OTFFontFileNode {
         return paddedData
     }
 
-    public var tableLength:         Int { tableData.count }
-    public var paddedTableLength:   Int { paddedTableData.count }
+    public var tableLength:         UInt32 { UInt32(tableData.count) }
+    public var paddedTableLength:   UInt32 { UInt32(paddedTableData.count) }
 
-    public var calculatedChecksum: UInt32 {
+    public var calculatedChecksum:  UInt32 {
+        NSLog("\(type(of: self)).\(#function)")
         let tableLongs: [UInt32] = paddedTableData.withUnsafeBytes{ rawBuffer in
             return rawBuffer.bindMemory(to: UInt32.self).map(\.bigEndian)
         }
@@ -38,13 +40,35 @@ open class FontTable: OTFFontFileNode {
         return calcChecksum
     }
 
-    var reader:    BinaryDataReader
+    public class var usesLazyParsing: Bool { true }
 
-    public required init(with tableData: Data, tag: TableTag) throws {
+    var reader:         BinaryDataReader
+
+    enum ParseState {
+        case unparsed
+        case parsing
+        case parsed
+    }
+    var parseState:     ParseState = .unparsed
+
+    // MARK: - init
+    public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         self.tableData = tableData
-        tableTag = tag
+        self.tableTag = tableTag
         reader = BinaryDataReader(tableData)
-        try super.init()
+        try super.init(fontFile: fontFile)
+//        if !Self.usesLazyParsing {
+//            try parseTableData()
+//        }
+    }
+
+    public func parseTableData() throws {
+    }
+
+    func parseTableDataIfNeeded() throws {
+        if parseState != .unparsed { return }
+        try parseTableData()
+        parseState = .parsed
     }
 
     public static func `class`(for tableTag: TableTag) -> FontTable.Type {
@@ -71,3 +95,16 @@ open class FontTable: OTFFontFileNode {
     public var nameTable: FontTable_name? { table(for: .name) as? FontTable_name }
 
 }
+/// `Ideally:`
+/// immediate parsing:
+/// `head`, `maxp`, `OS/2`
+///
+/// lazy parsing:
+/// `cmap`, `hhea`, `hmtx`, `hdmx`,
+/// `post`, `vhea`, `vmtx`
+/// `name`, `fdsc`, `feat`,
+/// `loca`, `glyf`, `fond`, `gasp`, `cvt `,
+/// `kern`, `kerx`, `DSIG`, `CFF `, `CFF2`
+/// `GPOS`, `GSUB`, `GDEF`,
+/// `cvar`, `fvar`, `gvar`,
+/// & all others

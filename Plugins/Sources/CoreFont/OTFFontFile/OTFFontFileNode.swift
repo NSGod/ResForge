@@ -8,6 +8,7 @@
 import Foundation
 import RFSupport
 
+/// abstract abstract superclass
 open class OTFFontFileNode: NSObject {
     public weak var fontFile:      OTFFontFile?        // weak
 

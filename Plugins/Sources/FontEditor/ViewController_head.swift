@@ -9,11 +9,10 @@ import Cocoa
 import CoreFont
 
 final public class ViewController_head: FontTableViewController {
-
     @IBOutlet weak var flagsControl:        BitfieldControl!
     @IBOutlet weak var macStyleControl:     BitfieldControl!
 
-    var table:      						FontTable_head
+    var table:                              FontTable_head
 
     required init?(with fontTable: FontTable) {
         self.table = fontTable as! FontTable_head
