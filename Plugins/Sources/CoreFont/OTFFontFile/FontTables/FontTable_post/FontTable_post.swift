@@ -50,4 +50,8 @@ final public class FontTable_post: FontTable {
         }
         format = try tableClass.init(reader)
     }
+
+    public func glyphName(for glyphID: Glyph32ID) -> String? {
+        return format?.glyphName(for: glyphID)
+    }
 }

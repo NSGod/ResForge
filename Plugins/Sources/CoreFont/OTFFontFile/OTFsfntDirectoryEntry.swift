@@ -26,14 +26,32 @@ final public class OTFsfntDirectoryEntry: OTFFontFileNode, Comparable {
         }
     }
 
+    public var range: Range<UInt32> {
+        return offset..<(offset + length)
+    }
+
     public static var nodeLength:  UInt32    = UInt32(MemoryLayout<UInt32>.size * 4) // 16
 
-    public init(_ reader: BinaryDataReader) throws {
+    public init(_ reader: BinaryDataReader, fontFile: OTFFontFile?) throws {
         tableTag = TableTag(rawValue: try reader.read())
         checksum = try reader.read()
         offset = try reader.read()
         length = try reader.read()
-        try super.init()
+        try super.init(fontFile: fontFile)
+    }
+
+    public static func sortForParsing(lhs: OTFsfntDirectoryEntry, rhs: OTFsfntDirectoryEntry) -> Bool {
+        let lhsIndex = Self.tagsToParsingOrder[lhs.tableTag]
+        let rhsIndex = Self.tagsToParsingOrder[rhs.tableTag]
+        if let lhsIndex, let rhsIndex {
+            return lhsIndex < rhsIndex
+        } else if let lhsIndex {
+            return true
+        } else if let rhsIndex {
+            return false
+        } else {
+            return false
+        }
     }
 
     public static func < (lhs: OTFsfntDirectoryEntry, rhs: OTFsfntDirectoryEntry) -> Bool {
@@ -43,4 +61,12 @@ final public class OTFsfntDirectoryEntry: OTFFontFileNode, Comparable {
     public override var description: String {
         "OTFsfntDirectoryEntry('\(tableTagString)', checksum: \(String(format: "0x%08x", checksum)), offset: \(offset), length: \(length))"
     }
+
+    fileprivate static let tagsToParsingOrder: [TableTag: Int] = [
+        .head: 0,
+        .maxp: 1,
+        .OS_2: 2,
+        .post: 3,
+        .name: 4,
+    ]
 }

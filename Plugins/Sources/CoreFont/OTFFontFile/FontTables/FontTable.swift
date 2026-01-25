@@ -17,7 +17,6 @@ public enum FontTableError: LocalizedError {
 /// abstract superclass
 open class FontTable: OTFFontFileNode {
     public let tableTag:            TableTag
-
     public var tableData:           Data
     public var paddedTableData:     Data {
         var paddedData = tableData
@@ -29,7 +28,7 @@ open class FontTable: OTFFontFileNode {
     public var paddedTableLength:   UInt32 { UInt32(paddedTableData.count) }
 
     public var calculatedChecksum:  UInt32 {
-        NSLog("\(type(of: self)).\(#function)")
+        // NSLog("\(type(of: self)).\(#function)")
         let tableLongs: [UInt32] = paddedTableData.withUnsafeBytes{ rawBuffer in
             return rawBuffer.bindMemory(to: UInt32.self).map(\.bigEndian)
         }
@@ -67,6 +66,7 @@ open class FontTable: OTFFontFileNode {
 
     func parseTableDataIfNeeded() throws {
         if parseState != .unparsed { return }
+        parseState = .parsing
         try parseTableData()
         parseState = .parsed
     }

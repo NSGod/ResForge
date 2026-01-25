@@ -23,5 +23,4 @@ public extension FontTable_post {
             }
         }
     }
-
 }

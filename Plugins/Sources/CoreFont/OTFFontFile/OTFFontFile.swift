@@ -10,7 +10,7 @@ import RFSupport
 import OrderedCollections
 
 final public class OTFFontFile: NSObject {
-    @objc public var directory:     OTFsfntDirectory
+    @objc public var directory:     OTFsfntDirectory!
 
     public var tables:              OrderedSet<FontTable>
 
@@ -18,19 +18,22 @@ final public class OTFFontFile: NSObject {
     private let reader:             BinaryDataReader
 
     private var tableTagsToTables:  [TableTag: FontTable] = [:]
-
     // this is to help determine table indexes for display in UI:
     private var rangesToFontTables: [Range<UInt32>: FontTable] = [:]
 
     public init(_ data: Data) throws {
         self.data = data
         reader = BinaryDataReader(data)
-        directory = try OTFsfntDirectory(reader)
         tables = OrderedSet()
         super.init()
+        directory = try OTFsfntDirectory(reader, fontFile: self)
         // FIXME: load/font tables in a specified order
-        for entry in directory.entries {
-            let range = entry.offset..<entry.offset + entry.length
+        var entries = directory.entries
+        entries.sort {
+            return OTFsfntDirectoryEntry.sortForParsing(lhs: $0, rhs: $1)
+        }
+        for entry in entries {
+            let range = entry.range
             let tableData = try reader.subdata(with: range)
             let tableClass: FontTable.Type = FontTable.class(for: entry.tableTag).self
             let table = try tableClass.init(with: tableData, tableTag: entry.tableTag, fontFile: self)
@@ -38,11 +41,7 @@ final public class OTFFontFile: NSObject {
             rangesToFontTables[range] = table
             entry.table = table
         }
-        for entry in directory.entries {
-            entry.fontFile = self
-            entry.table.fontFile = self
-        }
-        // sort for display
+        // sort tables into the order they're found in the font for display
         tables.sort { table1, table2 in
             var offset1: UInt32 = 0
             var offset2: UInt32 = 0
@@ -63,19 +62,15 @@ final public class OTFFontFile: NSObject {
     public var headTable: FontTable_head? {
         return table(for: .head) as? FontTable_head
     }
-
     public var maxpTable: FontTable_maxp? {
         return table(for: .maxp) as? FontTable_maxp
     }
-
     public var postTable: FontTable_post? {
         return table(for: .post) as? FontTable_post
     }
-
     public var nameTable: FontTable_name? {
         return table(for: .name) as? FontTable_name
     }
-
     public func table(for tableTag: TableTag) -> FontTable? {
         return tableTagsToTables[tableTag]
     }
@@ -88,13 +83,4 @@ final public class OTFFontFile: NSObject {
         case TYP1
         case CID
     }
-
-//    private func table(for entry: OTFsfntDirectoryEntry) throws -> FontTable {
-//        // FIXME: switch to Swift ranges
-//        let tableRange = NSMakeRange(Int(entry.offset), Int(entry.length))
-//
-//
-//
-//    }
-
 }

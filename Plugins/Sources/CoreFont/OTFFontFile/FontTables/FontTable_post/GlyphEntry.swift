@@ -11,7 +11,7 @@ import RFSupport
 public extension FontTable_post {
 
     // for display
-    @objc final class GlyphEntry: NSObject {
+    final class GlyphEntry: NSObject {
         public enum NameStyle {
             case a
             case aHex   // default

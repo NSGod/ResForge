@@ -22,17 +22,17 @@ final public class OTFsfntDirectory: OTFFontFileNode {
     public class var nodeLength: UInt32 {
         UInt32(MemoryLayout<UInt16>.size * 4 + MemoryLayout<OTFsfntFormat.RawValue>.size) } // 12
 
-    public init(_ reader: BinaryDataReader) throws {
+    public init(_ reader: BinaryDataReader, fontFile: OTFFontFile?) throws {
         format = OTFsfntFormat(rawValue: try reader.read())
         numberOfTables = try reader.read()
         searchRange = try reader.read()
         entrySelector = try reader.read()
         rangeShift = try reader.read()
         entries = []
-        for _ in 0..<Int(numberOfTables) {
-            entries.append(try OTFsfntDirectoryEntry(reader))
+        for _ in 0..<numberOfTables {
+            entries.append(try OTFsfntDirectoryEntry(reader, fontFile: fontFile))
         }
-        try super.init()
+        try super.init(fontFile: fontFile)
     }
 
     public override var description: String {
