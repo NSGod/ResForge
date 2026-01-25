@@ -9,15 +9,28 @@ import Cocoa
 import CoreFont
 import HexFiend
 
+struct HFDefaults {
+    static let fontSize = "HFDefaultFontSize"
+//    static let statusBarMode = "HFStatusBarDefaultMode" // This is defined and used by HexFiend automatically, it's just here for reference
+}
+
 // generic data viewer for non-specialized viewers
 final public class FontTableDataViewController: FontTableViewController {
+    @IBOutlet weak var textView:    HFTextView!
 
-    @IBOutlet weak var box:         NSBox!
+    @IBOutlet var findView:         NSView!
+    @IBOutlet var findField:        NSTextField!
+    @IBOutlet var replaceField:     NSTextField!
+    @IBOutlet var wrapAround:       NSButton!
+    @IBOutlet var ignoreCase:       NSButton!
+    @IBOutlet var searchText:       NSButton!
+    @IBOutlet var searchHex:        NSButton!
 
     var hexController:              HFController?
-    var table:                      FontTable?
+    var table:                      FontTable
 
     required init?(with fontTable: FontTable) {
+        UserDefaults.standard.register(defaults: [HFDefaults.fontSize: 10])
         table = fontTable
         super.init(with: fontTable)
     }
@@ -28,44 +41,36 @@ final public class FontTableDataViewController: FontTableViewController {
 
     public override func viewDidLoad() {
         super.viewDidLoad()
+        findView.isHidden = true
+
+        let lineCountingRepresenter = HFLineCountingRepresenter()
+        lineCountingRepresenter.lineNumberFormat = .hexadecimal
+        let statusBarRepresenter = HFStatusBarRepresenter()
+
+        textView.layoutRepresenter.addRepresenter(lineCountingRepresenter)
+        textView.layoutRepresenter.addRepresenter(statusBarRepresenter)
+        textView.controller.addRepresenter(lineCountingRepresenter)
+        textView.controller.addRepresenter(statusBarRepresenter)
+        let fontSize = UserDefaults.standard.integer(forKey: HFDefaults.fontSize)
+        textView.controller.font = NSFont.userFixedPitchFont(ofSize: CGFloat(fontSize))!
+        textView.data = table.tableData
+        textView.controller.undoManager = self.view.window?.windowController?.undoManager
+        textView.layoutRepresenter.performLayout()
+        textView.delegate = self
+
         updateUI()
     }
 
-    private func updateUI() {
-        NSLog("\(type(of: self)).\(#function)")
-        guard let hexController else {
-            guard let table else {
-                // if no data, add empty view
-                let view = NSView(frame: NSMakeRect(0.0, 0.0, 20.0, 20.0))
-                box.contentView = view
-                return
-            }
-            hexController = HFController()
-            let byteSlice = HFSharedMemoryByteSlice(unsharedData: table.tableData)
-            let byteArray = HFBTreeByteArray(byteSlice: byteSlice)
-            hexController?.byteArray = byteArray
-            let layoutRep = HFLayoutRepresenter()
-            let hexRep = HFHexTextRepresenter()
-            let asciiRep = HFStringEncodingTextRepresenter()
-            let scrollRep = HFVerticalScrollerRepresenter()
-            hexController?.addRepresenter(layoutRep)
-            hexController?.addRepresenter(hexRep)
-            hexController?.addRepresenter(asciiRep)
-            hexController?.addRepresenter(scrollRep)
-            layoutRep.addRepresenter(hexRep)
-            layoutRep.addRepresenter(asciiRep)
-            layoutRep.addRepresenter(scrollRep)
-            box.contentView = layoutRep.view()
-            return
+    // MARK: - <HFTextViewDelegate>
+    public func hexTextView(_ view: HFTextView, didChangeProperties properties: HFControllerPropertyBits) {
+        if properties.contains(.contentValue) {
+            self.view.window?.windowController?.setDocumentEdited(true)
+//            self.setDocumentEdited(true)
         }
-        guard let table else {
-            // if no data, add empty view
-            let view = NSView(frame: NSMakeRect(0.0, 0.0, 20.0, 20.0))
-            box.contentView = view
-            return
-        }
-        let byteSlice = HFSharedMemoryByteSlice(unsharedData: table.tableData)
-        let byteArray = HFBTreeByteArray(byteSlice: byteSlice)
-        hexController.byteArray = byteArray
     }
+
+    private func updateUI() {
+        NSLog("\(type(of: self)).\(#function) '\(table.tableTag.fourCharString)'")
+    }
+
 }
