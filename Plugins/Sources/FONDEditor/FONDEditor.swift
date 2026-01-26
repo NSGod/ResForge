@@ -115,7 +115,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
     }
 
     @IBAction func showPopover(_ sender: Any) {
-        popover.show(relativeTo: popoverButton.bounds, of: popoverButton, preferredEdge: .maxX)
+        popover.show(relativeTo: popoverButton.bounds, of: popoverButton, preferredEdge: .minX)
     }
 
     @IBAction func changeFlags(_ sender: Any) {
