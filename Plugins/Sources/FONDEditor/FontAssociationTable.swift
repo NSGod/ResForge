@@ -10,16 +10,15 @@ import Foundation
 import RFSupport
 import CoreFont
 
-final class FontAssociationTable: ResourceNode {
-    var numberOfEntries:    Int16                           // number of entries - 1
-    @objc var entries:      [Entry]
+final public class FontAssociationTable: ResourceNode {
+    public var numberOfEntries:    Int16                           // number of entries - 1
+    @objc public var entries:      [Entry]
 
-    override var length:    Int {
-        get { return MemoryLayout<Int16>.size + entries.count * Entry.length }
-        set {}
+    @objc public override var length:    Int {
+        return MemoryLayout<Int16>.size + entries.count * Entry.length
     }
 
-    init(_ reader: BinaryDataReader) throws {
+    public init(_ reader: BinaryDataReader) throws {
         numberOfEntries = try reader.read()
         entries = []
         for _ in 0...numberOfEntries {
@@ -29,7 +28,7 @@ final class FontAssociationTable: ResourceNode {
         super.init()
     }
 
-    func add(_ entry: Entry) throws {
+    public func add(_ entry: Entry) throws {
         guard !entries.contains(entry) else {
             throw FONDError.fontAssociationTableEntriesRefSameFont
         }
@@ -38,7 +37,7 @@ final class FontAssociationTable: ResourceNode {
         numberOfEntries = Int16(entries.count - 1)
     }
 
-    func remove(_ entry: Entry) throws {
+    public func remove(_ entry: Entry) throws {
         guard entries.contains(entry) else {
             throw FONDError.noSuchFontAssociationTableEntry
         }
@@ -49,21 +48,20 @@ final class FontAssociationTable: ResourceNode {
 }
 
 extension FontAssociationTable {
+    final public class Entry: ResourceNode, Comparable {
+        @objc public var fontPointSize:    Int16
+        public var fontStyle:              MacFontStyle
+        @objc public var fontID:           ResID
 
-    final class Entry: ResourceNode, Comparable {
-        @objc var fontPointSize:    Int16
-        var fontStyle:              MacFontStyle
-        @objc var fontID:           ResID
-
-        @objc var objcFontStyle:    MacFontStyle.RawValue {
+        @objc public var objcFontStyle:    MacFontStyle.RawValue {
             didSet { fontStyle = .init(rawValue: objcFontStyle) }
         }
 
-        override class var length: Int {
-            return MemoryLayout<Int16>.size + MemoryLayout<MacFontStyle.RawValue>.size + MemoryLayout<ResID>.size // 6
+        public override class var length: Int {
+            return MemoryLayout<Int16>.size * 2 + MemoryLayout<MacFontStyle.RawValue>.size // 6
         }
 
-        init(_ reader: BinaryDataReader) throws {
+        public init(_ reader: BinaryDataReader) throws {
             fontPointSize = try reader.read()
             fontStyle = try reader.read()
             fontID = try reader.read()
@@ -71,25 +69,7 @@ extension FontAssociationTable {
             super.init()
         }
 
-        @objc func compare(_ otherEntry: Entry) -> ComparisonResult {
-            if fontPointSize != otherEntry.fontPointSize {
-                if fontPointSize < otherEntry.fontPointSize {
-                    return .orderedAscending
-                } else {
-                    return .orderedDescending
-                }
-            } else {
-                if fontStyle.rawValue < otherEntry.fontStyle.rawValue {
-                    return .orderedAscending
-                } else if fontStyle.rawValue == otherEntry.fontStyle.rawValue {
-                    return .orderedSame
-                } else {
-                    return .orderedDescending
-                }
-            }
-        }
-
-        static func < (lhs: Entry, rhs: Entry) -> Bool {
+        public static func < (lhs: Entry, rhs: Entry) -> Bool {
             if lhs.fontPointSize != rhs.fontPointSize {
                 return lhs.fontPointSize < rhs.fontPointSize
             } else {
@@ -97,7 +77,7 @@ extension FontAssociationTable {
             }
         }
 
-        static func == (lhs: Entry, rhs: Entry) -> Bool {
+        public static func == (lhs: Entry, rhs: Entry) -> Bool {
             return lhs.fontPointSize == rhs.fontPointSize &&
             lhs.fontStyle == rhs.fontStyle && lhs.fontID == rhs.fontID
         }

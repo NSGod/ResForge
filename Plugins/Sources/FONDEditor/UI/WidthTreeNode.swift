@@ -8,12 +8,11 @@
 import Cocoa
 
 class WidthTreeNode: NSTreeNode {
-
     override init(representedObject: Any?) {
         super.init(representedObject: representedObject)
     }
 
-    init(with widthTableEntry: WidthTableEntry) {
+    init(with widthTableEntry: WidthTable.Entry) {
         var mTreeNodes: [WidthTreeNode] = []
         let widthNodes = WidthNode.widthNodes(widthTableEntry: widthTableEntry)
         for node in widthNodes {

@@ -159,8 +159,8 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
         var panel: NSSavePanel!
         if entries.count == 1 {
             panel = NSSavePanel()
-            panel.allowedFileTypes = [KernTableEntry.GPOSFeatureUTType,
-                                      KernTableEntry.CSVUTType]
+            panel.allowedFileTypes = [KernTable.Entry.GPOSFeatureUTType,
+                                      KernTable.Entry.CSVUTType]
 			let entry = entries[0]
 			if let name = fond.postScriptNameForFont(with: entry.style) {
 				if let filename = (name as NSString).appendingPathExtension("txt") {
@@ -210,10 +210,10 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
         }
     }
 
-    private func selectedKernTableEntries() -> [KernTableEntry] {
+    private func selectedKernTableEntries() -> [KernTable.Entry] {
         let objs = kernPairsTreeController.selectedObjects as? [KernTreeNode] ?? []
-        let entries: [KernTableEntry] = objs.compactMap { kernTreeNode in
-            kernTreeNode.representedObject as? KernTableEntry
+        let entries: [KernTable.Entry] = objs.compactMap { kernTreeNode in
+            kernTreeNode.representedObject as? KernTable.Entry
         }
         return entries
     }
@@ -247,7 +247,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
             let view: NSTableCellView = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
             if let id = tableColumn?.identifier, id.rawValue == "style" { return view }
             /// need to set the unitsPerEm of the Fixed4Dot12ToEmValueFormatter
-            if let bboxEntries = boundingBoxTableEntriesController.arrangedObjects as? [BoundingBoxTableEntry] {
+            if let bboxEntries = boundingBoxTableEntriesController.arrangedObjects as? [BoundingBoxTable.Entry] {
                 if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
                     let entry = bboxEntries[row]
                     formatter.unitsPerEm = fond.unitsPerEm(for: entry.style)
@@ -289,7 +289,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
     public func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         if outlineView == kernTableOutlineView {
             guard let representedObject = ((item as? NSTreeNode)?.representedObject as? KernTreeNode)?.representedObject else { return nil }
-            if representedObject is KernTableEntry {
+            if representedObject is KernTable.Entry {
                 if tableColumn?.identifier.rawValue == "style"{
                     return outlineView.makeView(withIdentifier: tableColumn!.identifier, owner: self)
                 } else if tableColumn?.identifier.rawValue == "kernWidth" {
@@ -299,7 +299,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
             } else if representedObject is KernPairNode {
                 if tableColumn?.identifier.rawValue == "style" { return nil }
                 let view: NSTableCellView = outlineView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
-                if let entry: KernTableEntry = ((item as? NSTreeNode)?.representedObject as? KernTreeNode)?.parent?.representedObject as? KernTableEntry {
+                if let entry: KernTable.Entry = ((item as? NSTreeNode)?.representedObject as? KernTreeNode)?.parent?.representedObject as? KernTable.Entry {
                     if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
                         formatter.unitsPerEm = fond.unitsPerEm(for: entry.style)
                     }
@@ -311,7 +311,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
                 if tableColumn?.identifier.rawValue == "style" { return nil }
                 let view: NSTableCellView = outlineView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
                 if tableColumn?.identifier.rawValue == "glyphWidth" {
-                    if let entry: WidthTableEntry = (item.representedObject as? KernTreeNode)?.parent?.representedObject as? WidthTableEntry {
+                    if let entry: WidthTable.Entry = (item.representedObject as? KernTreeNode)?.parent?.representedObject as? WidthTable.Entry {
                         if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
                             formatter.unitsPerEm = fond.unitsPerEm(for: entry.style)
                         }

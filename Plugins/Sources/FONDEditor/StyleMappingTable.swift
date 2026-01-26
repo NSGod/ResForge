@@ -22,12 +22,12 @@ public final class StyleMappingTable: ResourceNode {
     public var reserved:                           Int32
     public var indexes:                            [UInt8]     // [48] Indexes into the Font Name Suffix subtable
 
-    @objc var objcFontClass:                FontClass.RawValue {
+    @objc public var objcFontClass:                FontClass.RawValue {
         didSet { fontClass = .init(rawValue: objcFontClass) }
     }
 
-    var fontNameSuffixSubtable:             FontNameSuffixSubtable
-    @objc var glyphNameEncodingSubtable:    GlyphNameEncodingSubtable?
+    public var fontNameSuffixSubtable:             FontNameSuffixSubtable
+    @objc public var glyphNameEncodingSubtable:    GlyphNameEncodingSubtable?
 
     class public override var length: Int {
         MemoryLayout<FontClass.RawValue>.size + MemoryLayout<Int32>.size * 2 + 48  // 58 bytes

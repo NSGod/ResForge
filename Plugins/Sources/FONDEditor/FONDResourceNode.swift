@@ -7,10 +7,10 @@
 
 import Foundation
 
-class FONDResourceNode: ResourceNode {
-    unowned var fond:   FOND    // weak
+public class FONDResourceNode: ResourceNode {
+    public unowned var fond:   FOND    // weak
 
-    init(fond: FOND) {
+    public init(fond: FOND) {
         self.fond = fond
         super.init()
     }

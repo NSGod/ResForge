@@ -26,12 +26,17 @@ import CoreFont
             This section beginning on page 4-105, provides an example of using this table.
  */
 
-final class GlyphNameEncodingSubtable: ResourceNode {
-    var numberOfEntries:        Int16               // actual number of entries
+final public class GlyphNameEncodingSubtable: ResourceNode {
+    public var numberOfEntries:        Int16               // actual number of entries
+    public var charCodesToGlyphNames:  [CharCode: String] = [:]
 
-    var charCodesToGlyphNames:  [CharCode: String] = [:]
+    @objc public override var length: Int {
+        set { _length = newValue }
+        get { return _length }
+    }
+    private var _length: Int = 0
 
-    init(_ reader: BinaryDataReader) throws {
+    public init(_ reader: BinaryDataReader) throws {
         let before = reader.bytesRead
         numberOfEntries = try reader.read()
         for _ in 0..<numberOfEntries {
@@ -43,7 +48,7 @@ final class GlyphNameEncodingSubtable: ResourceNode {
         length = reader.bytesRead - before
     }
 
-    func glyphName(for charCode: CharCode) -> String? {
+    public func glyphName(for charCode: CharCode) -> String? {
         return charCodesToGlyphNames[charCode]
     }
 }

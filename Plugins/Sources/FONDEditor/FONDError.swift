@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum FONDError: LocalizedError {
+public enum FONDError: LocalizedError {
     case noFontAssociationTableEntries
     case fontAssociationTableEntriesInvalid
     case fontAssociationTableEntriesNotAscending
@@ -28,7 +28,7 @@ enum FONDError: LocalizedError {
     case kernTableUsability
     case noSuchFontAssociationTableEntry
 
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
             case .noFontAssociationTableEntries:
                 return NSLocalizedString("The 'FOND' doesn’t contain any font association table entries.", comment: "")

@@ -14,23 +14,23 @@ class KernPairSaveAccessoryViewController: NSViewController {
     @IBOutlet weak var scaleCheckbox:   NSButton!
     @IBOutlet weak var resolveCheckbox: NSButton!
 
-    @objc var allowedFileTypes:         [String] = [KernTableEntry.GPOSFeatureFileType,
-                                                    KernTableEntry.CSVFileType]
+    @objc var allowedFileTypes:         [String] = [KernTable.Entry.GPOSFeatureFileType,
+                                                    KernTable.Entry.CSVFileType]
     @objc var selectedFileType:         String {
         didSet {
             guard let panel else { return }
             /// try to change filename extension in save panel's field
             /// by limiting the allowed UT types to the currently selected one.
-            if selectedFileType == KernTableEntry.GPOSFeatureFileType {
-                panel.allowedFileTypes = [KernTableEntry.GPOSFeatureUTType]
+            if selectedFileType == KernTable.Entry.GPOSFeatureFileType {
+                panel.allowedFileTypes = [KernTable.Entry.GPOSFeatureUTType]
                 shouldResolveGlyphNames = true
                 scaleToUnitsPerEm = true
             } else {
-                panel.allowedFileTypes = [KernTableEntry.CSVUTType]
+                panel.allowedFileTypes = [KernTable.Entry.CSVUTType]
             }
             /// GPOS format must have both scale and glyph names resolved
-            scaleCheckbox.isEnabled = selectedFileType != KernTableEntry.GPOSFeatureFileType
-            resolveCheckbox.isEnabled = selectedFileType != KernTableEntry.GPOSFeatureFileType
+            scaleCheckbox.isEnabled = selectedFileType != KernTable.Entry.GPOSFeatureFileType
+            resolveCheckbox.isEnabled = selectedFileType != KernTable.Entry.GPOSFeatureFileType
         }
     }
 
@@ -46,8 +46,8 @@ class KernPairSaveAccessoryViewController: NSViewController {
         }
     }
 
-    var config: KernTableEntry.KernExportConfig {
-        KernTableEntry.KernExportConfig(format: (selectedFileType == KernTableEntry.GPOSFeatureFileType ? .GPOS : .CSV),
+    var config: KernTable.Entry.KernExportConfig {
+        KernTable.Entry.KernExportConfig(format: (selectedFileType == KernTable.Entry.GPOSFeatureFileType ? .GPOS : .CSV),
                                         resolveGlyphNames: shouldResolveGlyphNames, scaleToUnitsPerEm: scaleToUnitsPerEm)
     }
 
@@ -56,7 +56,7 @@ class KernPairSaveAccessoryViewController: NSViewController {
     private static let ScaleToUnitsPerEmKey:    String = "KernPairs.ScaleToUnitsPerEm"
 
     required init(with panel: NSSavePanel) {
-        let defaults: [String : Any] = [Self.SaveFileTypeKey: KernTableEntry.GPOSFeatureFileType,
+        let defaults: [String : Any] = [Self.SaveFileTypeKey: KernTable.Entry.GPOSFeatureFileType,
                         Self.ResolveGlyphNamesKey: true,
                         Self.ScaleToUnitsPerEmKey: true]
         UserDefaults.standard.register(defaults: defaults)

@@ -26,7 +26,6 @@ public extension BinaryDataReader {
         try self.advance(-length)
         return bigEndian ?? self.bigEndian ? T(bigEndian: val) : T(littleEndian: val)
     }
-
 }
 
 public extension Date {

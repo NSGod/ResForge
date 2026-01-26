@@ -10,9 +10,9 @@ import RFSupport
 
 // represents a single 'POST' resource
 public struct POST {
-    private let dataType:   DataType    // UInt8
-    private let ignored:    UInt8       // ignored
-    let postScriptData:     Data
+    private let dataType:           DataType    // UInt8
+    private let ignored:            UInt8       // ignored
+    private let postScriptData:     Data
 
     private enum DataType: UInt8 {
         case ascii      = 1

@@ -9,36 +9,37 @@
 import Foundation
 import RFSupport
 
-final class OffsetTable: ResourceNode {
-    var numberOfEntries:        Int16               // number of entries - 1
-    @objc var entries:          [OffsetTableEntry]
+final public class OffsetTable: ResourceNode {
+    public var numberOfEntries:        Int16               // number of entries - 1
+    @objc public var entries:          [Entry]
 
-    @objc override var length:  Int {
-        get { return MemoryLayout<Int16>.size + entries.count * OffsetTableEntry.length }
-        set {}
+    @objc public override var length:  Int {
+        return MemoryLayout<Int16>.size + entries.count * Entry.length
     }
 
-    init(_ reader: BinaryDataReader) throws {
+    public init(_ reader: BinaryDataReader) throws {
         numberOfEntries = try reader.read()
         entries = []
         for _ in 0...numberOfEntries {
-            let entry: OffsetTableEntry = try OffsetTableEntry(reader)
+            let entry: Entry = try Entry(reader)
             entries.append(entry)
         }
         super.init()
     }
 }
 
+extension OffsetTable {
 
-final class OffsetTableEntry: ResourceNode {
-    @objc var offsetOfTable: Int32    // number of bytes from START OF THE OFFSET TABLE to the start of the table
+    final public class Entry: ResourceNode {
+        @objc public var offsetOfTable: Int32    // number of bytes from START OF THE OFFSET TABLE to the start of the table
 
-    init(_ reader: BinaryDataReader) throws {
-        offsetOfTable = try reader.read()
-        super.init()
-    }
+        public init(_ reader: BinaryDataReader) throws {
+            offsetOfTable = try reader.read()
+            super.init()
+        }
 
-    override class var length: Int {
-        return MemoryLayout<Int32>.size // 4
+        public override class var length: Int {
+            return MemoryLayout<Int32>.size // 4
+        }
     }
 }

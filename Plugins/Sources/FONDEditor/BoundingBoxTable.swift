@@ -10,49 +10,50 @@ import Foundation
 import RFSupport
 import CoreFont
 
-final class BoundingBoxTable: ResourceNode {
-    var numberOfEntries:    Int16                      // number of entries - 1
-    @objc var entries:      [BoundingBoxTableEntry]
+final public class BoundingBoxTable: ResourceNode {
+    public var numberOfEntries:         Int16           // number of entries - 1
+    @objc public var entries:           [Entry]
 
-    @objc override var length:    Int {
-        get { return MemoryLayout<Int16>.size + entries.count * BoundingBoxTableEntry.length }
-        set {}
+    @objc public override var length:   Int {
+        return MemoryLayout<Int16>.size + entries.count * Entry.length
     }
 
-    init(_ reader: BinaryDataReader) throws {
+    public init(_ reader: BinaryDataReader) throws {
         numberOfEntries = try reader.read()
         entries = []
         for _ in 0...numberOfEntries {
-            let entry = try BoundingBoxTableEntry(reader)
+            let entry = try Entry(reader)
             entries.append(entry)
         }
         super.init()
     }
 }
 
+extension BoundingBoxTable {
+    
+    final public class Entry: ResourceNode {
+        public var style:              MacFontStyle
+        @objc public var left:         Fixed4Dot12
+        @objc public var bottom:       Fixed4Dot12
+        @objc public var right:        Fixed4Dot12
+        @objc public var top:          Fixed4Dot12
 
-final class BoundingBoxTableEntry: ResourceNode {
-    var style:              MacFontStyle
-    @objc var left:         Fixed4Dot12
-    @objc var bottom:       Fixed4Dot12
-    @objc var right:        Fixed4Dot12
-    @objc var top:          Fixed4Dot12
+        @objc var objcStyle:    MacFontStyle.RawValue {
+            didSet { style = .init(rawValue: objcStyle) }
+        }
 
-    @objc var objcStyle:    MacFontStyle.RawValue {
-        didSet { style = .init(rawValue: objcStyle) }
-    }
+        public override class var length: Int {
+            return MemoryLayout<Int16>.size * 5 // 10
+        }
 
-    override class var length: Int {
-        return MemoryLayout<Int16>.size * 5 // 10
-    }
-
-    init(_ reader: BinaryDataReader) throws {
-        style = try reader.read()
-        left = try reader.read()
-        bottom = try reader.read()
-        right = try reader.read()
-        top = try reader.read()
-        objcStyle = style.rawValue
-        super.init()
+        public init(_ reader: BinaryDataReader) throws {
+            style = try reader.read()
+            left = try reader.read()
+            bottom = try reader.read()
+            right = try reader.read()
+            top = try reader.read()
+            objcStyle = style.rawValue
+            super.init()
+        }
     }
 }

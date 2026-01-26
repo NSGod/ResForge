@@ -33,26 +33,23 @@ import RFSupport
 ///       So, the full PostScript name for the bold style is ExampleFont-Bold
 ///       
 
-struct FontNameSuffixSubtable {
-    var stringCount:                            Int16       // actual string count
-
-    var baseFontName:                           String      // Index 1 shown above
-                                                            // This is documented as always being a 256 byte long Pascal string,
-                                                            // but that's not the case.
-
+public struct FontNameSuffixSubtable {
+    public var stringCount:                     Int16           // actual string count
+    public var baseFontName:                    String          // Index 1 shown above
+                                                                // This is documented as always being a 256 byte long Pascal string,
+                                                                // but that's not the case.
     private var entryIndexesToPostScriptNames:  [UInt8: String]
-    private var _actualStringCount:             Int16       // actual actual string count
+    private var _actualStringCount:             Int16           // actual actual string count
 }
 
 // of all the FOND tables, this is the one I've encountered the most variation and issues with, hence all the debug logging
 extension FontNameSuffixSubtable {
-    init(_ reader: BinaryDataReader, range knownRange: NSRange) throws {
+    public init(_ reader: BinaryDataReader, range knownRange: NSRange) throws {
         stringCount = try reader.read()
         baseFontName = try reader.readPString()
         entryIndexesToPostScriptNames = [:]
         _actualStringCount = 1
         var stringDatas : [Data] = []
-
         /// we already have the base font name, so go with `stringCount - 1`
         for _ in 0..<stringCount - 1 {
             if NSMaxRange(knownRange) == reader.bytesRead {
@@ -116,10 +113,10 @@ extension FontNameSuffixSubtable {
             }
             entryIndexesToPostScriptNames[UInt8(i) + 2] = fullName
         }
-//        NSLog("\(type(of: self)).\(#function)() entryIndexesToPostScriptNames == \(entryIndexesToPostScriptNames)")
+        // NSLog("\(type(of: self)).\(#function)() entryIndexesToPostScriptNames == \(entryIndexesToPostScriptNames)")
     }
 
-    func postScriptNameForFontEntry(at oneBasedIndex: UInt8) -> String? {
+    public func postScriptNameForFontEntry(at oneBasedIndex: UInt8) -> String? {
         if oneBasedIndex > _actualStringCount {
             NSLog("\(type(of: self)).\(#function)() *** WARNING: fontEntryIndex of \(oneBasedIndex) is beyond total string count (\(_actualStringCount))")
             return nil
@@ -131,16 +128,11 @@ extension FontNameSuffixSubtable {
         let length = data.withUnsafeBytes {
             $0.loadUnaligned(as: UInt8.self)
         }
-        guard length > 0 else {
-            return ""
-        }
-        guard data.count > 1 else {
-			return ""
-        }
+        guard length > 0 else { return "" }
+        guard data.count > 1 else { return "" }
         guard let string = String(data: data[data.startIndex+1..<data.endIndex], encoding: .macOSRoman) else {
             throw BinaryDataReaderError.stringDecodeFailure
         }
         return string
     }
-
 }

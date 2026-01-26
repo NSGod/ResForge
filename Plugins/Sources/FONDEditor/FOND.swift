@@ -11,61 +11,57 @@ import RFSupport
 import CoreFont
 
 final public class FOND: NSObject {
-    struct FontFamilyRecord {
+    private struct FontFamilyRecord {
         static let length = 52
     }
 
     // FontFamilyRecord is the first 52 bytes of the FOND
-    var ffFlags:                FontFamilyFlags     // UInt16; flags for family
-    @objc var famID:            ResID               // family ID number
-    @objc var firstChar:        Int16               // ASCII code of 1st character
-    @objc var lastChar:         Int16               // ASCII code of last character
-    @objc var ascent:           Fixed4Dot12         // maximum ascent for 1pt font;  Fixed 4.12
-    @objc var descent:          Fixed4Dot12         // maximum descent for 1pt font; Fixed 4.12
-    @objc var leading:          Fixed4Dot12         // maximum leading for 1pt font; Fixed 4.12
-    @objc var widMax:           Fixed4Dot12         // maximum width for 1pt font;   Fixed 4.12
+    public var ffFlags:                FontFamilyFlags  // UInt16; flags for family
+    @objc public var famID:            ResID            // family ID number; must match FOND resource ID
+    @objc public var firstChar:        Int16            // ASCII code of 1st character
+    @objc public var lastChar:         Int16            // ASCII code of last character
+    @objc public var ascent:           Fixed4Dot12      // maximum ascent for 1pt font;  Fixed 4.12
+    @objc public var descent:          Fixed4Dot12      // maximum descent for 1pt font; Fixed 4.12
+    @objc public var leading:          Fixed4Dot12      // maximum leading for 1pt font; Fixed 4.12
+    @objc public var widMax:           Fixed4Dot12      // maximum width for 1pt font;   Fixed 4.12
 
-    @objc var wTabOff:          Int32               /* offset to family glyph-width table from beginning of font family
-                                                       resource to beginning of table, in bytes */
-    @objc var kernOff:          Int32               /* offset to kerning table from beginning of font family resource to
-                                                       beginning of table, in bytes */
-    @objc var styleOff:         Int32               /* offset to style mapping table from beginning of font family
-                                                       resource to beginning of table, in bytes */
+    @objc public var wTabOff:          Int32            /* offset to family glyph-width table from beginning of font family
+                                                             resource to beginning of table, in bytes */
+    @objc public var kernOff:          Int32            /* offset to kerning table from beginning of font family resource to
+                                                             beginning of table, in bytes */
+    @objc public var styleOff:         Int32            /* offset to style mapping table from beginning of font family
+                                                            resource to beginning of table, in bytes */
 
-                                                    // style property info; extra widths for different styles
-    @objc var ewSPlain:         Fixed4Dot12         // should be 0
-    @objc var ewSBold:          Fixed4Dot12
-    @objc var ewSItalic:        Fixed4Dot12
-    @objc var ewSUnderline:     Fixed4Dot12
-    @objc var ewSOutline:       Fixed4Dot12
-    @objc var ewSShadow:        Fixed4Dot12
-    @objc var ewSCondensed:     Fixed4Dot12
-    @objc var ewSExtended:      Fixed4Dot12
-    @objc var ewSUnused:        Fixed4Dot12         // unused; should be 0
+                                                        // style property info; extra widths for different styles
+    @objc public var ewSPlain:         Fixed4Dot12      // should be 0
+    @objc public var ewSBold:          Fixed4Dot12
+    @objc public var ewSItalic:        Fixed4Dot12
+    @objc public var ewSUnderline:     Fixed4Dot12
+    @objc public var ewSOutline:       Fixed4Dot12
+    @objc public var ewSShadow:        Fixed4Dot12
+    @objc public var ewSCondensed:     Fixed4Dot12
+    @objc public var ewSExtended:      Fixed4Dot12
+    @objc public var ewSUnused:        Fixed4Dot12      // unused; should be 0
 
-    @objc var intl0:            Int16               // for international use
-    @objc var intl1:            Int16               // for international use
+    @objc public var intl0:            Int16            // for international use
+    @objc public var intl1:            Int16            // for international use
 
-    @objc var ffVersion:        Version             // version number
+    @objc public var ffVersion:        Version          // version number
 
     // MARK: -
-    @objc var objcFFFlags:      FontFamilyFlags.RawValue {
+    @objc public var objcFFFlags:      FontFamilyFlags.RawValue {
         didSet { ffFlags = FontFamilyFlags(rawValue: objcFFFlags) }
     }
 
-    @objc var fontAssociationTable:     FontAssociationTable
+    @objc public var fontAssociationTable:  FontAssociationTable
 
-    @objc var countOfFontAssociationTableEntries: Int {
-        return fontAssociationTable.entries.count
-    }
+    private unowned var resource:           Resource
+    private var reader:                     BinaryDataReader
+    @objc public var remainingTableData:    Data
 
-    unowned var resource:               Resource
-    private(set) var reader:            BinaryDataReader
-    @objc var remainingTableData:       Data
+    @objc public var offsetTable:           OffsetTable?
 
-    @objc var offsetTable:              OffsetTable?
-
-    @objc lazy var boundingBoxTable:    BoundingBoxTable? = {
+    @objc public lazy var boundingBoxTable: BoundingBoxTable? = {
         do {
             try calculateOffsetsIfNeeded()
             // can only have a Bounding Box table if we have an offset table to specify its offset
@@ -82,7 +78,7 @@ final public class FOND: NSObject {
         return nil
     }()
 
-    @objc lazy var widthTable:          WidthTable? = {
+    @objc public lazy var widthTable:       WidthTable? = {
         if wTabOff == 0 { return nil }
         do {
             try calculateOffsetsIfNeeded()
@@ -96,7 +92,7 @@ final public class FOND: NSObject {
         return nil
     }()
 
-    @objc lazy var styleMappingTable:   StyleMappingTable? = {
+    @objc public lazy var styleMappingTable:    StyleMappingTable? = {
         if styleOff == 0 { return nil }
         do {
             try calculateOffsetsIfNeeded()
@@ -114,7 +110,7 @@ final public class FOND: NSObject {
         return nil
     }()
 
-    @objc lazy var kernTable:           KernTable? = {
+    @objc public lazy var kernTable:        KernTable? = {
         if kernOff == 0 { return nil }
         do {
             try calculateOffsetsIfNeeded()
@@ -133,7 +129,7 @@ final public class FOND: NSObject {
     }()
 
     // used to help inform encoding choice (e.g. Symbol and Dingbat fonts have special encodings)
-    lazy var basePostScriptName:        String? = {
+    public lazy var basePostScriptName:     String? = {
         if styleOff == 0 { return nil }
         guard let entry = fontAssociationTable.entries.first else { return nil }
         if let postScriptName = self.styleMappingTable?.postScriptNameForFont(with: entry.fontStyle) {
@@ -142,7 +138,7 @@ final public class FOND: NSObject {
         return nil
     }()
 
-    lazy var encoding:                  MacEncoding = {
+    public lazy var encoding:               MacEncoding = {
         // FIXME: improve non-MacRoman encodings
         let scriptID = MacEncoding.scriptID(for: ResID(resource.id))
         NSLog("\(type(of: self)).\(#function)() resID: \(resource.id), scriptID: \(scriptID)")
@@ -174,11 +170,11 @@ final public class FOND: NSObject {
     public struct FontFamilyFlags: OptionSet, Hashable {
         public let rawValue: UInt16
 
-        static let hasGlyphWidthTable       = Self(rawValue: 1 << 1)
-        static let ignoreFractEnable        = Self(rawValue: 1 << 12)
-        static let useIntegerWidths         = Self(rawValue: 1 << 13)
-        static let dontUseFractWidthTable   = Self(rawValue: 1 << 14)
-        static let isFixedWidth             = Self(rawValue: 1 << 15)
+        public static let hasGlyphWidthTable       = Self(rawValue: 1 << 1)
+        public static let ignoreFractEnable        = Self(rawValue: 1 << 12)
+        public static let useIntegerWidths         = Self(rawValue: 1 << 13)
+        public static let dontUseFractWidthTable   = Self(rawValue: 1 << 14)
+        public static let isFixedWidth             = Self(rawValue: 1 << 15)
 
         public init(rawValue: UInt16) {
             self.rawValue = rawValue
@@ -195,7 +191,6 @@ final public class FOND: NSObject {
     ///   0x0001    Original format as designed by the font developer. This font family record probably has the width tables and most of the fields are filled.
     ///   0x0002    This record may contain the offset and bounding-box tables.
     ///   0x0003    This record definitely contains the offset and bounding-box tables.
-
     @objc public enum Version : UInt16, RawRepresentable {
         case version0    = 0,
              version1,
@@ -217,18 +212,16 @@ final public class FOND: NSObject {
     private var needsRepair:            Bool = false   // If this FOND resource's resourceID doesn't match the famID, we need to update the famID
 
     // MARK: - init
-    convenience init(_ data: Data, resource: Resource) throws {
+    public convenience init(_ data: Data, resource: Resource) throws {
         let reader = BinaryDataReader(data)
         try self.init(reader, resource: resource)
     }
 
-    init(_ binReader: BinaryDataReader, resource: Resource) throws {
+    public init(_ binReader: BinaryDataReader, resource: Resource) throws {
         // FIXME: deal with FOND w/ no name error
-        
         /// hold onto `reader` for future parsing for lazy data structures
         self.reader = binReader
         self.resource = resource
-
         ffFlags         = try reader.read()
         objcFFFlags     = ffFlags.rawValue
         famID           = try reader.read()
@@ -241,7 +234,6 @@ final public class FOND: NSObject {
         wTabOff         = try reader.read()
         kernOff         = try reader.read()
         styleOff        = try reader.read()
-
         ewSPlain        = try reader.read()
         ewSBold         = try reader.read()
         ewSItalic       = try reader.read()
@@ -251,7 +243,6 @@ final public class FOND: NSObject {
         ewSCondensed    = try reader.read()
         ewSExtended     = try reader.read()
         ewSUnused       = try reader.read()
-
         intl0           = try reader.read()
         intl1           = try reader.read()
         ffVersion       = try reader.read()
@@ -267,14 +258,13 @@ final public class FOND: NSObject {
         // FIXME: add validation/error-checking here
 
         fontAssociationTable = try FontAssociationTable(reader)
-
         reader.pushSavedPosition()
         remainingTableData = try reader.readData(length: reader.bytesRemaining)
         reader.popPosition()
         super.init()
     }
 
-    func unitsPerEm(for fontStyle: MacFontStyle) -> UnitsPerEm {
+    public func unitsPerEm(for fontStyle: MacFontStyle) -> UnitsPerEm {
         /* Here we'll assume that if there's a mix of entries for both TrueType
          (fontPointSize of 0) and Bitmap fonts, that the bitmap fonts are merely for
          screen display and don't reference possible PostScript outline fonts.
@@ -307,7 +297,7 @@ final public class FOND: NSObject {
         return styleMappingTable?.postScriptNameForFont(with: style)
     }
 
-    func glyphName(for charCode: CharCode) -> String? {
+    public func glyphName(for charCode: CharCode) -> String? {
         // or should this be non-optional and return .notdef?
         return self.encoding.glyphName(for: charCode)
     }
@@ -339,17 +329,17 @@ final public class FOND: NSObject {
         offsetsCalculated = true
     }
 
-    func add(_ entry: FontAssociationTable.Entry) throws {
+    public func add(_ entry: FontAssociationTable.Entry) throws {
         try fontAssociationTable.add(entry)
         shiftOffsetsAndRanges(by: entry.length)
     }
 
-    func remove(_ entry: FontAssociationTable.Entry) throws {
+    public func remove(_ entry: FontAssociationTable.Entry) throws {
         try fontAssociationTable.remove(entry)
         shiftOffsetsAndRanges(by: -entry.length)
     }
 
-    func shiftOffsetsAndRanges(by deltaLength: Int) {
+    private func shiftOffsetsAndRanges(by deltaLength: Int) {
         do {
             try calculateOffsetsIfNeeded()
             // NOTE: the table offsets could be empty (== 0), so check before modifying their values
@@ -381,5 +371,4 @@ final public class FOND: NSObject {
              NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
         }
     }
-
 }

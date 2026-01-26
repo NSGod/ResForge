@@ -78,5 +78,4 @@ final public class GlyphNameEntry: NSObject, Comparable {
     public static func == (lhs: GlyphNameEntry, rhs: GlyphNameEntry) -> Bool {
         return lhs.compare(rhs) == .orderedSame
     }
-
 }

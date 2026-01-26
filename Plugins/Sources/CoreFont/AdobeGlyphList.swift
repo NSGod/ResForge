@@ -18,7 +18,7 @@ public struct AdobeGlyphList {
         return glyphName.trimmingCharacters(in: percentSet)
     }
 
-    public static func uv(for glyphName: String) -> UVBMP {
+    public static func uv(forGlyphName glyphName: String) -> UVBMP {
         guard let uv = agl2uv[glyphName] else {
             return .undefined
         }
@@ -32,7 +32,7 @@ public struct AdobeGlyphList {
         return glyphName
     }
 
-    public static func zapfDingbatUV(for glyphName: String) -> UVBMP {
+    public static func zapfDingbatUV(forGlyphName glyphName: String) -> UVBMP {
         guard let uv = zding2uv[glyphName] else {
             return .undefined
         }

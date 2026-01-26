@@ -45,9 +45,9 @@ final public class OTFsfntDirectoryEntry: OTFFontFileNode, Comparable {
         let rhsIndex = Self.tagsToParsingOrder[rhs.tableTag]
         if let lhsIndex, let rhsIndex {
             return lhsIndex < rhsIndex
-        } else if let lhsIndex {
+        } else if lhsIndex != nil {
             return true
-        } else if let rhsIndex {
+        } else if rhsIndex != nil {
             return false
         } else {
             return false

@@ -12,7 +12,7 @@ final class KernTreeNode: NSTreeNode, Comparable {
         super.init(representedObject: modelObject)
     }
 
-    init(_ entry: KernTableEntry) {
+    init(_ entry: KernTable.Entry) {
         var mKernPairNodes: [KernTreeNode] = []
         entry.fond.encoding.logsInvalidCharCodes = true
         for kernPair in entry.kernPairs {

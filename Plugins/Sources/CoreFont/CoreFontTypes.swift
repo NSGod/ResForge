@@ -5,7 +5,6 @@
 //  Created by Mark Douma on 1/18/2026.
 //
 
-
 import Foundation
 import RFSupport
 
@@ -21,9 +20,6 @@ public extension CharCode {
 public extension CharCode16 {
     static let space: CharCode16 = 0x20
 }
-
-//typealias EncodingID    = UInt16
-//typealias LanguageID    = UInt16
 
 public typealias UVBMP         = UInt16
 
@@ -43,31 +39,25 @@ public func DoubleToFixed4Dot12(_ x: Double) -> Fixed4Dot12 {
     Fixed4Dot12(x * Double(fixed4) + (x < 0 ? -0.5 : 0.5))
 }
 
-//extension Double {
-//    init<Fixed4Dot12>(_ x: Fixed4Dot12) {
-//        self.init(Double(Int32(x)) * 1.0/Double(fixed4))
-//    }
-//}
-
 public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible {
     public let rawValue: UInt16
 
-    static let regular          = Self([])
-    static let plain            = Self.regular
-    static let normal           = Self.regular
-    static let bold             = Self(rawValue: 1 << 0)    // 1
-    static let italic           = Self(rawValue: 1 << 1)    // 2
-    static let underline        = Self(rawValue: 1 << 2)    // 4
-    static let outline          = Self(rawValue: 1 << 3)    // 8
-    static let shadow           = Self(rawValue: 1 << 4)    // 16
-    static let condensed        = Self(rawValue: 1 << 5)    // 32
-    static let extended         = Self(rawValue: 1 << 6)    // 64
+    public static let regular          = Self([])
+    public static let plain            = Self.regular
+    public static let normal           = Self.regular
+    public static let bold             = Self(rawValue: 1 << 0)    // 1
+    public static let italic           = Self(rawValue: 1 << 1)    // 2
+    public static let underline        = Self(rawValue: 1 << 2)    // 4
+    public static let outline          = Self(rawValue: 1 << 3)    // 8
+    public static let shadow           = Self(rawValue: 1 << 4)    // 16
+    public static let condensed        = Self(rawValue: 1 << 5)    // 32
+    public static let extended         = Self(rawValue: 1 << 6)    // 64
 
     public init(rawValue: UInt16) {
         self.rawValue = rawValue
     }
 
-    var styleDescription: String {
+    public var styleDescription: String {
         switch self {
             case .regular, .plain, .normal: return NSLocalizedString("Regular", comment: "")
             case .bold: return NSLocalizedString("Bold", comment: "")
