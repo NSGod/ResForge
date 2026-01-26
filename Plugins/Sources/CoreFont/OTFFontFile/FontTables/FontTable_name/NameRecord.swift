@@ -37,7 +37,7 @@ public extension FontTable_name {
         @objc var name:             String = ""
         @objc var value:            String = ""
 
-        public init(_ reader: BinaryDataReader, stringOffset: UInt16, table: FontTable? = nil) throws {
+        public init(_ reader: BinaryDataReader, stringOffset: UInt16, table: FontTable) throws {
             try super.init(reader, table: table)
             guard let platID = PlatformID(rawValue: try reader.read()) else {
                 throw FontTableError.parseError("Unexpected PlatformID")
@@ -77,7 +77,7 @@ public extension FontTable_name {
         }
 
         @available(*, unavailable, message: "use initializer that takes stringOffset instead")
-        public override init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable? = nil) throws {
+        public override init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable) throws {
             fatalError("")
         }
 

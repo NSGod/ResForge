@@ -39,7 +39,7 @@ open class FontTable: OTFFontFileNode {
         return calcChecksum
     }
 
-    public class var usesLazyParsing: Bool { true }
+    class var usesLazyParsing: Bool { true }
 
     var reader:         BinaryDataReader
 
@@ -93,8 +93,18 @@ open class FontTable: OTFFontFileNode {
     public var maxpTable: FontTable_maxp? { table(for: .maxp) as? FontTable_maxp }
     public var postTable: FontTable_post? { table(for: .post) as? FontTable_post }
     public var nameTable: FontTable_name? { table(for: .name) as? FontTable_name }
+    public var hheaTable: FontTable_hhea? { table(for: .hhea) as? FontTable_hhea }
+    public var htmxTable: FontTable_hmtx? { table(for: .hmtx) as? FontTable_hmtx }
 
+    public var fontNumGlyphs: Int {
+        return fontFile.numGlyphs
+    }
+
+    public func fontGlyphName(for glyphID: Glyph32ID) -> String? {
+        return fontFile.glyphName(for: glyphID)
+    }
 }
+
 /// `Ideally:`
 /// immediate parsing:
 /// `head`, `maxp`, `OS/2`

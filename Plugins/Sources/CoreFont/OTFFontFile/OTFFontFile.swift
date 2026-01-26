@@ -27,9 +27,9 @@ final public class OTFFontFile: NSObject {
         tables = OrderedSet()
         super.init()
         directory = try OTFsfntDirectory(reader, fontFile: self)
-        // FIXME: load/font tables in a specified order
         var entries = directory.entries
         entries.sort {
+            // load/font tables in a specified order, since parsing some rely on presence of others
             return OTFsfntDirectoryEntry.sortForParsing(lhs: $0, rhs: $1)
         }
         for entry in entries {
@@ -40,6 +40,7 @@ final public class OTFFontFile: NSObject {
             tables.append(table)
             rangesToFontTables[range] = table
             entry.table = table
+            tableTagsToTables[entry.tableTag] = table
         }
         // sort tables into the order they're found in the font for display
         tables.sort { table1, table2 in
@@ -59,6 +60,56 @@ final public class OTFFontFile: NSObject {
         }
     }
 
+    private var glyphLookupType: GlyphNameLookupType = .undetermined
+    private func initGlyphNameLookup() {
+        if glyphLookupType != .undetermined { return }
+        if tableTagsToTables[.CFF_] != nil {
+            glyphLookupType = .CFF
+        } else if let postTable, postTable.version != .version3_0 {
+            glyphLookupType = .post
+//        } else if tableTagsToTables[.cmap] != nil && other stuff {
+//          glyphLookupType = .CID
+        } else if tableTagsToTables[.TYP1] != nil {
+            glyphLookupType = .TYP1
+        } else if tableTagsToTables[.CID_] != nil {
+            glyphLookupType = .CID
+        } else {
+            glyphLookupType = .AGL
+        }
+    }
+
+    public var numGlyphs: Int {
+        if glyphLookupType == .undetermined { self .initGlyphNameLookup() }
+        // FIXME: !! allow for other methods to get glyph count (see /afdko/c/spot/source/global.c for more info)
+        if glyphLookupType == .post || glyphLookupType == .cmap {
+            return Int(maxpTable?.numGlyphs ?? 0)
+        } else if glyphLookupType == .CFF {
+            // return CFFTable.numGlyphs
+            return 0
+        } else if glyphLookupType == .TYP1 {
+            return 0
+        } else if glyphLookupType == .CID {
+            return 0
+        }
+        return Int(maxpTable?.numGlyphs ?? 0)
+    }
+
+    public func glyphName(for glyphID: Glyph32ID) -> String {
+        // FIXME: !! deal with other methods of getting glyph names
+        if glyphLookupType == .undetermined { self .initGlyphNameLookup() }
+        var glyphName = ""
+        if glyphLookupType == .post {
+            glyphName = postTable?.glyphName(for: glyphID) ?? ""
+        } else if glyphLookupType == .cmap {
+
+        } else if glyphLookupType == .CFF {
+
+        } else if glyphLookupType == .AGL {
+
+        }
+        return glyphName.isEmpty ? "<\(glyphID)" : glyphName
+    }
+
     public var headTable: FontTable_head? {
         return table(for: .head) as? FontTable_head
     }
@@ -71,6 +122,12 @@ final public class OTFFontFile: NSObject {
     public var nameTable: FontTable_name? {
         return table(for: .name) as? FontTable_name
     }
+    public var hheaTable: FontTable_hhea? {
+        return table(for: .hhea) as? FontTable_hhea
+    }
+    public var hmtxTable: FontTable_hmtx? {
+        return table(for: .hmtx) as? FontTable_hmtx
+    }
     public func table(for tableTag: TableTag) -> FontTable? {
         return tableTagsToTables[tableTag]
     }
@@ -82,5 +139,6 @@ final public class OTFFontFile: NSObject {
         case CFF
         case TYP1
         case CID
+        case AGL
     }
 }

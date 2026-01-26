@@ -22,7 +22,7 @@ final public class OTFsfntDirectory: OTFFontFileNode {
     public class var nodeLength: UInt32 {
         UInt32(MemoryLayout<UInt16>.size * 4 + MemoryLayout<OTFsfntFormat.RawValue>.size) } // 12
 
-    public init(_ reader: BinaryDataReader, fontFile: OTFFontFile?) throws {
+    public init(_ reader: BinaryDataReader, fontFile: OTFFontFile) throws {
         format = OTFsfntFormat(rawValue: try reader.read())
         numberOfTables = try reader.read()
         searchRange = try reader.read()

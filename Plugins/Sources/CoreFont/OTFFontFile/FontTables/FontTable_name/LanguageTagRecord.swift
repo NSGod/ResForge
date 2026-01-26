@@ -15,7 +15,7 @@ public extension FontTable_name {
         @objc public var offset:        UInt16 = 0  // string offset from start of storage area
         @objc public var string:        String = ""
 
-        public init(_ reader: BinaryDataReader,  stringOffset: UInt16, table: FontTable? = nil) throws {
+        public init(_ reader: BinaryDataReader,  stringOffset: UInt16, table: FontTable) throws {
             try super.init(reader, table: table)
             length = try reader.read()
             self.offset = try reader.read()
@@ -26,7 +26,7 @@ public extension FontTable_name {
         }
 
         @available(*, unavailable, message: "use initializer that takes stringOffset instead")
-        public override init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable? = nil) throws {
+        public override init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable) throws {
             fatalError("")
         }
     }

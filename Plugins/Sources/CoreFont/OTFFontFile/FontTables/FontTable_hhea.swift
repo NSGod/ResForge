@@ -1,0 +1,73 @@
+//
+//  FontTable_hhea.swift
+//  FontEditor
+//
+//  Created by Mark Douma on 1/25/2026.
+//
+
+import Foundation
+import RFSupport
+
+/// `REQUIRES`:
+/// `DEPENDS ON`:
+/// `DISPLAY DEPENDS ON`:
+
+/* "The values in the minRightSidebearing, minLeftSideBearing and xMaxExtent
+    should be computed using only glyphs that have contours. Glyphs with
+    no contours should be ignored for the purposes of these calculations." */
+/*
+ The values for ascent, descent and lineGap represent the design intentions of the font's creator
+ rather than any computed value, and individual glyphs may well exceed the the limits they represent.
+ The values for the advanceWidthMax, minLeftSideBearing and minRightSideBearing are computed values
+ and must be consistent with whatever values appear in the 'hmtx' table. These values are as their
+ names imply, the actual maximum advance width for any glyph in the font, the minimum left side
+ bearing for any glyph and the minimum right side bearing for any glyph. Similarly, the xMin, yMin,
+ xMax, and yMax, fields in the 'head' represent the actual extrema for the glyphs in the font.
+
+ */
+final public class FontTable_hhea: FontTable {
+    @objc public enum Version: Fixed {
+        case default1_0 = 0x00010000
+    }
+
+    @objc public var version:               Version = .default1_0
+    @objc public var ascender:              Int16 = 0   // design intention
+    @objc public var descender:             Int16 = 0   // design intention
+    @objc public var lineGap:               Int16 = 0   // design intention
+    @objc public var advanceWidthMax:       UInt16 = 0  // calculated; must be consistent
+    @objc public var minLeftSideBearing:    Int16 = 0   // calculated; must be consistent
+    @objc public var minRightSideBearing:   Int16 = 0   // calculated; MIN (aWM - lsb - (xMax - xMin)); must be consistent
+    @objc public var xMaxExtent:            UInt16 = 0  // MAX (lsb + (xMax - xMin))
+    @objc public var caretSlopeRise:        Int16 = 0   // to calc slope of cursor; 1 for vertical
+    @objc public var caretSlopeRun:         Int16 = 0   // 0 for vertical
+    @objc public var caretOffset:           Int16 = 0
+
+    @objc public var reserved0:             Int16 = 0
+    @objc public var reserved1:             Int16 = 0
+    @objc public var reserved2:             Int16 = 0
+    @objc public var reserved3:             Int16 = 0
+
+    @objc public var metricDataFormat:      Int16 = 0   // 0 for current format
+    @objc public var numberOfHMetrics:      UInt16 = 0
+
+    public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
+        try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
+        version = Version(rawValue: try reader.read()) ?? .default1_0
+        ascender = try reader.read()
+        descender = try reader.read()
+        lineGap = try reader.read()
+        advanceWidthMax = try reader.read()
+        minLeftSideBearing = try reader.read()
+        minRightSideBearing = try reader.read()
+        xMaxExtent = try reader.read()
+        caretSlopeRise = try reader.read()
+        caretSlopeRun = try reader.read()
+        caretOffset = try reader.read()
+        reserved0 = try reader.read()
+        reserved1 = try reader.read()
+        reserved2 = try reader.read()
+        reserved3 = try reader.read()
+        metricDataFormat = try reader.read()
+        numberOfHMetrics = try reader.read()
+    }
+}

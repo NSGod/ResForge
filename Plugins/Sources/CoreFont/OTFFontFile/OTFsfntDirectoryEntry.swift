@@ -32,7 +32,7 @@ final public class OTFsfntDirectoryEntry: OTFFontFileNode, Comparable {
 
     public static var nodeLength:  UInt32    = UInt32(MemoryLayout<UInt32>.size * 4) // 16
 
-    public init(_ reader: BinaryDataReader, fontFile: OTFFontFile?) throws {
+    public init(_ reader: BinaryDataReader, fontFile: OTFFontFile) throws {
         tableTag = TableTag(rawValue: try reader.read())
         checksum = try reader.read()
         offset = try reader.read()
@@ -68,5 +68,7 @@ final public class OTFsfntDirectoryEntry: OTFFontFileNode, Comparable {
         .OS_2: 2,
         .post: 3,
         .name: 4,
+        .hhea: 5,
+        .hmtx: 6,
     ]
 }

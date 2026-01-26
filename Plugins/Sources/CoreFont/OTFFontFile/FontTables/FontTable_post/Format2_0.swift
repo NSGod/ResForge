@@ -14,7 +14,7 @@ public extension FontTable_post {
         public var numberOfGlyphs:          UInt16 = 0      // must be synched with maxp.numGlyphs
         public var glyphNameIndexes:        [GlyphID] = []
 
-        required public init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable? = nil) throws {
+        required public init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable) throws {
             try super.init(reader, offset: offset, table: table)
             numberOfGlyphs = try reader.read()
             for _ in 0..<numberOfGlyphs {

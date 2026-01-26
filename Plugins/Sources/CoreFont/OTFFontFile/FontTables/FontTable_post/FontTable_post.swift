@@ -48,7 +48,7 @@ final public class FontTable_post: FontTable {
         guard let tableClass: Format.Type = Format.class(for: version).self else {
             return
         }
-        format = try tableClass.init(reader)
+        format = try tableClass.init(reader, table: self)
     }
 
     public func glyphName(for glyphID: Glyph32ID) -> String? {
