@@ -34,8 +34,8 @@ let package = Package(
             name: "BitmapFontEditor",
             targets: ["BitmapFontEditor"]),
         .library(
-            name: "POSTEditor",
-            targets: ["POSTEditor"]),
+            name: "POSTExporter",
+            targets: ["POSTExporter"]),
         .library(
             name: "ImageEditor",
             targets: ["ImageEditor"]),
@@ -93,9 +93,9 @@ let package = Package(
             dependencies: [.target(name: "RFSupport"),
                            .target(name: "CoreFont"),
                            ]),
-        .target(name: "POSTEditor",
-            dependencies: [.target(name: "RFSupport")],
-                ),
+        .target(name: "POSTExporter",
+            dependencies: [.target(name: "RFSupport"),
+                           .target(name: "CoreFont")], ),
         .target(
             name: "MenuEditor",
             dependencies: [.target(name: "RFSupport")]),
