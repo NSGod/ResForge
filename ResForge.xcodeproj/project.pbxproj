@@ -52,6 +52,7 @@
 		C11C2A3A2F15E368002AEBAB /* BitmapFontEditor in Frameworks */ = {isa = PBXBuildFile; productRef = C11C2A392F15E368002AEBAB /* BitmapFontEditor */; };
 		C14989422F22D81B0059329A /* postScriptA.pdf in Resources */ = {isa = PBXBuildFile; fileRef = C14989412F22D81B0059329A /* postScriptA.pdf */; };
 		C1960C4C2F049DBC003BC1E4 /* FONDEditor in Frameworks */ = {isa = PBXBuildFile; productRef = C1960C4B2F049DBC003BC1E4 /* FONDEditor */; };
+		C1D84C822F1BDB1900DB8BB7 /* POSTEditor in Frameworks */ = {isa = PBXBuildFile; productRef = C1D84C812F1BDB1900DB8BB7 /* POSTEditor */; };
 		C1D84C8D2F1D501400DB8BB7 /* CoreFont in Frameworks */ = {isa = PBXBuildFile; productRef = C1D84C8C2F1D501400DB8BB7 /* CoreFont */; };
 		C1DD00B32F134D03006188B0 /* FontEditor in Frameworks */ = {isa = PBXBuildFile; productRef = C1DD00B22F134D03006188B0 /* FontEditor */; };
 /* End PBXBuildFile section */
@@ -187,6 +188,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				49AA91E22DC08B89007944F6 /* ImageEditor in Frameworks */,
+				C1D84C822F1BDB1900DB8BB7 /* POSTEditor in Frameworks */,
 				4952BD4C26DD9356005DB6EB /* CSV in Frameworks */,
 				49F4648D2E487A15003C732F /* HexFiend.framework in Frameworks */,
 				49AA91FE2DC0A902007944F6 /* RFSupport in Frameworks */,
@@ -346,6 +348,7 @@
 				C1960C4B2F049DBC003BC1E4 /* FONDEditor */,
 				C1DD00B22F134D03006188B0 /* FontEditor */,
 				C11C2A392F15E368002AEBAB /* BitmapFontEditor */,
+				C1D84C812F1BDB1900DB8BB7 /* POSTEditor */,
 				C1D84C8C2F1D501400DB8BB7 /* CoreFont */,
 			);
 			productInstallPath = "$(USER_APPS_DIR)";
@@ -790,6 +793,10 @@
 		C1960C4B2F049DBC003BC1E4 /* FONDEditor */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FONDEditor;
+		};
+		C1D84C812F1BDB1900DB8BB7 /* POSTEditor */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = POSTEditor;
 		};
 		C1D84C8C2F1D501400DB8BB7 /* CoreFont */ = {
 			isa = XCSwiftPackageProductDependency;
