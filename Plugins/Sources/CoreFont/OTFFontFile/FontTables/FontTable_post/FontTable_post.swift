@@ -32,11 +32,15 @@ final public class FontTable_post: FontTable {
     @objc public var minMemType1:           UInt32 = 0
     @objc public var maxMemType1:           UInt32 = 0
 
-    @objc public var format:                Format? // nil for .version3_0/format 3
+    @objc public var format:                Format? // nil for .version3_0
 
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
-        version = Version(rawValue: try reader.read()) ?? .version1_0
+        let vers: Fixed = try reader.read()
+        guard let version = Version(rawValue: vers) else {
+            throw FontTableError.unknownVersion(String(format: "Unknown post table version: 0x%08X", vers))
+        }
+        self.version = version
         italicAngle = try reader.read()
         underlinePosition = try reader.read()
         underlineThickness = try reader.read()

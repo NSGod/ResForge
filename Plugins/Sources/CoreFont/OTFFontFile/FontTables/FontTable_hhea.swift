@@ -52,7 +52,11 @@ final public class FontTable_hhea: FontTable {
 
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
-        version = Version(rawValue: try reader.read()) ?? .default1_0
+        let vers: Fixed = try reader.read()
+        guard let version = Version(rawValue: vers) else {
+            throw FontTableError.unknownVersion(String(format: "Unknown version %08X in 'hhea' table", vers))
+        }
+        self.version = version
         ascender = try reader.read()
         descender = try reader.read()
         lineGap = try reader.read()

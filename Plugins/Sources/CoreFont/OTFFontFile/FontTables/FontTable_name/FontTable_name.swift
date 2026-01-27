@@ -30,8 +30,9 @@ final public class FontTable_name: FontTable {
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
         self.parseState = .parsing
-        guard let format = Format(rawValue: try reader.read()) else {
-            throw FontTableError.unknownFormat
+        let format: UInt16 = try reader.read()
+        guard let format = Format(rawValue: format) else {
+            throw FontTableError.unknownFormat("Unknown 'name' table format (\(format))")
         }
         self.format = format
         count = try reader.read()

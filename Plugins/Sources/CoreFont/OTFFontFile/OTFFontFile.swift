@@ -60,24 +60,6 @@ final public class OTFFontFile: NSObject {
         }
     }
 
-    private var glyphLookupType: GlyphNameLookupType = .undetermined
-    private func initGlyphNameLookup() {
-        if glyphLookupType != .undetermined { return }
-        if tableTagsToTables[.CFF_] != nil {
-            glyphLookupType = .CFF
-        } else if let postTable, postTable.version != .version3_0 {
-            glyphLookupType = .post
-//        } else if tableTagsToTables[.cmap] != nil && other stuff {
-//          glyphLookupType = .CID
-        } else if tableTagsToTables[.TYP1] != nil {
-            glyphLookupType = .TYP1
-        } else if tableTagsToTables[.CID_] != nil {
-            glyphLookupType = .CID
-        } else {
-            glyphLookupType = .AGL
-        }
-    }
-
     public var numGlyphs: Int {
         if glyphLookupType == .undetermined { self .initGlyphNameLookup() }
         // FIXME: !! allow for other methods to get glyph count (see /afdko/c/spot/source/global.c for more info)
@@ -130,6 +112,24 @@ final public class OTFFontFile: NSObject {
     }
     public func table(for tableTag: TableTag) -> FontTable? {
         return tableTagsToTables[tableTag]
+    }
+
+    private var glyphLookupType: GlyphNameLookupType = .undetermined
+    private func initGlyphNameLookup() {
+        if glyphLookupType != .undetermined { return }
+        if tableTagsToTables[.CFF_] != nil {
+            glyphLookupType = .CFF
+        } else if let postTable, postTable.version != .version3_0 {
+            glyphLookupType = .post
+//        } else if tableTagsToTables[.cmap] != nil && other stuff {
+//          glyphLookupType = .CID
+        } else if tableTagsToTables[.TYP1] != nil {
+            glyphLookupType = .TYP1
+        } else if tableTagsToTables[.CID_] != nil {
+            glyphLookupType = .CID
+        } else {
+            glyphLookupType = .AGL
+        }
     }
 
     private enum GlyphNameLookupType {

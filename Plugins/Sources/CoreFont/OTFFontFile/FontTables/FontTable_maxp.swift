@@ -42,10 +42,11 @@ final public class FontTable_maxp: FontTable {
 
     required public init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
-        guard let vers = Version(rawValue: try reader.read()) else {
-            throw FontTableError.unknownVersion
+        let vers: Fixed = try reader.read()
+        guard let version = Version(rawValue: vers) else {
+            throw FontTableError.unknownVersion(String(format:"Unknown 'maxp' table version: 0x%08X", vers))
         }
-        self.version = vers
+        self.version = version
         numGlyphs = try reader.read()
         if version == .version1_0 {
             maxPoints = try reader.read()

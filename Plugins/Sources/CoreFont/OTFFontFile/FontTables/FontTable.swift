@@ -9,8 +9,8 @@ import Foundation
 import RFSupport
 
 public enum FontTableError: LocalizedError {
-    case unknownVersion
-    case unknownFormat
+    case unknownVersion(String?)
+    case unknownFormat(String?)
     case parseError(String?)
 }
 
