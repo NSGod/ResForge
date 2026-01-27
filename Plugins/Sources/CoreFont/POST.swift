@@ -68,7 +68,7 @@ public struct POST {
                         mString += "\n"
                         hexColumn = 0
                     }
-                    mString += String(format: "%02x", post.postScriptData[i])
+                    mString += String(format: "%02x", post.postScriptData[post.postScriptData.startIndex + i])
                     hexColumn += 2
                 }
                 lastType = .binary
