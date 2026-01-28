@@ -22,11 +22,7 @@ final public class WidthTable: FONDResourceNode {
 
     public init(_ reader: BinaryDataReader, fond: FOND) throws {
         numberOfEntries = try reader.read()
-        entries = []
-        for _ in 0...numberOfEntries {
-            let entry = try Entry(reader, fond:fond)
-            entries.append(entry)
-        }
+        entries = try (0...numberOfEntries).map { _ in try Entry(reader, fond:fond) }
         super.init(fond:fond)
     }
 }
@@ -52,10 +48,7 @@ extension WidthTable {
             // https://github.com/fontforge/fontforge/blob/7195402701ace7783753ef9424153eff48c9af44/fontforge/macbinary.c#L2342
             // this is why we neeed to be a FONDResourceNode w/ access to the FOND:
             let numGlyphs = fond.lastChar - fond.firstChar + 3
-            for _ in 0..<numGlyphs {
-                let width: Fixed4Dot12 = try reader.read()
-                widths.append(width)
-            }
+            widths = try (0..<numGlyphs).map { _ in try reader.read() }
             super.init(fond: fond)
         }
     }

@@ -12,13 +12,13 @@ import CoreFont
 import CSV
 
 final public class KernTable: FONDResourceNode {
-    public var numberOfEntries:                Int16              // number of entries - 1
-    public var entries:                        [Entry]
+    public var numberOfEntries:             Int16              // number of entries - 1
+    public var entries:                     [Entry]
 
-    public var hasOutOfRangeCharCodes:         Bool = false
-    private var fontStylesToEntries:    [MacFontStyle: Entry]
+    public var hasOutOfRangeCharCodes:      Bool = false
+    private var fontStylesToEntries:        [MacFontStyle: Entry]
 
-    @objc public override var length:          Int {
+    @objc public override var length:       Int {
         var length = MemoryLayout<Int16>.size
         for entry in self.entries { length += entry.length }
         return length

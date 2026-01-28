@@ -20,11 +20,7 @@ final public class FontAssociationTable: ResourceNode {
 
     public init(_ reader: BinaryDataReader) throws {
         numberOfEntries = try reader.read()
-        entries = []
-        for _ in 0...numberOfEntries {
-            let entry: Entry = try Entry(reader)
-            entries.append(entry)
-        }
+        entries = try (0...numberOfEntries).map { _ in try Entry(reader) }
         super.init()
     }
 

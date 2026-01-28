@@ -16,7 +16,7 @@ final public class FOND: NSObject {
     }
 
     // FontFamilyRecord is the first 52 bytes of the FOND
-    public var ffFlags:                FontFamilyFlags  // UInt16; flags for family
+    public var ffFlags:                Flags            // UInt16; flags for family
     @objc public var famID:            ResID            // family ID number; must match FOND resource ID
     @objc public var firstChar:        Int16            // ASCII code of 1st character
     @objc public var lastChar:         Int16            // ASCII code of last character
@@ -49,8 +49,8 @@ final public class FOND: NSObject {
     @objc public var ffVersion:        Version          // version number
 
     // MARK: -
-    @objc public var objcFFFlags:      FontFamilyFlags.RawValue {
-        didSet { ffFlags = FontFamilyFlags(rawValue: objcFFFlags) }
+    @objc public var objcFFFlags:      Flags.RawValue {
+        didSet { ffFlags = Flags(rawValue: objcFFFlags) }
     }
 
     @objc public var fontAssociationTable:  FontAssociationTable
@@ -168,7 +168,7 @@ final public class FOND: NSObject {
      /// 14     This bit is set to 1 if the family fractional-width table is not used, and is cleared to 0 if the table is used.
      /// 15     This bit is set to 1 if the font family describes fixed-width fonts, and is cleared to 0 if the font describes proportional fonts.
 
-    public struct FontFamilyFlags: OptionSet, Hashable {
+    public struct Flags: OptionSet, Hashable {
         public let rawValue: UInt16
 
         public static let hasGlyphWidthTable       = Self(rawValue: 1 << 1)
