@@ -388,13 +388,20 @@
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DAU-mh-F94">
-                        <rect key="frame" x="62" y="331" width="121" height="14"/>
+                        <rect key="frame" x="6" y="331" width="177" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Offset to width tables:" id="FPa-dm-rXa">
                             <font key="font" metaFont="smallSystem"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
+                        <connections>
+                            <binding destination="-2" name="fontBold" keyPath="fond.wTabOff" id="zCY-be-WPG">
+                                <dictionary key="options">
+                                    <string key="NSValueTransformerName">NSIsNotNil</string>
+                                </dictionary>
+                            </binding>
+                        </connections>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mg5-eJ-INA">
                         <rect key="frame" x="186" y="328" width="60" height="19"/>
@@ -464,13 +471,20 @@
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Q78-xp-Wo6">
-                        <rect key="frame" x="52" y="309" width="131" height="14"/>
+                        <rect key="frame" x="6" y="309" width="177" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Offset to kerning tables:" id="FWg-Ee-cyo">
                             <font key="font" metaFont="smallSystem"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
+                        <connections>
+                            <binding destination="-2" name="fontBold" keyPath="fond.kernOff" id="xCW-6s-CQf">
+                                <dictionary key="options">
+                                    <string key="NSValueTransformerName">NSIsNotNil</string>
+                                </dictionary>
+                            </binding>
+                        </connections>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jvd-Ec-wvt">
                         <rect key="frame" x="186" y="306" width="60" height="19"/>
@@ -489,13 +503,20 @@
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rfh-j4-EJ3">
-                        <rect key="frame" x="17" y="287" width="166" height="14"/>
+                        <rect key="frame" x="6" y="287" width="177" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Offset to style mapping tables:" id="Lfy-zt-3Wu">
                             <font key="font" metaFont="smallSystem"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
+                        <connections>
+                            <binding destination="-2" name="fontBold" keyPath="fond.styleOff" id="KBp-Oe-siI">
+                                <dictionary key="options">
+                                    <string key="NSValueTransformerName">NSIsNotNil</string>
+                                </dictionary>
+                            </binding>
+                        </connections>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yqo-zh-lOr">
                         <rect key="frame" x="186" y="284" width="60" height="19"/>
@@ -1714,7 +1735,7 @@
                     </textField>
                     <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="32O-8D-vlx" customClass="BitfieldControl" customModule="CoreFont">
                         <rect key="frame" x="747" y="540" width="275" height="269"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                         <subviews>
                             <button tag="2" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AgQ-5f-HIH">
                                 <rect key="frame" x="0.0" y="237" width="231" height="16"/>

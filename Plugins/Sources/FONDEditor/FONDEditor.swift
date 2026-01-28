@@ -108,6 +108,15 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
         fontClassBitfieldControl.isEnabled = fond.styleOff != 0
         fontClassField.isEnabled = fond.styleOff != 0
         tabView.selectTabViewItem(at: UserDefaults.standard.integer(forKey: "FONDEditor.selectedTabIndex"))
+        if fond.boundingBoxTable != nil {
+            tabView.tabViewItems[0].label = NSLocalizedString("✅ Bounding Box Table", comment: "")
+        }
+        if fond.kernOff != 0 {
+            tabView.tabViewItems[1].label = NSLocalizedString("✅ Kern Table", comment: "")
+        }
+        if fond.wTabOff != 0 {
+            tabView.tabViewItems[2].label = NSLocalizedString("✅ Glyph Width Table", comment: "")
+        }
     }
 
     public func windowWillClose(_ notification: Notification) {

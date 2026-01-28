@@ -41,16 +41,17 @@ public class PSFontMetrics : NSObject, FontMetrics {
     }
 
     public init(font: NSFont) {
-        ascender = font.ascender
-        descender = font.descender
-        leading = font.leading
-        underlinePosition = font.underlinePosition
-        underlineThickness = font.underlineThickness
-        italicAngle = font.italicAngle
-        capHeight = font.capHeight
-        xHeight = font.xHeight
-        isFixedPitch = font.isFixedPitch
         unitsPerEm = UnitsPerEm(rawValue: UInt16(CTFontGetUnitsPerEm(font as CTFont)))
+        let factor = CGFloat(unitsPerEm.rawValue) / font.pointSize
+        ascender = font.ascender * factor
+        descender = font.descender * factor
+        leading = font.leading * factor
+        underlinePosition = font.underlinePosition * factor
+        underlineThickness = font.underlineThickness * factor
+        italicAngle = font.italicAngle * factor // ??
+        capHeight = font.capHeight * factor
+        xHeight = font.xHeight * factor
+        isFixedPitch = font.isFixedPitch
         super.init()
     }
 }
