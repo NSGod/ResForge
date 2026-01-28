@@ -1,18 +1,19 @@
 import Foundation
+import RFSupport
 
 // https://developer.apple.com/library/archive/documentation/mac/pdf/MoreMacintoshToolbox.pdf#page=151
 
-open class ClassicFormat: ResourceFileFormat {
-    public static let defaultExtension = "rsrc"
+class ClassicFormat: ResourceFileFormat {
+    static let defaultExtension = "rsrc"
     // We want to make the format's filename extension simply a "suggestion" and not force it in any manner, but the
     // standard behaviour makes this difficult to achieve nicely. NSSavePanel.allowsOtherFileTypes isn't sufficient as
     // it still prompts the user to confirm and only works if the user has entered an extension known by the system.
     // The current solution is to use a system UTI that has no extension, then manually append one when the panel opens.
-    public static let typeName = "public.data"
-    public var name: String { NSLocalizedString("Resource File", comment: "") }
-    public let supportsResAttributes = true
+    static let typeName = "public.data"
+    var name: String { NSLocalizedString("Resource File", comment: "") }
+    let supportsResAttributes = true
 
-    public func filenameExtension(for url: URL?) -> String? {
+    func filenameExtension(for url: URL?) -> String? {
         // Prefer to keep an existing extension
         if let url, !url.pathExtension.isEmpty {
             return url.pathExtension
@@ -20,11 +21,7 @@ open class ClassicFormat: ResourceFileFormat {
         return Self.defaultExtension
     }
 
-    public init() {
-
-    }
-
-    public func read(_ data: Data) throws -> ResourceMap {
+    func read(_ data: Data) throws -> ResourceMap {
         var resourceMap: ResourceMap = [:]
         let reader = BinaryDataReader(data)
 
@@ -114,7 +111,7 @@ open class ClassicFormat: ResourceFileFormat {
         return resourceMap
     }
 
-    public func write(_ resourceMap: ResourceMap) throws -> Data {
+    func write(_ resourceMap: ResourceMap) throws -> Data {
         // Known constants
         let dataOffset = 256
         let dataSizeMask = (1 << 24) - 1

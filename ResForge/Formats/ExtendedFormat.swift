@@ -1,17 +1,18 @@
 import Foundation
+import RFSupport
 
 // https://github.com/TheDiamondProject/Graphite
 
-public struct ExtendedFormat: ResourceFileFormat {
-    public typealias IDType = Int32 // Technically supports 64-bit but we limit to 32-bit
-    public static let typeName = "com.resforge.extended-resource-file"
-    public let name = NSLocalizedString("Extended Resource File", comment: "")
-    public let supportsTypeAttributes = true
+struct ExtendedFormat: ResourceFileFormat {
+    typealias IDType = Int32 // Technically supports 64-bit but we limit to 32-bit
+    static let typeName = "com.resforge.extended-resource-file"
+    let name = NSLocalizedString("Extended Resource File", comment: "")
+    let supportsTypeAttributes = true
 
     static let signature = UInt32(fourCharString: "RSRX")
     static let version = 1
 
-    public func read(_ data: Data) throws -> ResourceMap {
+    func read(_ data: Data) throws -> ResourceMap {
         var resourceMap: ResourceMap = [:]
         let reader = BinaryDataReader(data)
 
@@ -118,7 +119,7 @@ public struct ExtendedFormat: ResourceFileFormat {
         return resourceMap
     }
 
-    public func write(_ resourceMap: ResourceMap) throws -> Data {
+    func write(_ resourceMap: ResourceMap) throws -> Data {
         // Known constants
         let dataOffset = 256
         let mapHeaderLength = 40

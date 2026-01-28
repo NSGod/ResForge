@@ -1,9 +1,10 @@
 import Foundation
+import RFSupport
 
 // https://web.archive.org/web/20050305044255/http://www.lazerware.com/formats/macbinary/macbinary_iii.html
 
-public class MacBinaryFormat: ClassicFormat {
-    public override var name: String { NSLocalizedString("MacBinary Archive", comment: "") }
+class MacBinaryFormat: ClassicFormat {
+    override var name: String { NSLocalizedString("MacBinary Archive", comment: "") }
 
     static let headerLength = 128
     static let forkLengthOffset = 83
@@ -11,7 +12,7 @@ public class MacBinaryFormat: ClassicFormat {
 
     private var headerAndData = Data()
 
-    public override func filenameExtension(for url: URL?) -> String? {
+    override func filenameExtension(for url: URL?) -> String? {
         // We can't create MacBinary files, so Save As will default to classic format
         return ClassicFormat.defaultExtension
     }
@@ -36,7 +37,7 @@ public class MacBinaryFormat: ClassicFormat {
         return true
     }
 
-    public override func read(_ data: Data) throws -> ResourceMap {
+    override func read(_ data: Data) throws -> ResourceMap {
         let reader = BinaryDataReader(data)
 
         // Validate the CRC
@@ -65,7 +66,7 @@ public class MacBinaryFormat: ClassicFormat {
         return resources
     }
 
-    public override func write(_ resourceMap: ResourceMap) throws -> Data {
+    override func write(_ resourceMap: ResourceMap) throws -> Data {
         // Construct the resource fork
         let rsrcFork = try super.write(resourceMap)
 

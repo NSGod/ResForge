@@ -1,17 +1,18 @@
 import Foundation
+import RFSupport
 
 // https://github.com/Olde-Skuul/burgerlib/blob/master/source/file/brrezfile.cpp
 
-public struct RezFormat: ResourceFileFormat {
-    public static let typeName = "com.resforge.rez-file"
-    public let name = NSLocalizedString("Rez File", comment: "")
+struct RezFormat: ResourceFileFormat {
+    static let typeName = "com.resforge.rez-file"
+    let name = NSLocalizedString("Rez File", comment: "")
 
     static let signature = UInt32(fourCharString: "BRGR")
     static let type = 1
     static let mapName = "resource.map"
     static let resourceNameLength = 256
 
-    public func read(_ data: Data) throws -> ResourceMap {
+    func read(_ data: Data) throws -> ResourceMap {
         var resourceMap: ResourceMap = [:]
         let reader = BinaryDataReader(data, bigEndian: false)
 
@@ -87,7 +88,7 @@ public struct RezFormat: ResourceFileFormat {
         return resourceMap
     }
 
-    public func write(_ resourceMap: ResourceMap) throws -> Data {
+    func write(_ resourceMap: ResourceMap) throws -> Data {
         // Known constants
         let rootHeaderLength = 12
         let groupHeaderLength = 12
