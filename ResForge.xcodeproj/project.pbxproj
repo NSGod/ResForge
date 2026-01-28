@@ -348,7 +348,6 @@
 				C1960C4B2F049DBC003BC1E4 /* FONDEditor */,
 				C1DD00B22F134D03006188B0 /* FontEditor */,
 				C11C2A392F15E368002AEBAB /* BitmapFontEditor */,
-				C1D84C812F1BDB1900DB8BB7 /* POSTEditor */,
 				C1D84C8C2F1D501400DB8BB7 /* CoreFont */,
 				C16D69822F283CB800AEFB16 /* POSTExporter */,
 			);
@@ -798,10 +797,6 @@
 		C1960C4B2F049DBC003BC1E4 /* FONDEditor */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FONDEditor;
-		};
-		C1D84C812F1BDB1900DB8BB7 /* POSTEditor */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = POSTEditor;
 		};
 		C1D84C8C2F1D501400DB8BB7 /* CoreFont */ = {
 			isa = XCSwiftPackageProductDependency;
