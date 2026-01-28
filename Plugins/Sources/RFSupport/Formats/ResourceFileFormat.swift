@@ -1,10 +1,9 @@
 import Foundation
 import OrderedCollections
-import RFSupport
 
-typealias ResourceMap = OrderedDictionary<ResourceType, [Resource]>
+public typealias ResourceMap = OrderedDictionary<ResourceType, [Resource]>
 
-protocol ResourceFileFormat {
+public protocol ResourceFileFormat {
     associatedtype IDType: FixedWidthInteger
     static var typeName: String { get }
     var name: String { get }
@@ -18,32 +17,32 @@ protocol ResourceFileFormat {
 
 // Implement some typical defaults and helpers for all formats
 extension ResourceFileFormat {
-    typealias IDType = Int16
-    var supportsResAttributes: Bool { false }
-    var supportsTypeAttributes: Bool { false }
+    public typealias IDType = Int16
+    public var supportsResAttributes: Bool { false }
+    public var supportsTypeAttributes: Bool { false }
 
-    func filenameExtension(for url: URL?) -> String? {
+    public func filenameExtension(for url: URL?) -> String? {
         return nil
     }
 
-    static func isValid(id: Int) -> Bool {
+    public static func isValid(id: Int) -> Bool {
         return Int(IDType.min)...Int(IDType.max) ~= id
     }
-    func isValid(id: Int) -> Bool {
+    public func isValid(id: Int) -> Bool {
         return Self.isValid(id: id)
     }
 }
 
 // Convenience functions for format detection
-struct ResourceFormat {
+public struct ResourceFormat {
     // We can only create new files of these types
-    static let creatableTypes = [
+    public static let creatableTypes = [
         ClassicFormat.typeName,
         RezFormat.typeName,
         ExtendedFormat.typeName,
     ]
 
-    static func from(data: Data) throws -> any ResourceFileFormat {
+    public static func from(data: Data) throws -> any ResourceFileFormat {
         guard !data.isEmpty else {
             // Default to classic
             return ClassicFormat()
@@ -71,7 +70,7 @@ struct ResourceFormat {
         }
     }
 
-    static func from(typeName: String) -> any ResourceFileFormat {
+    public static func from(typeName: String) -> any ResourceFileFormat {
         switch typeName {
         case RezFormat.typeName:
             return RezFormat()
@@ -83,13 +82,13 @@ struct ResourceFormat {
     }
 }
 
-enum ResourceFormatError: LocalizedError {
+public enum ResourceFormatError: LocalizedError {
     case invalidID(Int)
     case typeAttributesNotSupported
     case fileTooBig
     case valueOverflow
 
-    var failureReason: String? {
+    public var failureReason: String? {
         switch self {
         case let .invalidID(id):
             return String(format: NSLocalizedString("The ID %ld is out of range for this file format.", comment: ""), id)

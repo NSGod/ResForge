@@ -1,10 +1,9 @@
 import Foundation
-import RFSupport
 
 // https://web.archive.org/web/20180311140826/http://kaiser-edv.de/documents/AppleSingle_AppleDouble.pdf
 
-class AppleSingleFormat: ClassicFormat {
-    override var name: String { NSLocalizedString("AppleSingle Archive", comment: "") }
+public class AppleSingleFormat: ClassicFormat {
+    public override var name: String { NSLocalizedString("AppleSingle Archive", comment: "") }
 
     class var signature: UInt32 { 0x00051600 }
     static let version: UInt32 = 0x00020000
@@ -13,12 +12,12 @@ class AppleSingleFormat: ClassicFormat {
 
     private var entries: [(UInt32, Data)] = []
 
-    override func filenameExtension(for url: URL?) -> String? {
+    public override func filenameExtension(for url: URL?) -> String? {
         // We can't create AppleSingle files, so Save As will default to classic format
         return ClassicFormat.defaultExtension
     }
 
-    override func read(_ data: Data) throws -> ResourceMap {
+    public override func read(_ data: Data) throws -> ResourceMap {
         var resourceMap: ResourceMap = [:]
         let reader = BinaryDataReader(data)
 
@@ -53,7 +52,7 @@ class AppleSingleFormat: ClassicFormat {
         return resourceMap
     }
 
-    override func write(_ resourceMap: ResourceMap) throws -> Data {
+    public override func write(_ resourceMap: ResourceMap) throws -> Data {
         let entryDescriptorLength = 12
 
         // Construct the resource fork
