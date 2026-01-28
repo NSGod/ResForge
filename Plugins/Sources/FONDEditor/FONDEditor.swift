@@ -117,6 +117,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
         if fond.wTabOff != 0 {
             tabView.tabViewItems[2].label = NSLocalizedString("✅ Glyph Width Table", comment: "")
         }
+        tableView.doubleAction = #selector(doubleClickOpenFont(_:))
     }
 
     public func windowWillClose(_ notification: Notification) {
@@ -145,7 +146,17 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
         let revLoc = tableView.convert(loc, from: nil)
         let row = tableView.row(at: revLoc)
         if row < 0 { return }
-        let entry = (fontAssocTableEntriesController.arrangedObjects as! [FontAssociationTable.Entry])[row]
+        openFont(at: row)
+    }
+
+    @IBAction func doubleClickOpenFont(_ sender: Any) {
+        // Ignore double-clicks in table header
+        guard tableView.clickedRow != -1 else { return }
+        openFont(at: tableView.clickedRow)
+    }
+
+    private func openFont(at rowIndex: Int) {
+        let entry = (fontAssocTableEntriesController.arrangedObjects as! [FontAssociationTable.Entry])[rowIndex]
         if let font: Resource = manager.findResource(type: ResourceType(entry.fontPointSize == 0 ? "sfnt" : "NFNT"), id: Int(entry.fontID), currentDocumentOnly: true) {
             manager.open(resource: font)
         }
@@ -195,7 +206,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
                 viewController.saveOptions()
                 let config = viewController.config
                 if entries.count == 1 {
-                    guard let rep: String = entries.first!.representation(using: config) else { return }
+                    guard let rep: String = entries.first!.representation(using: config, manager: manager) else { return }
                     do {
                         try rep.write(to: panel.url!, atomically: true, encoding: .utf8)
                     } catch {
@@ -205,7 +216,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
                     guard let parentDirURL = panel.url else { return }
                     for entry in entries {
                         if let name = fond.postScriptNameForFont(with: entry.style) {
-                            guard let rep = entry.representation(using: config) else { continue }
+                            guard let rep = entry.representation(using: config, manager: manager) else { continue }
                             let url = parentDirURL.appendingPathComponent(name).appendingPathExtension(config.pathExtension).assuringUniqueFilename()
                             do {
                                 try rep.write(to: url, atomically: true, encoding: .utf8)
@@ -259,7 +270,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
             if let bboxEntries = boundingBoxTableEntriesController.arrangedObjects as? [BoundingBoxTable.Entry] {
                 if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
                     let entry = bboxEntries[row]
-                    formatter.unitsPerEm = fond.unitsPerEm(for: entry.style)
+                    formatter.unitsPerEm = fond.unitsPerEm(for: entry.style, manager: manager)
                     return view
                 }
             }
@@ -310,7 +321,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
                 let view: NSTableCellView = outlineView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
                 if let entry: KernTable.Entry = ((item as? NSTreeNode)?.representedObject as? KernTreeNode)?.parent?.representedObject as? KernTable.Entry {
                     if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
-                        formatter.unitsPerEm = fond.unitsPerEm(for: entry.style)
+                        formatter.unitsPerEm = fond.unitsPerEm(for: entry.style, manager: manager)
                     }
                     return view
                 }
@@ -322,7 +333,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
                 if tableColumn?.identifier.rawValue == "glyphWidth" {
                     if let entry: WidthTable.Entry = (item.representedObject as? KernTreeNode)?.parent?.representedObject as? WidthTable.Entry {
                         if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
-                            formatter.unitsPerEm = fond.unitsPerEm(for: entry.style)
+                            formatter.unitsPerEm = fond.unitsPerEm(for: entry.style, manager: manager)
                         }
                     }
                 }

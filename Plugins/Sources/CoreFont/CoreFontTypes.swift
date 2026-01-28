@@ -137,6 +137,45 @@ public enum UnitsPerEm {
     }
 }
 
+/// Given the specified PostScript font name, generate the filename for the
+/// referenced 'LWFN' font, following the 5-3-3 naming convention:
+/// Up to 5 characters from the first capitalized "word", then up to 3 chars for each following "word":
+/// PSName:                             Filename:
+/// GillSans-BoldCondensed              ->  GillSanBolCon
+/// SmithCoronaSuperSterling-Regular    ->  SmithCorSupSteReg
+/// Helvetica-BoldOblique               ->  HelveBolObl
+
+public func MDFilename(forPostScriptFontName psName: String) -> String {
+    var psName = psName
+    psName = psName.replacingOccurrences(of: "-", with: "")
+    let length = psName.count
+    var mPostScriptFontFilename = ""
+    var mString = ""
+    var fiveDone = false
+    /// PostScript font names must be ASCII, or a subset of ASCII, actually.
+    var i = 0
+    for char: Character in psName {
+        if char.isUppercase {
+            if !mString.isEmpty {
+                mPostScriptFontFilename.append(mString)
+                if !fiveDone { fiveDone = true }
+            }
+            mString = String(char)
+        } else if char.isLowercase {
+            if !fiveDone {
+                if mString.count < 5 { mString.append(char) }
+            } else {
+                if mString.count < 3 { mString.append(char) }
+            }
+        }
+        if i == length - 1 {
+            mPostScriptFontFilename.append(mString)
+        }
+        i += 1
+    }
+    return mPostScriptFontFilename
+}
+
 public protocol FontMetrics {
     var unitsPerEm:         UnitsPerEm  { get }
     var ascender:           CGFloat     { get }

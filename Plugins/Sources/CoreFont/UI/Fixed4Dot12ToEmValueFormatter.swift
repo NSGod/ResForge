@@ -9,7 +9,7 @@ import Foundation
 
 final public class Fixed4Dot12ToEmValueFormatter: NumberFormatter, @unchecked Sendable {
 
-    public var unitsPerEm: UnitsPerEm  = .postScriptStandard
+    public var unitsPerEm: UnitsPerEm  = .custom(0)
 
     public override func copy() -> Any {
         let result: Fixed4Dot12ToEmValueFormatter = super.copy() as! Fixed4Dot12ToEmValueFormatter

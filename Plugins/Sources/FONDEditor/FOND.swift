@@ -144,6 +144,7 @@ final public class FOND: NSObject {
         NSLog("\(type(of: self)).\(#function)() resID: \(resource.id), scriptID: \(scriptID)")
         var encoding = MacEncoding.encodingFor(scriptID: scriptID, postScriptFontName: basePostScriptName)
         if let customGlyphs = self.styleMappingTable?.glyphNameEncodingSubtable {
+            // FIXME: or should this be replacing existing?
             encoding.add(custom: GlyphNameEntry.glyphNameEntries(with: customGlyphs.charCodesToGlyphNames))
         }
         return encoding
@@ -210,6 +211,7 @@ final public class FOND: NSObject {
     private var offsetTypesToRanges:    [TableOffsetType: NSRange] = [:]
     private var offsetsCalculated:      Bool = false
     private var needsRepair:            Bool = false   // If this FOND resource's resourceID doesn't match the famID, we need to update the famID
+    private var stylesToUnitsPerEm:     [MacFontStyle: UnitsPerEm] = [:]
 
     // MARK: - init
     public convenience init(_ data: Data, resource: Resource) throws {
@@ -264,32 +266,79 @@ final public class FOND: NSObject {
         super.init()
     }
 
-    public func unitsPerEm(for fontStyle: MacFontStyle) -> UnitsPerEm {
+    public func unitsPerEm(for fontStyle: MacFontStyle, manager: RFEditorManager? = nil) -> UnitsPerEm {
         /* Here we'll assume that if there's a mix of entries for both TrueType
          (fontPointSize of 0) and Bitmap fonts, that the bitmap fonts are merely for
-         screen display and don't reference possible PostScript outline fonts.
+         screen display and don't reference possible PostScript outline fonts. So
+         we first check for any TT fonts w/ the specified style, then resort to looking
+         at the bitmap entries if that finds nothing.
 
-         Currently, this value for UnitsPerEm is really just a best guess.
+         This value for UnitsPerEm should now be fairly accurate.
 
-         For PS fonts, if we wanted to get a more accurate measurement, we'd parse the
-         Mac PostScript Type 1 outline font (file type 'LWFN' w/ 'POST' resources) which holds the
-         PFA/PFB font. Inside there is the actual abfTopDict->abfSupplement->UnitsPerEm value,
-         though parsing that is a bit beyond the scope of this editor.
+         For PS fonts, to get a more accurate measurement, we search for the
+         Mac PostScript Type 1 outline font (file type 'LWFN' w/ 'POST' resources
+         which holds the PFA/PFB font) in the same directory as the font suitcase.
+         We can temporarily activate the PFA font locally to our process,
+         extract metrics data, and then deactivate it.
 
-         For TT fonts, if we wanted to get a more accurate measurement, we'd look
-         at the actual unitsPerEm value in the 'sfnt''s 'head' table, but that's kind of
-         outside the scope of this editor. Moreover, an 'sfnt' would likely already have
-         a 'kern' or 'GPOS' table, the kern pairs of which would take precedence over
-         kerns defined here in the 'FOND'. (The data in an 'sfnt' entry is exactly what a
-         Windows .ttf contains: see my answer here https://stackoverflow.com/a/7418915/277952) */
+         For TT fonts, to get a more accurate measurement, we look
+         at the actual unitsPerEm value in the 'sfnt''s 'head' table,
+         (The data in an 'sfnt' entry is exactly what a Windows .ttf contains:
+         see my answer here https://stackoverflow.com/a/7418915/277952) */
 
-        // TODO: use POST and OTFFontFile to get actual Units Per Em
+        /// Cache these results as this can be quite costly, and this method gets called a lot:
+        if let cachedUnitsPerEm = stylesToUnitsPerEm[fontStyle] {
+            return cachedUnitsPerEm
+        }
         for entry in fontAssociationTable.entries {
             if entry.fontStyle == fontStyle && entry.fontPointSize == 0 {
-                return .trueTypeStandard
+                guard let manager,
+                    let resource: Resource = manager.findResource(type: ResourceType("sfnt"), id: Int(entry.fontID), currentDocumentOnly: true) else {
+                    stylesToUnitsPerEm[fontStyle] = .trueTypeStandard
+                    return .trueTypeStandard
+                }
+                do {
+                    let otfFontFile: OTFFontFile = try OTFFontFile(resource.data)
+                    guard let unitsPerEm: UnitsPerEm = otfFontFile.headTable?.unitsPerEm else {
+                        stylesToUnitsPerEm[fontStyle] = .trueTypeStandard
+                        return .trueTypeStandard
+                    }
+                    stylesToUnitsPerEm[fontStyle] = unitsPerEm
+                    return unitsPerEm
+                } catch {
+                     NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+                    stylesToUnitsPerEm[fontStyle] = .trueTypeStandard
+                    return .trueTypeStandard
+                }
             }
         }
-        // if there's no TT fonts, then assume the bitmaps are for PostScript fonts
+
+        // If there's no TT fonts, then assume the bitmaps are for PostScript fonts.
+        // Try to locate the 'LWFN' font file in the same directory as the font suitcase
+        guard let psName = postScriptNameForFont(with: fontStyle), let document = manager?.document else {
+            stylesToUnitsPerEm[fontStyle] = .postScriptStandard
+            return .postScriptStandard
+        }
+        let fontFilename = MDFilename(forPostScriptFontName: psName)
+        guard let url = document.fileURL?.deletingLastPathComponent().appendingPathComponent(fontFilename) else {
+            stylesToUnitsPerEm[fontStyle] = .postScriptStandard
+            return .postScriptStandard
+        }
+        if FileManager.default.fileExists(atPath: url.path) {
+            do {
+                let psFont = try MacPostScriptType1FontFile(contentsOf: url)
+                guard let pfaFont = psFont.postScriptFontFile else {
+                    stylesToUnitsPerEm[fontStyle] = .postScriptStandard
+                    return .postScriptStandard
+                }
+                stylesToUnitsPerEm[fontStyle] = pfaFont.metrics.unitsPerEm
+                NSLog("\(type(of: self)).\(#function) unitsPerEm: \(pfaFont.metrics.unitsPerEm) for \(url.path)")
+                return pfaFont.metrics.unitsPerEm
+            } catch {
+                 NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            }
+        }
+        stylesToUnitsPerEm[fontStyle] = .postScriptStandard
         return .postScriptStandard
     }
 

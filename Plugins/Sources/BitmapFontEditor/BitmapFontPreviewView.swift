@@ -127,5 +127,4 @@ public class BitmapFontPreviewView: NSView {
 		}
         textStorage.layoutManager.drawGlyphs(at: NSMakePoint(padding, padding))
     }
-
 }

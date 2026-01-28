@@ -13,7 +13,7 @@ import RFSupport
 /// and owns all the other objects. `NFNTLayoutManager` uses `NFNTTextContainer`
 /// to model the area in which to set the type. It uses `NFNTTypesetter` to
 /// generate an array of `NFNTLineFragment`s, which are themselves an array
-/// of `NFNT,Glyph`s. The layout manager then does the drawing.
+/// of `NFNT.Glyph`s. The layout manager then does the drawing.
 ///
 ///     `NFNTTextStorage`
 ///                |
@@ -52,5 +52,4 @@ class NFNTTextStorage {
             layoutManager.textStorage = self
         }
     }
-
 }

@@ -76,10 +76,6 @@ extension FontNameSuffixSubtable {
             // I've encountered weird values here, hence the logging...
             NSLog("\(type(of: self)).\(#function)() *** WARNING: string count of \(stringCount) (byte-swapped: \(stringCount.byteSwapped)) appears to be wrong; actual string count: \(_actualStringCount)")
         }
-//        let descs = stringDatas.map { data in
-//            "{ length = \(data.count), bytes = 0x\(data.hexadecimal) }"
-//        }
-//        NSLog("\(type(of: self)).\(#function)() stringDatas == \(descs.joined(separator: "\n"))")
 
         /// Referring to the diagram at the top of this file, we're going to create a representation
         /// where Indexes 2-8 are fully expanded into the full PostScript names.

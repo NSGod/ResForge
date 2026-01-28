@@ -105,18 +105,19 @@ extension KernTable {
             }
         }
 
-        public func representation(using config: KernExportConfig = .gposDefault) -> String? {
+        // feeding in the RFEditorManager will allow for a much better scaling to Units Per Em
+        public func representation(using config: KernExportConfig = .gposDefault, manager: RFEditorManager? = nil) -> String? {
             if config.format == .GPOS {
-                return GPOSFeatureRepresentation(using: config)
+                return GPOSFeatureRepresentation(using: config, manager: manager)
             } else {
-                return CSVRepresentation(using: config)
+                return CSVRepresentation(using: config, manager: manager)
             }
         }
 
         // FIXME: add better explanation about what this method is for
         /* This can be used to create a `feature` file used during conversion to OTF/TTF
             by Adobe AFDKO's hotconvert/makeotf to create a `GPOS` table containing the kern pairs */
-        public func GPOSFeatureRepresentation(using config: KernExportConfig = .gposDefault) -> String? {
+        public func GPOSFeatureRepresentation(using config: KernExportConfig = .gposDefault, manager: RFEditorManager? = nil) -> String? {
             var mString = """
     languagesystem DFLT dflt;
     languagesystem latn dflt;
@@ -124,7 +125,7 @@ extension KernTable {
     feature kern {\n
     """
             var mKernPairStrings: [String] = []
-            let unitsPerEm = self.fond.unitsPerEm(for: style)
+            let unitsPerEm = self.fond.unitsPerEm(for: style, manager: manager)
             for kernPair in kernPairs {
                 let firstGlyphName = config.resolveGlyphNames ? self.fond.glyphName(for: kernPair.kernFirst) : String(kernPair.kernFirst)
                 let secondGlyphName = config.resolveGlyphNames ? self.fond.glyphName(for: kernPair.kernSecond) : String(kernPair.kernSecond)
@@ -145,12 +146,12 @@ extension KernTable {
             return mString
         }
 
-        public func CSVRepresentation(using config: KernExportConfig = .csvDefault) -> String? {
+        public func CSVRepresentation(using config: KernExportConfig = .csvDefault, manager: RFEditorManager? = nil) -> String? {
             let stream = OutputStream(toMemory: ())
             do {
                 let writer = try CSVWriter(stream: stream)
                 try writer.write(row: ["Kern First", "Kern Second", "Kern Width"])
-                let unitsPerEm = self.fond.unitsPerEm(for: style)
+                let unitsPerEm = self.fond.unitsPerEm(for: style, manager: manager)
                 for kernPair in kernPairs {
                     guard let firstGlyphName = config.resolveGlyphNames ? self.fond.glyphName(for: kernPair.kernFirst) : String(kernPair.kernFirst) else {
                         continue
