@@ -2,7 +2,7 @@ import Foundation
 
 // https://developer.apple.com/library/archive/documentation/mac/pdf/MoreMacintoshToolbox.pdf#page=151
 
-open class ClassicFormat: ResourceFileFormat {
+public class ClassicFormat: ResourceFileFormat {
     public static let defaultExtension = "rsrc"
     // We want to make the format's filename extension simply a "suggestion" and not force it in any manner, but the
     // standard behaviour makes this difficult to achieve nicely. NSSavePanel.allowsOtherFileTypes isn't sufficient as
@@ -20,9 +20,7 @@ open class ClassicFormat: ResourceFileFormat {
         return Self.defaultExtension
     }
 
-    public init() {
-
-    }
+    public init() { }
 
     public func read(_ data: Data) throws -> ResourceMap {
         var resourceMap: ResourceMap = [:]
