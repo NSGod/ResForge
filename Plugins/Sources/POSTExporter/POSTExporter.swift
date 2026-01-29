@@ -84,7 +84,28 @@ public class POSTExporter: AbstractEditor, ResourceEditor, ExportProvider, TypeI
         super.showWindow(sender)
     }
 
+    @IBAction func exportFont(_ sender: Any) {
+        NSLog("\(type(of: self)).\(#function)")
+        guard let pfaFile else { return }
+        let panel = NSSavePanel()
+        panel.allowedFileTypes = ["pfa"]
+        panel.nameFieldStringValue = pfaFile.postScriptName
+        panel.beginSheetModal(for: self.window!) { (result) in
+            if result == .OK {
+                if let url = panel.url {
+                    do {
+                        try pfaFile.write(to: url)
+                    } catch {
+                        NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+                    }
+                }
+            }
+        }
+    }
+
     public static func export(_ resource: Resource, to url: URL) throws {
+        NSLog("\(type(of: self)).\(#function) resource: \(resource), url: \(url.path)")
+
 //        if let document
     }
 

@@ -17,12 +17,12 @@ public enum PostScriptError : LocalizedError {
 }
 
 // .pfa
-//NSString * const MDUTTypePFAOutlineFont           = @"com.adobe.postscript-pfa-font";
-//NSString * const MDPFAOutlineFontType             = @"PostScript Type 1 (ASCII) outline font";
+public let MDUTTypePFAOutlineFont: String   = "com.adobe.postscript-pfa-font"
+public let MDPFAOutlineFontType: String     = "PostScript Type 1 (ASCII) outline font"
 
 // .pfb
-//NSString * const MDUTTypePFBOutlineFont           = @"com.adobe.postscript-pfb-font";
-//NSString * const MDPFBOutlineFontType             = @"PostScript Type 1 (Binary) outline font";
+public let MDUTTypePFBOutlineFont: String   = "com.adobe.postscript-pfb-font"
+public let MDPFBOutlineFontType: String     = "PostScript Type 1 (Binary) outline font"
 
 public class PSFontMetrics : NSObject, FontMetrics {
     public let unitsPerEm:                  UnitsPerEm

@@ -27,7 +27,7 @@
                     <userLayoutGuide location="117" affinity="minX"/>
                 </userGuides>
                 <subviews>
-                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="yuO-xp-i13">
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="yuO-xp-i13">
                         <rect key="frame" x="398" y="178" width="476" height="280"/>
                         <textFieldCell key="cell" selectable="YES" alignment="center" id="DEx-W3-O9h">
                             <font key="font" metaFont="system" size="48"/>
@@ -40,7 +40,7 @@ nopqrstuvwxyz
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fzG-k9-eeo">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fzG-k9-eeo">
                         <rect key="frame" x="6" y="424" width="114" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="PostScript name:" id="5oW-qa-J2e">
                             <font key="font" metaFont="smallSystem"/>
@@ -48,7 +48,7 @@ nopqrstuvwxyz
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YhG-tv-GkB">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YhG-tv-GkB">
                         <rect key="frame" x="6" y="444" width="114" height="14"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="110" id="Kdg-WP-3JE"/>
@@ -59,7 +59,7 @@ nopqrstuvwxyz
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Tcs-WK-hhn">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Tcs-WK-hhn">
                         <rect key="frame" x="6" y="404" width="114" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Family name:" id="Zub-IR-DMb">
                             <font key="font" metaFont="smallSystem"/>
@@ -67,7 +67,7 @@ nopqrstuvwxyz
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tGG-dc-woH">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tGG-dc-woH">
                         <rect key="frame" x="6" y="384" width="114" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Display name:" id="vhY-1v-tdo">
                             <font key="font" metaFont="smallSystem"/>
@@ -75,7 +75,7 @@ nopqrstuvwxyz
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YeO-nY-8dK">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YeO-nY-8dK">
                         <rect key="frame" x="6" y="344" width="114" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Unique name:" id="fvy-QG-tfx">
                             <font key="font" metaFont="smallSystem"/>
@@ -83,7 +83,7 @@ nopqrstuvwxyz
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="0bP-aT-vy9">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="0bP-aT-vy9">
                         <rect key="frame" x="6" y="364" width="114" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Sub-Family name:" id="Joh-wa-d7G">
                             <font key="font" metaFont="smallSystem"/>
@@ -91,7 +91,7 @@ nopqrstuvwxyz
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wJl-pe-0rX">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wJl-pe-0rX">
                         <rect key="frame" x="6" y="324" width="114" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Version:" id="CMY-XO-R38">
                             <font key="font" metaFont="smallSystem"/>
@@ -99,7 +99,7 @@ nopqrstuvwxyz
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7tA-WG-YKM">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7tA-WG-YKM">
                         <rect key="frame" x="6" y="304" width="114" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Copyright:" id="7oC-Er-sbO">
                             <font key="font" metaFont="smallSystem"/>
@@ -107,7 +107,7 @@ nopqrstuvwxyz
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JjD-QA-hjQ">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JjD-QA-hjQ">
                         <rect key="frame" x="122" y="424" width="260" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" selectable="YES" title="SmithCoronaSuperSterling-Regular" id="3dQ-Ux-bEt">
                             <font key="font" metaFont="smallSystem"/>
@@ -118,7 +118,7 @@ nopqrstuvwxyz
                             <binding destination="-2" name="value" keyPath="pfaFile.postScriptName" id="HRi-OU-1Yh"/>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OU6-nQ-Wan">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OU6-nQ-Wan">
                         <rect key="frame" x="122" y="444" width="260" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" selectable="YES" title="SmithCoronaSuperSterling-Regular" id="Wb9-MI-7wc">
                             <font key="font" metaFont="smallSystem"/>
@@ -129,7 +129,7 @@ nopqrstuvwxyz
                             <binding destination="-2" name="value" keyPath="pfaFile.fullName" id="751-rL-P43"/>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Y6T-gl-8HK">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Y6T-gl-8HK">
                         <rect key="frame" x="122" y="404" width="260" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" selectable="YES" title="SmithCoronaSuperSterling-Regular" id="Awr-VU-PaC">
                             <font key="font" metaFont="smallSystem"/>
@@ -140,7 +140,7 @@ nopqrstuvwxyz
                             <binding destination="-2" name="value" keyPath="pfaFile.familyName" id="O8p-Kj-i7S"/>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="q7n-6D-WYX">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="q7n-6D-WYX">
                         <rect key="frame" x="122" y="384" width="260" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" selectable="YES" title="SmithCoronaSuperSterling-Regular" id="ND8-yc-zSA">
                             <font key="font" metaFont="smallSystem"/>
@@ -151,7 +151,7 @@ nopqrstuvwxyz
                             <binding destination="-2" name="value" keyPath="pfaFile.displayName" id="aWx-Gn-rie"/>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3x8-Uu-R8Y">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3x8-Uu-R8Y">
                         <rect key="frame" x="122" y="344" width="260" height="14"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="256" id="pny-S8-Gdd"/>
@@ -169,7 +169,7 @@ nopqrstuvwxyz
                             </binding>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="w5E-S6-bgA">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="w5E-S6-bgA">
                         <rect key="frame" x="122" y="364" width="260" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" selectable="YES" title="SmithCoronaSuperSterling-Regular" id="S4k-nF-rmh">
                             <font key="font" metaFont="smallSystem"/>
@@ -184,7 +184,7 @@ nopqrstuvwxyz
                             </binding>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3p2-xk-2SP">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3p2-xk-2SP">
                         <rect key="frame" x="122" y="324" width="189" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" selectable="YES" title="SmithCoronaSuperSterling-Regular" id="wKZ-Oj-QaW">
                             <font key="font" metaFont="smallSystem"/>
@@ -199,7 +199,7 @@ nopqrstuvwxyz
                             </binding>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="k1D-6P-pPp">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="k1D-6P-pPp">
                         <rect key="frame" x="122" y="262" width="260" height="56"/>
                         <textFieldCell key="cell" controlSize="small" selectable="YES" id="7Jr-cV-Muu">
                             <font key="font" metaFont="smallSystem"/>
@@ -215,7 +215,7 @@ nopqrstuvwxyz
                             </binding>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IrL-5P-6QQ">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IrL-5P-6QQ">
                         <rect key="frame" x="6" y="222" width="114" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Ascender:" id="Chz-QN-Slt">
                             <font key="font" metaFont="smallSystem"/>
@@ -223,7 +223,7 @@ nopqrstuvwxyz
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aJt-0F-jsI">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aJt-0F-jsI">
                         <rect key="frame" x="6" y="242" width="114" height="14"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="110" id="vwa-Gn-aFJ"/>
@@ -234,7 +234,7 @@ nopqrstuvwxyz
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xaO-AJ-KUC">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xaO-AJ-KUC">
                         <rect key="frame" x="6" y="202" width="114" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Descender:" id="not-FS-j56">
                             <font key="font" metaFont="smallSystem"/>
@@ -242,7 +242,7 @@ nopqrstuvwxyz
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2Ha-be-3Pm">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2Ha-be-3Pm">
                         <rect key="frame" x="6" y="182" width="114" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Leading:" id="GYT-IL-Fl3">
                             <font key="font" metaFont="smallSystem"/>
@@ -250,7 +250,7 @@ nopqrstuvwxyz
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ljf-4v-yQU">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ljf-4v-yQU">
                         <rect key="frame" x="6" y="142" width="114" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Underline thickness:" id="BZS-aH-bv5">
                             <font key="font" metaFont="smallSystem"/>
@@ -258,7 +258,7 @@ nopqrstuvwxyz
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Rdt-r5-60V">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Rdt-r5-60V">
                         <rect key="frame" x="6" y="162" width="114" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Underline position:" id="ofR-3x-yRa">
                             <font key="font" metaFont="smallSystem"/>
@@ -266,7 +266,7 @@ nopqrstuvwxyz
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="N3S-HR-nU8">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="N3S-HR-nU8">
                         <rect key="frame" x="6" y="122" width="114" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Italic angle:" id="FTK-Cn-W3E">
                             <font key="font" metaFont="smallSystem"/>
@@ -274,7 +274,7 @@ nopqrstuvwxyz
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="oQn-TY-WFr">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="oQn-TY-WFr">
                         <rect key="frame" x="122" y="222" width="32" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" selectable="YES" title="3000" id="x3g-qu-xDe">
                             <font key="font" metaFont="smallSystem"/>
@@ -286,7 +286,7 @@ nopqrstuvwxyz
                             <outlet property="formatter" destination="VBD-lw-DeG" id="UWl-sy-hdc"/>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="U4D-fa-cP5">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="U4D-fa-cP5">
                         <rect key="frame" x="122" y="242" width="32" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" selectable="YES" title="3000" id="F4l-8f-LYz">
                             <font key="font" metaFont="smallSystem"/>
@@ -298,7 +298,7 @@ nopqrstuvwxyz
                             <outlet property="formatter" destination="VBD-lw-DeG" id="oD4-dD-dJY"/>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ReG-Ro-wVU">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ReG-Ro-wVU">
                         <rect key="frame" x="122" y="202" width="32" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" selectable="YES" title="3000" id="d0D-SP-up7">
                             <font key="font" metaFont="smallSystem"/>
@@ -310,7 +310,7 @@ nopqrstuvwxyz
                             <outlet property="formatter" destination="VBD-lw-DeG" id="ymZ-GJ-gT9"/>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6hh-KB-eO0">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6hh-KB-eO0">
                         <rect key="frame" x="122" y="182" width="32" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" selectable="YES" title="3000" id="vfU-oJ-Owt">
                             <font key="font" metaFont="smallSystem"/>
@@ -322,7 +322,7 @@ nopqrstuvwxyz
                             <outlet property="formatter" destination="VBD-lw-DeG" id="Nzn-pE-Kdb"/>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4yr-rK-gTq">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4yr-rK-gTq">
                         <rect key="frame" x="122" y="142" width="32" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" selectable="YES" title="3000" id="BrT-VE-CC7">
                             <font key="font" metaFont="smallSystem"/>
@@ -338,7 +338,7 @@ nopqrstuvwxyz
                             <outlet property="formatter" destination="VBD-lw-DeG" id="Ejs-6F-beW"/>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EfD-eU-JTR">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EfD-eU-JTR">
                         <rect key="frame" x="122" y="162" width="32" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" selectable="YES" title="3000" id="MeG-A4-gx2">
                             <font key="font" metaFont="smallSystem"/>
@@ -354,7 +354,7 @@ nopqrstuvwxyz
                             <outlet property="formatter" destination="VBD-lw-DeG" id="HT1-fw-LdJ"/>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="G52-td-EMy">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="G52-td-EMy">
                         <rect key="frame" x="122" y="122" width="32" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" selectable="YES" title="3000" id="bxl-WA-tb8">
                             <font key="font" metaFont="smallSystem"/>
@@ -370,7 +370,7 @@ nopqrstuvwxyz
                             <outlet property="formatter" destination="VBD-lw-DeG" id="cZr-yA-PPv"/>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="g46-2i-6aF">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="g46-2i-6aF">
                         <rect key="frame" x="6" y="82" width="114" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="x height:" id="9Zf-ni-een">
                             <font key="font" metaFont="smallSystem"/>
@@ -378,7 +378,7 @@ nopqrstuvwxyz
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JXY-kS-cTa">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JXY-kS-cTa">
                         <rect key="frame" x="6" y="102" width="114" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Cap height:" id="fSt-bw-ndm">
                             <font key="font" metaFont="smallSystem"/>
@@ -386,7 +386,7 @@ nopqrstuvwxyz
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="SYm-mn-rho">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="SYm-mn-rho">
                         <rect key="frame" x="6" y="62" width="114" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Is fixed pitch:" id="OmR-fT-1Wo">
                             <font key="font" metaFont="smallSystem"/>
@@ -394,7 +394,7 @@ nopqrstuvwxyz
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zv6-Dd-FK1">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zv6-Dd-FK1">
                         <rect key="frame" x="122" y="82" width="32" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" selectable="YES" title="3000" id="sKu-zr-qhg">
                             <font key="font" metaFont="smallSystem"/>
@@ -410,7 +410,7 @@ nopqrstuvwxyz
                             <outlet property="formatter" destination="VBD-lw-DeG" id="hjf-oA-61Q"/>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aQN-XI-d8b">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aQN-XI-d8b">
                         <rect key="frame" x="122" y="102" width="32" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" selectable="YES" title="3000" id="ILw-H5-tsF">
                             <font key="font" metaFont="smallSystem"/>
@@ -426,7 +426,7 @@ nopqrstuvwxyz
                             <outlet property="formatter" destination="VBD-lw-DeG" id="nLp-Q6-kBh"/>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2EJ-X6-vxa">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2EJ-X6-vxa">
                         <rect key="frame" x="122" y="62" width="189" height="14"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" selectable="YES" title="SmithCoronaSuperSterling-Regular" id="bDJ-Ya-hxS">
                             <font key="font" metaFont="smallSystem"/>
@@ -441,6 +441,17 @@ nopqrstuvwxyz
                             </binding>
                         </connections>
                     </textField>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7TI-13-YcD">
+                        <rect key="frame" x="767" y="20" width="105" height="24"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                        <buttonCell key="cell" type="push" title="Export…" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="z9H-Bk-LSE">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="exportFont:" target="-2" id="v61-Qm-Jpt"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstItem="tGG-dc-woH" firstAttribute="leading" secondItem="YhG-tv-GkB" secondAttribute="leading" id="0Wn-iv-j2M"/>
