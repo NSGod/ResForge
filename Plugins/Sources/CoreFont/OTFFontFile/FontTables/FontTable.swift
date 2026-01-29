@@ -72,7 +72,7 @@ open class FontTable: OTFFontFileNode {
     }
 
     public static func `class`(for tableTag: TableTag) -> FontTable.Type {
-//        if tableTag == .OS_2 { return FontTable_OS_2.self }
+        if tableTag == .OS_2 { return FontTable_OS2.self }
 //        if tableTag == .CID_ { return FontTable_CID.self }
 //        if tableTag == .cvt_ { return FontTable_cvt.self }
 //        if tableTag == .CFF_ { return FontTable_CFF.self }
@@ -95,7 +95,8 @@ open class FontTable: OTFFontFileNode {
     public var nameTable: FontTable_name? { table(for: .name) as? FontTable_name }
     public var hheaTable: FontTable_hhea? { table(for: .hhea) as? FontTable_hhea }
     public var htmxTable: FontTable_hmtx? { table(for: .hmtx) as? FontTable_hmtx }
-
+    public var os2Table: FontTable_OS2?   { table(for: .OS_2) as? FontTable_OS2 }
+    
     public var fontNumGlyphs: Int {
         return fontFile.numGlyphs
     }

@@ -25,7 +25,7 @@ public class FontTableViewController: NSViewController {
     }
 
     public static func `class`(for tableTag: TableTag) -> FontTableViewController.Type {
-//        if tableTag == .OS_2 { return ViewController_OS2.self }
+        if tableTag == .OS_2 { return ViewController_OS2.self }
 //        if tableTag == .CFF_ { return ViewController_CFF.self }
 //        if tableTag == .cvt_ { return ViewController_CVT.self }
         if let theClass: FontTableViewController.Type = (NSClassFromString("FontEditor.ViewController_\(tableTag.fourCharString)")) as? FontTableViewController.Type {

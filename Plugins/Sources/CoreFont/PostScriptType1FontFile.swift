@@ -180,7 +180,7 @@ public final class PostScriptType1FontFile: NSObject {
 
     deinit {
         if isActivated {
-            fatalError("you must deactivate the font (NSFont) before the PostScriptType1FontFile is deallocated")
+            fatalError("\(type(of: self)).\(#function)() This font is currently activated (isActive == true); you must call deactivate() before allowing it to be deallocated!")
         }
     }
 
@@ -310,7 +310,7 @@ public final class PostScriptType1FontFile: NSObject {
             }
             return mString.data(using: .ascii) ?? Data()
         } else {
-            /// is PFA, return existing data
+            /// is already PFA, return existing data
             if toFormat == .ascii { return data }
             throw PostScriptError.unsupportedFormat("Converting PostScript Type 1 PFA to a PFB font is not currently supported")
         }

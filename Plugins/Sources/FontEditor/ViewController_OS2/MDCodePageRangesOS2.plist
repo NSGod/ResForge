@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>0</key>
+	<string>1252 (Latin 1)</string>
+	<key>1</key>
+	<string>1250 (Latin 2: Eastern Europe)</string>
+	<key>2</key>
+	<string>1251 (Cyrillic)</string>
+	<key>3</key>
+	<string>1253 (Greek)</string>
+	<key>4</key>
+	<string>1254 (Turkish)</string>
+	<key>5</key>
+	<string>1255 (Hebrew)</string>
+	<key>6</key>
+	<string>1256 (Arabic)</string>
+	<key>7</key>
+	<string>1257 (Windows Baltic)</string>
+	<key>8</key>
+	<string>1258 (Vietnamese)</string>
+	<key>16</key>
+	<string>874 (Thai)</string>
+	<key>17</key>
+	<string>932 (JIS/Japan)</string>
+	<key>18</key>
+	<string>936 (Chinese: Simplified chars)</string>
+	<key>19</key>
+	<string>949 (Korean Wansung)</string>
+	<key>20</key>
+	<string>950 (Chinese: Traditional chars)</string>
+	<key>21</key>
+	<string>1361 (Korean Johab)</string>
+	<key>29</key>
+	<string>MacRoman</string>
+	<key>30</key>
+	<string>OEM Character Set</string>
+	<key>31</key>
+	<string>Symbol Character Set</string>
+	<key>48</key>
+	<string>869 (IBM Greek)</string>
+	<key>49</key>
+	<string>866 (MS-DOS Russian)</string>
+	<key>50</key>
+	<string>865 (MS-DOS Nordic)</string>
+	<key>51</key>
+	<string>864 (Arabic)</string>
+	<key>52</key>
+	<string>863 (MS-DOS Canadian French)</string>
+	<key>53</key>
+	<string>862 (Hebrew)</string>
+	<key>54</key>
+	<string>861 (MS-DOS Icelandic)</string>
+	<key>55</key>
+	<string>860 (MS-DOS Portuguese)</string>
+	<key>56</key>
+	<string>857 (IBM Turkish)</string>
+	<key>57</key>
+	<string>855 (IBM Cyrillic; primarily Russian)</string>
+	<key>58</key>
+	<string>852 (Latin 2)</string>
+	<key>59</key>
+	<string>775 (MS-DOS Baltic)</string>
+	<key>60</key>
+	<string>737 (Greek; former 437 G)</string>
+	<key>61</key>
+	<string>708 (Arabic; ASMO 708)</string>
+	<key>62</key>
+	<string>850 (WE/Latin 1)</string>
+	<key>63</key>
+	<string>437 (US)</string>
+</dict>
+</plist>

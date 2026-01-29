@@ -110,6 +110,9 @@ final public class OTFFontFile: NSObject {
     public var hmtxTable: FontTable_hmtx? {
         return table(for: .hmtx) as? FontTable_hmtx
     }
+    public var os2Table: FontTable_OS2? {
+        return table(for: .OS_2) as? FontTable_OS2
+    }
     public func table(for tableTag: TableTag) -> FontTable? {
         return tableTagsToTables[tableTag]
     }

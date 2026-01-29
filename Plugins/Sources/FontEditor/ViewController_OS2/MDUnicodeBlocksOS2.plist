@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>0</key>
+	<string>Basic Latin</string>
+	<key>1</key>
+	<string>Latin-1 Supplement</string>
+	<key>2</key>
+	<string>Latin Extended-A</string>
+	<key>3</key>
+	<string>Latin Extended-B</string>
+	<key>4</key>
+	<string>IPA and Phonetic Extensions</string>
+	<key>5</key>
+	<string>Spacing Modifier Letters</string>
+	<key>6</key>
+	<string>Combining Diacritical Marks</string>
+	<key>7</key>
+	<string>Greek and Coptic</string>
+	<key>8</key>
+	<string>Coptic</string>
+	<key>9</key>
+	<string>Cyrillic</string>
+	<key>10</key>
+	<string>Armenian</string>
+	<key>11</key>
+	<string>Hebrew</string>
+	<key>12</key>
+	<string>Vai</string>
+	<key>13</key>
+	<string>Arabic</string>
+	<key>14</key>
+	<string>NKo</string>
+	<key>15</key>
+	<string>Devanagari</string>
+	<key>16</key>
+	<string>Bengali</string>
+	<key>17</key>
+	<string>Gurmukhi</string>
+	<key>18</key>
+	<string>Gujarati</string>
+	<key>19</key>
+	<string>Oriya</string>
+	<key>20</key>
+	<string>Tamil</string>
+	<key>21</key>
+	<string>Telugu</string>
+	<key>22</key>
+	<string>Kannada</string>
+	<key>23</key>
+	<string>Malayalam</string>
+	<key>24</key>
+	<string>Thai</string>
+	<key>25</key>
+	<string>Lao</string>
+	<key>26</key>
+	<string>Georgian</string>
+	<key>27</key>
+	<string>Balinese</string>
+	<key>28</key>
+	<string>Hangul Jamo</string>
+	<key>29</key>
+	<string>Latin Extended</string>
+	<key>30</key>
+	<string>Greek Extended</string>
+	<key>31</key>
+	<string>General Punctuation</string>
+	<key>32</key>
+	<string>Superscripts And Subscripts</string>
+	<key>33</key>
+	<string>Currency Symbols</string>
+	<key>34</key>
+	<string>Combining Diacritical Marks For Symbols</string>
+	<key>35</key>
+	<string>Letterlike Symbols</string>
+	<key>36</key>
+	<string>Number Forms</string>
+	<key>37</key>
+	<string>Arrows</string>
+	<key>38</key>
+	<string>Mathematical Operators</string>
+	<key>39</key>
+	<string>Miscellaneous Technical</string>
+	<key>40</key>
+	<string>Control Pictures</string>
+	<key>41</key>
+	<string>Optical Character Recognition</string>
+	<key>42</key>
+	<string>Enclosed Alphanumerics</string>
+	<key>43</key>
+	<string>Box Drawing</string>
+	<key>44</key>
+	<string>Block Elements</string>
+	<key>45</key>
+	<string>Geometric Shapes</string>
+	<key>46</key>
+	<string>Miscellaneous Symbols</string>
+	<key>47</key>
+	<string>Dingbats</string>
+	<key>48</key>
+	<string>CJK Symbols And Punctuation</string>
+	<key>49</key>
+	<string>Hiragana</string>
+	<key>50</key>
+	<string>Katakana</string>
+	<key>51</key>
+	<string>Bopomofo</string>
+	<key>52</key>
+	<string>Hangul Compatibility Jamo</string>
+	<key>53</key>
+	<string>Phags-pa</string>
+	<key>54</key>
+	<string>Enclosed CJK Letters And Months</string>
+	<key>55</key>
+	<string>CJK Compatibility</string>
+	<key>56</key>
+	<string>Hangul Syllables</string>
+	<key>57</key>
+	<string>Non-Plane 0</string>
+	<key>58</key>
+	<string>Phoenician</string>
+	<key>59</key>
+	<string>CJK Unified Ideographs</string>
+	<key>60</key>
+	<string>Private Use Area (plane 0)</string>
+	<key>61</key>
+	<string>CJK Strokes and Compatibility Ideographs</string>
+	<key>62</key>
+	<string>Alphabetic Presentation Forms</string>
+	<key>63</key>
+	<string>Arabic Presentation Forms-A</string>
+	<key>64</key>
+	<string>Combining Half Marks</string>
+	<key>65</key>
+	<string>Vertical and CJK Compatibility Forms</string>
+	<key>66</key>
+	<string>Small Form Variants</string>
+	<key>67</key>
+	<string>Arabic Presentation Forms-B</string>
+	<key>68</key>
+	<string>Halfwidth And Fullwidth Forms</string>
+	<key>69</key>
+	<string>Specials</string>
+	<key>70</key>
+	<string>Tibetan</string>
+	<key>71</key>
+	<string>Syriac</string>
+	<key>72</key>
+	<string>Thaana</string>
+	<key>73</key>
+	<string>Sinhala</string>
+	<key>74</key>
+	<string>Myanmar</string>
+	<key>75</key>
+	<string>Ethiopic</string>
+	<key>76</key>
+	<string>Cherokee</string>
+	<key>77</key>
+	<string>Unified Canadian Aboriginal Syllabics</string>
+	<key>78</key>
+	<string>Ogham</string>
+	<key>79</key>
+	<string>Runic</string>
+	<key>80</key>
+	<string>Khmer</string>
+	<key>81</key>
+	<string>Mongolian</string>
+	<key>82</key>
+	<string>Braille Patterns</string>
+	<key>83</key>
+	<string>Yi</string>
+	<key>84</key>
+	<string>Tagalog, Hanunoo, Buhid, Tagbanwa</string>
+	<key>85</key>
+	<string>Old Italic</string>
+	<key>86</key>
+	<string>Gothic</string>
+	<key>87</key>
+	<string>Deseret</string>
+	<key>88</key>
+	<string>Musical Symbols</string>
+	<key>89</key>
+	<string>Mathematical Alphanumeric Symbols</string>
+	<key>90</key>
+	<string>Private Use (planes 15 and 16)</string>
+	<key>91</key>
+	<string>Variation Selectors</string>
+	<key>92</key>
+	<string>Tags</string>
+	<key>93</key>
+	<string>Limbu</string>
+	<key>94</key>
+	<string>Tai Le</string>
+	<key>95</key>
+	<string>New Tai Lue</string>
+	<key>96</key>
+	<string>Buginese</string>
+	<key>97</key>
+	<string>Glagolitic</string>
+	<key>98</key>
+	<string>Tifinagh</string>
+	<key>99</key>
+	<string>Yijing Hexagram Symbols</string>
+	<key>100</key>
+	<string>Syloti Nagri</string>
+	<key>101</key>
+	<string>Linear B</string>
+	<key>102</key>
+	<string>Ancient Greek Numbers</string>
+	<key>103</key>
+	<string>Ugaritic</string>
+	<key>104</key>
+	<string>Old Persian</string>
+	<key>105</key>
+	<string>Shavian</string>
+	<key>106</key>
+	<string>Osmanya</string>
+	<key>107</key>
+	<string>Cypriot Syllabary</string>
+	<key>108</key>
+	<string>Kharoshthi</string>
+	<key>109</key>
+	<string>Tai Xuan Jing Symbols</string>
+	<key>110</key>
+	<string>Cuneiform</string>
+	<key>111</key>
+	<string>Counting Rod Numerals</string>
+	<key>112</key>
+	<string>Sundanese</string>
+	<key>113</key>
+	<string>Lepcha</string>
+	<key>114</key>
+	<string>Ol Chiki</string>
+	<key>115</key>
+	<string>Saurashtra</string>
+	<key>116</key>
+	<string>Kayah Li</string>
+	<key>117</key>
+	<string>Rejang</string>
+	<key>118</key>
+	<string>Cham</string>
+	<key>119</key>
+	<string>Ancient Symbols</string>
+	<key>120</key>
+	<string>Phaistos Disc</string>
+	<key>121</key>
+	<string>Carian, Lycian, and Lydian</string>
+	<key>122</key>
+	<string>Domino and Mahjong Tiles</string>
+</dict>
+</plist>
