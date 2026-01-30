@@ -8,15 +8,36 @@
 import Foundation
 
 public class HexNumberFormatter: NumberFormatter, @unchecked Sendable {
+    @IBInspectable @objc var maxValue: NSNumber?
+
+    public override init() {
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+
+    override public func awakeFromNib() {
+        super.awakeFromNib()
+    }
+
     public override func string(for obj: Any?) -> String? {
-        guard let numberValue = obj as? UInt32 else { return nil }
-        let maxValue = self.maximum?.uint32Value ?? 0
-        if maxValue == UInt32.max {
-            return String(format: "0x%08X", numberValue)
+        guard let numberValue = obj as? UInt64 else { return nil }
+        guard let maxValue = self.maximum?.uint64Value else {
+            fatalError("you must set a max value")
+        }
+        if maxValue == UInt64.max {
+            return String(format: "0x%016llX", numberValue)
+        } else if maxValue == UInt32.max {
+            let numValue = UInt32(truncatingIfNeeded: numberValue)
+            return String(format: "0x%08X", numValue)
         } else if maxValue == UInt16.max {
-            return String(format: "0x%04X", UInt16(numberValue))
+            let numValue = UInt16(truncatingIfNeeded: numberValue)
+            return String(format: "0x%04hX", numValue)
         } else if maxValue == UInt8.max {
-            return String(format: "0x%02X", UInt8(numberValue))
+            let numValue = UInt8(truncatingIfNeeded: numberValue)
+            return String(format: "0x%02hhX", numValue)
         }
         return nil
     }
@@ -24,7 +45,7 @@ public class HexNumberFormatter: NumberFormatter, @unchecked Sendable {
     public override func getObjectValue(_ obj: AutoreleasingUnsafeMutablePointer<AnyObject?>?, for string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool {
         guard let obj else { return false }
         let scanner = Scanner(string: string)
-        if let value = scanner.scanInt(representation: .hexadecimal) {
+        if let value = scanner.scanUInt64(representation: .hexadecimal) {
             obj.pointee = value as AnyObject
             return true
         } else {

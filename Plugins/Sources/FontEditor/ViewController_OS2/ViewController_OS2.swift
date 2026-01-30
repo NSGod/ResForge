@@ -22,20 +22,51 @@ class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NSTableV
     @IBOutlet weak var version2View: NSView!
     @IBOutlet weak var version5View: NSView!
 
+    @IBOutlet weak var ulUnicodeRange1Formatter: HexNumberFormatter!
+    @IBOutlet weak var ulUnicodeRange2Formatter: HexNumberFormatter!
+    @IBOutlet weak var ulCodePageRangeFormatter: HexNumberFormatter!
+
     var table:  FontTable_OS2
+
+    @objc var usWeightClass:    UInt16 = 0
+    @objc var fsType:           FontTable_OS2.FontType.RawValue = 0
+    @objc var ulUnicodeRange1:  FontTable_OS2.UnicodeMask1.RawValue = 0 {
+        didSet {
+            unicodeRangesTableView.reloadData()
+        }
+    }
+
+    @objc var ulUnicodeRange2:  FontTable_OS2.UnicodeMask2.RawValue = 0 {
+        didSet {
+            unicodeRangesTableView.reloadData()
+        }
+    }
+    @objc var ulCodePageRange:  UInt64  = 0 {
+        didSet {
+            codeRangesTableView.reloadData()
+        }
+    }
+
+    @objc var fsSelection:      FontTable_OS2.Selection.RawValue = 0
 
     private var unicodeBlocksToNames:   [Int: String] = [:]
     private var codePageRangesToNames:  [Int: String] = [:]
 
     required init?(with fontTable: FontTable) {
         table = fontTable as! FontTable_OS2
+        usWeightClass = table.usWeightClass.rawValue
+        fsType = table.fsType.rawValue
+        ulUnicodeRange1 = table.ulUnicodeRange1.rawValue
+        ulUnicodeRange2 = table.ulUnicodeRange2.rawValue
+        ulCodePageRange = table.ulCodePageRange.rawValue
+        fsSelection = table.fsSelection.rawValue
         super.init(with: fontTable)
         do {
             let uBlocksToNames: [String: String] = try NSDictionary(contentsOf: Bundle.module.url(forResource: "MDUnicodeBlocksOS2", withExtension: "plist")!, error: ()) as! [String: String]
             for (key, value) in uBlocksToNames {
                 unicodeBlocksToNames[Int(key)!] = value
             }
-            let cPageRangesToNames: [String: String] = try NSDictionary(contentsOf: Bundle.main.url(forResource: "MDCodePageRangesOS2", withExtension: "plist")!, error: ()) as! [String: String]
+            let cPageRangesToNames: [String: String] = try NSDictionary(contentsOf: Bundle.module.url(forResource: "MDCodePageRangesOS2", withExtension: "plist")!, error: ()) as! [String: String]
             for (key, value) in cPageRangesToNames {
                 codePageRangesToNames[Int(key)!] = value
             }
@@ -49,9 +80,13 @@ class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NSTableV
     }
     
     override func viewDidLoad() {
-        NSLog("\(type(of: self)).\(#function)")
+        // AFAICT, a bug in IB limits formatter max to Int64.max
+        ulUnicodeRange1Formatter.maximum = UInt64.max as NSNumber
+        ulUnicodeRange2Formatter.maximum = UInt64.max as NSNumber
+        ulCodePageRangeFormatter.maximum = UInt64.max as NSNumber
+        fontTypeControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "fsType", options: nil)
+        fontSelectionControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "fsSelection", options: nil)
         super.viewDidLoad()
-        fontTypeControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "representedObject.f", options: nil)
         updateUI()
     }
 
@@ -72,27 +107,69 @@ class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NSTableV
     }
 
     @IBAction func changeVersion(_ sender: Any) {
-
+        updateUI()
     }
 
     @IBAction func changeFontType(_ sender: Any) {
+        guard let sender = sender as? NSButton else { return }
+        let fontType: FontTable_OS2.FontType = .init(rawValue: UInt16(sender.tag))
+//        let document = view.window?.windowController?.document
+//        document?.undoManager?.setActionName(NSLocalizedString("Change Font Type", comment: ""))
+//        document?.undoManager?.registerUndo(withTarget: self) { (self) in
+//            self.fsType = fsType
+//        }
+        if sender.state == .on {
+            fsType |= fontType.rawValue
+        } else {
+            fsType &= ~fontType.rawValue
+        }
 
     }
     
     @IBAction func changeFontSelection(_ sender: Any) {
-
+        guard let sender = sender as? NSButton else { return }
+        let fontSelection: FontTable_OS2.Selection = .init(rawValue: UInt16(sender.tag))
+        if sender.state == .on {
+            fsSelection |= fontSelection.rawValue
+        } else {
+            fsSelection &= ~fontSelection.rawValue
+        }
     }
 
     @IBAction func toggleUnicodeRange1(_ sender: Any) {
-
+        let sender = sender as! NSButton
+        let mask: FontTable_OS2.UnicodeMask1 = .init(rawValue: UInt64(1 << sender.tag))
+        self.willChangeValue(forKey: "ulUnicodeRange1")
+        if sender.state == .on {
+            ulUnicodeRange1 |= mask.rawValue
+        } else {
+            ulUnicodeRange1 &= ~mask.rawValue
+        }
+        self.didChangeValue(forKey: "ulUnicodeRange1")
     }
 
     @IBAction func toggleUnicodeRange2(_ sender: Any) {
-
+        let sender = sender as! NSButton
+        let mask: FontTable_OS2.UnicodeMask2 = .init(rawValue: UInt64(1 << sender.tag))
+        self.willChangeValue(forKey: "ulUnicodeRange2")
+        if sender.state == .on {
+            ulUnicodeRange2 |= mask.rawValue
+        } else {
+            ulUnicodeRange2 &= ~mask.rawValue
+        }
+        self.didChangeValue(forKey: "ulUnicodeRange2")
     }
 
     @IBAction func toggleCodePageRange(_ sender: Any) {
-        
+        let sender = sender as! NSButton
+        let mask: FontTable_OS2.CodePageMask = .init(rawValue: UInt64(1 << sender.tag))
+        self.willChangeValue(forKey: "ulCodePageRange")
+        if sender.state == .on {
+            ulCodePageRange |= mask.rawValue
+        } else {
+            ulCodePageRange &= ~mask.rawValue
+        }
+        self.didChangeValue(forKey: "ulCodePageRange")
     }
 
     // MARK: <NSTableViewDataSource>
@@ -113,8 +190,9 @@ class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NSTableV
             cellView.checkbox.target = self
             if row < 64 {
                 cellView.checkbox.action = #selector(toggleUnicodeRange1(_:))
-                cellView.checkbox.tag = 1 << row
-                cellView.checkbox.state = table.ulUnicodeRange1.contains(FontTable_OS2.UnicodeMask1(rawValue: UInt64(1 << row))) ? .on : .off
+                cellView.checkbox.tag = row
+                let mask: UInt64 = 1 << row
+                cellView.checkbox.state = ulUnicodeRange1 & mask != 0 ? .on : .off
                 if row < 32 {
                     cellView.checkbox.isEnabled = table.version >= .version0
                 } else {
@@ -122,8 +200,9 @@ class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NSTableV
                 }
             } else {
                 cellView.checkbox.action = #selector(toggleUnicodeRange2(_:))
-                cellView.checkbox.tag = 1 << (row - 64)
-                cellView.checkbox.state = table.ulUnicodeRange2.contains(FontTable_OS2.UnicodeMask2(rawValue: UInt64(1 << (row - 64)))) ? .on : .off
+                cellView.checkbox.tag = row - 64
+                let mask: UInt64 = 1 << (row - 64)
+                cellView.checkbox.state = ulUnicodeRange2 & mask != 0 ? .on : .off
                 cellView.checkbox.isEnabled = table.version >= .version1
             }
             return cellView
@@ -137,11 +216,10 @@ class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NSTableV
             }
             cellView.checkbox.target = self
             cellView.checkbox.action = #selector(toggleCodePageRange(_:))
-            cellView.checkbox.tag = 1 << row
-            cellView.checkbox.state = table.ulCodePageRange.contains(FontTable_OS2.CodePageMask(rawValue: UInt64(1 << row))) ? .on : .off
+            cellView.checkbox.tag = row
+            let mask: UInt64 = 1 << row
+            cellView.checkbox.state = ulCodePageRange & mask != 0 ? .on : .off
             return cellView
         }
     }
-
-
 }

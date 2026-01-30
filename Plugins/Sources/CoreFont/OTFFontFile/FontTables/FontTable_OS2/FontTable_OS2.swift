@@ -35,7 +35,7 @@ final public class FontTable_OS2: FontTable {
     @objc public var version:                   Version = .version0
     @objc public var xAvgCharWidth:             Int16 = 0
     public var usWeightClass:                   Weight = .normal
-    public var usWidthClass:                    Width = .normal
+    @objc public var usWidthClass:              Width = .normal
     public var fsType:                          FontType = .installableEmbedding
     @objc public var ySubscriptXSize:           Int16 = 0
     @objc public var ySubscriptYSize:           Int16 = 0
@@ -69,8 +69,8 @@ final public class FontTable_OS2: FontTable {
 
     @objc public var sxHeight:                  Int16 = 0   // ver 2+
     @objc public var sCapHeight:                Int16 = 0   // ver 2+
-    @objc public var usDefaultChar:             UInt16 = 0  // ver 2+
-    @objc public var usBreakChar:               UInt16 = 0  // ver 2+
+    @objc public var usDefaultChar:             UVBMP = 0   // ver 2+
+    @objc public var usBreakChar:               UVBMP = 0   // ver 2+
     @objc public var usMaxContext:              UInt16 = 0  // ver 2+
 
     @objc public var usLowerOpticalPointSize:   UInt16 = 0  // ver 5+
@@ -87,7 +87,11 @@ final public class FontTable_OS2: FontTable {
         self.version = versn
         xAvgCharWidth = try reader.read()
         usWeightClass = Weight(rawValue: try reader.read())
-        usWidthClass = Width(rawValue: try reader.read())
+        let usWidth: UInt16 = try reader.read()
+        guard let usWidthCls = Width(rawValue: usWidth) else {
+            throw FontTableError.parseError("Unknown width class \(usWidth) in 'OS/2' table")
+        }
+        usWidthClass = usWidthCls
         fsType = FontType(rawValue: try reader.read())
         ySubscriptXSize = try reader.read()
         ySubscriptYSize = try reader.read()
@@ -127,7 +131,4 @@ final public class FontTable_OS2: FontTable {
             }
         }
     }
-
-
-    
 }

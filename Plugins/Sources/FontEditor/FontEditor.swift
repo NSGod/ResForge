@@ -137,5 +137,5 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, NSTable
     }
 
     static var emptyView: NSView = NSView(frame: NSMakeRect(0, 0, 400, 600))
-    static let supportedTableTags: Set<TableTag> = Set([.head, .maxp, .name, .post, .hhea, .hmtx])
+    static let supportedTableTags: Set<TableTag> = Set([.head, .maxp, .name, .post, .hhea, .hmtx, .OS_2])
 }

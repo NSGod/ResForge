@@ -346,7 +346,7 @@
                     </connections>
                 </popUpButton>
                 <searchField wantsLayer="YES" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ey2-Pd-GrP">
-                    <rect key="frame" x="151" y="498" width="223" height="19"/>
+                    <rect key="frame" x="151" y="498" width="222" height="19"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <searchFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" sendsSearchStringImmediately="YES" recentsAutosaveName="glyphNameSearches" id="Nvv-sN-IA5">
                         <font key="font" metaFont="smallSystem"/>

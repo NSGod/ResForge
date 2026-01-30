@@ -228,7 +228,7 @@
                     </connections>
                 </textField>
                 <searchField wantsLayer="YES" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j1K-xm-Ayw">
-                    <rect key="frame" x="416" y="709" width="275" height="19"/>
+                    <rect key="frame" x="413" y="709" width="275" height="19"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                     <searchFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" sendsSearchStringImmediately="YES" id="581-qZ-OYq">
                         <font key="font" metaFont="smallSystem"/>

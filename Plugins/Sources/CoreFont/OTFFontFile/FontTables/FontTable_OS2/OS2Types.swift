@@ -79,50 +79,17 @@ public extension FontTable_OS2 {
         public static let ultraBlack    = Self.extraBlack
     }
 
-    enum Width: Comparable {
-        case custom(UInt16)
-        case ultraCondensed
-        case extraCondensed
-        case condensed
-        case semiCondensed
-        case normal
-        case semiExpanded
-        case expanded
-        case extraExpanded
-        case ultraExpanded
-        case unknown
-
-        public var rawValue: UInt16 {
-            switch self {
-                case .custom(let v):     return v
-                case .ultraCondensed:   return 1
-                case .extraCondensed:    return 2
-                case .condensed:        return 3
-                case .semiCondensed:    return 4
-                case .normal:           return 5
-                case .semiExpanded:     return 6
-                case .expanded:         return 7
-                case .extraExpanded:    return 8
-                case .ultraExpanded:    return 9
-                case .unknown:          return UInt16.max
-            }
-        }
-
-        public init(rawValue: UInt16) {
-            switch rawValue {
-                case 1:         self = .ultraCondensed
-                case 2:         self = .extraCondensed
-                case 3:         self = .condensed
-                case 4:         self = .semiCondensed
-                case 5:         self = .normal
-                case 6:         self = .semiExpanded
-                case 7:         self = .expanded
-                case 8:         self = .extraExpanded
-                case 9:         self = .ultraExpanded
-                case UInt16.max:    self = .unknown
-                default :       self = .custom(rawValue)
-            }
-        }
+    @objc enum Width: UInt16, Comparable {
+        case ultraCondensed     = 1
+        case extraCondensed     = 2
+        case condensed          = 3
+        case semiCondensed      = 4
+        case normal             = 5
+        case semiExpanded       = 6
+        case expanded           = 7
+        case extraExpanded      = 8
+        case ultraExpanded      = 9
+        case unknown            = 0xffff
 
         public static func == (lhs: Width, rhs: Width) -> Bool {
             return lhs.rawValue == rhs.rawValue
