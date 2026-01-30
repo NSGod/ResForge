@@ -252,6 +252,7 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
+                        <binding destination="-2" name="value" keyPath="fsSelection" id="nfs-Sd-vFM"/>
                         <outlet property="formatter" destination="1D2-ib-T7b" id="OIS-L8-b6g"/>
                     </connections>
                 </textField>

@@ -143,11 +143,13 @@ class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NSTableV
     @IBAction func changeFontSelection(_ sender: Any) {
         guard let sender = sender as? NSButton else { return }
         let fontSelection: FontTable_OS2.Selection = .init(rawValue: UInt16(sender.tag))
+        self.willChangeValue(forKey: "fsSelection")
         if sender.state == .on {
             fsSelection |= fontSelection.rawValue
         } else {
             fsSelection &= ~fontSelection.rawValue
         }
+        self.didChangeValue(forKey: "fsSelection")
     }
 
     @IBAction func toggleUnicodeRange1(_ sender: Any) {
