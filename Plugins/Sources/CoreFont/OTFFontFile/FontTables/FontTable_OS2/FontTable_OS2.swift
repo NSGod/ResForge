@@ -51,9 +51,11 @@ final public class FontTable_OS2: FontTable {
     @objc public var panose:                    Panose!
                                                                   /// - Note: all 128 bits are there in all versions
                                                                   ///     but only fully utilized in ver 1+
-    public var ulUnicodeRange1:                 UnicodeMask1 = [] /// UInt64; ver 0: bits 0-31; ver 1+: bits 32-63
-    public var ulUnicodeRange2:                 UnicodeMask2 = [] /// UInt64; ver 1+: bits 64-127
-
+    public var ulUnicodeRange1:                 UnicodeMask1 = [] /// UInt32; ver 0: bits 0-31
+    public var ulUnicodeRange2:                 UnicodeMask2 = [] /// UInt32; ver 1+: bits 32-63
+    public var ulUnicodeRange3:                 UnicodeMask3 = [] /// UInt32; ver 1+: bits 64-95
+    public var ulUnicodeRange4:                 UnicodeMask4 = [] /// UInt32; ver 1+: bits 96-127
+                                                                  ///
     @objc public var vendorID:                  Tag = 0
 
     public var fsSelection:                     Selection = .none
@@ -65,7 +67,8 @@ final public class FontTable_OS2: FontTable {
     @objc public var usWinAscent:               UInt16 = 0  // yMax in Windows or clipping can occur
     @objc public var usWinDescent:              UInt16 = 0  // -yMin in Windows or clipping can occur
 
-    public var ulCodePageRange:                 CodePageMask = []   // ver 1+
+    public var ulCodePageRange1:                CodePageMask1 = [] // ver 1+
+    public var ulCodePageRange2:                CodePageMask2 = [] // ver 1+
 
     @objc public var sxHeight:                  Int16 = 0   // ver 2+
     @objc public var sCapHeight:                Int16 = 0   // ver 2+
@@ -107,6 +110,8 @@ final public class FontTable_OS2: FontTable {
         panose = try Panose(reader, table: self)
         ulUnicodeRange1 = UnicodeMask1(rawValue: try reader.read())
         ulUnicodeRange2 = UnicodeMask2(rawValue: try reader.read())
+        ulUnicodeRange3 = UnicodeMask3(rawValue: try reader.read())
+        ulUnicodeRange4 = UnicodeMask4(rawValue: try reader.read())
         vendorID = try reader.read()
         fsSelection = Selection(rawValue: try reader.read())
         usFirstCharIndex = try reader.read()
@@ -117,7 +122,8 @@ final public class FontTable_OS2: FontTable {
         usWinAscent = try reader.read()
         usWinDescent = try reader.read()
         if version >= .version1 {
-            ulCodePageRange = CodePageMask(rawValue: try reader.read())
+            ulCodePageRange1 = CodePageMask1(rawValue: try reader.read())
+            ulCodePageRange2 = CodePageMask2(rawValue: try reader.read())
             if version >= .version2 {
                 sxHeight = try reader.read()
                 sCapHeight = try reader.read()

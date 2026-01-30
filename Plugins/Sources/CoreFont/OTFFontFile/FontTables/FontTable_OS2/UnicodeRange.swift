@@ -11,7 +11,6 @@ public extension FontTable_OS2 {
 
     struct UnicodeRange: OptionSet {
         public let rawValue: Int
-
         public init(rawValue: Int) {
             self.rawValue = rawValue
         }
@@ -143,11 +142,10 @@ public extension FontTable_OS2 {
     }
 
     struct UnicodeMask1: OptionSet {
-        public let rawValue: UInt64
-        public init(rawValue: UInt64) {
+        public let rawValue: UInt32
+        public init(rawValue: UInt32) {
             self.rawValue = rawValue
         }
-
         public static let basicLatin:                              UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.basicLatin.rawValue)
         public static let latin1Supplement:                        UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.latin1Supplement.rawValue)
         public static let latinExtendedA:                          UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.latinExtendedA.rawValue)
@@ -180,104 +178,118 @@ public extension FontTable_OS2 {
         public static let latinExtended:                           UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.latinExtended.rawValue)
         public static let greekExtended:                           UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.greekExtended.rawValue)
         public static let generalPunctuation:                      UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.generalPunctuation.rawValue)
-        public static let cuperscriptsAndSubscripts:               UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.superscriptsAndSubscripts.rawValue)
-        public static let currencySymbols:                         UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.currencySymbols.rawValue)
-        public static let combiningDiacriticalMarksForSymbols:     UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.combiningDiacriticalMarksForSymbols.rawValue)
-        public static let letterlikeSymbols:                       UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.letterlikeSymbols.rawValue)
-        public static let numberForms:                             UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.numberForms.rawValue)
-        public static let arrows:                                  UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.arrows.rawValue)
-        public static let mathematicalOperators:                   UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.mathematicalOperators.rawValue)
-        public static let miscTechnical:                           UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.miscTechnical.rawValue)
-        public static let controlPictures:                         UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.controlPictures.rawValue)
-        public static let ocr:                                     UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.ocr.rawValue)
-        public static let enclosedAlphanumerics:                   UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.enclosedAlphanumerics.rawValue)
-        public static let boxDrawing:                              UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.boxDrawing.rawValue)
-        public static let blockElements:                           UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.blockElements.rawValue)
-        public static let geometricShapes:                         UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.geometricShapes.rawValue)
-        public static let miscSymbols:                             UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.miscSymbols.rawValue)
-        public static let dingbats:                                UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.dingbats.rawValue)
-        public static let cjkSymbolsAndPunctuation:                UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.cjkSymbolsAndPunctuation.rawValue)
-        public static let hiragana:                                UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.hiragana.rawValue)
-        public static let katakana:                                UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.katakana.rawValue)
-        public static let bopomofo:                                UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.bopomofo.rawValue)
-        public static let hangulCompatibilityJamo:                 UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.hangulCompatibilityJamo.rawValue)
-        public static let phagsPa:                                 UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.phagsPa.rawValue)
-        public static let enclosedCJKLettersAndMonths:             UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.enclosedCJKLettersAndMonths.rawValue)
-        public static let cjkCompatibility:                        UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.cjkCompatibility.rawValue)
-        public static let hangulSyllables:                         UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.hangulSyllables.rawValue)
-        public static let nonPlane0:                               UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.nonPlane0.rawValue)
-        public static let phoenician:                              UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.phoenician.rawValue)
-        public static let cjkUnifiedIdeographs:                    UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.cjkUnifiedIdeographs.rawValue)
-        public static let privateUseAreaPlane0:                    UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.privateUseAreaPlane0.rawValue)
-        public static let cjkStrokesAndCompatibilityIdeographs:    UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.cjkStrokesAndCompatibilityIdeographs.rawValue)
-        public static let alphabeticPresentationForms:             UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.alphabeticPresentationForms.rawValue)
-        public static let arabicPresentationFormsA:                UnicodeMask1 = .init(rawValue: 1 << UnicodeRange.arabicPresentationFormsA.rawValue)
     }
 
     struct UnicodeMask2: OptionSet {
-        public let rawValue: UInt64
-        public init(rawValue: UInt64) {
+        public let rawValue: UInt32
+        public init(rawValue: UInt32) {
             self.rawValue = rawValue
         }
+        public static let superscriptsAndSubscripts:               UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.superscriptsAndSubscripts.rawValue % 32))
+        public static let currencySymbols:                         UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.currencySymbols.rawValue % 32))
+        public static let combiningDiacriticalMarksForSymbols:     UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.combiningDiacriticalMarksForSymbols.rawValue % 32))
+        public static let letterlikeSymbols:                       UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.letterlikeSymbols.rawValue % 32))
+        public static let numberForms:                             UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.numberForms.rawValue % 32))
+        public static let arrows:                                  UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.arrows.rawValue % 32))
+        public static let mathematicalOperators:                   UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.mathematicalOperators.rawValue % 32))
+        public static let miscTechnical:                           UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.miscTechnical.rawValue % 32))
+        public static let controlPictures:                         UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.controlPictures.rawValue % 32))
+        public static let ocr:                                     UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.ocr.rawValue % 32))
+        public static let enclosedAlphanumerics:                   UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.enclosedAlphanumerics.rawValue % 32))
+        public static let boxDrawing:                              UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.boxDrawing.rawValue % 32))
+        public static let blockElements:                           UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.blockElements.rawValue % 32))
+        public static let geometricShapes:                         UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.geometricShapes.rawValue % 32))
+        public static let miscSymbols:                             UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.miscSymbols.rawValue % 32))
+        public static let dingbats:                                UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.dingbats.rawValue % 32))
+        public static let cjkSymbolsAndPunctuation:                UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.cjkSymbolsAndPunctuation.rawValue % 32))
+        public static let hiragana:                                UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.hiragana.rawValue % 32))
+        public static let katakana:                                UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.katakana.rawValue % 32))
+        public static let bopomofo:                                UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.bopomofo.rawValue % 32))
+        public static let hangulCompatibilityJamo:                 UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.hangulCompatibilityJamo.rawValue % 32))
+        public static let phagsPa:                                 UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.phagsPa.rawValue % 32))
+        public static let enclosedCJKLettersAndMonths:             UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.enclosedCJKLettersAndMonths.rawValue % 32))
+        public static let cjkCompatibility:                        UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.cjkCompatibility.rawValue % 32))
+        public static let hangulSyllables:                         UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.hangulSyllables.rawValue % 32))
+        public static let nonPlane0:                               UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.nonPlane0.rawValue % 32))
+        public static let phoenician:                              UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.phoenician.rawValue % 32))
+        public static let cjkUnifiedIdeographs:                    UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.cjkUnifiedIdeographs.rawValue % 32))
+        public static let privateUseAreaPlane0:                    UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.privateUseAreaPlane0.rawValue % 32))
+        public static let cjkStrokesAndCompatibilityIdeographs:    UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.cjkStrokesAndCompatibilityIdeographs.rawValue % 32))
+        public static let alphabeticPresentationForms:             UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.alphabeticPresentationForms.rawValue % 32))
+        public static let arabicPresentationFormsA:                UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.arabicPresentationFormsA.rawValue % 32))
 
-        public static let combiningHalfMarks:                  UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.combiningHalfMarks.rawValue % 64))
-        public static let verticalAndCJKCompatabilityForms:    UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.verticalAndCJKCompatabilityForms.rawValue % 64))
-        public static let smallFormVariants:                   UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.smallFormVariants.rawValue % 64))
-        public static let arabicPresentationFormsB:            UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.arabicPresentationFormsB.rawValue % 64))
-        public static let halfwidthAndFullwidthForms:          UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.halfwidthAndFullwidthForms.rawValue % 64))
-        public static let specials:                            UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.specials.rawValue % 64))
-        public static let tibetan:                             UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.tibetan.rawValue % 64))
-        public static let syriac:                              UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.syriac.rawValue % 64))
-        public static let thaana:                              UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.thaana.rawValue % 64))
-        public static let sinhala:                             UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.sinhala.rawValue % 64))
-        public static let myanmar:                             UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.myanmar.rawValue % 64))
-        public static let ethiopic:                            UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.ethiopic.rawValue % 64))
-        public static let cherokee:                            UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.cherokee.rawValue % 64))
-        public static let unitedCanadianAboriginalSyllabics:   UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.unitedCanadianAboriginalSyllabics.rawValue % 64))
-        public static let ogham:                               UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.ogham.rawValue % 64))
-        public static let runic:                               UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.runic.rawValue % 64))
-        public static let khmer:                               UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.khmer.rawValue % 64))
-        public static let mongolian:                           UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.mongolian.rawValue % 64))
-        public static let braillePatterns:                     UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.braillePatterns.rawValue % 64))
-        public static let yi:                                  UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.yi.rawValue % 64))
-        public static let tagalogHanunooBuhidTagbanwa:         UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.tagalogHanunooBuhidTagbanwa.rawValue % 64))
-        public static let oldItalic:                           UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.oldItalic.rawValue % 64))
-        public static let gothic:                              UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.gothic.rawValue % 64))
-        public static let deseret:                             UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.deseret.rawValue % 64))
-        public static let musicalSymbols:                      UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.musicalSymbols.rawValue % 64))
-        public static let mathematicalAlphanumericSymbols:     UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.mathematicalAlphanumericSymbols.rawValue % 64))
-        public static let privateUsePlanes15_16:               UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.privateUsePlanes15_16.rawValue % 64))
-        public static let variationSelectors:                  UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.variationSelectors.rawValue % 64))
-        public static let tags:                                UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.tags.rawValue % 64))
-        public static let limbu:                               UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.limbu.rawValue % 64))
-        public static let taiLe:                               UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.taiLe.rawValue % 64))
-        public static let newTaiLue:                           UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.newTaiLue.rawValue % 64))
-        public static let buginese:                            UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.buginese.rawValue % 64))
-        public static let glagolitic:                          UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.glagolitic.rawValue % 64))
-        public static let tifinagh:                            UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.tifinagh.rawValue % 64))
-        public static let yijingHexagramSymbols:               UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.yijingHexagramSymbols.rawValue % 64))
-        public static let sylotiNagri:                         UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.sylotiNagri.rawValue % 64))
-        public static let linearB:                             UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.linearB.rawValue % 64))
-        public static let ancientGreekNumbers:                 UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.ancientGreekNumbers.rawValue % 64))
-        public static let ugaritic:                            UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.ugaritic.rawValue % 64))
-        public static let oldPersian:                          UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.oldPersian.rawValue % 64))
-        public static let shavian:                             UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.shavian.rawValue % 64))
-        public static let osmanya:                             UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.osmanya.rawValue % 64))
-        public static let cypriotSyllabary:                    UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.cypriotSyllabary.rawValue % 64))
-        public static let kharoshthi:                          UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.kharoshthi.rawValue % 64))
-        public static let taiXuanJingSymbols:                  UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.taiXuanJingSymbols.rawValue % 64))
-        public static let cuneiform:                           UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.cuneiform.rawValue % 64))
-        public static let countingRodNumerals:                 UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.countingRodNumerals.rawValue % 64))
-        public static let sundanese:                           UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.sundanese.rawValue % 64))
-        public static let lepcha:                              UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.lepcha.rawValue % 64))
-        public static let olChiki:                             UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.olChiki.rawValue % 64))
-        public static let saurashtra:                          UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.saurashtra.rawValue % 64))
-        public static let kayahLi:                             UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.kayahLi.rawValue % 64))
-        public static let rejang:                              UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.rejang.rawValue % 64))
-        public static let cham:                                UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.cham.rawValue % 64))
-        public static let ancientSymbols:                      UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.ancientSymbols.rawValue % 64))
-        public static let phaistosDisc:                        UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.phaistosDisc.rawValue % 64))
-        public static let carianLycianLydian:                  UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.carianLycianLydian.rawValue % 64))
-        public static let dominoAndMahjongTiles:               UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.dominoAndMahjongTiles.rawValue % 64))
+    }
+
+    struct UnicodeMask3: OptionSet {
+        public let rawValue: UInt32
+        public init(rawValue: UInt32) {
+            self.rawValue = rawValue
+        }
+        public static let combiningHalfMarks:                  UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.combiningHalfMarks.rawValue % 32))
+        public static let verticalAndCJKCompatabilityForms:    UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.verticalAndCJKCompatabilityForms.rawValue % 32))
+        public static let smallFormVariants:                   UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.smallFormVariants.rawValue % 32))
+        public static let arabicPresentationFormsB:            UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.arabicPresentationFormsB.rawValue % 32))
+        public static let halfwidthAndFullwidthForms:          UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.halfwidthAndFullwidthForms.rawValue % 32))
+        public static let specials:                            UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.specials.rawValue % 32))
+        public static let tibetan:                             UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.tibetan.rawValue % 32))
+        public static let syriac:                              UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.syriac.rawValue % 32))
+        public static let thaana:                              UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.thaana.rawValue % 32))
+        public static let sinhala:                             UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.sinhala.rawValue % 32))
+        public static let myanmar:                             UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.myanmar.rawValue % 32))
+        public static let ethiopic:                            UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.ethiopic.rawValue % 32))
+        public static let cherokee:                            UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.cherokee.rawValue % 32))
+        public static let unitedCanadianAboriginalSyllabics:   UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.unitedCanadianAboriginalSyllabics.rawValue % 32))
+        public static let ogham:                               UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.ogham.rawValue % 32))
+        public static let runic:                               UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.runic.rawValue % 32))
+        public static let khmer:                               UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.khmer.rawValue % 32))
+        public static let mongolian:                           UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.mongolian.rawValue % 32))
+        public static let braillePatterns:                     UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.braillePatterns.rawValue % 32))
+        public static let yi:                                  UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.yi.rawValue % 32))
+        public static let tagalogHanunooBuhidTagbanwa:         UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.tagalogHanunooBuhidTagbanwa.rawValue % 32))
+        public static let oldItalic:                           UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.oldItalic.rawValue % 32))
+        public static let gothic:                              UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.gothic.rawValue % 32))
+        public static let deseret:                             UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.deseret.rawValue % 32))
+        public static let musicalSymbols:                      UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.musicalSymbols.rawValue % 32))
+        public static let mathematicalAlphanumericSymbols:     UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.mathematicalAlphanumericSymbols.rawValue % 32))
+        public static let privateUsePlanes15_16:               UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.privateUsePlanes15_16.rawValue % 32))
+        public static let variationSelectors:                  UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.variationSelectors.rawValue % 32))
+        public static let tags:                                UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.tags.rawValue % 32))
+        public static let limbu:                               UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.limbu.rawValue % 32))
+        public static let taiLe:                               UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.taiLe.rawValue % 32))
+        public static let newTaiLue:                           UnicodeMask3 = .init(rawValue: 1 << (UnicodeRange.newTaiLue.rawValue % 32))
+    }
+
+    struct UnicodeMask4: OptionSet {
+        public let rawValue: UInt32
+        public init(rawValue: UInt32) {
+            self.rawValue = rawValue
+        }
+        public static let buginese:                            UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.buginese.rawValue % 32))
+        public static let glagolitic:                          UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.glagolitic.rawValue % 32))
+        public static let tifinagh:                            UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.tifinagh.rawValue % 32))
+        public static let yijingHexagramSymbols:               UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.yijingHexagramSymbols.rawValue % 32))
+        public static let sylotiNagri:                         UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.sylotiNagri.rawValue % 32))
+        public static let linearB:                             UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.linearB.rawValue % 32))
+        public static let ancientGreekNumbers:                 UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.ancientGreekNumbers.rawValue % 32))
+        public static let ugaritic:                            UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.ugaritic.rawValue % 32))
+        public static let oldPersian:                          UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.oldPersian.rawValue % 32))
+        public static let shavian:                             UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.shavian.rawValue % 32))
+        public static let osmanya:                             UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.osmanya.rawValue % 32))
+        public static let cypriotSyllabary:                    UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.cypriotSyllabary.rawValue % 32))
+        public static let kharoshthi:                          UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.kharoshthi.rawValue % 32))
+        public static let taiXuanJingSymbols:                  UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.taiXuanJingSymbols.rawValue % 32))
+        public static let cuneiform:                           UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.cuneiform.rawValue % 32))
+        public static let countingRodNumerals:                 UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.countingRodNumerals.rawValue % 32))
+        public static let sundanese:                           UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.sundanese.rawValue % 32))
+        public static let lepcha:                              UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.lepcha.rawValue % 32))
+        public static let olChiki:                             UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.olChiki.rawValue % 32))
+        public static let saurashtra:                          UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.saurashtra.rawValue % 32))
+        public static let kayahLi:                             UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.kayahLi.rawValue % 32))
+        public static let rejang:                              UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.rejang.rawValue % 32))
+        public static let cham:                                UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.cham.rawValue % 32))
+        public static let ancientSymbols:                      UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.ancientSymbols.rawValue % 32))
+        public static let phaistosDisc:                        UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.phaistosDisc.rawValue % 32))
+        public static let carianLycianLydian:                  UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.carianLycianLydian.rawValue % 32))
+        public static let dominoAndMahjongTiles:               UnicodeMask4 = .init(rawValue: 1 << (UnicodeRange.dominoAndMahjongTiles.rawValue % 32))
     }
 }
