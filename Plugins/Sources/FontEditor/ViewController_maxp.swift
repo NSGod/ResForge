@@ -8,7 +8,7 @@
 import Cocoa
 import CoreFont
 
-final public class ViewController_maxp: FontTableViewController {
+final class ViewController_maxp: FontTableViewController {
 	@IBOutlet weak var version1View:    NSView!
 
 	var table:                          FontTable_maxp
@@ -18,11 +18,11 @@ final public class ViewController_maxp: FontTableViewController {
 		super.init(with: fontTable)
 	}
 
-	required init?(coder: NSCoder) {
+    @MainActor required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	public override func viewDidLoad() {
+	override func viewDidLoad() {
         super.viewDidLoad()
         updateUI()
     }

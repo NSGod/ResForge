@@ -9,7 +9,7 @@ import Cocoa
 import CoreFont
 import RFSupport
 
-class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NSTableViewDataSource {
+final class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NSTableViewDataSource {
 
     @IBOutlet weak var unicodeRangesTableView:  NSTableView!
     @IBOutlet weak var codeRangesTableView:     NSTableView!
@@ -26,7 +26,6 @@ class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NSTableV
     @IBOutlet weak var version5View:            NSView!
 
     var table:  FontTable_OS2
-
 
     @objc var usWeightClass:    UInt16 = 0
     @objc var fsType:           FontTable_OS2.FontType.RawValue = 0
@@ -271,7 +270,7 @@ class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NSTableV
         self.didChangeValue(forKey: "ulCodePageRange2")
     }
 
-    // MARK: <NSTableViewDataSource>
+    // MARK: - <NSTableViewDataSource>
     func numberOfRows(in tableView: NSTableView) -> Int {
         if tableView == unicodeRangesTableView {
             return 123
@@ -280,7 +279,7 @@ class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NSTableV
         }
     }
 
-    // MARK: <NSTableViewDelegate>
+    // MARK: - <NSTableViewDelegate>
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         if tableView == unicodeRangesTableView {
             let cellView: CheckboxTableCellView = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("unicodeRangeTableCellView"), owner: self) as! CheckboxTableCellView

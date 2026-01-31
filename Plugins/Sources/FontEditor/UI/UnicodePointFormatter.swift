@@ -13,5 +13,4 @@ class UnicodePointFormatter: NumberFormatter, @unchecked Sendable {
         guard let value: UInt32 = obj as? UInt32 else { return nil }
         return String(format: "U+%04X", value)
     }
-
 }

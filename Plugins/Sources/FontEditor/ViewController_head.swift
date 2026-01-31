@@ -8,7 +8,7 @@
 import Cocoa
 import CoreFont
 
-final public class ViewController_head: FontTableViewController {
+final class ViewController_head: FontTableViewController {
     @IBOutlet weak var flagsControl:        BitfieldControl!
     @IBOutlet weak var macStyleControl:     BitfieldControl!
 
@@ -19,11 +19,11 @@ final public class ViewController_head: FontTableViewController {
         super.init(with: fontTable)
     }
 
-    required init?(coder: NSCoder) {
+    @MainActor required init?(coder: NSCoder) {
         fatalError("not implemented")
     }
 
-    public override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         flagsControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "representedObject.objcFlags")
         macStyleControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "representedObject.objcMacStyle")
@@ -36,5 +36,4 @@ final public class ViewController_head: FontTableViewController {
     @IBAction func changeMacStyle(_ sender: Any) {
 
     }
-
 }

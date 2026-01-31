@@ -93,6 +93,7 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, NSTable
         } else {
             let calcChecksum = entry.table.calculatedChecksum
             let isGood = entry.checksum == calcChecksum
+            // FIXME: make this compatible with dark mode or not hard-coded
             view.textField?.textColor = isGood ? NSColor.labelColor : NSColor(srgbRed: 183.0/255.0, green: 130.0/255.0, blue: 0, alpha: 1.0)
             view.textField?.toolTip = isGood ? "" : String(format: NSLocalizedString("The calculated checksum is 0x%08X", comment: ""), calcChecksum)
             view.textField?.font = .monospacedSystemFont(ofSize: NSFont.smallSystemFontSize, weight: .regular)
@@ -137,5 +138,5 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, NSTable
     }
 
     static var emptyView: NSView = NSView(frame: NSMakeRect(0, 0, 400, 600))
-    static let supportedTableTags: Set<TableTag> = Set([.head, .maxp, .name, .post, .hhea, .hmtx, .OS_2])
+    static let supportedTableTags: Set<TableTag> = Set([.head, .maxp, .name, .post, .hhea, .hmtx, .OS_2, .gasp])
 }

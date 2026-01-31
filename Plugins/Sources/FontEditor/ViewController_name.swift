@@ -8,7 +8,7 @@
 import Cocoa
 import CoreFont
 
-final public class ViewController_name: FontTableViewController {
+final class ViewController_name: FontTableViewController {
     var table:    FontTable_name
 
     required init?(with fontTable: FontTable) {
@@ -20,7 +20,7 @@ final public class ViewController_name: FontTableViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
     }
 }

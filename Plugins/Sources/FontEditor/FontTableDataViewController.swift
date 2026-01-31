@@ -15,7 +15,7 @@ struct HFDefaults {
 }
 
 // generic data viewer for non-specialized viewers
-final public class FontTableDataViewController: FontTableViewController {
+final class FontTableDataViewController: FontTableViewController {
     @IBOutlet weak var textView:    HFTextView!
 
     @IBOutlet var findView:         NSView!
@@ -39,7 +39,7 @@ final public class FontTableDataViewController: FontTableViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         findView.isHidden = true
 
@@ -62,7 +62,7 @@ final public class FontTableDataViewController: FontTableViewController {
     }
 
     // MARK: - <HFTextViewDelegate>
-    public func hexTextView(_ view: HFTextView, didChangeProperties properties: HFControllerPropertyBits) {
+    func hexTextView(_ view: HFTextView, didChangeProperties properties: HFControllerPropertyBits) {
         if properties.contains(.contentValue) {
             self.view.window?.windowController?.setDocumentEdited(true)
 //            self.setDocumentEdited(true)

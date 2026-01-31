@@ -1,6 +1,6 @@
 //
 //  FontTable_hmtx.swift
-//  Plugins
+//  CoreFont
 //
 //  Created by Mark Douma on 1/26/2026.
 //
