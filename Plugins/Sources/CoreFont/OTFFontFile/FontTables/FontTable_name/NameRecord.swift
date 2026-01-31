@@ -10,7 +10,7 @@ import RFSupport
 
 public extension FontTable_name {
 
-    class NameRecord: FontTableNode, Comparable {
+    final class NameRecord: FontTableNode, Comparable {
         public var platformID:      PlatformID = .any   // base-0
         public var encodingID:      EncodingID = .none  // aka `platformSpecificID`/`scriptID`; base-0
         public var languageID:      LanguageID = .none  // base-0

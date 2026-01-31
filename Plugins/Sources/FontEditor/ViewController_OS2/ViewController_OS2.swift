@@ -14,9 +14,12 @@ class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NSTableV
     @IBOutlet weak var unicodeRangesTableView:  NSTableView!
     @IBOutlet weak var codeRangesTableView:     NSTableView!
 
+    @IBOutlet var unicodeRangePopover:          NSPopover!
+
     @IBOutlet weak var fontTypeControl:         BitfieldControl!
     @IBOutlet weak var fontSelectionControl:    BitfieldControl!
 
+    @IBOutlet weak var unicodeRangeButton:      NSButton!
     @IBOutlet weak var version1UnicodeView:     NSView!
     @IBOutlet weak var codePageView:            NSView!
     @IBOutlet weak var version2View:            NSView!
@@ -24,45 +27,83 @@ class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NSTableV
 
     var table:  FontTable_OS2
 
+
     @objc var usWeightClass:    UInt16 = 0
     @objc var fsType:           FontTable_OS2.FontType.RawValue = 0
+
     @objc var ulUnicodeRange1:  FontTable_OS2.UnicodeMask1.RawValue = 0 {
         didSet {
+            undoManager?.setActionName(NSLocalizedString("Change Unicode Range", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.willChangeValue(forKey: "ulUnicodeRange1")
+                $0.ulUnicodeRange1 = oldValue
+                $0.didChangeValue(forKey: "ulUnicodeRange1")
+            })
             unicodeRangesTableView.reloadData()
         }
     }
 
     @objc var ulUnicodeRange2:  FontTable_OS2.UnicodeMask2.RawValue = 0 {
         didSet {
+            undoManager?.setActionName(NSLocalizedString("Change Unicode Range", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.willChangeValue(forKey: "ulUnicodeRange2")
+                $0.ulUnicodeRange2 = oldValue
+                $0.didChangeValue(forKey: "ulUnicodeRange2")
+            })
             unicodeRangesTableView.reloadData()
         }
     }
 
     @objc var ulUnicodeRange3:  FontTable_OS2.UnicodeMask3.RawValue = 0 {
         didSet {
+            undoManager?.setActionName(NSLocalizedString("Change Unicode Range", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.willChangeValue(forKey: "ulUnicodeRange3")
+                $0.ulUnicodeRange3 = oldValue
+                $0.didChangeValue(forKey: "ulUnicodeRange3")
+            })
             unicodeRangesTableView.reloadData()
         }
     }
 
     @objc var ulUnicodeRange4:  FontTable_OS2.UnicodeMask4.RawValue = 0 {
         didSet {
+            undoManager?.setActionName(NSLocalizedString("Change Unicode Range", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.willChangeValue(forKey: "ulUnicodeRange4")
+                $0.ulUnicodeRange4 = oldValue
+                $0.didChangeValue(forKey: "ulUnicodeRange4")
+            })
             unicodeRangesTableView.reloadData()
         }
     }
 
     @objc var ulCodePageRange1:  UInt32  = 0 {
         didSet {
+            undoManager?.setActionName(NSLocalizedString("Change Code Page Range", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.willChangeValue(forKey: "ulCodePageRange1")
+                $0.ulCodePageRange1 = oldValue
+                $0.didChangeValue(forKey: "ulCodePageRange1")
+            })
             codeRangesTableView.reloadData()
         }
     }
 
     @objc var ulCodePageRange2:  UInt32  = 0 {
         didSet {
+            undoManager?.setActionName(NSLocalizedString("Change Code Page Range", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.willChangeValue(forKey: "ulCodePageRange2")
+                $0.ulCodePageRange2 = oldValue
+                $0.didChangeValue(forKey: "ulCodePageRange2")
+            })
             codeRangesTableView.reloadData()
         }
     }
 
-    @objc var fsSelection:      FontTable_OS2.Selection.RawValue = 0
+    @objc var fsSelection:      UInt16 = 0 
 
     private var unicodeBlocksToNames:   [Int: String] = [:]
     private var codePageRangesToNames:  [Int: String] = [:]
@@ -120,6 +161,10 @@ class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NSTableV
         codeRangesTableView.reloadData()
     }
 
+    @IBAction func showUnicodeRangePopover(_ sender: Any) {
+        unicodeRangePopover.show(relativeTo: unicodeRangeButton.bounds, of: unicodeRangeButton, preferredEdge: .maxX)
+    }
+
     @IBAction func changeVersion(_ sender: Any) {
         updateUI()
     }
@@ -127,17 +172,18 @@ class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NSTableV
     @IBAction func changeFontType(_ sender: Any) {
         guard let sender = sender as? NSButton else { return }
         let fontType: FontTable_OS2.FontType = .init(rawValue: UInt16(sender.tag))
-//        let document = view.window?.windowController?.document
+//        let document = windowController?.document
 //        document?.undoManager?.setActionName(NSLocalizedString("Change Font Type", comment: ""))
 //        document?.undoManager?.registerUndo(withTarget: self) { (self) in
 //            self.fsType = fsType
 //        }
+        self.willChangeValue(forKey: "fsType")
         if sender.state == .on {
             fsType |= fontType.rawValue
         } else {
             fsType &= ~fontType.rawValue
         }
-
+        self.didChangeValue(forKey: "fsType")
     }
     
     @IBAction func changeFontSelection(_ sender: Any) {
