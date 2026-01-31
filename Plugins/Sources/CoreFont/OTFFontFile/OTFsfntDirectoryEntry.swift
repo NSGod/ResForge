@@ -70,5 +70,6 @@ final public class OTFsfntDirectoryEntry: OTFFontFileNode, Comparable {
         .name: 4,
         .hhea: 5,
         .hmtx: 6,
+        .gasp: 7,
     ]
 }

@@ -56,6 +56,10 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        nfnt.unbind(NSBindingName("objcFontType"))
+    }
+
     public override func awakeFromNib() {
 //        NSLog("\(type(of: self)).\(#function)")
     }

@@ -136,7 +136,12 @@ final class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NS
     @MainActor required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    deinit {
+        fontTypeControl.unbind(NSBindingName("objectValue"))
+        fontSelectionControl.unbind(NSBindingName("objectValue"))
+    }
+
     override func viewDidLoad() {
         fontTypeControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "fsType", options: nil)
         fontSelectionControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "fsSelection", options: nil)

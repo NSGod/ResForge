@@ -113,6 +113,9 @@ final public class OTFFontFile: NSObject {
     public var os2Table: FontTable_OS2? {
         return table(for: .OS_2) as? FontTable_OS2
     }
+    public var gaspTable: FontTable_gasp? {
+        return table(for: .gasp) as? FontTable_gasp
+    }
     public func table(for tableTag: TableTag) -> FontTable? {
         return tableTagsToTables[tableTag]
     }

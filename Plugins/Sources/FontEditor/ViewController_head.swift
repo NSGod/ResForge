@@ -23,6 +23,11 @@ final class ViewController_head: FontTableViewController {
         fatalError("not implemented")
     }
 
+    deinit {
+        flagsControl.unbind(NSBindingName("objectValue"))
+        macStyleControl.unbind(NSBindingName("objectValue"))
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         flagsControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "representedObject.objcFlags")
