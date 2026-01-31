@@ -18,17 +18,6 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
         PluginRegistry.register(self)
     }
 
-    public let resource:                    Resource
-    private let manager:                    RFEditorManager
-    @objc var fond:                         FOND
-
-    @objc var kernPairs:                    [KernTreeNode] = []
-    @objc var glyphWidths:                  [WidthTreeNode] = []
-
-    @objc var glyphNameEntries:             [GlyphNameEntry] = []
-    @objc var effectiveGlyphNameEntries:    [GlyphNameEntry] = []
-
-
     @IBOutlet weak var boundingBoxTableView:            NSTableView!
     @IBOutlet weak var kernTableOutlineView:            NSOutlineView!
     @IBOutlet weak var glyphWidthsOutlineView:          NSOutlineView!
@@ -47,35 +36,34 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
     @IBOutlet weak var exportKernPairButton:            NSButton!
     @IBOutlet var boundingBoxTableEntriesController:    NSArrayController!
 
-    @objc var objcFontClass:                            StyleMappingTable.FontClass.RawValue = 0
+    public let resource:                    Resource
+    private let manager:                    RFEditorManager
+    @objc var fond:                         FOND
 
+    @objc var kernPairs:                    [KernTreeNode] = []
+    @objc var glyphWidths:                  [WidthTreeNode] = []
+
+    @objc var glyphNameEntries:             [GlyphNameEntry] = []
+    @objc var effectiveGlyphNameEntries:    [GlyphNameEntry] = []
+
+    @objc var objcFontClass:                StyleMappingTable.FontClass.RawValue = 0
 
     public override var windowNibName: NSNib.Name {
         "FONDEditor"
     }
 
     public required init?(resource: Resource, manager: RFEditorManager) {
+        UserDefaults.standard.register(defaults: ["FONDEditor.selectedTabIndex": 0])
         self.resource = resource
         self.manager = manager
-        UserDefaults.standard.register(defaults: ["FONDEditor.selectedTabIndex": 0])
         do {
             fond = try FOND(resource.data, resource: self.resource)
             objcFontClass = fond.styleMappingTable?.objcFontClass ?? 0
             if let kernEntries = fond.kernTable?.entries {
-                for kernEntry in kernEntries {
-                    let node = KernTreeNode(kernEntry)
-                    kernPairs.append(node)
-                }
-                // FIXME: figure out sorting here
-//                kernPairs.sort(by: <)
+                kernPairs = kernEntries.map(KernTreeNode.init(representedObject:)).sorted(by: <)
             }
             if let widthEntries = fond.widthTable?.entries {
-                for widthEntry in widthEntries {
-                    let node = WidthTreeNode(with: widthEntry)
-                    glyphWidths.append(node)
-                }
-                // FIXME: figure out sorting here
-
+                glyphWidths = widthEntries.map(WidthTreeNode.init(representedObject:)).sorted(by: <)
             }
             if let charCodesToGlyphNames = fond.styleMappingTable?.glyphNameEncodingSubtable?.charCodesToGlyphNames, charCodesToGlyphNames.count > 0 {
                 let entries = GlyphNameEntry.glyphNameEntries(with: charCodesToGlyphNames)
@@ -116,6 +104,9 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
         }
         if fond.wTabOff != 0 {
             tabView.tabViewItems[2].label = NSLocalizedString("✅ Glyph Width Table", comment: "")
+        }
+        if fond.styleMappingTable?.glyphNameEncodingSubtable != nil {
+            tabView.tabViewItems[3].label = NSLocalizedString("✅ Glyph Name-Encoding Subtable", comment: "")
         }
         tableView.doubleAction = #selector(doubleClickOpenFont(_:))
     }
@@ -331,7 +322,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
                 if tableColumn?.identifier.rawValue == "style" { return nil }
                 let view: NSTableCellView = outlineView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
                 if tableColumn?.identifier.rawValue == "glyphWidth" {
-                    if let entry: WidthTable.Entry = (item.representedObject as? KernTreeNode)?.parent?.representedObject as? WidthTable.Entry {
+                    if let entry: WidthTable.Entry = (item.representedObject as? WidthTreeNode)?.parent?.representedObject as? WidthTable.Entry {
                         if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
                             formatter.unitsPerEm = fond.unitsPerEm(for: entry.style, manager: manager)
                         }
@@ -340,7 +331,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
                 return view
             } else {
                 if tableColumn?.identifier.rawValue == "style" {
-                    return outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("style"), owner: self)
+                    return outlineView.makeView(withIdentifier: tableColumn!.identifier, owner: self)
                 } else if tableColumn?.identifier.rawValue == "glyphWidth" {
                     return outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("glyphWidthCount"), owner: self)
                 }

@@ -18,7 +18,7 @@ final public class Fixed4Dot12ToEmValueFormatter: NumberFormatter, @unchecked Se
     }
 
     public override func string(for obj: Any?) -> String? {
-        guard let obj, let value = obj as? Fixed4Dot12 else { return nil }
+        guard let value = obj as? Fixed4Dot12 else { return nil }
         return super.string(for: Fixed4Dot12ToDouble(value) * Double(unitsPerEm.rawValue))
     }
 }

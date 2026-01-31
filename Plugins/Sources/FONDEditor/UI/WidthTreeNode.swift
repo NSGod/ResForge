@@ -7,23 +7,33 @@
 
 import Cocoa
 
-class WidthTreeNode: NSTreeNode {
-    override init(representedObject: Any?) {
-        super.init(representedObject: representedObject)
-    }
+final class WidthTreeNode: NSTreeNode, Comparable {
 
-    init(with widthTableEntry: WidthTable.Entry) {
-        var mTreeNodes: [WidthTreeNode] = []
-        let widthNodes = WidthNode.widthNodes(widthTableEntry: widthTableEntry)
-        for node in widthNodes {
-            let treeNode = WidthTreeNode(representedObject:node)
-            mTreeNodes.append(treeNode)
+    override init(representedObject modelObject: Any?) {
+        if let entry = modelObject as? WidthTable.Entry {
+            var mTreeNodes: [WidthTreeNode] = []
+            let widthNodes: [WidthNode] = WidthNode.widthNodes(widthTableEntry: entry)
+            for node in widthNodes {
+                let treeNode = WidthTreeNode(representedObject: node)
+                mTreeNodes.append(treeNode)
+            }
+            let treeNodes = mTreeNodes.sorted(by: <)
+            super.init(representedObject: entry)
+            mutableChildren.addObjects(from: treeNodes)
+        } else {
+            super.init(representedObject: modelObject)
         }
-        super.init(representedObject: widthTableEntry)
-        self.mutableChildren.addObjects(from: mTreeNodes)
     }
 
     @objc var countOfChildNodes: Int {
         return self.children?.count ?? 0
+    }
+
+    static func < (lhs: WidthTreeNode, rhs: WidthTreeNode) -> Bool {
+        /// `representedObject` can be either `WidthNode` or `WidthTable.Entry`
+        if let lhs = lhs.representedObject as? WidthTable.Entry, let rhs = rhs.representedObject as? WidthTable.Entry {
+            return lhs.style < rhs.style
+        }
+        return false
     }
 }
