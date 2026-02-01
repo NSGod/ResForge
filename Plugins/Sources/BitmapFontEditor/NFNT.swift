@@ -132,13 +132,8 @@ public final class NFNT: NSObject {
     private var haveBuiltGlyphs: Bool = false
 
     // MARK: - init
-    convenience init(_ data: Data, resource: Resource) throws {
-        let reader = BinaryDataReader(data)
-        try self.init(reader, resource: resource)
-    }
-
-    init(_ binReader: BinaryDataReader, resource: Resource) throws {
-        self.reader = binReader
+    init(with resource: Resource) throws {
+        reader = BinaryDataReader(resource.data)
         self.resource = resource
         fontType = FontType(rawValue: try reader.read())
         firstChar = try reader.read()

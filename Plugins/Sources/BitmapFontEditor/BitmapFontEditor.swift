@@ -39,11 +39,11 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
         return "BitmapFontEditor"
     }
 
-    public required init?(resource: RFSupport.Resource, manager: any RFSupport.RFEditorManager) {
+    public required init?(resource: Resource, manager: any RFEditorManager) {
         self.resource = resource
         self.manager = manager
         do {
-            nfnt = try NFNT(resource.data, resource: resource)
+            nfnt = try NFNT(with: self.resource)
             objcFontType = nfnt.fontType.rawValue
         } catch  {
             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
@@ -141,7 +141,7 @@ extension BitmapFontEditor: PreviewProvider {
 					previewView.stringValue = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcde12345"
 					isSetup = true
 				}
-				let nfnt: NFNT = try NFNT(resource.data, resource: resource)
+				let nfnt: NFNT = try NFNT(with: resource)
 				previewView.nfnt = nfnt
 				if let bitmapRep = previewView.bitmapImageRepForCachingDisplay(in: previewView.bounds) {
 					previewView.cacheDisplay(in: previewView.bounds, to: bitmapRep)

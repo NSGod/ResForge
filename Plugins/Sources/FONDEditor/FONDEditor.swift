@@ -57,7 +57,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
         self.resource = resource
         self.manager = manager
         do {
-            fond = try FOND(resource.data, resource: self.resource)
+            fond = try FOND(with: self.resource)
             objcFontClass = fond.styleMappingTable?.objcFontClass ?? 0
             if let kernEntries = fond.kernTable?.entries {
                 kernPairs = kernEntries.map(KernTreeNode.init(representedObject:)).sorted(by: <)
@@ -77,6 +77,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
             return nil
         }
         super.init(window: nil)
+        fond.responder = self
     }
 
     required init?(coder: NSCoder) {

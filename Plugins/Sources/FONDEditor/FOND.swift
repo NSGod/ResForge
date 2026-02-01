@@ -214,15 +214,9 @@ final public class FOND: NSObject {
     private var stylesToUnitsPerEm:     [MacFontStyle: UnitsPerEm] = [:]
 
     // MARK: - init
-    public convenience init(_ data: Data, resource: Resource) throws {
-        let reader = BinaryDataReader(data)
-        try self.init(reader, resource: resource)
-    }
-
-    public init(_ binReader: BinaryDataReader, resource: Resource) throws {
+    public init(with resource: Resource) throws {
         // FIXME: deal with FOND w/ no name error
-        /// hold onto `reader` for future parsing for lazy data structures
-        self.reader = binReader
+        reader = BinaryDataReader(resource.data)
         self.resource = resource
         ffFlags         = try reader.read()
         objcFFFlags     = ffFlags.rawValue
