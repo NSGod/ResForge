@@ -9,7 +9,7 @@ import Cocoa
 import RFSupport
 import CoreFont
 
-public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvider, NSTableViewDelegate {
+public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvider, ExportProvider, NSTableViewDelegate {
     public static var bundle: Bundle { .module }
     public static let supportedTypes = [
         "NFNT",
@@ -95,6 +95,19 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
         return nil
     }
 
+    // MARK: <ExportProvider>
+    public static func filenameExtension(for resourceType: String) -> String {
+        return "png"
+    }
+
+    public static func export(_ resource: Resource, to url: URL) throws {
+        let nfnt = try NFNT(with: resource)
+        guard let image: NSImage = nfnt.bitmapImage else { return }
+        guard let imageRep: NSBitmapImageRep = image.representations.first as? NSBitmapImageRep else { return }
+        guard let data = imageRep.representation(using: .png, properties: [:]) else { return }
+        _ = try data.write(to: url, options: .atomic)
+    }
+
     @IBAction func showPopover(_ sender: Any) {
         popover.show(relativeTo: popoverButton.bounds, of: popoverButton, preferredEdge: .maxX)
     }
@@ -112,6 +125,8 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
     @IBAction func changeBitDepth(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
         guard let sender = sender as? NSPopUpButton else { return }
+
+        
     }
 
     public func saveResource(_ sender: Any) {
