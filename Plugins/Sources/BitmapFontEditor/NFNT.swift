@@ -9,6 +9,66 @@ import Cocoa
 import RFSupport
 import CoreFont
 
+extension NFNT {
+    struct Glyph {
+        let charCode:       CharCode16
+        let glyphRect:      NSRect
+        let offset:         Int8
+        let width:          Int8
+
+        var pixelOffset:    Int16 {
+            return Int16(glyphRect.origin.x)
+        }
+
+        var isMissingGlyph: Bool {
+            self.offset == -1 && self.width == -1 && self.glyphRect == .zero
+        }
+
+        weak var nfnt:      NFNT!
+
+        static let nullGlyph: Glyph = .init(with: .zero, offset: -1, width: -1, charCode: CharCode16.max, nfnt:nil)
+
+        init(with glyphRect: NSRect, offset: Int8, width: Int8, charCode: CharCode16, nfnt: NFNT?) {
+            self.offset = offset
+            self.width = width
+            if self.offset == -1 && self.width == -1 {
+                self.glyphRect = .zero
+            } else {
+                self.glyphRect = glyphRect
+            }
+            self.charCode = charCode
+            self.nfnt = nfnt
+        }
+    }
+
+    struct FontType: OptionSet {
+        let rawValue: UInt16
+        init(rawValue: UInt16) { self.rawValue = rawValue }
+
+        static let hasImageHeightTable      = FontType(rawValue: 1 << 0)
+        static let hasGlyphWidthTable       = FontType(rawValue: 1 << 1)
+        static let font2BitDepth            = FontType(rawValue: 1 << 2)
+        static let font4BitDepth            = FontType(rawValue: 1 << 3)
+        static let font8BitDepth            = FontType(rawValue: 12)
+        static let hasFctbResource          = FontType(rawValue: 1 << 7)
+        static let isSyntheticFont          = FontType(rawValue: 1 << 8)
+        static let isColorFont              = FontType(rawValue: 1 << 9)
+        static let reserved12               = FontType(rawValue: 1 << 12)   // reserved, should be 1
+        static let isFixedWidthFont         = FontType(rawValue: 1 << 13)
+        static let expandFontHeight         = FontType(rawValue: 1 << 14)
+
+        static func viewTag(forFontBitDepth: FontType) -> Int {
+            switch forFontBitDepth {
+                case .font8BitDepth:      return 3
+                case .font4BitDepth:      return 2
+                case .font2BitDepth:      return 1
+                default:                  return 0
+            }
+        }
+    }
+}
+
+
 public final class NFNT: NSObject {
     struct FontRec {
         static let length = 26
@@ -68,63 +128,6 @@ public final class NFNT: NSObject {
     private var _glyphs:                [Glyph] = []
     private var _glyphEntries:          [String: Glyph] = [:]
     private var _bitmapImage:           NSImage?
-
-    struct FontType: OptionSet {
-        let rawValue: UInt16
-        init(rawValue: UInt16) { self.rawValue = rawValue }
-
-        static let hasImageHeightTable      = FontType(rawValue: 1 << 0)
-        static let hasGlyphWidthTable       = FontType(rawValue: 1 << 1)
-        static let font2BitDepth            = FontType(rawValue: 1 << 2)
-        static let font4BitDepth            = FontType(rawValue: 1 << 3)
-        static let font8BitDepth            = FontType(rawValue: 12)
-        static let hasFctbResource          = FontType(rawValue: 1 << 7)
-        static let isSyntheticFont          = FontType(rawValue: 1 << 8)
-        static let isColorFont              = FontType(rawValue: 1 << 9)
-        static let reserved12               = FontType(rawValue: 1 << 12)   // reserved, should be 1
-        static let isFixedWidthFont         = FontType(rawValue: 1 << 13)
-        static let expandFontHeight         = FontType(rawValue: 1 << 14)
-
-        static func viewTag(forFontBitDepth: FontType) -> Int {
-            switch forFontBitDepth {
-                case .font8BitDepth:      return 3
-                case .font4BitDepth:      return 2
-                case .font2BitDepth:      return 1
-                default:                  return 0
-            }
-        }
-    }
-
-    struct Glyph {
-        let charCode:       CharCode16
-        let glyphRect:      NSRect
-        let offset:         Int8
-        let width:          Int8
-
-        var pixelOffset:    Int16 {
-            return Int16(glyphRect.origin.x)
-        }
-
-        var isMissingGlyph: Bool {
-            self.offset == -1 && self.width == -1 && self.glyphRect == .zero
-        }
-
-        weak var nfnt:      NFNT!
-
-        static let nullGlyph: Glyph = .init(with: .zero, offset: -1, width: -1, charCode: CharCode16.max, nfnt:nil)
-
-        init(with glyphRect: NSRect, offset: Int8, width: Int8, charCode: CharCode16, nfnt: NFNT?) {
-            self.offset = offset
-            self.width = width
-            if self.offset == -1 && self.width == -1 {
-                self.glyphRect = .zero
-            } else {
-                self.glyphRect = glyphRect
-            }
-            self.charCode = charCode
-            self.nfnt = nfnt
-        }
-    }
 
     unowned var resource:       Resource
     private var reader:         BinaryDataReader

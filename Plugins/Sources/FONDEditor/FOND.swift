@@ -332,6 +332,7 @@ final public class FOND: NSObject {
                  NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
             }
         }
+        // If 'LWFN' can't be found, fall back to default
         stylesToUnitsPerEm[fontStyle] = .postScriptStandard
         return .postScriptStandard
     }
