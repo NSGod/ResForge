@@ -15,6 +15,7 @@ final class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NS
     @IBOutlet weak var codeRangesTableView:     NSTableView!
 
     @IBOutlet var unicodeRangePopover:          NSPopover!
+    @IBOutlet var codePageRangePopover:         NSPopover!
 
     @IBOutlet weak var fontTypeControl:         BitfieldControl!
     @IBOutlet weak var fontSelectionControl:    BitfieldControl!
@@ -167,6 +168,11 @@ final class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NS
 
     @IBAction func showUnicodeRangePopover(_ sender: Any) {
         unicodeRangePopover.show(relativeTo: unicodeRangeButton.bounds, of: unicodeRangeButton, preferredEdge: .maxX)
+    }
+
+    @IBAction func showCodePageRangePopover(_ sender: Any) {
+        let button = sender as! NSButton
+        codePageRangePopover.show(relativeTo: button.bounds, of: button, preferredEdge: .maxX)
     }
 
     @IBAction func changeVersion(_ sender: Any) {
