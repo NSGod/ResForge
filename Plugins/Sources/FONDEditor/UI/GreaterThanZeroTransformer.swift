@@ -1,6 +1,6 @@
 //
 //  GreaterThanZeroTransformer.swift
-//  Plugins
+//  FONDEditor
 //
 //  Created by Mark Douma on 2/1/2026.
 //
