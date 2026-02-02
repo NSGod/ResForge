@@ -38,9 +38,7 @@ public extension FontTable_OS2 {
                 case .semibold:     return 600
                 case .bold:         return 700
                 case .extraBold:    return 800
-                case .ultraBold:    return 800
                 case .black:        return 900
-                case .heavy:        return 900
                 case .extraBlack:   return 950
             }
         }
@@ -71,7 +69,11 @@ public extension FontTable_OS2 {
             return lhs.rawValue < rhs.rawValue
         }
 
-        public static let ultraBold     = Self.black
+        /// synonyms
+        public static let ultraLight    = Self.extraLight
+        public static let regular       = Self.normal
+        public static let demibold      = Self.medium
+        public static let ultraBold     = Self.extraBold
         public static let heavy         = Self.black
         public static let ultra         = Self.black
         public static let nord          = Self.black
@@ -106,16 +108,16 @@ public extension FontTable_OS2 {
         public init(rawValue: UInt16) {
             self.rawValue = rawValue
         }
-        public static let installableEmbedding:     FontType = []
+        public static let installableEmbedding:  FontType = []
         /// bit 0; reserved, set to 0
-        public static let restrictedEmbedding:      FontType = .init(rawValue: 1 << 1) /// 0x0002, 2; bit 1; font cannot be
-                                                                                /// embedded (to work, must be only level of embedding selected)
-        public static let previewPrintEmbedding:    FontType = .init(rawValue: 1 << 2) /// 0x0004, 4; bit 2; font can be installed
-                                                                                /// temp for read-only doc access
-        public static let editableEmbedding:        FontType = .init(rawValue: 1 << 3) /// 0x0008, 8; bit 3; font can be installed temp for doc editing
+        public static let restrictedEmbedding:   FontType = .init(rawValue: 1 << 1) /// 0x0002, 2; bit 1; font cannot be
+                                                                                    /// embedded (to work, must be only level of embedding selected)
+        public static let previewPrintEmbedding: FontType = .init(rawValue: 1 << 2) /// 0x0004, 4; bit 2; font can be installed
+                                                                                    /// temp for read-only doc access
+        public static let editableEmbedding:     FontType = .init(rawValue: 1 << 3) /// 0x0008, 8; bit 3; font can be installed temp for doc editing
         /// bits 4 - 7; reserved, set to 0
-        public static let noSubsetting:             FontType = .init(rawValue: 1 << 8) /// 0x0100, 256; bit 8; no subsetting prior to embedding
-        public static let bitmapEmbedding:          FontType = .init(rawValue: 1 << 9) /// 0x0200, 512; bit 9; no outline data may be embedded, bitmap data only
+        public static let noSubsetting:          FontType = .init(rawValue: 1 << 8) /// 0x0100, 256; bit 8; no subsetting prior to embedding
+        public static let bitmapEmbedding:       FontType = .init(rawValue: 1 << 9) /// 0x0200, 512; bit 9; no outline data may be embedded, bitmap data only
     }
 
     struct Selection: OptionSet {
@@ -138,6 +140,7 @@ public extension FontTable_OS2 {
         public static let oblique:          Selection = .init(rawValue: 1 << 9) // 512, (ver 4+) font contains oblique chars
     }
 
+    // FIXME: work on defining/expanding this?
     final class Panose: FontTableNode {
         @objc public var panose0: UInt8 = 0
         @objc public var panose1: UInt8 = 0

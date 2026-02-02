@@ -97,7 +97,7 @@ open class FontTable: OTFFontFileNode {
     public var htmxTable: FontTable_hmtx? { table(for: .hmtx) as? FontTable_hmtx }
     public var os2Table:  FontTable_OS2?  { table(for: .OS_2) as? FontTable_OS2 }
     public var gaspTable: FontTable_gasp? { table(for: .gasp) as? FontTable_gasp }
-    
+
     public var fontNumGlyphs: Int {
         return fontFile.numGlyphs
     }

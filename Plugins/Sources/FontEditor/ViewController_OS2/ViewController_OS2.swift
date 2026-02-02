@@ -28,9 +28,6 @@ final class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NS
 
     var table:  FontTable_OS2
 
-    @objc var usWeightClass:    UInt16 = 0
-    @objc var fsType:           FontTable_OS2.FontType.RawValue = 0
-
     @objc var ulUnicodeRange1:  FontTable_OS2.UnicodeMask1.RawValue = 0 {
         didSet {
             undoManager?.setActionName(NSLocalizedString("Change Unicode Range", comment: ""))
@@ -38,7 +35,13 @@ final class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NS
                 $0.willChangeValue(forKey: "ulUnicodeRange1")
                 $0.ulUnicodeRange1 = oldValue
                 $0.didChangeValue(forKey: "ulUnicodeRange1")
+                if #available(macOS 14.4, *) {
+                    if let undoCount = $0.undoManager?.undoCount, undoCount == 0 {
+                        $0.view.window?.isDocumentEdited = false
+                    }
+                }
             })
+            view.window?.isDocumentEdited = true
             unicodeRangesTableView.reloadData()
         }
     }
@@ -50,7 +53,13 @@ final class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NS
                 $0.willChangeValue(forKey: "ulUnicodeRange2")
                 $0.ulUnicodeRange2 = oldValue
                 $0.didChangeValue(forKey: "ulUnicodeRange2")
+                if #available(macOS 14.4, *) {
+                    if let undoCount = $0.undoManager?.undoCount, undoCount == 0 {
+                        $0.view.window?.isDocumentEdited = false
+                    }
+                }
             })
+            view.window?.isDocumentEdited = true
             unicodeRangesTableView.reloadData()
         }
     }
@@ -63,6 +72,7 @@ final class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NS
                 $0.ulUnicodeRange3 = oldValue
                 $0.didChangeValue(forKey: "ulUnicodeRange3")
             })
+            view.window?.isDocumentEdited = true
             unicodeRangesTableView.reloadData()
         }
     }
@@ -75,6 +85,7 @@ final class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NS
                 $0.ulUnicodeRange4 = oldValue
                 $0.didChangeValue(forKey: "ulUnicodeRange4")
             })
+            view.window?.isDocumentEdited = true
             unicodeRangesTableView.reloadData()
         }
     }
@@ -87,6 +98,7 @@ final class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NS
                 $0.ulCodePageRange1 = oldValue
                 $0.didChangeValue(forKey: "ulCodePageRange1")
             })
+            view.window?.isDocumentEdited = true
             codeRangesTableView.reloadData()
         }
     }
@@ -99,11 +111,46 @@ final class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NS
                 $0.ulCodePageRange2 = oldValue
                 $0.didChangeValue(forKey: "ulCodePageRange2")
             })
+            view.window?.isDocumentEdited = true
             codeRangesTableView.reloadData()
         }
     }
 
-    @objc var fsSelection:      UInt16 = 0 
+    @objc var usWeightClass:    UInt16 = 0 {
+        didSet {
+            undoManager?.setActionName(NSLocalizedString("Change Weight", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.willChangeValue(forKey: "usWeightClass")
+                $0.usWeightClass = oldValue
+                $0.didChangeValue(forKey: "usWeightClass")
+            })
+            view.window?.isDocumentEdited = true
+        }
+    }
+
+    @objc var fsType:           UInt16 = 0 {
+        didSet {
+            undoManager?.setActionName(NSLocalizedString("Change Font Type", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.willChangeValue(forKey: "fsType")
+                $0.fsType = oldValue
+                $0.didChangeValue(forKey: "fsType")
+            })
+            view.window?.isDocumentEdited = true
+        }
+    }
+
+    @objc var fsSelection:      UInt16 = 0 {
+        didSet {
+            undoManager?.setActionName("Change Font Selection")
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.willChangeValue(forKey: "fsSelection")
+                $0.fsSelection = oldValue
+                $0.didChangeValue(forKey: "fsSelection")
+            })
+            view.window?.isDocumentEdited = true
+        }
+    }
 
     private var unicodeBlocksToNames:   [Int: String] = [:]
     private var codePageRangesToNames:  [Int: String] = [:]
@@ -141,13 +188,280 @@ final class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NS
     deinit {
         fontTypeControl.unbind(NSBindingName("objectValue"))
         fontSelectionControl.unbind(NSBindingName("objectValue"))
+        let keys = ["version", "usWidthClass", "ySubscriptXSize", "ySubscriptYSize", "ySubscriptXOffset", "ySubscriptYOffset", "ySuperscriptXSize", "ySuperscriptYSize", "ySuperscriptXOffset", "ySuperscriptYOffset", "yStrikeoutSize", "yStrikeoutPosition", "sFamilyClass", "vendorID", "usFirstCharIndex", "usLastCharIndex", "sTypoAscent", "sTypoDescent", "sTypoLineGap", "usWinAscent", "usWinDescent", "sxHeight", "sCapHeight", "usDefaultChar", "usBreakChar", "usMaxContext", "usLowerOpticalPointSize", "usUpperOpticalPointSize"]
+        keys.forEach({ table.removeObserver(self, forKeyPath: $0) })
     }
 
     override func viewDidLoad() {
+        table.addObserver(self, forKeyPath: "version", options: [.new, .old], context: &table.version)
+        table.addObserver(self, forKeyPath: "usWidthClass", options: [.new, .old], context: &table.usWidthClass)
+        table.addObserver(self, forKeyPath: "ySubscriptXSize", options: [.new, .old], context: &table.ySubscriptXSize)
+        table.addObserver(self, forKeyPath: "ySubscriptYSize", options: [.new, .old], context: &table.ySubscriptYSize)
+        table.addObserver(self, forKeyPath: "ySubscriptXOffset", options: [.new, .old], context: &table.ySubscriptXOffset)
+        table.addObserver(self, forKeyPath: "ySubscriptYOffset", options: [.new, .old], context: &table.ySubscriptYOffset)
+        table.addObserver(self, forKeyPath: "ySuperscriptXSize", options: [.new, .old], context: &table.ySuperscriptXSize)
+        table.addObserver(self, forKeyPath: "ySuperscriptYSize", options: [.new, .old], context: &table.ySuperscriptYSize)
+        table.addObserver(self, forKeyPath: "ySuperscriptXOffset", options: [.new, .old], context: &table.ySuperscriptXOffset)
+        table.addObserver(self, forKeyPath: "ySuperscriptYOffset", options: [.new, .old], context: &table.ySuperscriptYOffset)
+        table.addObserver(self, forKeyPath: "yStrikeoutSize", options: [.new, .old], context: &table.yStrikeoutSize)
+        table.addObserver(self, forKeyPath: "yStrikeoutPosition", options: [.new, .old], context: &table.yStrikeoutPosition)
+        table.addObserver(self, forKeyPath: "sFamilyClass", options: [.new, .old], context: &table.sFamilyClass)
+        table.addObserver(self, forKeyPath: "vendorID", options: [.new, .old], context: &table.vendorID)
+        
+        table.addObserver(self, forKeyPath: "usFirstCharIndex", options: [.new, .old], context: &table.usFirstCharIndex)
+        table.addObserver(self, forKeyPath: "usLastCharIndex", options: [.new, .old], context: &table.usLastCharIndex)
+        table.addObserver(self, forKeyPath: "sTypoAscender", options: [.new, .old], context: &table.sTypoAscender)
+        table.addObserver(self, forKeyPath: "sTypoDescender", options: [.new, .old], context: &table.sTypoDescender)
+        table.addObserver(self, forKeyPath: "sTypoLineGap", options: [.new, .old], context: &table.sTypoLineGap)
+        table.addObserver(self, forKeyPath: "usWinAscent", options: [.new, .old], context: &table.usWinAscent)
+        table.addObserver(self, forKeyPath: "usWinDescent", options: [.new, .old], context: &table.usWinDescent)
+        table.addObserver(self, forKeyPath: "sxHeight", options: [.new, .old], context: &table.sxHeight)
+        table.addObserver(self, forKeyPath: "sCapHeight", options: [.new, .old], context: &table.sCapHeight)
+        table.addObserver(self, forKeyPath: "usDefaultChar", options: [.new, .old], context: &table.usDefaultChar)
+        table.addObserver(self, forKeyPath: "usBreakChar", options: [.new, .old], context: &table.usBreakChar)
+        table.addObserver(self, forKeyPath: "usMaxContext", options: [.new, .old], context: &table.usMaxContext)
+        table.addObserver(self, forKeyPath: "usLowerOpticalPointSize", options: [.new, .old], context: &table.usLowerOpticalPointSize)
+        table.addObserver(self, forKeyPath: "usUpperOpticalPointSize", options: [.new, .old], context: &table.usUpperOpticalPointSize)
+
         fontTypeControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "fsType", options: nil)
         fontSelectionControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "fsSelection", options: nil)
         super.viewDidLoad()
         updateUI()
+    }
+
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        NSLog("\(type(of: self)).\(#function) keyPath == \(String(describing: keyPath)), change == \(String(describing: change))")
+        guard let context = context else {
+            // call super?
+            return
+        }
+        if context == &table.version {
+            undoManager?.setActionName(NSLocalizedString("Change Version", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "version")
+                $0.table.version = FontTable_OS2.Version(rawValue: change![.oldKey] as! UInt16)!
+                $0.table.didChangeValue(forKey: "version")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.usWidthClass {
+            undoManager?.setActionName(NSLocalizedString("Change Width Class", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "usWidthClass")
+                $0.table.usWidthClass = FontTable_OS2.Width(rawValue: change![.oldKey] as! UInt16)!
+                $0.table.didChangeValue(forKey: "usWidthClass")
+            })
+            view.window?.isDocumentEdited = true
+
+        } else if context == &table.ySubscriptXSize {
+            undoManager?.setActionName(NSLocalizedString("Change Subscript X Size", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "ySubscriptXSize")
+                $0.table.ySubscriptXSize = change![.oldKey] as! Int16
+                $0.table.didChangeValue(forKey: "ySubscriptXSize")
+            })
+            view.window?.isDocumentEdited = true
+
+        } else if context == &table.ySubscriptYSize {
+            undoManager?.setActionName(NSLocalizedString("Change Subscript Y Size", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "ySubscriptYSize")
+                $0.table.ySubscriptYSize = change![.oldKey] as! Int16
+                $0.table.didChangeValue(forKey: "ySubscriptYSize")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.ySubscriptXOffset {
+            undoManager?.setActionName(NSLocalizedString("Change Subscript X Offset", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "ySubscriptXOffset")
+                $0.table.ySubscriptXOffset = change![.oldKey] as! Int16
+                $0.table.didChangeValue(forKey: "ySubscriptXOffset")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.ySubscriptYOffset {
+            undoManager?.setActionName(NSLocalizedString("Change Subscript Y Offset", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "ySubscriptYOffset")
+                $0.table.ySubscriptYOffset = change![.oldKey] as! Int16
+                $0.table.didChangeValue(forKey: "ySubscriptYOffset")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.ySuperscriptXSize {
+            undoManager?.setActionName(NSLocalizedString("Change Superscript X Size", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "ySuperscriptXSize")
+                $0.table.ySuperscriptXSize = change![.oldKey] as! Int16
+                $0.table.didChangeValue(forKey: "ySuperscriptXSize")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.ySuperscriptYSize {
+            undoManager?.setActionName(NSLocalizedString("Change Superscript Y Size", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "ySuperscriptYSize")
+                $0.table.ySuperscriptYSize = change![.oldKey] as! Int16
+                $0.table.didChangeValue(forKey: "ySuperscriptYSize")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.ySuperscriptXOffset {
+            undoManager?.setActionName(NSLocalizedString("Change Superscript X Offset", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "ySuperscriptXOffset")
+                $0.table.ySuperscriptXOffset = change![.oldKey] as! Int16
+                $0.table.didChangeValue(forKey: "ySuperscriptXOffset")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.ySuperscriptYOffset {
+            undoManager?.setActionName(NSLocalizedString("Change Superscript Y Offset", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "ySuperscriptYOffset")
+                $0.table.ySuperscriptYOffset = change![.oldKey] as! Int16
+                $0.table.didChangeValue(forKey: "ySuperscriptYOffset")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.yStrikeoutSize {
+            undoManager?.setActionName(NSLocalizedString("Change Strikeout Size", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "yStrikeoutSize")
+                $0.table.yStrikeoutSize = change![.oldKey] as! Int16
+                $0.table.didChangeValue(forKey: "yStrikeoutSize")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.yStrikeoutPosition {
+            undoManager?.setActionName(NSLocalizedString("Change Strikeout Position", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "yStrikeoutPosition")
+                $0.table.yStrikeoutPosition = change![.oldKey] as! Int16
+                $0.table.didChangeValue(forKey: "yStrikeoutPosition")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.sFamilyClass {
+            undoManager?.setActionName(NSLocalizedString("Change Family Class", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "sFamilyClass")
+                $0.table.sFamilyClass = change![.oldKey] as! Int16
+                $0.table.didChangeValue(forKey: "sFamilyClass")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.vendorID {
+            undoManager?.setActionName(NSLocalizedString("Change Vendor ID", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "vendorID")
+                $0.table.vendorID = change![.oldKey] as! Tag
+                $0.table.didChangeValue(forKey: "vendorID")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.usFirstCharIndex {
+            undoManager?.setActionName(NSLocalizedString("Change First Character", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "usFirstCharIndex")
+                $0.table.usFirstCharIndex = change![.oldKey] as! UVBMP
+                $0.table.didChangeValue(forKey: "usFirstCharIndex")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.usLastCharIndex {
+            undoManager?.setActionName(NSLocalizedString("Change Last Character", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "usLastCharIndex")
+                $0.table.usLastCharIndex = change![.oldKey] as! UVBMP
+                $0.table.didChangeValue(forKey: "usLastCharIndex")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.sTypoAscender {
+            undoManager?.setActionName(NSLocalizedString("Change Ascender", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "sTypoAscender")
+                $0.table.sTypoAscender = change![.oldKey] as! Int16
+                $0.table.didChangeValue(forKey: "sTypoAscender")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.sTypoDescender {
+            undoManager?.setActionName(NSLocalizedString("Change Descender", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "sTypoDescender")
+                $0.table.sTypoDescender = change![.oldKey] as! Int16
+                $0.table.didChangeValue(forKey: "sTypoDescender")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.sTypoLineGap {
+            undoManager?.setActionName(NSLocalizedString("Change Line Gap", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "sTypoLineGap")
+                $0.table.sTypoLineGap = change![.oldKey] as! Int16
+                $0.table.didChangeValue(forKey: "sTypoLineGap")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.usWinAscent {
+            undoManager?.setActionName(NSLocalizedString("Change Windows Ascent", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "usWinAscent")
+                $0.table.usWinAscent = change![.oldKey] as! UInt16
+                $0.table.didChangeValue(forKey: "usWinAscent")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.usWinDescent {
+            undoManager?.setActionName(NSLocalizedString("Change Windows Descent", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "usWinDescent")
+                $0.table.usWinDescent = change![.oldKey] as! UInt16
+                $0.table.didChangeValue(forKey: "usWinDescent")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.sxHeight {
+            undoManager?.setActionName(NSLocalizedString("Change x-Height", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "sxHeight")
+                $0.table.sxHeight = change![.oldKey] as! Int16
+                $0.table.didChangeValue(forKey: "sxHeight")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.sCapHeight {
+            undoManager?.setActionName(NSLocalizedString("Change Cap Height", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "sCapHeight")
+                $0.table.sCapHeight = change![.oldKey] as! Int16
+                $0.table.didChangeValue(forKey: "sCapHeight")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.usDefaultChar {
+            undoManager?.setActionName(NSLocalizedString("Change Default Character", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "usDefaultChar")
+                $0.table.usDefaultChar = change![.oldKey] as! UVBMP
+                $0.table.didChangeValue(forKey: "usDefaultChar")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.usBreakChar {
+            undoManager?.setActionName(NSLocalizedString("Change Break Character", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "usBreakChar")
+                $0.table.usBreakChar = change![.oldKey] as! UVBMP
+                $0.table.didChangeValue(forKey: "usBreakChar")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.usMaxContext {
+            undoManager?.setActionName(NSLocalizedString("Change Max Context", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "usMaxContext")
+                $0.table.usMaxContext = change![.oldKey] as! UInt16
+                $0.table.didChangeValue(forKey: "usMaxContext")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.usLowerOpticalPointSize {
+            undoManager?.setActionName(NSLocalizedString("Change Lower Optical Point Size", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "usLowerOpticalPointSize")
+                $0.table.usLowerOpticalPointSize = change![.oldKey] as! UInt16
+                $0.table.didChangeValue(forKey: "usLowerOpticalPointSize")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.usUpperOpticalPointSize {
+            undoManager?.setActionName(NSLocalizedString("Change Upper Optical Point Size", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.willChangeValue(forKey: "usUpperOpticalPointSize")
+                $0.table.usUpperOpticalPointSize = change![.oldKey] as! UInt16
+                $0.table.didChangeValue(forKey: "usUpperOpticalPointSize")
+            })
+            view.window?.isDocumentEdited = true
+        }
     }
 
     func updateUI() {
@@ -182,11 +496,6 @@ final class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NS
     @IBAction func changeFontType(_ sender: Any) {
         guard let sender = sender as? NSButton else { return }
         let fontType: FontTable_OS2.FontType = .init(rawValue: UInt16(sender.tag))
-//        let document = windowController?.document
-//        document?.undoManager?.setActionName(NSLocalizedString("Change Font Type", comment: ""))
-//        document?.undoManager?.registerUndo(withTarget: self) { (self) in
-//            self.fsType = fsType
-//        }
         self.willChangeValue(forKey: "fsType")
         if sender.state == .on {
             fsType |= fontType.rawValue

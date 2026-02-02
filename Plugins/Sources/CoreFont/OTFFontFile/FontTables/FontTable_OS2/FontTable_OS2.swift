@@ -74,7 +74,7 @@ final public class FontTable_OS2: FontTable {
     @objc public var sCapHeight:                Int16 = 0   // ver 2+
     @objc public var usDefaultChar:             UVBMP = 0   // ver 2+
     @objc public var usBreakChar:               UVBMP = 0   // ver 2+
-    @objc public var usMaxContext:              UInt16 = 0  // ver 2+
+    @objc public var usMaxContext:              UInt16 = 0  // ver 2+ max lookahead context: e.g. for ffl ligature, it'd be 2
 
     @objc public var usLowerOpticalPointSize:   UInt16 = 0  // ver 5+
     @objc public var usUpperOpticalPointSize:   UInt16 = 0  // ver 5+
