@@ -8,7 +8,8 @@
 import Cocoa
 import CoreFont
 
-// abstract superclass
+/// abstract superclass
+// - Note: this is a FontTable_ViewController, not a Font_TableViewController
 class FontTableViewController: NSViewController {
 
     required init?(with fontTable: FontTable) {

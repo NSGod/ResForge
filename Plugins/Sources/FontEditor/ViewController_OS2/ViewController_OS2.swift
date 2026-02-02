@@ -9,7 +9,7 @@ import Cocoa
 import CoreFont
 import RFSupport
 
-final class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NSTableViewDataSource {
+final class ViewController_OS2: FontTableViewController {
 
     @IBOutlet weak var unicodeRangesTableView:  NSTableView!
     @IBOutlet weak var codeRangesTableView:     NSTableView!
@@ -188,7 +188,7 @@ final class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NS
     deinit {
         fontTypeControl.unbind(NSBindingName("objectValue"))
         fontSelectionControl.unbind(NSBindingName("objectValue"))
-        let keys = ["version", "usWidthClass", "ySubscriptXSize", "ySubscriptYSize", "ySubscriptXOffset", "ySubscriptYOffset", "ySuperscriptXSize", "ySuperscriptYSize", "ySuperscriptXOffset", "ySuperscriptYOffset", "yStrikeoutSize", "yStrikeoutPosition", "sFamilyClass", "vendorID", "usFirstCharIndex", "usLastCharIndex", "sTypoAscent", "sTypoDescent", "sTypoLineGap", "usWinAscent", "usWinDescent", "sxHeight", "sCapHeight", "usDefaultChar", "usBreakChar", "usMaxContext", "usLowerOpticalPointSize", "usUpperOpticalPointSize"]
+        let keys = ["version", "usWidthClass", "ySubscriptXSize", "ySubscriptYSize", "ySubscriptXOffset", "ySubscriptYOffset", "ySuperscriptXSize", "ySuperscriptYSize", "ySuperscriptXOffset", "ySuperscriptYOffset", "yStrikeoutSize", "yStrikeoutPosition", "sFamilyClass", "vendorID", "usFirstCharIndex", "usLastCharIndex", "sTypoAscender", "sTypoDescender", "sTypoLineGap", "usWinAscent", "usWinDescent", "sxHeight", "sCapHeight", "usDefaultChar", "usBreakChar", "usMaxContext", "usLowerOpticalPointSize", "usUpperOpticalPointSize"]
         keys.forEach({ table.removeObserver(self, forKeyPath: $0) })
     }
 
@@ -207,7 +207,6 @@ final class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NS
         table.addObserver(self, forKeyPath: "yStrikeoutPosition", options: [.new, .old], context: &table.yStrikeoutPosition)
         table.addObserver(self, forKeyPath: "sFamilyClass", options: [.new, .old], context: &table.sFamilyClass)
         table.addObserver(self, forKeyPath: "vendorID", options: [.new, .old], context: &table.vendorID)
-        
         table.addObserver(self, forKeyPath: "usFirstCharIndex", options: [.new, .old], context: &table.usFirstCharIndex)
         table.addObserver(self, forKeyPath: "usLastCharIndex", options: [.new, .old], context: &table.usLastCharIndex)
         table.addObserver(self, forKeyPath: "sTypoAscender", options: [.new, .old], context: &table.sTypoAscender)
@@ -227,6 +226,132 @@ final class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NS
         fontSelectionControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "fsSelection", options: nil)
         super.viewDidLoad()
         updateUI()
+    }
+
+    func updateUI() {
+        let views: [NSView] = [version1UnicodeView, codePageView, version2View, version5View]
+        for view in views {
+            for control: NSControl in view.subviews as! [NSControl] {
+                control.isEnabled = table.version.rawValue >= control.tag
+            }
+        }
+        if table.version < .version4 {
+            fontSelectionControl.enabledMask = 0x7F
+        } else {
+            fontSelectionControl.enabledMask = 0x3FF
+        }
+        unicodeRangesTableView.reloadData()
+        codeRangesTableView.reloadData()
+    }
+
+    @IBAction func showUnicodeRangePopover(_ sender: Any) {
+        unicodeRangePopover.show(relativeTo: unicodeRangeButton.bounds, of: unicodeRangeButton, preferredEdge: .maxX)
+    }
+
+    @IBAction func showCodePageRangePopover(_ sender: Any) {
+        let button = sender as! NSButton
+        codePageRangePopover.show(relativeTo: button.bounds, of: button, preferredEdge: .maxX)
+    }
+
+    @IBAction func changeVersion(_ sender: Any) {
+        updateUI()
+    }
+
+    @IBAction func changeFontType(_ sender: Any) {
+        guard let sender = sender as? NSButton else { return }
+        let fontType: FontTable_OS2.FontType = .init(rawValue: UInt16(sender.tag))
+        self.willChangeValue(forKey: "fsType")
+        if sender.state == .on {
+            fsType |= fontType.rawValue
+        } else {
+            fsType &= ~fontType.rawValue
+        }
+        self.didChangeValue(forKey: "fsType")
+    }
+    
+    @IBAction func changeFontSelection(_ sender: Any) {
+        guard let sender = sender as? NSButton else { return }
+        let fontSelection: FontTable_OS2.Selection = .init(rawValue: UInt16(sender.tag))
+        self.willChangeValue(forKey: "fsSelection")
+        if sender.state == .on {
+            fsSelection |= fontSelection.rawValue
+        } else {
+            fsSelection &= ~fontSelection.rawValue
+        }
+        self.didChangeValue(forKey: "fsSelection")
+    }
+
+    @IBAction func toggleUnicodeRange1(_ sender: Any) {
+        let sender = sender as! NSButton
+        let mask: FontTable_OS2.UnicodeMask1 = .init(rawValue: UInt32(1 << sender.tag))
+        self.willChangeValue(forKey: "ulUnicodeRange1")
+        if sender.state == .on {
+            ulUnicodeRange1 |= mask.rawValue
+        } else {
+            ulUnicodeRange1 &= ~mask.rawValue
+        }
+        self.didChangeValue(forKey: "ulUnicodeRange1")
+    }
+
+    @IBAction func toggleUnicodeRange2(_ sender: Any) {
+        let sender = sender as! NSButton
+        let mask: FontTable_OS2.UnicodeMask2 = .init(rawValue: UInt32(1 << sender.tag))
+        self.willChangeValue(forKey: "ulUnicodeRange2")
+        if sender.state == .on {
+            ulUnicodeRange2 |= mask.rawValue
+        } else {
+            ulUnicodeRange2 &= ~mask.rawValue
+        }
+        self.didChangeValue(forKey: "ulUnicodeRange2")
+    }
+
+    @IBAction func toggleUnicodeRange3(_ sender: Any) {
+        let sender = sender as! NSButton
+        let mask: FontTable_OS2.UnicodeMask3 = .init(rawValue: UInt32(1 << sender.tag))
+        self.willChangeValue(forKey: "ulUnicodeRange3")
+        if sender.state == .on {
+            ulUnicodeRange3 |= mask.rawValue
+        } else {
+            ulUnicodeRange3 &= ~mask.rawValue
+        }
+        self.didChangeValue(forKey: "ulUnicodeRange3")
+    }
+
+    @IBAction func toggleUnicodeRange4(_ sender: Any) {
+        let sender = sender as! NSButton
+        let mask: FontTable_OS2.UnicodeMask4 = .init(rawValue: UInt32(1 << sender.tag))
+        self.willChangeValue(forKey: "ulUnicodeRange4")
+        if sender.state == .on {
+            ulUnicodeRange4 |= mask.rawValue
+        } else {
+            ulUnicodeRange4 &= ~mask.rawValue
+        }
+        self.didChangeValue(forKey: "ulUnicodeRange4")
+    }
+
+
+    @IBAction func toggleCodePageRange1(_ sender: Any) {
+        let sender = sender as! NSButton
+        let mask: FontTable_OS2.CodePageMask1 = .init(rawValue: UInt32(1 << sender.tag))
+        self.willChangeValue(forKey: "ulCodePageRange1")
+        if sender.state == .on {
+            ulCodePageRange1 |= mask.rawValue
+        } else {
+            ulCodePageRange1 &= ~mask.rawValue
+        }
+        self.didChangeValue(forKey: "ulCodePageRange1")
+    }
+
+    @IBAction func toggleCodePageRange2(_ sender: Any) {
+        let sender = sender as! NSButton
+        let mask: FontTable_OS2.CodePageMask2 = .init(rawValue: UInt32(1 << sender.tag))
+        self.willChangeValue(forKey: "ulCodePageRange2")
+        if sender.state == .on {
+            ulCodePageRange2 |= mask.rawValue
+        } else {
+            ulCodePageRange2 &= ~mask.rawValue
+        }
+        self.didChangeValue(forKey: "ulCodePageRange2")
     }
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -461,133 +586,9 @@ final class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NS
             view.window?.isDocumentEdited = true
         }
     }
+}
 
-    func updateUI() {
-        let views: [NSView] = [version1UnicodeView, codePageView, version2View, version5View]
-        for view in views {
-            for control: NSControl in view.subviews as! [NSControl] {
-                control.isEnabled = table.version.rawValue >= control.tag
-            }
-        }
-        if table.version < .version4 {
-            fontSelectionControl.enabledMask = 0x7F
-        } else {
-            fontSelectionControl.enabledMask = 0x3FF
-        }
-        unicodeRangesTableView.reloadData()
-        codeRangesTableView.reloadData()
-    }
-
-    @IBAction func showUnicodeRangePopover(_ sender: Any) {
-        unicodeRangePopover.show(relativeTo: unicodeRangeButton.bounds, of: unicodeRangeButton, preferredEdge: .maxX)
-    }
-
-    @IBAction func showCodePageRangePopover(_ sender: Any) {
-        let button = sender as! NSButton
-        codePageRangePopover.show(relativeTo: button.bounds, of: button, preferredEdge: .maxX)
-    }
-
-    @IBAction func changeVersion(_ sender: Any) {
-        updateUI()
-    }
-
-    @IBAction func changeFontType(_ sender: Any) {
-        guard let sender = sender as? NSButton else { return }
-        let fontType: FontTable_OS2.FontType = .init(rawValue: UInt16(sender.tag))
-        self.willChangeValue(forKey: "fsType")
-        if sender.state == .on {
-            fsType |= fontType.rawValue
-        } else {
-            fsType &= ~fontType.rawValue
-        }
-        self.didChangeValue(forKey: "fsType")
-    }
-    
-    @IBAction func changeFontSelection(_ sender: Any) {
-        guard let sender = sender as? NSButton else { return }
-        let fontSelection: FontTable_OS2.Selection = .init(rawValue: UInt16(sender.tag))
-        self.willChangeValue(forKey: "fsSelection")
-        if sender.state == .on {
-            fsSelection |= fontSelection.rawValue
-        } else {
-            fsSelection &= ~fontSelection.rawValue
-        }
-        self.didChangeValue(forKey: "fsSelection")
-    }
-
-    @IBAction func toggleUnicodeRange1(_ sender: Any) {
-        let sender = sender as! NSButton
-        let mask: FontTable_OS2.UnicodeMask1 = .init(rawValue: UInt32(1 << sender.tag))
-        self.willChangeValue(forKey: "ulUnicodeRange1")
-        if sender.state == .on {
-            ulUnicodeRange1 |= mask.rawValue
-        } else {
-            ulUnicodeRange1 &= ~mask.rawValue
-        }
-        self.didChangeValue(forKey: "ulUnicodeRange1")
-    }
-
-    @IBAction func toggleUnicodeRange2(_ sender: Any) {
-        let sender = sender as! NSButton
-        let mask: FontTable_OS2.UnicodeMask2 = .init(rawValue: UInt32(1 << sender.tag))
-        self.willChangeValue(forKey: "ulUnicodeRange2")
-        if sender.state == .on {
-            ulUnicodeRange2 |= mask.rawValue
-        } else {
-            ulUnicodeRange2 &= ~mask.rawValue
-        }
-        self.didChangeValue(forKey: "ulUnicodeRange2")
-    }
-
-    @IBAction func toggleUnicodeRange3(_ sender: Any) {
-        let sender = sender as! NSButton
-        let mask: FontTable_OS2.UnicodeMask3 = .init(rawValue: UInt32(1 << sender.tag))
-        self.willChangeValue(forKey: "ulUnicodeRange3")
-        if sender.state == .on {
-            ulUnicodeRange3 |= mask.rawValue
-        } else {
-            ulUnicodeRange3 &= ~mask.rawValue
-        }
-        self.didChangeValue(forKey: "ulUnicodeRange3")
-    }
-
-    @IBAction func toggleUnicodeRange4(_ sender: Any) {
-        let sender = sender as! NSButton
-        let mask: FontTable_OS2.UnicodeMask4 = .init(rawValue: UInt32(1 << sender.tag))
-        self.willChangeValue(forKey: "ulUnicodeRange4")
-        if sender.state == .on {
-            ulUnicodeRange4 |= mask.rawValue
-        } else {
-            ulUnicodeRange4 &= ~mask.rawValue
-        }
-        self.didChangeValue(forKey: "ulUnicodeRange4")
-    }
-
-
-    @IBAction func toggleCodePageRange1(_ sender: Any) {
-        let sender = sender as! NSButton
-        let mask: FontTable_OS2.CodePageMask1 = .init(rawValue: UInt32(1 << sender.tag))
-        self.willChangeValue(forKey: "ulCodePageRange1")
-        if sender.state == .on {
-            ulCodePageRange1 |= mask.rawValue
-        } else {
-            ulCodePageRange1 &= ~mask.rawValue
-        }
-        self.didChangeValue(forKey: "ulCodePageRange1")
-    }
-
-    @IBAction func toggleCodePageRange2(_ sender: Any) {
-        let sender = sender as! NSButton
-        let mask: FontTable_OS2.CodePageMask2 = .init(rawValue: UInt32(1 << sender.tag))
-        self.willChangeValue(forKey: "ulCodePageRange2")
-        if sender.state == .on {
-            ulCodePageRange2 |= mask.rawValue
-        } else {
-            ulCodePageRange2 &= ~mask.rawValue
-        }
-        self.didChangeValue(forKey: "ulCodePageRange2")
-    }
-
+extension ViewController_OS2: NSTableViewDelegate, NSTableViewDataSource {
     // MARK: - <NSTableViewDataSource>
     func numberOfRows(in tableView: NSTableView) -> Int {
         if tableView == unicodeRangesTableView {
