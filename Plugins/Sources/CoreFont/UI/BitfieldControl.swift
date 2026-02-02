@@ -20,7 +20,7 @@ public class BitfieldControl: NSControl {
         }
     }
 
-    override public var isEnabled: Bool {
+    public override var isEnabled: Bool {
         didSet {
             if isEnabled == false {
                 enabledMask = 0

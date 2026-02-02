@@ -22,7 +22,7 @@ public extension FontTable_name {
         @objc public var string:    String = ""
         public var data:            Data!
 
-        override public var nodeLength: UInt32 {
+        public override var nodeLength: UInt32 {
             return UInt32(MemoryLayout<UInt16>.size * 6) // 12
         }
 

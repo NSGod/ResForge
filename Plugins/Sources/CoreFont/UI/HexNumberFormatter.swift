@@ -18,7 +18,7 @@ public class HexNumberFormatter: NumberFormatter, @unchecked Sendable {
         super.init(coder: coder)
     }
 
-    override public func awakeFromNib() {
+    public override func awakeFromNib() {
         super.awakeFromNib()
     }
 

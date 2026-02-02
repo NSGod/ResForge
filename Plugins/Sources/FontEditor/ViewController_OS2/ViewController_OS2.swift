@@ -251,7 +251,6 @@ final class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NS
                 $0.table.didChangeValue(forKey: "usWidthClass")
             })
             view.window?.isDocumentEdited = true
-
         } else if context == &table.ySubscriptXSize {
             undoManager?.setActionName(NSLocalizedString("Change Subscript X Size", comment: ""))
             undoManager?.registerUndo(withTarget: self, handler: {
@@ -260,7 +259,6 @@ final class ViewController_OS2: FontTableViewController, NSTableViewDelegate, NS
                 $0.table.didChangeValue(forKey: "ySubscriptXSize")
             })
             view.window?.isDocumentEdited = true
-
         } else if context == &table.ySubscriptYSize {
             undoManager?.setActionName(NSLocalizedString("Change Subscript Y Size", comment: ""))
             undoManager?.registerUndo(withTarget: self, handler: {
