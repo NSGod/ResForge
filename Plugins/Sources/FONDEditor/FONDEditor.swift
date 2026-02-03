@@ -9,7 +9,7 @@ import Cocoa
 import RFSupport
 import CoreFont
 
-public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, NSOutlineViewDelegate {
+public class FONDEditor : AbstractEditor, ResourceEditor {
     public static var bundle: Bundle { .module }
     public static let supportedTypes = [
         "FOND",
@@ -52,6 +52,10 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
         "FONDEditor"
     }
 
+    public override var undoManager: UndoManager? {
+        return window?.undoManager
+    }
+
     public required init?(resource: Resource, manager: RFEditorManager) {
         UserDefaults.standard.register(defaults: ["FONDEditor.selectedTabIndex": 0])
         self.resource = resource
@@ -77,7 +81,6 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
             return nil
         }
         super.init(window: nil)
-        fond.responder = self
     }
 
     required init?(coder: NSCoder) {
@@ -88,6 +91,8 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
         flagsBitfieldControl.unbind(NSBindingName("objectValue"))
         fontClassBitfieldControl.unbind(NSBindingName("objectValue"))
         fond.styleMappingTable?.unbind(NSBindingName("objcFontClass"))
+        let keys = ["famID", "firstChar", "lastChar", "ascent", "descent", "leading", "widMax", "wTabOff", "kernOff", "styleOff", "ewSPlain", "ewSBold", "ewSItalic", "ewSUnderline", "ewSOutline", "ewSShadow", "ewSCondensed", "ewSExtended", "ewSUnused", "intl0", "intl1", "ffVersion"]
+        keys.forEach( { fond.removeObserver(self, forKeyPath: $0) } )
     }
 
     public override func windowDidLoad() {
@@ -110,6 +115,28 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
             tabView.tabViewItems[3].label = NSLocalizedString("✅ Glyph Name-Encoding Subtable", comment: "")
         }
         tableView.doubleAction = #selector(doubleClickOpenFont(_:))
+        fond.addObserver(self, forKeyPath: "famID", options: [.new, .old], context: &fond.famID)
+        fond.addObserver(self, forKeyPath: "firstChar", options: [.new, .old], context: &fond.firstChar)
+        fond.addObserver(self, forKeyPath: "lastChar", options: [.new, .old], context: &fond.lastChar)
+        fond.addObserver(self, forKeyPath: "ascent", options: [.new, .old], context: &fond.ascent)
+        fond.addObserver(self, forKeyPath: "descent", options: [.new, .old], context: &fond.descent)
+        fond.addObserver(self, forKeyPath: "leading", options: [.new, .old], context: &fond.leading)
+        fond.addObserver(self, forKeyPath: "widMax", options: [.new, .old], context: &fond.widMax)
+        fond.addObserver(self, forKeyPath: "wTabOff", options: [.new, .old], context: &fond.wTabOff)
+        fond.addObserver(self, forKeyPath: "kernOff", options: [.new, .old], context: &fond.kernOff)
+        fond.addObserver(self, forKeyPath: "styleOff", options: [.new, .old], context: &fond.styleOff)
+        fond.addObserver(self, forKeyPath: "ewSPlain", options: [.new, .old], context: &fond.ewSPlain)
+        fond.addObserver(self, forKeyPath: "ewSBold", options: [.new, .old], context: &fond.ewSBold)
+        fond.addObserver(self, forKeyPath: "ewSItalic", options: [.new, .old], context: &fond.ewSItalic)
+        fond.addObserver(self, forKeyPath: "ewSUnderline", options: [.new, .old], context: &fond.ewSUnderline)
+        fond.addObserver(self, forKeyPath: "ewSOutline", options: [.new, .old], context: &fond.ewSOutline)
+        fond.addObserver(self, forKeyPath: "ewSShadow", options: [.new, .old], context: &fond.ewSShadow)
+        fond.addObserver(self, forKeyPath: "ewSCondensed", options: [.new, .old], context: &fond.ewSCondensed)
+        fond.addObserver(self, forKeyPath: "ewSExtended", options: [.new, .old], context: &fond.ewSExtended)
+        fond.addObserver(self, forKeyPath: "ewSUnused", options: [.new, .old], context: &fond.ewSUnused)
+        fond.addObserver(self, forKeyPath: "intl0", options: [.new, .old], context: &fond.intl0)
+        fond.addObserver(self, forKeyPath: "intl1", options: [.new, .old], context: &fond.intl1)
+        fond.addObserver(self, forKeyPath: "ffVersion", options: [.new, .old], context: &fond.ffVersion)
     }
 
     public func windowWillClose(_ notification: Notification) {
@@ -132,6 +159,26 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
 //        self.didChangeValue(forKey: "fond.objcFFFlags")
     }
 
+    @IBAction func changeFontClass(_ sender: Any) {
+        guard let sender = sender as? NSButton else { return }
+        let isOn = sender.state == .on
+        if isOn {
+            self.objcFontClass = objcFontClass | UInt16(sender.tag)
+        } else {
+            self.objcFontClass = objcFontClass & ~UInt16(sender.tag)
+        }
+    }
+    
+    @IBAction public func saveResource(_ sender: Any) {
+
+
+    }
+
+    @IBAction public func revertResource(_ sender: Any) {
+
+    }
+
+
     @IBAction func openFont(_ sender: Any) {
         // try to get the row of the button we clicked.
         guard let loc = NSApp.currentEvent?.locationInWindow else { return }
@@ -151,16 +198,6 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
         let entry = (fontAssocTableEntriesController.arrangedObjects as! [FontAssociationTable.Entry])[rowIndex]
         if let font: Resource = manager.findResource(type: ResourceType(entry.fontPointSize == 0 ? "sfnt" : "NFNT"), id: Int(entry.fontID), currentDocumentOnly: true) {
             manager.open(resource: font)
-        }
-    }
-
-    @IBAction func changeFontClass(_ sender: Any) {
-        guard let sender = sender as? NSButton else { return }
-        let isOn = sender.state == .on
-        if isOn {
-            self.objcFontClass = objcFontClass | UInt16(sender.tag)
-        } else {
-            self.objcFontClass = objcFontClass & ~UInt16(sender.tag)
         }
     }
 
@@ -253,6 +290,193 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
         return false
     }
 
+    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        guard let context = context else {
+            return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+        }
+        if context == &fond.famID {
+            undoManager?.setActionName(NSLocalizedString("Change Family ID", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "famID")
+                $0.fond.famID = change![.oldKey] as! ResID
+                $0.fond.didChangeValue(forKey: "famID")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &fond.firstChar {
+            undoManager?.setActionName(NSLocalizedString("Change First Character", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "firstChar")
+                $0.fond.firstChar = change![.oldKey] as! Int16
+                $0.fond.didChangeValue(forKey: "firstChar")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &fond.lastChar {
+            undoManager?.setActionName(NSLocalizedString("Change Last Character", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "lastChar")
+                $0.fond.lastChar = change![.oldKey] as! Int16
+                $0.fond.didChangeValue(forKey: "lastChar")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &fond.ascent {
+            undoManager?.setActionName(NSLocalizedString("Change Ascent", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "ascent")
+                $0.fond.ascent = change![.oldKey] as! Fixed4Dot12
+                $0.fond.didChangeValue(forKey: "ascent")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &fond.descent {
+            undoManager?.setActionName(NSLocalizedString("Change Descent", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "descent")
+                $0.fond.descent = change![.oldKey] as! Fixed4Dot12
+                $0.fond.didChangeValue(forKey: "descent")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &fond.leading {
+            undoManager?.setActionName(NSLocalizedString("Change Leading", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "leading")
+                $0.fond.leading = change![.oldKey] as! Fixed4Dot12
+                $0.fond.didChangeValue(forKey: "leading")
+            })
+            window?.isDocumentEdited = true
+
+        } else if context == &fond.widMax {
+            undoManager?.setActionName(NSLocalizedString("Change Maximum Width", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "widMax")
+                $0.fond.widMax = change![.oldKey] as! Fixed4Dot12
+                $0.fond.didChangeValue(forKey: "widMax")
+            })
+            window?.isDocumentEdited = true
+
+        } else if context == &fond.wTabOff {
+            undoManager?.setActionName(NSLocalizedString("Change Width Table Offset", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "wTabOff")
+                $0.fond.wTabOff = change![.oldKey] as! Int32
+                $0.fond.didChangeValue(forKey: "wTabOff")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &fond.kernOff {
+            undoManager?.setActionName(NSLocalizedString("Change Kern Table Offset", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "kernOff")
+                $0.fond.kernOff = change![.oldKey] as! Int32
+                $0.fond.didChangeValue(forKey: "kernOff")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &fond.styleOff {
+            undoManager?.setActionName(NSLocalizedString("Change Style Table Offset", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "styleOff")
+                $0.fond.styleOff = change![.oldKey] as! Int32
+                $0.fond.didChangeValue(forKey: "styleOff")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &fond.ewSPlain {
+            undoManager?.setActionName(NSLocalizedString("Change Extra Width for Plain", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "ewSPlain")
+                $0.fond.ewSPlain = change![.oldKey] as! Fixed4Dot12
+                $0.fond.didChangeValue(forKey: "ewSPlain")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &fond.ewSBold {
+            undoManager?.setActionName(NSLocalizedString("Change Extra Width for Bold", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "ewSBold")
+                $0.fond.ewSBold = change![.oldKey] as! Fixed4Dot12
+                $0.fond.didChangeValue(forKey: "ewSBold")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &fond.ewSItalic {
+            undoManager?.setActionName(NSLocalizedString("Change Extra Width for Italic", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "ewSItalic")
+                $0.fond.ewSItalic = change![.oldKey] as! Fixed4Dot12
+                $0.fond.didChangeValue(forKey: "ewSItalic")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &fond.ewSUnderline {
+            undoManager?.setActionName(NSLocalizedString("Change Extra Width for Underline", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "ewSUnderline")
+                $0.fond.ewSUnderline = change![.oldKey] as! Fixed4Dot12
+                $0.fond.didChangeValue(forKey: "ewSUnderline")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &fond.ewSOutline {
+            undoManager?.setActionName(NSLocalizedString("Change Extra Width for Outline", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "ewSOutline")
+                $0.fond.ewSOutline = change![.oldKey] as! Fixed4Dot12
+                $0.fond.didChangeValue(forKey: "ewSOutline")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &fond.ewSShadow {
+            undoManager?.setActionName(NSLocalizedString("Change Extra Width for Shadow", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "ewSShadow")
+                $0.fond.ewSShadow = change![.oldKey] as! Fixed4Dot12
+                $0.fond.didChangeValue(forKey: "ewSShadow")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &fond.ewSCondensed {
+            undoManager?.setActionName(NSLocalizedString("Change Extra Width for Condensed", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "ewSCondensed")
+                $0.fond.ewSCondensed = change![.oldKey] as! Fixed4Dot12
+                $0.fond.didChangeValue(forKey: "ewSCondensed")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &fond.ewSExtended {
+            undoManager?.setActionName(NSLocalizedString("Change Extra Width for Extended", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "ewSExtended")
+                $0.fond.ewSExtended = change![.oldKey] as! Fixed4Dot12
+                $0.fond.didChangeValue(forKey: "ewSExtended")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &fond.ewSUnused {
+            undoManager?.setActionName(NSLocalizedString("Change Extra Width Unused", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "ewSUnused")
+                $0.fond.ewSUnused = change![.oldKey] as! Fixed4Dot12
+                $0.fond.didChangeValue(forKey: "ewSUnused")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &fond.intl0 {
+            undoManager?.setActionName(NSLocalizedString("Change International 0", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "intl0")
+                $0.fond.intl0 = change![.oldKey] as! Fixed4Dot12
+                $0.fond.didChangeValue(forKey: "intl0")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &fond.intl1 {
+            undoManager?.setActionName(NSLocalizedString("Change International 1", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "intl1")
+                $0.fond.intl1 = change![.oldKey] as! Fixed4Dot12
+                $0.fond.didChangeValue(forKey: "intl1")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &fond.ffVersion {
+            undoManager?.setActionName(NSLocalizedString("Change Version", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.fond.willChangeValue(forKey: "ffVersion")
+                $0.fond.ffVersion = FOND.Version(rawValue: change![.oldKey] as! UInt16)!
+                $0.fond.didChangeValue(forKey: "ffVersion")
+            })
+            window?.isDocumentEdited = true
+        }
+    }
+}
+
+extension FONDEditor: NSTableViewDelegate, NSOutlineViewDelegate {
     // MARK: - <NSTableViewDelegate>
     public func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         if tableView == boundingBoxTableView {
@@ -340,14 +564,4 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSTableViewDelegate, N
         }
         return nil
     }
-
-    @IBAction public func saveResource(_ sender: Any) {
-
-
-    }
-
-    @IBAction public func revertResource(_ sender: Any) {
-
-    }
-
 }

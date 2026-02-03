@@ -16,41 +16,48 @@ final public class FOND: NSObject {
     }
 
     // FontFamilyRecord is the first 52 bytes of the FOND
-    public var ffFlags:                Flags            // UInt16; flags for family
-    @objc public var famID:            ResID            // family ID number; must match FOND resource ID
-    @objc public var firstChar:        Int16            // ASCII code of 1st character
-    @objc public var lastChar:         Int16            // ASCII code of last character
-    @objc public var ascent:           Fixed4Dot12      // maximum ascent for 1pt font;  Fixed 4.12
-    @objc public var descent:          Fixed4Dot12      // maximum descent for 1pt font; Fixed 4.12
-    @objc public var leading:          Fixed4Dot12      // maximum leading for 1pt font; Fixed 4.12
-    @objc public var widMax:           Fixed4Dot12      // maximum width for 1pt font;   Fixed 4.12
+    public var ffFlags:                 Flags            /// UInt16; flags for family
+    @objc public var famID:             ResID            /// family ID number; `must match FOND resource ID`
+    @objc public var firstChar:         Int16            /// ASCII code of 1st character
+    @objc public var lastChar:          Int16            /// ASCII code of last character
+    @objc public var ascent:            Fixed4Dot12      /// maximum ascent for 1pt font;  Fixed 4.12
+    @objc public var descent:           Fixed4Dot12      /// maximum descent for 1pt font; Fixed 4.12
+    @objc public var leading:           Fixed4Dot12      /// maximum leading for 1pt font; Fixed 4.12
+    @objc public var widMax:            Fixed4Dot12      /// maximum width for 1pt font;   Fixed 4.12
 
-    @objc public var wTabOff:          Int32            /* offset to family glyph-width table from beginning of font family
+    @objc public var wTabOff:           Int32            /* offset to family glyph-width table from beginning of font family
+                                                              resource to beginning of table, in bytes */
+    @objc public var kernOff:           Int32            /* offset to kerning table from beginning of font family resource to
+                                                              beginning of table, in bytes */
+    @objc public var styleOff:          Int32            /* offset to style mapping table from beginning of font family
                                                              resource to beginning of table, in bytes */
-    @objc public var kernOff:          Int32            /* offset to kerning table from beginning of font family resource to
-                                                             beginning of table, in bytes */
-    @objc public var styleOff:         Int32            /* offset to style mapping table from beginning of font family
-                                                            resource to beginning of table, in bytes */
 
-                                                        // style property info; extra widths for different styles
-    @objc public var ewSPlain:         Fixed4Dot12      // should be 0
-    @objc public var ewSBold:          Fixed4Dot12
-    @objc public var ewSItalic:        Fixed4Dot12
-    @objc public var ewSUnderline:     Fixed4Dot12
-    @objc public var ewSOutline:       Fixed4Dot12
-    @objc public var ewSShadow:        Fixed4Dot12
-    @objc public var ewSCondensed:     Fixed4Dot12
-    @objc public var ewSExtended:      Fixed4Dot12
-    @objc public var ewSUnused:        Fixed4Dot12      // unused; should be 0
+                                                         // style property info; extra widths for different styles
+    @objc public var ewSPlain:          Fixed4Dot12      // should be 0
+    @objc public var ewSBold:           Fixed4Dot12
+    @objc public var ewSItalic:         Fixed4Dot12
+    @objc public var ewSUnderline:      Fixed4Dot12
+    @objc public var ewSOutline:        Fixed4Dot12
+    @objc public var ewSShadow:         Fixed4Dot12
+    @objc public var ewSCondensed:      Fixed4Dot12
+    @objc public var ewSExtended:       Fixed4Dot12
+    @objc public var ewSUnused:         Fixed4Dot12      // unused; should be 0
 
-    @objc public var intl0:            Int16            // for international use
-    @objc public var intl1:            Int16            // for international use
+    @objc public var intl0:             Int16            // for international use
+    @objc public var intl1:             Int16            // for international use
 
-    @objc public var ffVersion:        Version          // version number
+    @objc public var ffVersion:         Version          // version number
 
     // MARK: -
-    @objc public var objcFFFlags:      Flags.RawValue {
-        didSet { ffFlags = Flags(rawValue: objcFFFlags) }
+    @objc public var objcFFFlags:       Flags.RawValue {
+        get {
+            return ffFlags.rawValue
+        }
+        set {
+            self.willChangeValue(forKey: "objcFFFlags")
+            ffFlags = Flags(rawValue: newValue)
+            self.didChangeValue(forKey: "objcFFFlags")
+        }
     }
 
     @objc public var fontAssociationTable:  FontAssociationTable
@@ -192,11 +199,11 @@ final public class FOND: NSObject {
     ///   0x0001    Original format as designed by the font developer. This font family record probably has the width tables and most of the fields are filled.
     ///   0x0002    This record may contain the offset and bounding-box tables.
     ///   0x0003    This record definitely contains the offset and bounding-box tables.
-    @objc public enum Version : UInt16, RawRepresentable {
-        case version0    = 0,
-             version1,
-             version2,
-             version3
+    @objc public enum Version : UInt16 {
+        case version0   = 0
+        case version1   = 1
+        case version2   = 2
+        case version3   = 3
     }
 
     private enum TableOffsetType {
@@ -207,7 +214,7 @@ final public class FOND: NSObject {
         case kernTable
     }
 
-    // FIXME: switch to Swift Ranges
+    // FIXME: switch to Swift Ranges?
     private var offsetTypesToRanges:    [TableOffsetType: NSRange] = [:]
     private var offsetsCalculated:      Bool = false
     private var needsRepair:            Bool = false   // If this FOND resource's resourceID doesn't match the famID, we need to update the famID
@@ -219,7 +226,6 @@ final public class FOND: NSObject {
         reader = BinaryDataReader(resource.data)
         self.resource = resource
         ffFlags         = try reader.read()
-        objcFFFlags     = ffFlags.rawValue
         famID           = try reader.read()
         firstChar       = try reader.read()
         lastChar        = try reader.read()
@@ -347,7 +353,7 @@ final public class FOND: NSObject {
     }
 
     private func calculateOffsetsIfNeeded() throws {
-        // FIXME: switch to Swift Ranges
+        // FIXME: switch to Swift Ranges?
         if offsetsCalculated == true { return }
         var offsetsToOffsetTypes: [Int32: TableOffsetType] = [:]
         if wTabOff > 0 { offsetsToOffsetTypes[wTabOff] = .widthTable }
