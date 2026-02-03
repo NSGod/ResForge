@@ -30,7 +30,7 @@ final public class OTFsfntDirectoryEntry: OTFFontFileNode, Comparable {
         return offset..<(offset + length)
     }
 
-    public static var nodeLength:  UInt32    = UInt32(MemoryLayout<UInt32>.size * 4) // 16
+    public override class var nodeLength: UInt32 { UInt32(MemoryLayout<UInt32>.size * 4) }  // 16
 
     public init(_ reader: BinaryDataReader, fontFile: OTFFontFile) throws {
         tableTag = TableTag(rawValue: try reader.read())
@@ -58,6 +58,10 @@ final public class OTFsfntDirectoryEntry: OTFFontFileNode, Comparable {
         lhs.tableTag.rawValue < rhs.tableTag.rawValue
     }
 
+    public static func == (lhs: OTFsfntDirectoryEntry, rhs: OTFsfntDirectoryEntry) -> Bool {
+        return lhs.tableTag == rhs.tableTag
+    }
+    
     public override var description: String {
         "OTFsfntDirectoryEntry('\(tableTagString)', checksum: \(String(format: "0x%08x", checksum)), offset: \(offset), length: \(length))"
     }

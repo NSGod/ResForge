@@ -9,7 +9,7 @@ import Cocoa
 import RFSupport
 import CoreFont
 
-public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, NSTableViewDelegate, NSTableViewDataSource {
+public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
     public static var bundle: Bundle { .module }
     public static let supportedTypes = [
         "sfnt",
@@ -22,7 +22,7 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, NSTable
     @IBOutlet weak var tableTagField:               NSTextField!
     @IBOutlet weak var box:                         NSBox!
 
-    public var resource: 		Resource
+    public var resource: 		Resource        /// `'sfnt'`
     let manager: 		        RFEditorManager
     @objc var fontFile:         OTFFontFile
 
@@ -62,6 +62,21 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, NSTable
         window?.makeFirstResponder(directoryEntriesTableView)
     }
 
+    // MARK: -
+    public func saveResource(_ sender: Any) {
+
+    }
+
+    public func revertResource(_ sender: Any) {
+
+    }
+
+
+    static var emptyView: NSView = NSView(frame: NSMakeRect(0, 0, 400, 600))
+    static let supportedTableTags: Set<TableTag> = Set([.head, .maxp, .name, .post, .hhea, .hmtx, .OS_2, .gasp])
+}
+
+extension FontEditor: NSTableViewDelegate, NSTableViewDataSource {
     // MARK: - <NSTableViewDataSource>
     public func numberOfRows(in tableView: NSTableView) -> Int {
         return fontFile.directory.entries.count
@@ -127,16 +142,4 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, NSTable
             tableTagField.stringValue = tag.fourCharString
         }
     }
-
-    // MARK: -
-    public func saveResource(_ sender: Any) {
-
-    }
-
-    public func revertResource(_ sender: Any) {
-
-    }
-
-    static var emptyView: NSView = NSView(frame: NSMakeRect(0, 0, 400, 600))
-    static let supportedTableTags: Set<TableTag> = Set([.head, .maxp, .name, .post, .hhea, .hmtx, .OS_2, .gasp])
 }

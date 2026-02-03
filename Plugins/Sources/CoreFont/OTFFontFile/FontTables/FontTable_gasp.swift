@@ -9,7 +9,7 @@ import Foundation
 import RFSupport
 
 /// - Note: PPEM = Pixels Per Em
-///
+
 final public class FontTable_gasp: FontTable {
     @objc public enum Version: UInt16 {
         case version0 = 0
@@ -62,8 +62,10 @@ public extension FontTable_gasp {
             }
         }
 
-        public static let nodeLength: Int = MemoryLayout<UInt16>.size * 2 // 4
-
+        public class override var nodeLength: UInt32 {
+            UInt32(MemoryLayout<UInt16>.size * 2) // 4
+        }
+        
         public override init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable) throws {
             try super.init(reader, offset: offset, table: table)
             maxPPEM = try reader.read()

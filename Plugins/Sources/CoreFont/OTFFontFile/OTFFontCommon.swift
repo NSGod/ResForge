@@ -57,7 +57,7 @@ public struct OTFsfntFormat: RawRepresentable, Equatable {
     public static let vt1b:    OTFsfntFormat = .init(rawValue: 0x498182F0) // VT100-Bold
 }
 
-public struct TableTag: RawRepresentable, Hashable, CustomStringConvertible {
+public struct TableTag: RawRepresentable, Comparable, Hashable, CustomStringConvertible {
     public let rawValue: Tag
 
     public init(rawValue: Tag) {
@@ -175,6 +175,14 @@ public struct TableTag: RawRepresentable, Hashable, CustomStringConvertible {
 
     public var description: String {
         return fourCharString
+    }
+
+    public static func < (lhs: TableTag, rhs: TableTag) -> Bool {
+        return lhs.rawValue < rhs.rawValue
+    }
+
+    public static func == (lhs: TableTag, rhs: TableTag) -> Bool {
+        return lhs.rawValue == rhs.rawValue
     }
 }
 

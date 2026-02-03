@@ -19,7 +19,12 @@ final public class OTFsfntDirectory: OTFFontFileNode {
 
     @objc public var objcFormat:           OTFsfntFormat.RawValue { format.rawValue }
 
-    public class var nodeLength: UInt32 {
+    public override var totalNodeLength:    UInt32 {
+        numberOfTables = UInt16(entries.count)
+        return Self.nodeLength + OTFsfntDirectoryEntry.nodeLength * UInt32(numberOfTables)
+    }
+
+    public class override var nodeLength:   UInt32 {
         UInt32(MemoryLayout<UInt16>.size * 4 + MemoryLayout<OTFsfntFormat.RawValue>.size) } // 12
 
     public init(_ reader: BinaryDataReader, fontFile: OTFFontFile) throws {

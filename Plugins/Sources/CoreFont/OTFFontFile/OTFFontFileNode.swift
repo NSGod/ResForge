@@ -6,16 +6,28 @@
 //
 
 import Foundation
-import RFSupport
 
 /// abstract abstract superclass
 open class OTFFontFileNode: NSObject {
     public weak var fontFile:      OTFFontFile!        // weak
 
-    /// the following 2 properties must be overridden by any subclasses
-    /// that intend for them to be called:
-    public var nodeLength:         UInt32 = UInt32.max // size in bytes
-    public var totalNodeLength:    UInt32 = UInt32.max // size in bytes + size of associated child/sibling nodes
+    /// the following 3 properties must be overridden by any subclasses
+    /// that intend for them to be used:
+    ///
+    // size in bytes
+    public var nodeLength:          UInt32 {
+        fatalError("must be overridden by subclass")
+    }
+
+    // size in bytes + size of associated child/sibling nodes
+    public var totalNodeLength:     UInt32 {
+        fatalError("must be overridden by subclass")
+    }
+
+    // size in bytes
+    public class var nodeLength:    UInt32 {
+        fatalError("must be overridden by subclass")
+    }
 
     public init(fontFile: OTFFontFile) throws {
         self.fontFile = fontFile

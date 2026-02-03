@@ -26,7 +26,7 @@ public extension FontTable_name {
             return UInt32(MemoryLayout<UInt16>.size * 6) // 12
         }
 
-        public class var nodeLength: UInt32 {
+        public class override var nodeLength: UInt32 {
             return UInt32(MemoryLayout<UInt16>.size * 6) // 12
         }
 

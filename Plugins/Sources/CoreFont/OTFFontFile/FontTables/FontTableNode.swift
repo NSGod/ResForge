@@ -11,13 +11,17 @@ import RFSupport
 open class FontTableNode: NSObject, NSCopying {
     public weak var table:         FontTable!
 
-    /// the following 2 properties must be overridden by any subclasses who
-    /// intend to have them called
-    public var nodeLength:         UInt32 {
+    /// the following 3 properties must be overridden by any subclasses
+    /// that intend for them to be used:
+    public var nodeLength:          UInt32 {    /// size in bytes
         fatalError("subclasses must override")
     }
 
-    public var totalNodeLength:    UInt32 {
+    public var totalNodeLength:     UInt32 {    /// size in bytes + size of associated child/sibling nodes
+        fatalError("subclasses must override")
+    }
+
+    public class var nodeLength:    UInt32 {    /// size in bytes
         fatalError("subclasses must override")
     }
 
