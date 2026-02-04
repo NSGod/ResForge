@@ -31,6 +31,14 @@ final public class FontTable_gasp: FontTable {
         numRanges = try reader.read()
         ranges = try (0..<numRanges).map { _ in try Range(reader, table: self) }
     }
+
+    public override func write() throws {
+        dataHandle.write(version)
+        dataHandle.write(numRanges)
+        try ranges.forEach({ try $0.write(to: dataHandle) })
+        try super.write()
+    }
+
 }
 
 public extension FontTable_gasp {
@@ -71,6 +79,11 @@ public extension FontTable_gasp {
             maxPPEM = try reader.read()
             behavior = Behavior(rawValue: try reader.read())
             objcBehavior = behavior.rawValue
+        }
+
+        public override func write(to dataHandle: DataHandle) throws {
+            dataHandle.write(maxPPEM)
+            dataHandle.write(behavior)
         }
 
         public static func < (lhs: FontTable_gasp.Range, rhs: FontTable_gasp.Range) -> Bool {

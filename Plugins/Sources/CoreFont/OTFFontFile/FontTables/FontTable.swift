@@ -39,16 +39,8 @@ open class FontTable: OTFFontFileNode {
         return calcChecksum
     }
 
-    class var usesLazyParsing: Bool { true }
-
     var reader:         BinaryDataReader
-
-    enum ParseState {
-        case unparsed
-        case parsing
-        case parsed
-    }
-    var parseState:     ParseState = .unparsed
+    var dataHandle:     DataHandle!
 
     // MARK: - init
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
@@ -61,15 +53,34 @@ open class FontTable: OTFFontFileNode {
 //        }
     }
 
-    public func parseTableData() throws {
+    /// give table a chance to update its in memory data structures
+    func prepareToWrite() throws {
+        dataHandle = DataHandle()
     }
 
-    func parseTableDataIfNeeded() throws {
-        if parseState != .unparsed { return }
-        parseState = .parsing
-        try parseTableData()
-        parseState = .parsed
+    /// write to our `dataHandle` and update `tableData` with result
+    func write() throws {
+        tableData = dataHandle.data
+        dataHandle = nil
     }
+
+    /// Write `tableData` to provided external `extDataHandle`, and update the specified `OTFsfntDirectoryEntry`.
+    /// This calls `prepareToWrite()` and then `write()` to update `tableData`. It then writes `tableData`
+    /// to the specified `extDataHandle`.
+    public func write(to extDataHandle: DataHandle, updating entry: OTFsfntDirectoryEntry) throws {
+        try prepareToWrite()
+        try write()
+        let before: UInt32 = UInt32(extDataHandle.currentOffset)
+        extDataHandle.writeData(tableData)
+        let after: UInt32 = UInt32(extDataHandle.currentOffset)
+        let padBytesLength = (~(after & 0x3) + 1) & 0x3
+        if padBytesLength > 0 { extDataHandle.writeData(Data(repeating: 0, count: Int(padBytesLength))) }
+        entry.tableTag = tableTag
+        entry.table = self
+        entry.offset = before
+        entry.length = after - before
+    }
+
 
     public static func `class`(for tableTag: TableTag) -> FontTable.Type {
         if tableTag == .OS_2 { return FontTable_OS2.self }
@@ -78,7 +89,8 @@ open class FontTable: OTFFontFileNode {
 //        if tableTag == .CFF_ { return FontTable_CFF.self }
         if let theClass: FontTable.Type = NSClassFromString("CoreFont.FontTable_\(tableTag.fourCharString)") as? FontTable.Type {
             return theClass
-            // if class is Nil, try byte-swapping the table tag to see if it's wrong in the font (i.e. 'SOPG' instead of 'GPOS')
+            /// if class is Nil, try byte-swapping the table tag to see if it's wrong in the font (i.e. 'SOPG' instead of 'GPOS')
+            /// (Yes, I've seen this happen).
         } else if let theClass: FontTable.Type = NSClassFromString("CoreFont.FontTable_\(tableTag.byteSwapped.fourCharString)") as? FontTable.Type {
             return theClass
         }
@@ -105,7 +117,79 @@ open class FontTable: OTFFontFileNode {
     public func fontGlyphName(for glyphID: Glyph32ID) -> String? {
         return fontFile.glyphName(for: glyphID)
     }
+
+    /// currently unutilized:
+    class var usesLazyParsing: Bool { true }
+
+    enum ParseState {
+        case unparsed
+        case parsing
+        case parsed
+    }
+    var parseState:     ParseState = .unparsed
+
+    public func parseTableData() throws {
+    }
+
+    func parseTableDataIfNeeded() throws {
+        if parseState != .unparsed { return }
+        parseState = .parsing
+        try parseTableData()
+        parseState = .parsed
+    }
 }
+
+extension FontTable {
+
+    static func OTFWritingOrderSort(lhs: FontTable, rhs: FontTable) -> Bool {
+        let a = ttfWriteOrder[lhs.tableTag] ?? Int.max
+        let b = ttfWriteOrder[rhs.tableTag] ?? Int.max
+        if a != b { return a < b }
+        return lhs.tableTag < rhs.tableTag
+    }
+
+    static let ttfWriteOrder: [TableTag: Int] = [
+        .head: 1,
+        .hhea: 2,
+        .maxp: 3,
+        .OS_2: 4,
+        .hmtx: 5,
+        .LTSH: 6,
+        .VDMX: 7,
+        .hdmx: 8,
+        .cmap: 9,
+        .fpgm: 10,
+        .prep: 11,
+        .cvt_: 12,
+        .loca: 13,
+        .glyf: 14,
+        .kern: 15,
+        .name: 16,
+        .post: 17,
+        .gasp: 18,
+        .vhea: 19,
+        .vmtx: 20,
+        .PCLT: 21,
+        .DSIG: 22,
+    ]
+
+    static let rewriteOrder: [TableTag: Int] = [
+        .cmap: 1,
+        .OS_2: 2,
+        .glyf: 3, // creates/tweaks 'loca', 'hmtx'; could tweak 'head'
+        .loca: 4, // could tweak 'head' during 'CFF ' to 'glyf'
+        .post: 5,
+        .maxp: 6, // tweaks 'head'
+        .feat: 7,
+        .name: 8,
+        .head: 9,
+        .hmtx: 10,
+        .hhea: 11,
+        .vmtx: 12,
+        .vhea: 13,
+    ]
+}
+
 
 /// `Ideally:`
 /// immediate parsing:

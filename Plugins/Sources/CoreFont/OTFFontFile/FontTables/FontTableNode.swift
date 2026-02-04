@@ -8,20 +8,25 @@
 import Foundation
 import RFSupport
 
-open class FontTableNode: NSObject, NSCopying {
+/// abstract superclass
+open class FontTableNode: NSObject, NSCopying, DataHandleWriting {
     public weak var table:         FontTable!
 
-    /// the following 3 properties must be overridden by any subclasses
+    /// The following 3 properties must be overridden by any subclasses
     /// that intend for them to be used:
-    public var nodeLength:          UInt32 {    /// size in bytes
+
+    /// size in bytes
+    public var nodeLength:          UInt32 {
         fatalError("subclasses must override")
     }
 
-    public var totalNodeLength:     UInt32 {    /// size in bytes + size of associated child/sibling nodes
+    /// size in bytes + size of associated child/sibling nodes
+    public var totalNodeLength:     UInt32 {
         fatalError("subclasses must override")
     }
 
-    public class var nodeLength:    UInt32 {    /// size in bytes
+    /// size in bytes
+    public class var nodeLength:    UInt32 {    
         fatalError("subclasses must override")
     }
 
@@ -34,6 +39,15 @@ open class FontTableNode: NSObject, NSCopying {
         let copy: FontTableNode = type(of: self).init() as! FontTableNode
         copy.table = self.table
         return copy
+    }
+
+    /// subclasses must override
+    public func write(to handle: DataHandle, offset: Int? = nil) throws {
+        fatalError("subclasses must override")
+    }
+
+    public func write(to dataHandle: DataHandle) throws {
+        fatalError("subclasses must override")
     }
 
     @objc public func compare(to other: FontTableNode) -> ComparisonResult {

@@ -74,4 +74,34 @@ final public class FontTable_hhea: FontTable {
         metricDataFormat = try reader.read()
         numberOfHMetrics = try reader.read()
     }
+
+    public override func prepareToWrite() throws {
+        try super.prepareToWrite()
+        reserved0 = 0
+        reserved1 = 0
+        reserved2 = 0
+        reserved3 = 0
+    }
+
+    public override func write() throws {
+        dataHandle.write(version)
+        dataHandle.write(ascender)
+        dataHandle.write(descender)
+        dataHandle.write(lineGap)
+        dataHandle.write(advanceWidthMax)
+        dataHandle.write(minLeftSideBearing)
+        dataHandle.write(minRightSideBearing)
+        dataHandle.write(xMaxExtent)
+        dataHandle.write(caretSlopeRise)
+        dataHandle.write(caretSlopeRun)
+        dataHandle.write(caretOffset)
+        dataHandle.write(reserved0)
+        dataHandle.write(reserved1)
+        dataHandle.write(reserved2)
+        dataHandle.write(reserved3)
+        dataHandle.write(metricDataFormat)
+        dataHandle.write(numberOfHMetrics)
+        try super.write()
+    }
+
 }

@@ -8,28 +8,36 @@
 import Foundation
 
 /// abstract abstract superclass
-open class OTFFontFileNode: NSObject {
+open class OTFFontFileNode: NSObject, DataHandleWriting {
     public weak var fontFile:      OTFFontFile!        // weak
 
-    /// the following 3 properties must be overridden by any subclasses
+    /// The following 3 properties must be overridden by any subclasses
     /// that intend for them to be used:
-    ///
-    // size in bytes
+
+    /// size in bytes
     public var nodeLength:          UInt32 {
         fatalError("must be overridden by subclass")
     }
 
-    // size in bytes + size of associated child/sibling nodes
+    /// size in bytes + size of associated child/sibling nodes
     public var totalNodeLength:     UInt32 {
         fatalError("must be overridden by subclass")
     }
 
-    // size in bytes
+    /// size in bytes
     public class var nodeLength:    UInt32 {
         fatalError("must be overridden by subclass")
     }
 
     public init(fontFile: OTFFontFile) throws {
         self.fontFile = fontFile
+    }
+
+    public func write(to dataHandle: DataHandle) throws {
+        fatalError("must be overridden by subclass")
+    }
+
+    public func write(to dataHandle: DataHandle, offset: Int? = nil) throws {
+        fatalError("must be overridden by subclass")
     }
 }

@@ -40,6 +40,13 @@ final public class OTFsfntDirectoryEntry: OTFFontFileNode, Comparable {
         try super.init(fontFile: fontFile)
     }
 
+    public override func write(to dataHandle: DataHandle) throws {
+        dataHandle.write(tableTag)
+        dataHandle.write(checksum)
+        dataHandle.write(offset)
+        dataHandle.write(length)
+    }
+
     public static func sortForParsing(lhs: OTFsfntDirectoryEntry, rhs: OTFsfntDirectoryEntry) -> Bool {
         let lhsIndex = Self.tagsToParsingOrder[lhs.tableTag]
         let rhsIndex = Self.tagsToParsingOrder[rhs.tableTag]

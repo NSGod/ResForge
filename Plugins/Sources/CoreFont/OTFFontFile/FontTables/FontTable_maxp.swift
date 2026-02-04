@@ -17,8 +17,8 @@ final public class FontTable_maxp: FontTable {
     public override class var usesLazyParsing: Bool { false }
 
     @objc public enum Version: Fixed {
-        case version0_5     = 0x00005000 // 20480
-        case version1_0     = 0x00010000 // 65536
+        case version0_5     = 0x00005000 // 20480   // for PS/CFF fonts
+        case version1_0     = 0x00010000 // 65536   // for TT outlines
     }
 
     @objc public var version:               Version = .version0_5   // 0x00010000 (1.0, TT) or 0x00005000 (0.5, PS CFF))
@@ -63,5 +63,26 @@ final public class FontTable_maxp: FontTable {
             maxComponentElements = try reader.read()
             maxComponentDepth = try reader.read()
         }
+    }
+
+    public override func write() throws {
+        dataHandle.write(version)
+        dataHandle.write(numGlyphs)
+        if version == .version1_0 {
+            dataHandle.write(maxPoints)
+            dataHandle.write(maxContours)
+            dataHandle.write(maxCompositePoints)
+            dataHandle.write(maxCompositeContours)
+            dataHandle.write(maxZones)
+            dataHandle.write(maxTwilightPoints)
+            dataHandle.write(maxStorage)
+            dataHandle.write(maxFunctionDefs)
+            dataHandle.write(maxInstructionDefs)
+            dataHandle.write(maxStackElements)
+            dataHandle.write(maxSizeOfInstructions)
+            dataHandle.write(maxComponentElements)
+            dataHandle.write(maxComponentDepth)
+        }
+        try super.write()
     }
 }

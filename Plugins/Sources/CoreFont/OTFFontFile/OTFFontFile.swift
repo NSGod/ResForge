@@ -60,6 +60,29 @@ final public class OTFFontFile: NSObject {
         }
     }
 
+    public func write(to dataHandle: DataHandle) throws {
+        directory.sortEntries()
+        sortTables()
+        // write the tables first
+        dataHandle.seek(to: directory.totalNodeLength)
+        // process and write directory and directory entries
+        var checksumOffset: UInt32
+        for entry in directory.entries {
+            // fill in dir entry checksums
+            if entry.tableTag == .head {
+                checksumOffset = entry.offset + FontTable_head.checksumAdjustmentOffset
+            }
+            entry.checksum = entry.table.calculatedChecksum
+        }
+
+    }
+
+    private func sortTables() {
+        NSLog("\(type(of: self)).\(#function) tables (BEFORE) == \(tables.map(\.tableTag.fourCharString))")
+        tables.sort(by: FontTable.OTFWritingOrderSort)
+        NSLog("\(type(of: self)).\(#function) tables (AFTER) == \(tables.map(\.tableTag.fourCharString))")
+    }
+
     public var numGlyphs: Int {
         if glyphLookupType == .undetermined { self .initGlyphNameLookup() }
         // FIXME: !! allow for other methods to get glyph count (see /afdko/c/spot/source/global.c for more info)

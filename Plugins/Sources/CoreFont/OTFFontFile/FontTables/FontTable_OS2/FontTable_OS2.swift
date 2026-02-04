@@ -137,4 +137,53 @@ final public class FontTable_OS2: FontTable {
             }
         }
     }
+
+    public override func write() throws {
+        dataHandle.write(version)
+        dataHandle.write(xAvgCharWidth)
+        dataHandle.write(usWeightClass.rawValue)
+        dataHandle.write(usWidthClass)
+        dataHandle.write(fsType)
+        dataHandle.write(ySubscriptXSize)
+        dataHandle.write(ySubscriptYSize)
+        dataHandle.write(ySubscriptXOffset)
+        dataHandle.write(ySubscriptYOffset)
+        dataHandle.write(ySuperscriptXSize)
+        dataHandle.write(ySuperscriptYSize)
+        dataHandle.write(ySuperscriptXOffset)
+        dataHandle.write(ySuperscriptYOffset)
+        dataHandle.write(yStrikeoutSize)
+        dataHandle.write(yStrikeoutPosition)
+        dataHandle.write(sFamilyClass)
+        try panose.write(to: dataHandle)
+        dataHandle.write(ulUnicodeRange1)
+        dataHandle.write(ulUnicodeRange2)
+        dataHandle.write(ulUnicodeRange3)
+        dataHandle.write(ulUnicodeRange4)
+        dataHandle.write(vendorID)
+        dataHandle.write(fsSelection)
+        dataHandle.write(usFirstCharIndex)
+        dataHandle.write(usLastCharIndex)
+        dataHandle.write(sTypoAscender)
+        dataHandle.write(sTypoDescender)
+        dataHandle.write(sTypoLineGap)
+        dataHandle.write(usWinAscent)
+        dataHandle.write(usWinDescent)
+        if version >= .version1 {
+            dataHandle.write(ulCodePageRange1)
+            dataHandle.write(ulCodePageRange2)
+            if version >= .version2 {
+                dataHandle.write(sxHeight)
+                dataHandle.write(sCapHeight)
+                dataHandle.write(usDefaultChar)
+                dataHandle.write(usBreakChar)
+                dataHandle.write(usMaxContext)
+                if version >= .version5 {
+                    dataHandle.write(usLowerOpticalPointSize)
+                    dataHandle.write(usUpperOpticalPointSize)
+                }
+            }
+        }
+        try super.write()
+    }
 }

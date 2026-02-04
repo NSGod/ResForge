@@ -166,5 +166,18 @@ public extension FontTable_OS2 {
             panose8 = try reader.read()
             panose9 = try reader.read()
         }
+
+        public override func write(to dataHandle: DataHandle) throws {
+            dataHandle.write(panose0)
+            dataHandle.write(panose1)
+            dataHandle.write(panose2)
+            dataHandle.write(panose3)
+            dataHandle.write(panose4)
+            dataHandle.write(panose5)
+            dataHandle.write(panose6)
+            dataHandle.write(panose7)
+            dataHandle.write(panose8)
+            dataHandle.write(panose9)
+        }
     }
 }
