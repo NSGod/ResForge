@@ -106,7 +106,7 @@ open class FontTable: OTFFontFileNode {
     public var postTable: FontTable_post? { table(for: .post) as? FontTable_post }
     public var nameTable: FontTable_name? { table(for: .name) as? FontTable_name }
     public var hheaTable: FontTable_hhea? { table(for: .hhea) as? FontTable_hhea }
-    public var htmxTable: FontTable_hmtx? { table(for: .hmtx) as? FontTable_hmtx }
+    public var hmtxTable: FontTable_hmtx? { table(for: .hmtx) as? FontTable_hmtx }
     public var os2Table:  FontTable_OS2?  { table(for: .OS_2) as? FontTable_OS2 }
     public var gaspTable: FontTable_gasp? { table(for: .gasp) as? FontTable_gasp }
 
