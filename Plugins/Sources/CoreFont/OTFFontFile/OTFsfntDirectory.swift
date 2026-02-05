@@ -8,7 +8,7 @@
 import Foundation
 import RFSupport
 
-final public class OTFsfntDirectory: OTFFontFileNode {
+final public class OTFsfntDirectory: OTFFontFileNode, DataHandleWriting {
     public var format:                      OTFsfntFormat            // 0x00010000, 'OTTO', 'true', etc.
     @objc public var numberOfTables:        UInt16                   // number of tables
     @objc public var searchRange:           UInt16                   // (max power of 2 <= numberOfTables) x 16
@@ -27,6 +27,8 @@ final public class OTFsfntDirectory: OTFFontFileNode {
     public class override var nodeLength:   UInt32 {
         UInt32(MemoryLayout<UInt16>.size * 4 + MemoryLayout<OTFsfntFormat.RawValue>.size) } // 12
 
+    private var tableTagsToEntries: [TableTag: OTFsfntDirectoryEntry] = [:]
+
     public init(_ reader: BinaryDataReader, fontFile: OTFFontFile) throws {
         format = OTFsfntFormat(rawValue: try reader.read())
         numberOfTables = try reader.read()
@@ -36,15 +38,16 @@ final public class OTFsfntDirectory: OTFFontFileNode {
         entries = []
         for _ in 0..<numberOfTables {
             entries.append(try OTFsfntDirectoryEntry(reader, fontFile: fontFile))
+            tableTagsToEntries[entries.last!.tableTag] = entries.last!
         }
         try super.init(fontFile: fontFile)
     }
 
-    public override func write(to dataHandle: DataHandle, offset: Int? = nil) throws {
-        sortEntries()
+    public func write(to dataHandle: DataHandle) throws {
+        /// font calls sortEntries()
         calculateSearchParams()
         if format == .true {
-            // change to .V1_0, which is more cross-platform
+            // change to .V1_0, which is more cross-platform/compatible
             format = .V1_0
         }
         dataHandle.write(format)
@@ -52,16 +55,33 @@ final public class OTFsfntDirectory: OTFFontFileNode {
         dataHandle.write(searchRange)
         dataHandle.write(entrySelector)
         dataHandle.write(rangeShift)
-        for entry in entries {
-            try entry.write(to: dataHandle)
-        }
+        try entries.forEach({ try $0.write(to: dataHandle) })
+    }
+
+    public func entry(for tableTag: TableTag) -> OTFsfntDirectoryEntry? {
+        tableTagsToEntries[tableTag]
     }
 
     public func sortEntries() {
         entries.sort(by: <)
     }
 
-    public func calculateSearchParams() {
+    public func calculatedChecksum(with dataHandle: DataHandle) -> UInt32 {
+        let data = dataHandle.data
+        let subdata = data.subdata(in: data.startIndex..<data.startIndex + Int(totalNodeLength))
+        let tableLongs: [UInt32] = subdata.withUnsafeBytes {
+            $0.bindMemory(to: UInt32.self).map(\.bigEndian)
+        }
+        var calcChecksum: UInt32 = 0
+        tableLongs.forEach({ calcChecksum &+= $0 })
+        //		var calcChecksum : UInt32 = 0
+        //		for long in tableLongs {
+        //			calcChecksum &+= long
+        //		}
+        return calcChecksum
+    }
+
+    private func calculateSearchParams() {
         numberOfTables = UInt16(entries.count)
         var nextPower: UInt16 = 2
         var log2: UInt16 = 0

@@ -74,6 +74,7 @@ final public class FontTable_head: FontTable {
     @objc public var indexToLocFormat:      Int16 = 0               // 0 for short offsets, 2 for long
     @objc public var glyphDataFormat:       Int16 = 0               // 0 for current format
 
+    // MARK: -
     @objc public var createdDate:           Date!
     @objc public var modifiedDate:          Date!
 
@@ -89,6 +90,25 @@ final public class FontTable_head: FontTable {
         }
     }
 
+    public override var calculatedChecksum: UInt32 {
+        /// we're different in that we need to set checksumAdjustment
+        /// to 0 before calculating the checksum
+        NSLog("\(type(of: self)).\(#function)")
+        let dataHandle = DataHandle()
+        do {
+            try write(to: dataHandle, updating: nil)
+            let tableLongs: [UInt32] = dataHandle.data.withUnsafeBytes {
+                $0.bindMemory(to: UInt32.self).map(\.bigEndian)
+            }
+            var calcChecksum: UInt32 = 0
+            tableLongs.forEach({ calcChecksum &+= $0 })
+            return calcChecksum
+        } catch {
+            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+        }
+        return 0
+    }
+
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
         let vers: Fixed = try reader.read()
@@ -100,7 +120,6 @@ final public class FontTable_head: FontTable {
         checkSumAdjustment = try reader.read()
         magicNumber = try reader.read()
         flags = Flags(rawValue: try reader.read())
-        objcFlags = flags.rawValue
         unitsPerEm = UnitsPerEm(rawValue: try reader.read())
         created = try reader.read()
         modified = try reader.read()
@@ -119,5 +138,40 @@ final public class FontTable_head: FontTable {
         objcMacStyle = macStyle.rawValue
         createdDate = Date(secondsSince1904: created)
         modifiedDate = Date(secondsSince1904: modified)
+    }
+
+    public override func prepareToWrite() throws {
+        try super.prepareToWrite()
+        magicNumber = Self.magicNumber
+    }
+
+    public override func write(to extDataHandle: DataHandle, updating entry: OTFsfntDirectoryEntry?) throws {
+        try prepareToWrite()
+        try write()
+        let before: UInt32 = UInt32(extDataHandle.currentOffset)
+        extDataHandle.write(version)
+        extDataHandle.write(fontRevision)
+        extDataHandle.write(0 as UInt32)
+        extDataHandle.write(magicNumber)
+        extDataHandle.write(flags)
+        extDataHandle.write(unitsPerEm.rawValue)
+        extDataHandle.write(created)
+        extDataHandle.write(modified)
+        extDataHandle.write(xMin)
+        extDataHandle.write(yMin)
+        extDataHandle.write(xMax)
+        extDataHandle.write(yMax)
+        extDataHandle.write(macStyle)
+        extDataHandle.write(lowestRecPPEM)
+        extDataHandle.write(fontDirectionHint)
+        extDataHandle.write(indexToLocFormat)
+        extDataHandle.write(glyphDataFormat)
+        let after: UInt32 = UInt32(extDataHandle.currentOffset)
+        let padBytesLength = (~(after & 0x3) + 1) & 0x3
+        if padBytesLength > 0 { extDataHandle.writeData(Data(repeating: 0, count: Int(padBytesLength))) }
+        entry?.tableTag = tableTag
+        entry?.table = self
+        entry?.offset = before
+        entry?.length = after - before
     }
 }

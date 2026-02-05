@@ -12,19 +12,19 @@ public extension FontTable_name {
 
     final class NameRecord: FontTableNode, Comparable {
         public var platformID:      PlatformID = .any   // base-0
-        public var encodingID:      EncodingID = .none  // aka `platformSpecificID`/`scriptID`; base-0
-        public var languageID:      LanguageID = .none  // base-0
+        public var encodingID:      EncodingID = .any  	// aka `platformSpecificID`/`scriptID`; base-0
+        public var languageID:      LanguageID = .any  	// base-0
 
-        public var nameID:          FontNameID  = .any  // base-0
+        public var nameID:          FontNameID = .any  	// base-0
         public var length:          UInt16 = 0          // name string length in bytes
         public var offset:          UInt16 = 0          // name string offset in bytes from stringOffset
 
         @objc public var string:    String = ""
         public var data:            Data!
 
-        public override var nodeLength: UInt32 {
-            return UInt32(MemoryLayout<UInt16>.size * 6) // 12
-        }
+//        public override var nodeLength: UInt32 {
+//            return UInt32(MemoryLayout<UInt16>.size * 6) // 12
+//        }
 
         public class override var nodeLength: UInt32 {
             return UInt32(MemoryLayout<UInt16>.size * 6) // 12
@@ -78,7 +78,17 @@ public extension FontTable_name {
 
         @available(*, unavailable, message: "use initializer that takes stringOffset instead")
         public override init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable) throws {
-            fatalError("")
+            fatalError("use initializer that takes stringOffset instead")
+        }
+
+        @available(*, unavailable, message: "use write method that takes stringOffset instead")
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            fatalError("use write method that takes stringOffset instead")
+        }
+
+        @available(*, unavailable, message: "use write method that takes stringOffset instead")
+        public override func write(to dataHandle: DataHandle) throws {
+            <#code#>
         }
 
         /// "As with encoding records in the 'cmap' table, name records shall be sorted first by platform ID,

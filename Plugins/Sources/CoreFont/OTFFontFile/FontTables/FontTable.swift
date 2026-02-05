@@ -20,7 +20,8 @@ open class FontTable: OTFFontFileNode {
     public var tableData:           Data
     public var paddedTableData:     Data {
         var paddedData = tableData
-        paddedData.count = (paddedData.count + 3 ) & -4
+        paddedData.count = paddedData.count.uint32AlignedCount
+//        paddedData.count = (paddedData.count + 3 ) & -4
         return paddedData
     }
 
@@ -54,11 +55,13 @@ open class FontTable: OTFFontFileNode {
     }
 
     /// give table a chance to update its in memory data structures
+    /// - important: your first call should be to `super.prepareToWrite()`
     func prepareToWrite() throws {
         dataHandle = DataHandle()
     }
 
     /// write to our `dataHandle` and update `tableData` with result
+    /// - important: your last call should be to `super.write()`
     func write() throws {
         tableData = dataHandle.data
         dataHandle = nil
@@ -80,7 +83,6 @@ open class FontTable: OTFFontFileNode {
         entry.offset = before
         entry.length = after - before
     }
-
 
     public static func `class`(for tableTag: TableTag) -> FontTable.Type {
         if tableTag == .OS_2 { return FontTable_OS2.self }

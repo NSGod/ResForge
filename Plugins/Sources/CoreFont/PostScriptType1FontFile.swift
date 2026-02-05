@@ -290,7 +290,7 @@ public final class PostScriptType1FontFile: NSObject {
                     }
                     mBlockString = mBlockString.replacingOccurrences(of: "\r\n", with: "\n")
                     mBlockString = mBlockString.replacingOccurrences(of: "\r", with: "\n")
-                    // FIXME: resolve octal character excape sequences ('\251' -> '©')
+                    // FIXME: resolve octal character excape sequences ('\251' -> '©') ?
                     if lastFormat == .binary { mBlockString += "\n" }
                     mString.append(mBlockString)
                     lastFormat = .ascii

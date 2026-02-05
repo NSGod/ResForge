@@ -58,4 +58,18 @@ final public class FontTable_post: FontTable {
     public func glyphName(for glyphID: Glyph32ID) -> String? {
         return format?.glyphName(for: glyphID)
     }
+
+    override func write() throws {
+        dataHandle.write(version)
+        dataHandle.write(italicAngle)
+        dataHandle.write(underlinePosition)
+        dataHandle.write(underlineThickness)
+        dataHandle.write(isFixedPitch)
+        dataHandle.write(minMemType42)
+        dataHandle.write(maxMemType42)
+        dataHandle.write(minMemType1)
+        dataHandle.write(maxMemType1)
+        try format?.write(to: dataHandle)
+        try super.write()
+    }
 }

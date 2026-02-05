@@ -38,5 +38,9 @@ public extension FontTable_post {
                     return nil
             }
         }
+
+        public override func write(to dataHandle: DataHandle) throws {
+            // no op
+        }
     }
 }

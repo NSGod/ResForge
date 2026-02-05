@@ -11,7 +11,7 @@ import RFSupport
 /// `REQUIRES`: `hhea`, `maxp`
 /// `DEPENDS ON`:
 /// `DISPLAY DEPENDS ON`: `post`
-///
+
 final public class FontTable_hmtx: FontTable {
     // abbreviated/optimized format as stored in data
     public var horizontalMetrics:       [HorizontalMetric] = []

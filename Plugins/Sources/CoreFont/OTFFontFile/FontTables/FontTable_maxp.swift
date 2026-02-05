@@ -40,7 +40,7 @@ final public class FontTable_maxp: FontTable {
     @objc public var maxComponentDepth:     UInt16 = 0  // levels of recursion; set to 0 if font only has simple glyphs; max is 16;
                                                         // set to 1 if all compound glyphs are simple
 
-    required public init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
+    public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
         let vers: Fixed = try reader.read()
         guard let version = Version(rawValue: vers) else {
@@ -65,7 +65,7 @@ final public class FontTable_maxp: FontTable {
         }
     }
 
-    public override func write() throws {
+    override func write() throws {
         dataHandle.write(version)
         dataHandle.write(numGlyphs)
         if version == .version1_0 {

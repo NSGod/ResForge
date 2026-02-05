@@ -81,9 +81,13 @@ final public class FontTable_hhea: FontTable {
         reserved1 = 0
         reserved2 = 0
         reserved3 = 0
+        if let hmtxTable {
+            /// we want `.metrics`, not optimized `.horizontalMetrics`
+            numberOfHMetrics = UInt16(hmtxTable.metrics.count)
+        }
     }
 
-    public override func write() throws {
+    override func write() throws {
         dataHandle.write(version)
         dataHandle.write(ascender)
         dataHandle.write(descender)
@@ -103,5 +107,4 @@ final public class FontTable_hhea: FontTable {
         dataHandle.write(numberOfHMetrics)
         try super.write()
     }
-
 }

@@ -39,6 +39,12 @@ public extension Fixed {
 
 public typealias Tag       = UInt32
 
+public extension FixedWidthInteger {
+    var uint32AlignedCount: Int {
+        Int((self + 3) & -4)
+    }
+}
+
 public struct OTFsfntFormat: RawRepresentable, Equatable {
     public let rawValue: UInt32
 
@@ -286,46 +292,46 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CustomStringConv
     case czech                      = 1029	// 0x0405
     case danish                     = 1030	// 0x0406
     case german                     = 1031	// 0x0407
-    case greek                      = 1032 // 0x0408
-    case englishAmerican            = 1033 // 0x0409
-    case spanishTraditional         = 1034 // 0x040a
-    case finnish                    = 1035 // 0x040b
-    case french                     = 1036 // 0x040c
-    case hebrew                     = 1037 // 0x040d
-    case hungarian                  = 1038 // 0x040e
-    case icelandic                  = 1039 // 0x040f
-    case italian                    = 1040 // 0x0410
-    case japanese                   = 1041 // 0x0411
-    case korean                     = 1042 // 0x0412
-    case dutch                      = 1043 // 0x0413
-    case norwegianBokmal            = 1044 // 0x0414
-    case polish                     = 1045 // 0x0415
-    case portugueseBrazillian       = 1046 // 0x0416
-    case romanshSwitzerland         = 1047 // 0x0417
-    case romanian                   = 1048 // 0x0418
-    case russian                    = 1049 // 0x0419
-    case croatian                   = 1050 // 0x041a,
-    case slovak                     = 1051 // 0x041b,
-    case albanian                   = 1052 // 0x041c,
-    case swedish                    = 1053 // 0x041d,
-    case thai                       = 1054 // 0x041e
-    case turkish                    = 1055 // 0x041f
-    case urdu                       = 1056 // 0x0420
-    case indonesian                 = 1057 // 0x0421
-    case ukranian                   = 1058 // 0x0422
-    case byelorussian               = 1059 // 0x0423
-    case slovenian                  = 1060 // 0x0424
-    case estonian                   = 1061 // 0x0425
-    case latvian                    = 1062 // 0x0426
-    case lithuanian                 = 1063 // 0x0427
-    case tajik                      = 1064 // 0x0428
-    case vietnamese                 = 1066 // 0x042a
-    case armenian                   = 1067 // 0x042b
-    case azeri                      = 1068 // 0x042c
-    case basque                     = 1069 // 0x042d
-    case upperSorbian               = 1070 // 0x042e
-    case macedonian                 = 1071 // 0x042f
-    case malay                      = 1086 // 0x043e
+    case greek                      = 1032  // 0x0408
+    case englishAmerican            = 1033  // 0x0409
+    case spanishTraditional         = 1034  // 0x040a
+    case finnish                    = 1035  // 0x040b
+    case french                     = 1036  // 0x040c
+    case hebrew                     = 1037  // 0x040d
+    case hungarian                  = 1038  // 0x040e
+    case icelandic                  = 1039  // 0x040f
+    case italian                    = 1040  // 0x0410
+    case japanese                   = 1041  // 0x0411
+    case korean                     = 1042  // 0x0412
+    case dutch                      = 1043  // 0x0413
+    case norwegianBokmal            = 1044  // 0x0414
+    case polish                     = 1045  // 0x0415
+    case portugueseBrazillian       = 1046  // 0x0416
+    case romanshSwitzerland         = 1047  // 0x0417
+    case romanian                   = 1048  // 0x0418
+    case russian                    = 1049  // 0x0419
+    case croatian                   = 1050  // 0x041a,
+    case slovak                     = 1051  // 0x041b,
+    case albanian                   = 1052  // 0x041c,
+    case swedish                    = 1053  // 0x041d,
+    case thai                       = 1054  // 0x041e
+    case turkish                    = 1055  // 0x041f
+    case urdu                       = 1056  // 0x0420
+    case indonesian                 = 1057  // 0x0421
+    case ukranian                   = 1058  // 0x0422
+    case byelorussian               = 1059  // 0x0423
+    case slovenian                  = 1060  // 0x0424
+    case estonian                   = 1061  // 0x0425
+    case latvian                    = 1062  // 0x0426
+    case lithuanian                 = 1063  // 0x0427
+    case tajik                      = 1064  // 0x0428
+    case vietnamese                 = 1066  // 0x042a
+    case armenian                   = 1067  // 0x042b
+    case azeri                      = 1068  // 0x042c
+    case basque                     = 1069  // 0x042d
+    case upperSorbian               = 1070  // 0x042e
+    case macedonian                 = 1071  // 0x042f
+    case malay                      = 1086  // 0x043e
     case chinesePRC                 = 0x0804
     case germanSwiss                = 0x0807
     case englishBritish             = 0x0809
@@ -437,7 +443,7 @@ public enum EncodingID: Comparable, CustomStringConvertible {
 	case unicode(UnicodeEncodingID)
 	case mac(MacScriptID)
 	case microsoft(MicrosoftEncodingID)
-    case none
+    case any
 
     public var rawValue: UInt16 {
         switch self {
@@ -447,7 +453,7 @@ public enum EncodingID: Comparable, CustomStringConvertible {
                 return encID.rawValue
             case .microsoft(let encID):
                 return encID.rawValue
-            case .none:
+            case .any:
                 return 0
         }
     }
@@ -456,17 +462,17 @@ public enum EncodingID: Comparable, CustomStringConvertible {
         switch platformID {
             case .unicode:
                 guard let encID = UnicodeEncodingID(rawValue: encodingID) else {
-                    throw FontTableError.parseError("unknown Unicode encoding ID: \(encodingID)")
+                    throw FontTableError.parseError("Unknown Unicode encoding ID: \(encodingID)")
                 }
                 return .unicode(encID)
             case .mac:
                 guard let encID = MacScriptID(rawValue: encodingID) else {
-                    throw FontTableError.parseError("unknown MacScript encoding ID: \(encodingID)")
+                    throw FontTableError.parseError("Unknown MacScript encoding ID: \(encodingID)")
                 }
                 return .mac(encID)
             case .microsoft:
                 guard let encID = MicrosoftEncodingID(rawValue: encodingID) else {
-                    throw FontTableError.parseError("unknown Microsoft encoding ID: \(encodingID)")
+                    throw FontTableError.parseError("Unknown Microsoft encoding ID: \(encodingID)")
                 }
                 return .microsoft(encID)
             case .iso, .custom, .any:
@@ -482,8 +488,8 @@ public enum EncodingID: Comparable, CustomStringConvertible {
                 return encID.description
             case .microsoft(let encID):
                 return encID.description
-            case .none:
-                return NSLocalizedString("none", comment: "")
+            case .any:
+                return NSLocalizedString("Any", comment: "")
         }
     }
 }
@@ -492,7 +498,7 @@ public enum LanguageID: Comparable, CustomStringConvertible {
     case unicode
     case mac(MacLanguageID)
     case microsoft(MicrosoftLanguageID)
-    case none
+    case any
 
     public var rawValue: UInt16 {
         switch self {
@@ -500,7 +506,7 @@ public enum LanguageID: Comparable, CustomStringConvertible {
                 return langID.rawValue
             case .microsoft(let langID):
                 return langID.rawValue
-            case .none, .unicode:
+            case .any, .unicode:
                 return 0
         }
     }
@@ -511,7 +517,7 @@ public enum LanguageID: Comparable, CustomStringConvertible {
                 return .unicode
             case .mac:
                 guard let langID = MacLanguageID(rawValue: languageID) else {
-                    throw FontTableError.parseError("Unknown MacScript language ID: \(languageID)")
+                    throw FontTableError.parseError("Unknown MacLanguage ID: \(languageID)")
                 }
                 return .mac(langID)
             case .microsoft:
@@ -532,8 +538,8 @@ public enum LanguageID: Comparable, CustomStringConvertible {
                 return langID.description
             case .microsoft(let langID):
                 return langID.description
-            case .none:
-                return NSLocalizedString("none", comment: "")
+            case .any:
+                return NSLocalizedString("Any", comment: "")
         }
     }
 }

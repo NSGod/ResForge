@@ -12,14 +12,14 @@ public enum DataHandleError: Error {
 }
 
 public protocol DataHandleWriting {
-    func write(to dataHandle: DataHandle, offset:Int?) throws
+//    func write(to dataHandle: DataHandle, offset:Int?) throws
     func write(to dataHandle: DataHandle) throws
 }
 
 public extension DataHandleWriting {
-    func write(to dataHandle: DataHandle, offset: Int? = nil) throws {
-
-    }
+//    func write(to dataHandle: DataHandle, offset: Int? = nil) throws {
+//
+//    }
 
     func write(to dataHandle: DataHandle) throws {
 

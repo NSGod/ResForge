@@ -138,7 +138,7 @@ final public class FontTable_OS2: FontTable {
         }
     }
 
-    public override func write() throws {
+    override func write() throws {
         dataHandle.write(version)
         dataHandle.write(xAvgCharWidth)
         dataHandle.write(usWeightClass.rawValue)

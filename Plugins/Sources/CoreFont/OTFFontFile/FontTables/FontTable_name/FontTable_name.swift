@@ -18,6 +18,7 @@ final public class FontTable_name: FontTable {
         case format1    = 1     // not supported by Apple
     }
 
+	// MARK: -
     @objc public var format:                Format = .format0
 
     public var count:                       UInt16 = 0      // number of name records
@@ -27,6 +28,7 @@ final public class FontTable_name: FontTable {
     public var langTagCount:                UInt16 = 0      // format 1 only
     @objc public var languageTagRecords:    [LanguageTagRecord]?
 
+	// MARK: -
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
         self.parseState = .parsing
@@ -53,4 +55,40 @@ final public class FontTable_name: FontTable {
         }
         self.parseState = .parsed
     }
+
+    override func prepareToWrite() throws {
+        try super.prepareToWrite()
+        // FIXME: add support for language tags?
+        format = .format0
+        nameRecords.sort(by: <)
+        count = UInt16(nameRecords.count)
+        var offset: UInt16 = UInt16(MemoryLayout<UInt16>.size) * 3 + count * UInt16(NameRecord.nodeLength)
+        stringOffset = offset
+        for nameRecord in nameRecords {
+            nameRecord.offset = offset - stringOffset
+            offset += nameRecord.length
+        }
+    }
+
+    override func write() throws {
+
+        try super.write()
+    }
+
+    // FIXME: something better to allow preference of English?
+    public func nameFor(name: FontNameID, platform: PlatformID = .any, encoding: EncodingID = .any, language: LanguageID = .any) -> String? {
+        return recordFor(name: name, platform: platform, encoding: encoding, language: language)?.value
+    }
+
+    /// O(n)
+    public func recordFor(name: FontNameID, platform: PlatformID = .any, encoding: EncodingID = .any, language: LanguageID = .any) -> NameRecord? {
+        let record = nameRecords.first(where: {
+            $0.nameID == name &&
+            ($0.platformID == platform || platform == .any) &&
+            ($0.encodingID == encoding || encoding == .any) &&
+            ($0.languageID == language || language == .any)
+        })
+        return record
+    }
+
 }

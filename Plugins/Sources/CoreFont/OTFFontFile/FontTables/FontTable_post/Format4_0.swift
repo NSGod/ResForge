@@ -13,7 +13,7 @@ public extension FontTable_post {
     final class Format4_0: Format {
         var codes:                  [UInt16] = []
 
-        required public init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable) throws {
+        public required init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable) throws {
             try super.init(reader, offset: offset, table: table)
             let numGlyphs = table.fontNumGlyphs
             var code: UInt16 = 0
@@ -26,6 +26,10 @@ public extension FontTable_post {
                 glyphEntries.append(entry)
                 glyphIDsToEntries[Glyph32ID(i)] = entry
             }
+        }
+
+        public override func write(to dataHandle: DataHandle) throws {
+            codes.forEach { dataHandle.write($0) }
         }
     }
 }

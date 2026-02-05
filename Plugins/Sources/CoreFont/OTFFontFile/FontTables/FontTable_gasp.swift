@@ -32,13 +32,17 @@ final public class FontTable_gasp: FontTable {
         ranges = try (0..<numRanges).map { _ in try Range(reader, table: self) }
     }
 
-    public override func write() throws {
+    override func prepareToWrite() throws {
+        try super.prepareToWrite()
+        ranges.sort(by: <)
+    }
+    
+    override func write() throws {
         dataHandle.write(version)
         dataHandle.write(numRanges)
         try ranges.forEach({ try $0.write(to: dataHandle) })
         try super.write()
     }
-
 }
 
 public extension FontTable_gasp {
@@ -71,7 +75,7 @@ public extension FontTable_gasp {
         }
 
         public class override var nodeLength: UInt32 {
-            UInt32(MemoryLayout<UInt16>.size * 2) // 4
+            UInt32(MemoryLayout<UInt16>.size * 2)       // 4
         }
         
         public override init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable) throws {

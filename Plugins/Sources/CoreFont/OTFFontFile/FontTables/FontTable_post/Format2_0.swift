@@ -13,8 +13,9 @@ public extension FontTable_post {
     final class Format2_0: Format {
         public var numberOfGlyphs:          UInt16 = 0      // must be synched with maxp.numGlyphs
         public var glyphNameIndexes:        [GlyphID] = []
+        // public var glyphNames:           [String]        // inherited
 
-        required public init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable) throws {
+        public required init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable) throws {
             try super.init(reader, offset: offset, table: table)
             numberOfGlyphs = try reader.read()
             for _ in 0..<numberOfGlyphs {
@@ -47,6 +48,12 @@ public extension FontTable_post {
                 glyphEntries.append(entry)
                 glyphIDsToEntries[Glyph32ID(i)] = entry
             }
+        }
+
+        public override func write(to dataHandle: DataHandle) throws {
+            dataHandle.write(numberOfGlyphs)
+            glyphNameIndexes.forEach { dataHandle.write($0) }
+            try glyphNames.forEach { try dataHandle.writePString($0) }
         }
     }
 }
