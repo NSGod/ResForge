@@ -59,7 +59,9 @@ final public class FontTable_name: FontTable {
     override func prepareToWrite() throws {
         // FIXME: add support for language tags?
         format = .format0
+        NSLog("\(type(of: self)).\(#function) nameRecords (BEFORE) == \(nameRecords)")
         nameRecords.sort(by: <)
+        NSLog("\(type(of: self)).\(#function) nameRecords (AFTER) == \(nameRecords)")
         count = UInt16(nameRecords.count)
         var offset: UInt16 = UInt16(MemoryLayout<UInt16>.size) * 3 + count * UInt16(NameRecord.nodeLength)
         stringOffset = offset

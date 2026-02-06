@@ -113,7 +113,7 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
     }
 }
 
-public enum UnitsPerEm {
+public enum UnitsPerEm: CustomStringConvertible {
     case custom(UInt16)
     case postScriptStandard,
          trueTypeStandard
@@ -134,6 +134,10 @@ public enum UnitsPerEm {
             case .postScriptStandard: return 1000
             case .trueTypeStandard: return 2048
         }
+    }
+
+    public var description: String {
+        return "\(rawValue)"
     }
 }
 
@@ -239,7 +243,7 @@ public protocol FontMetrics {
     }
 }
 
-extension MacScriptID: CustomStringConvertible {
+extension MacScriptID: CustomStringConvertible, CustomDebugStringConvertible {
     public var description: String {
         switch self {
             case .roman:                    return NSLocalizedString("Roman", comment: "")
@@ -277,6 +281,10 @@ extension MacScriptID: CustomStringConvertible {
             case .uninterpreted:            return NSLocalizedString("Uninterpreted Symbols", comment: "")
             case .none:                     return NSLocalizedString("None", comment: "")
         }
+    }
+
+    public var debugDescription: String {
+        return "\(self.rawValue)"
     }
 }
 
@@ -414,7 +422,7 @@ extension MacScriptID: CustomStringConvertible {
     }
 }
 
-extension MacLanguageID: CustomStringConvertible {
+extension MacLanguageID: CustomStringConvertible, CustomDebugStringConvertible {
     public var description: String {
         switch self {
             case .english:          return NSLocalizedString("English", comment: "")
@@ -539,5 +547,9 @@ extension MacLanguageID: CustomStringConvertible {
             case .nynorsk:			return NSLocalizedString("Nynorsk", comment: "")
             case .none:             return NSLocalizedString("--", comment: "")
         }
+    }
+
+    public var debugDescription : String {
+        return "\(self.rawValue)"
     }
 }

@@ -192,7 +192,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CustomStringConv
     }
 }
 
-@objc public enum PlatformID: UInt16, Comparable, CustomStringConvertible {
+@objc public enum PlatformID: UInt16, Comparable, CustomStringConvertible, CustomDebugStringConvertible {
     case unicode    = 0
     case mac        = 1
     case iso        = 2 // deprecated/reserved
@@ -218,9 +218,20 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CustomStringConv
             case .any:          return NSLocalizedString("<any>", comment: "")
         }
     }
+
+    public var debugDescription: String {
+        switch self {
+            case .unicode:      return "Uni"
+            case .mac:          return "Mac"
+            case .iso:          return "ISO"
+            case .microsoft:    return "Mic"
+            case .custom:       return "Cus"
+            case .any:          return "Any"
+        }
+    }
 }
 
-@objc public enum UnicodeEncodingID: UInt16, Comparable, CustomStringConvertible {
+@objc public enum UnicodeEncodingID: UInt16, Comparable, CustomStringConvertible, CustomDebugStringConvertible {
     case unicode1_0             = 0  // Unicode 1.0 semantics.
     case unicode1_1             = 1  // Unicode 1.1 semantics.
     case iso_10646              = 2  // ISO/IEC 10646 semantics. (deprecated)
@@ -249,11 +260,15 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CustomStringConv
             case .unicodeFullRepertoire: return NSLocalizedString("Unicode full repertoire.", comment: "")
         }
     }
+
+    public var debugDescription: String {
+        return "\(rawValue)"
+    }
 }
 
 // MacScriptID & MacLanguageID are in CoreFontTypes.swift
 
-@objc public enum MicrosoftEncodingID : UInt16, Comparable, CustomStringConvertible {
+@objc public enum MicrosoftEncodingID : UInt16, Comparable, CustomStringConvertible, CustomDebugStringConvertible {
     case symbol                 = 0
     case unicodeBMP             = 1 // UTF-16
     case shiftJIS               = 2
@@ -282,9 +297,13 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CustomStringConv
             case .unicodeUCS4:     return NSLocalizedString("Unicode UCS-4/UTF-32", comment: "")
         }
     }
+
+    public var debugDescription: String {
+        return "\(rawValue)"
+    }
 }
 
-@objc public enum MicrosoftLanguageID: UInt16, Comparable, CustomStringConvertible {
+@objc public enum MicrosoftLanguageID: UInt16, Comparable, CustomStringConvertible, CustomDebugStringConvertible {
     case arabicSaudiArabia          = 1025	// 0x0401
     case bulgarian                  = 1026	// 0x0402
     case catalan                    = 1027	// 0x0403
@@ -437,9 +456,13 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CustomStringConv
             case .englishIreland: return NSLocalizedString("English (Ireland)", comment: "")
         }
     }
+
+    public var debugDescription: String {
+        return "\(rawValue)"
+    }
 }
 
-public enum EncodingID: Comparable, CustomStringConvertible {
+public enum EncodingID: Comparable, CustomStringConvertible, CustomDebugStringConvertible {
 	case unicode(UnicodeEncodingID)
 	case mac(MacScriptID)
 	case microsoft(MicrosoftEncodingID)
@@ -480,6 +503,14 @@ public enum EncodingID: Comparable, CustomStringConvertible {
         }
     }
 
+    public static func < (lhs: EncodingID, rhs: EncodingID) -> Bool {
+        return lhs.rawValue < rhs.rawValue
+    }
+
+    public static func == (lhs: EncodingID, rhs: EncodingID) -> Bool {
+        return lhs.rawValue == rhs.rawValue
+    }
+
     public var description: String {
         switch self {
             case .unicode(let encID):
@@ -492,9 +523,22 @@ public enum EncodingID: Comparable, CustomStringConvertible {
                 return NSLocalizedString("Any", comment: "")
         }
     }
+
+    public var debugDescription: String {
+        switch self {
+            case .unicode(let encID):
+                return encID.debugDescription
+            case .mac(let encID):
+                return encID.debugDescription
+            case .microsoft(let encID):
+                return encID.debugDescription
+            case .any:
+                return "any"
+        }
+    }
 }
 
-public enum LanguageID: Comparable, CustomStringConvertible {
+public enum LanguageID: Comparable, CustomStringConvertible, CustomDebugStringConvertible {
     case unicode
     case mac(MacLanguageID)
     case microsoft(MicrosoftLanguageID)
@@ -530,6 +574,14 @@ public enum LanguageID: Comparable, CustomStringConvertible {
         }
     }
 
+    public static func < (lhs: LanguageID, rhs: LanguageID) -> Bool {
+        return lhs.rawValue < rhs.rawValue
+    }
+
+    public static func == (lhs: LanguageID, rhs: LanguageID) -> Bool {
+        return lhs.rawValue == rhs.rawValue
+    }
+
     public var description: String {
         switch self {
             case .unicode:
@@ -542,10 +594,23 @@ public enum LanguageID: Comparable, CustomStringConvertible {
                 return NSLocalizedString("Any", comment: "")
         }
     }
+
+    public var debugDescription: String {
+        switch self {
+            case .unicode:
+                return "--"
+            case .mac(let langID):
+                return langID.debugDescription
+            case .microsoft(let langID):
+                return langID.debugDescription
+            case .any:
+                return "any"
+        }
+    }
 }
 
 public extension FontTable_name {
-    enum FontNameID: Comparable, CustomStringConvertible {
+    enum FontNameID: Comparable, CustomStringConvertible, CustomDebugStringConvertible {
         case copyright                 // = 0
         case family                    // = 1
         case subfamily                 // = 2
@@ -656,6 +721,10 @@ public extension FontTable_name {
                 case .any:                      return NSLocalizedString("any", comment: "")
                 case .custom(let v):            return NSLocalizedString("<\(v)>", comment: "")
             }
+        }
+
+        public var debugDescription: String {
+            return "\(self.rawValue)"
         }
 
         fileprivate static let rawValuesToCases: [UInt16: FontNameID] =

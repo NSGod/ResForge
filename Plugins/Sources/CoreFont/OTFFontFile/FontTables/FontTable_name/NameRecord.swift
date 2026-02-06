@@ -51,10 +51,10 @@ public extension FontTable_name {
             try reader.pushPosition(Int(stringOffset + offset))
             data = try reader.readData(length: Int(length))
             reader.popPosition()
-            if platformID == .unicode {
+            if platformID == .unicode || platformID == .microsoft {
                 string = String(data: data, encoding: .utf16BigEndian) ?? ""
             } else if platformID == .mac {
-                var stringEncoding: String.Encoding = .utf8
+                var stringEncoding: String.Encoding = .macOSRoman
                 let encoding = CFStringConvertEncodingToNSStringEncoding(UInt32(encodingID.rawValue))
                 if encoding == kCFStringEncodingInvalidId {
                     NSLog("\(type(of: self)).\(#function) *** ERROR/WARNING: could not find NSStringEncoding for scriptID: \(encodingID.rawValue)")
@@ -62,8 +62,6 @@ public extension FontTable_name {
                     stringEncoding = String.Encoding(rawValue: encoding)
                 }
                 string = String(data: data, encoding: stringEncoding) ?? ""
-            } else if platformID == .microsoft {
-                string = String(data: data, encoding: .utf16BigEndian) ?? ""
             }
             platformName = NSLocalizedString("[\(platformID.rawValue)] \(platformID)", comment: "")
             scriptName = NSLocalizedString("[\(encodingID.rawValue)] \(encodingID)", comment: "")
@@ -104,16 +102,16 @@ public extension FontTable_name {
             fatalError("use write method that takes stringOffset instead")
         }
 
-        /// "As with encoding records in the 'cmap' table, name records shall be sorted first by platform ID,
+        /// As with encoding records in the 'cmap' table, name records shall be sorted first by platform ID,
         /// then by encoding ID, then language ID, and then, in addition, by name ID.
-        public static func < (lhs: FontTable_name.NameRecord, rhs: FontTable_name.NameRecord) -> Bool {
+        public static func < (lhs: NameRecord, rhs: NameRecord) -> Bool {
             if lhs.platformID != rhs.platformID { return lhs.platformID < rhs.platformID }
             if lhs.encodingID != rhs.encodingID { return lhs.encodingID < rhs.encodingID }
             if lhs.languageID != rhs.languageID { return lhs.languageID < rhs.languageID }
             return lhs.nameID < rhs.nameID
         }
 
-        public static func == (lhs: FontTable_name.NameRecord, rhs: FontTable_name.NameRecord) -> Bool {
+        public static func == (lhs: NameRecord, rhs: NameRecord) -> Bool {
             return lhs.platformID == rhs.platformID &&
             lhs.nameID     == rhs.nameID &&
             lhs.length     == rhs.length &&
@@ -121,6 +119,10 @@ public extension FontTable_name {
             lhs.platformID == rhs.platformID &&
             lhs.encodingID == rhs.encodingID &&
             lhs.languageID == rhs.languageID
+        }
+
+        public override var description: String {
+            "NameRecord(\(platformID.debugDescription), \(encodingID.debugDescription), \(languageID.debugDescription), \(nameID.rawValue), \(string.prefix(7)))"
         }
     }
 }
