@@ -83,6 +83,5 @@ final public class FontTable_maxp: FontTable {
             dataHandle.write(maxComponentElements)
             dataHandle.write(maxComponentDepth)
         }
-        try super.write()
     }
 }

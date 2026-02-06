@@ -27,6 +27,12 @@ final class ViewController_gasp: FontTableViewController, NSTableViewDelegate {
         super.viewDidLoad()
     }
     
+    override var representedObject: Any? {
+        didSet {
+            self.table = self.representedObject as! FontTable_gasp
+        }
+    }
+
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         guard let tableColumn else { return nil }
         let identifier = tableColumn.identifier

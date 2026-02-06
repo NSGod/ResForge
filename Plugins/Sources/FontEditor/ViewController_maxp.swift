@@ -27,7 +27,14 @@ final class ViewController_maxp: FontTableViewController {
         updateUI()
     }
 
-    func updateUI() {
+    override var representedObject: Any? {
+        didSet {
+            self.table = self.representedObject as! FontTable_maxp
+            updateUI()
+        }
+    }
+
+    override func updateUI() {
         for control: NSControl in version1View.subviews as? [NSControl] ?? [] {
             control.isEnabled = table.version == .version1_0
         }

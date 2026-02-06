@@ -184,6 +184,5 @@ final public class FontTable_OS2: FontTable {
                 }
             }
         }
-        try super.write()
     }
 }

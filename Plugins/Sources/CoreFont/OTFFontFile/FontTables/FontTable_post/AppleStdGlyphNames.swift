@@ -12,7 +12,6 @@
 /* from /afdko/c/shared/resource/applestd.h */
 
 import Foundation
-import RFSupport
 
 public extension FontTable_post {
     /*

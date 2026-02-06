@@ -33,9 +33,17 @@ final class ViewController_head: FontTableViewController {
         flagsControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "representedObject.objcFlags")
         macStyleControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "representedObject.objcMacStyle")
     }
-    
-    @IBAction func changeFlags(_ sender: Any) {
 
+    override var representedObject: Any? {
+        didSet {
+            self.table = self.representedObject as! FontTable_head
+        }
+    }
+
+    @IBAction func changeFlags(_ sender: Any) {
+        let checkbox = sender as! NSButton
+        
+        self.view.window?.windowController?.setDocumentEdited(true)
     }
 
     @IBAction func changeMacStyle(_ sender: Any) {

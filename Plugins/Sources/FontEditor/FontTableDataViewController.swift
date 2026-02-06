@@ -69,7 +69,7 @@ final class FontTableDataViewController: FontTableViewController {
         }
     }
 
-    private func updateUI() {
+    override func updateUI() {
         NSLog("\(type(of: self)).\(#function) '\(table.tableTag.fourCharString)'")
     }
 

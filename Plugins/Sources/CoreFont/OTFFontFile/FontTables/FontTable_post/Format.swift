@@ -40,7 +40,7 @@ public extension FontTable_post {
         }
 
         public override func write(to dataHandle: DataHandle) throws {
-            // no op
+            // no op; prevent exception for Format1_0 which does no writing
         }
     }
 }

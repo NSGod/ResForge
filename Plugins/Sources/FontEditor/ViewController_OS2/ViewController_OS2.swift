@@ -228,7 +228,13 @@ final class ViewController_OS2: FontTableViewController {
         updateUI()
     }
 
-    func updateUI() {
+    override var representedObject: Any? {
+        didSet {
+            self.table = self.representedObject as! FontTable_OS2
+        }
+    }
+
+    override func updateUI() {
         let views: [NSView] = [version1UnicodeView, codePageView, version2View, version5View]
         for view in views {
             for control: NSControl in view.subviews as! [NSControl] {

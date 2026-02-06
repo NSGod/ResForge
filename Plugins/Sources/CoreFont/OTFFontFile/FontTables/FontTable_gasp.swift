@@ -18,7 +18,6 @@ final public class FontTable_gasp: FontTable {
 
     @objc public var version:       Version = .version0
     @objc public var numRanges:     UInt16 = 0
-
     @objc public var ranges:        [Range] = []    // sorted by PPEM
 
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
@@ -33,7 +32,6 @@ final public class FontTable_gasp: FontTable {
     }
 
     override func prepareToWrite() throws {
-        try super.prepareToWrite()
         ranges.sort(by: <)
     }
     
@@ -41,7 +39,6 @@ final public class FontTable_gasp: FontTable {
         dataHandle.write(version)
         dataHandle.write(numRanges)
         try ranges.forEach({ try $0.write(to: dataHandle) })
-        try super.write()
     }
 }
 

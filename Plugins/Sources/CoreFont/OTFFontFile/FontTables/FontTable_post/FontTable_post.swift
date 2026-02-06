@@ -70,6 +70,5 @@ final public class FontTable_post: FontTable {
         dataHandle.write(minMemType1)
         dataHandle.write(maxMemType1)
         try format?.write(to: dataHandle)
-        try super.write()
     }
 }

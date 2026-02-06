@@ -55,29 +55,29 @@ open class FontTable: OTFFontFileNode {
     }
 
     /// give table a chance to update its in memory data structures
-    /// - important: your first call should be to `super.prepareToWrite()`
     func prepareToWrite() throws {
-        dataHandle = DataHandle()
+
     }
 
-    /// write to our `dataHandle` and update `tableData` with result
-    /// - important: your last call should be to `super.write()`
+    /// write to our `dataHandle`
     func write() throws {
-        tableData = dataHandle.data
-        dataHandle = nil
+        dataHandle.data = tableData
     }
 
     /// Write `tableData` to provided external `extDataHandle`, and update the specified `OTFsfntDirectoryEntry`.
-    /// This calls `prepareToWrite()` and then `write()` to update `tableData`. It then writes `tableData`
-    /// to the specified `extDataHandle`.
+    /// This calls `prepareToWrite()` and then `write()` to allow subclasses to update `tableData`.
+    /// It then writes `tableData` to the specified `extDataHandle`.
     public func write(to extDataHandle: DataHandle, updating entry: OTFsfntDirectoryEntry) throws {
+        dataHandle = DataHandle()
         try prepareToWrite()
         try write()
+        tableData = dataHandle.data
+        dataHandle = nil
         let before: UInt32 = UInt32(extDataHandle.currentOffset)
         extDataHandle.writeData(tableData)
         let after: UInt32 = UInt32(extDataHandle.currentOffset)
-        let padBytesLength = (~(after & 0x3) + 1) & 0x3
-        if padBytesLength > 0 { extDataHandle.writeData(Data(repeating: 0, count: Int(padBytesLength))) }
+        let padBytesLength = (~(after & 0x3) &+ 1) & 0x3
+        if padBytesLength > 0 { extDataHandle.writeData(Data(count: Int(padBytesLength))) }
         entry.tableTag = tableTag
         entry.table = self
         entry.offset = before

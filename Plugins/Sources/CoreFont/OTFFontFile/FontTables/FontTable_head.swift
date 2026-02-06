@@ -75,8 +75,20 @@ final public class FontTable_head: FontTable {
     @objc public var glyphDataFormat:       Int16 = 0               // 0 for current format
 
     // MARK: -
-    @objc public var createdDate:           Date!
-    @objc public var modifiedDate:          Date!
+    @objc public var createdDate:           Date! {
+        didSet {
+            self.willChangeValue(forKey: "created")
+            created = createdDate.secondsSince1904
+            self.didChangeValue(forKey: "created")
+        }
+    }
+    @objc public var modifiedDate:          Date! {
+        didSet {
+            self.willChangeValue(forKey: "modified")
+            modified = modifiedDate.secondsSince1904
+            self.willChangeValue(forKey: "modified")
+        }
+    }
 
     @objc public var objcFlags:             Flags.RawValue = 0 {
         didSet { flags = Flags(rawValue: objcFlags) }
@@ -140,14 +152,13 @@ final public class FontTable_head: FontTable {
         modifiedDate = Date(secondsSince1904: modified)
     }
 
-    public override func prepareToWrite() throws {
-        try super.prepareToWrite()
+    override func prepareToWrite() throws {
         magicNumber = Self.magicNumber
     }
 
     public override func write(to extDataHandle: DataHandle, updating entry: OTFsfntDirectoryEntry?) throws {
-        try prepareToWrite()
-        try write()
+//        try prepareToWrite()
+//        try write()
         let before: UInt32 = UInt32(extDataHandle.currentOffset)
         extDataHandle.write(version)
         extDataHandle.write(fontRevision)
@@ -167,8 +178,8 @@ final public class FontTable_head: FontTable {
         extDataHandle.write(indexToLocFormat)
         extDataHandle.write(glyphDataFormat)
         let after: UInt32 = UInt32(extDataHandle.currentOffset)
-        let padBytesLength = (~(after & 0x3) + 1) & 0x3
-        if padBytesLength > 0 { extDataHandle.writeData(Data(repeating: 0, count: Int(padBytesLength))) }
+        let padBytesLength = (~(after & 0x3) &+ 1) & 0x3
+        if padBytesLength > 0 { extDataHandle.writeData(Data(count: Int(padBytesLength))) }
         entry?.tableTag = tableTag
         entry?.table = self
         entry?.offset = before

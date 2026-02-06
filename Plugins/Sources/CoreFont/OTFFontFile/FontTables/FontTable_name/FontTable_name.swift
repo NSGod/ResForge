@@ -57,7 +57,6 @@ final public class FontTable_name: FontTable {
     }
 
     override func prepareToWrite() throws {
-        try super.prepareToWrite()
         // FIXME: add support for language tags?
         format = .format0
         nameRecords.sort(by: <)
@@ -71,8 +70,11 @@ final public class FontTable_name: FontTable {
     }
 
     override func write() throws {
-
-        try super.write()
+        dataHandle.write(format)
+        dataHandle.write(count)
+        dataHandle.write(stringOffset)
+        try nameRecords.forEach({ try $0.write(to: dataHandle, stringOffset: stringOffset) })
+        // FIXME: add support for format 1?
     }
 
     // FIXME: something better to allow preference of English?
@@ -90,5 +92,4 @@ final public class FontTable_name: FontTable {
         })
         return record
     }
-
 }

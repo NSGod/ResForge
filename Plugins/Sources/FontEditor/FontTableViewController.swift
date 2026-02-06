@@ -9,7 +9,8 @@ import Cocoa
 import CoreFont
 
 /// abstract superclass
-// - Note: this is a FontTable_ViewController, not a Font_TableViewController
+/// - Note: this is a `FontTable_ViewController`, not a `Font_TableViewController`
+
 class FontTableViewController: NSViewController {
 
     required init?(with fontTable: FontTable) {
@@ -23,6 +24,10 @@ class FontTableViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+
+    @objc func updateUI() {
+
     }
 
     static func `class`(for tableTag: TableTag) -> FontTableViewController.Type {

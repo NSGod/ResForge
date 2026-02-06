@@ -75,8 +75,7 @@ final public class FontTable_hhea: FontTable {
         numberOfHMetrics = try reader.read()
     }
 
-    public override func prepareToWrite() throws {
-        try super.prepareToWrite()
+    override func prepareToWrite() throws {
         reserved0 = 0
         reserved1 = 0
         reserved2 = 0
@@ -105,6 +104,5 @@ final public class FontTable_hhea: FontTable {
         dataHandle.write(reserved3)
         dataHandle.write(metricDataFormat)
         dataHandle.write(numberOfHMetrics)
-        try super.write()
     }
 }

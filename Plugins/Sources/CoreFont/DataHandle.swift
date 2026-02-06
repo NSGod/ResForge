@@ -18,11 +18,9 @@ public protocol DataHandleWriting {
 
 public extension DataHandleWriting {
 //    func write(to dataHandle: DataHandle, offset: Int? = nil) throws {
-//
 //    }
 
     func write(to dataHandle: DataHandle) throws {
-
     }
 }
 
@@ -48,9 +46,9 @@ public class DataHandle {
         _dataOffset = data.startIndex
     }
 
+    // FIXME: how to allow all kinds of FixedWidthInteger that are <= Int but not larger?
     public func seek<T: FixedWidthInteger>(to offset: T) {
-        let offset = Int(offset)
-        seek(to: offset)
+        seek(to: Int(offset))
     }
 
     public func seek(to offset: Int) {
@@ -74,6 +72,11 @@ public class DataHandle {
         truncate(at: currentOffset)
     }
 
+    // FIXME: how to allow all kinds of FixedWidthInteger that are <= Int but not larger?
+    public func truncate<T: FixedWidthInteger>(at offset: T) {
+        truncate(at: Int(offset))
+    }
+
     public func truncate(at offset: Int) {
         data.count = offset
         currentOffset = offset
@@ -95,13 +98,13 @@ public class DataHandle {
         write(value.rawValue, bigEndian: bigEndian)
     }
 
-    public func writeData(_ newData: Data) {
-        let subrange = _dataOffset..<_dataOffset + newData.count
-        if !data.indices.contains(subrange.upperBound) {
-            data.count = subrange.upperBound - data.startIndex
+    public func writeData(_ data: Data) {
+        let subrange = _dataOffset..<_dataOffset + data.count
+        if !self.data.indices.contains(subrange.upperBound) {
+            self.data.count = subrange.upperBound - self.data.startIndex
         }
-        data.replaceSubrange(subrange, with: newData)
-        _dataOffset += newData.count
+        self.data.replaceSubrange(subrange, with: data)
+        _dataOffset += data.count
     }
 
     public func writeString(_ value: String, encoding: String.Encoding = .utf8) throws {
@@ -112,11 +115,12 @@ public class DataHandle {
     }
 
     public func writePString(_ value: String, encoding: String.Encoding = .macOSRoman) throws {
-        guard let data = value.data(using: encoding), data.count <= UInt8.max else {
+        guard let encoded = value.data(using: encoding), encoded.count <= UInt8.max else {
             throw DataHandleError.stringEncodeFailure
         }
-        var encodedData = Data(repeating: UInt8(data.count), count: 1)
-        encodedData.append(contentsOf: data)
+        var encodedData = Data()
+        encodedData.append(UInt8(encoded.count))
+        encodedData.append(encoded)
         writeData(encodedData)
     }
 }

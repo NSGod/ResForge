@@ -23,4 +23,10 @@ final class ViewController_name: FontTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+
+    override var representedObject: Any? {
+        didSet {
+            self.table = self.representedObject as! FontTable_name
+        }
+    }
 }

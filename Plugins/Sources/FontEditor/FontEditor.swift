@@ -63,14 +63,29 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
     }
 
     // MARK: -
-    public func saveResource(_ sender: Any) {
-
+    @IBAction public func saveResource(_ sender: Any) {
+        NSLog("\(type(of: self)).\(#function)")
+        do {
+            let data = try fontFile.data()
+            resource.data = data
+            self.willChangeValue(forKey: "fontFile")
+            fontFile = try OTFFontFile(data)
+            self.didChangeValue(forKey: "fontFile")
+            directoryEntriesTableView.deselectAll(self)
+            box.contentView = Self.emptyView
+            tableTagField.stringValue = ""
+            setDocumentEdited(false)
+            tableTagsToViewControllers.removeAll()
+            directoryEntriesTableView.reloadData()
+        } catch {
+            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            self.presentError(error)
+        }
     }
 
-    public func revertResource(_ sender: Any) {
+    @IBAction public func revertResource(_ sender: Any) {
 
     }
-
 
     static var emptyView: NSView = NSView(frame: NSMakeRect(0, 0, 400, 600))
     static let supportedTableTags: Set<TableTag> = Set([.head, .maxp, .name, .post, .hhea, .hmtx, .OS_2, .gasp])
@@ -117,6 +132,7 @@ extension FontEditor: NSTableViewDelegate, NSTableViewDataSource {
     }
 
     public func tableViewSelectionDidChange(_ notification: Notification) {
+        NSLog("\(type(of: self)).\(#function) notification == \(notification)")
         let indexes = directoryEntriesTableView.selectedRowIndexes
         if indexes.count != 1 {
             box.contentView = Self.emptyView

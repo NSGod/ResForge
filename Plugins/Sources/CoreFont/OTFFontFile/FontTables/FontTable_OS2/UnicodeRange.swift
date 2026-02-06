@@ -217,7 +217,6 @@ public extension FontTable_OS2 {
         public static let cjkStrokesAndCompatibilityIdeographs:    UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.cjkStrokesAndCompatibilityIdeographs.rawValue % 32))
         public static let alphabeticPresentationForms:             UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.alphabeticPresentationForms.rawValue % 32))
         public static let arabicPresentationFormsA:                UnicodeMask2 = .init(rawValue: 1 << (UnicodeRange.arabicPresentationFormsA.rawValue % 32))
-
     }
 
     struct UnicodeMask3: OptionSet {

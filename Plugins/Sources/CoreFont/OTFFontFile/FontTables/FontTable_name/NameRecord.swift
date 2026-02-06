@@ -81,14 +81,27 @@ public extension FontTable_name {
             fatalError("use initializer that takes stringOffset instead")
         }
 
+        public func write(to handle: DataHandle, stringOffset: UInt16) throws {
+            handle.write(platformID.rawValue)
+            handle.write(encodingID.rawValue)
+            handle.write(languageID.rawValue)
+            handle.write(nameID.rawValue)
+            handle.write(length)
+            handle.write(offset)
+            handle.pushSavedOffset()
+            handle.seek(to: stringOffset + offset)
+            handle.writeData(data)
+            handle.popAndSeekToSavedOffset()
+        }
+
         @available(*, unavailable, message: "use write method that takes stringOffset instead")
-        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+        public override func write(to dataHandle: DataHandle, offset: Int? = nil) throws {
             fatalError("use write method that takes stringOffset instead")
         }
 
         @available(*, unavailable, message: "use write method that takes stringOffset instead")
         public override func write(to dataHandle: DataHandle) throws {
-            <#code#>
+            fatalError("use write method that takes stringOffset instead")
         }
 
         /// "As with encoding records in the 'cmap' table, name records shall be sorted first by platform ID,
