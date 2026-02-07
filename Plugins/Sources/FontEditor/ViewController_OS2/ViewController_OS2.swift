@@ -231,10 +231,13 @@ final class ViewController_OS2: FontTableViewController {
     override var representedObject: Any? {
         didSet {
             self.table = self.representedObject as! FontTable_OS2
+            updateUI()
         }
     }
 
     override func updateUI() {
+        // allow us to be called before nib is loaded
+        guard let version1UnicodeView else { return }
         let views: [NSView] = [version1UnicodeView, codePageView, version2View, version5View]
         for view in views {
             for control: NSControl in view.subviews as! [NSControl] {

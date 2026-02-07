@@ -35,6 +35,8 @@ final class ViewController_maxp: FontTableViewController {
     }
 
     override func updateUI() {
+        // allow us to be called before nib is loaded
+        guard let version1View else { return }
         for control: NSControl in version1View.subviews as? [NSControl] ?? [] {
             control.isEnabled = table.version == .version1_0
         }

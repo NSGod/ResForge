@@ -20,11 +20,7 @@ public extension FontTable_name {
         public var offset:          UInt16 = 0          // name string offset in bytes from stringOffset
 
         @objc public var string:    String = ""
-        public var data:            Data!
-
-//        public override var nodeLength: UInt32 {
-//            return UInt32(MemoryLayout<UInt16>.size * 6) // 12
-//        }
+        public var data:            Data?
 
         public class override var nodeLength: UInt32 {
             return UInt32(MemoryLayout<UInt16>.size * 6) // 12
@@ -52,7 +48,7 @@ public extension FontTable_name {
             data = try reader.readData(length: Int(length))
             reader.popPosition()
             if platformID == .unicode || platformID == .microsoft {
-                string = String(data: data, encoding: .utf16BigEndian) ?? ""
+                string = String(data: data!, encoding: .utf16BigEndian) ?? ""
             } else if platformID == .mac {
                 var stringEncoding: String.Encoding = .macOSRoman
                 let encoding = CFStringConvertEncodingToNSStringEncoding(UInt32(encodingID.rawValue))
@@ -61,7 +57,7 @@ public extension FontTable_name {
                 } else {
                     stringEncoding = String.Encoding(rawValue: encoding)
                 }
-                string = String(data: data, encoding: stringEncoding) ?? ""
+                string = String(data: data!, encoding: stringEncoding) ?? ""
             }
             platformName = NSLocalizedString("[\(platformID.rawValue)] \(platformID)", comment: "")
             scriptName = NSLocalizedString("[\(encodingID.rawValue)] \(encodingID)", comment: "")
@@ -86,10 +82,14 @@ public extension FontTable_name {
             handle.write(nameID.rawValue)
             handle.write(length)
             handle.write(offset)
-            handle.pushSavedOffset()
-            handle.seek(to: stringOffset + offset)
-            handle.writeData(data)
-            handle.popAndSeekToSavedOffset()
+            /// if our data has been set to nil, our offset is referencing an existing string,
+            /// so no need to write our data
+            if let data {
+                handle.pushSavedOffset()
+                handle.seek(to: stringOffset + offset)
+                handle.writeData(data)
+                handle.popAndSeekToSavedOffset()
+            }
         }
 
         @available(*, unavailable, message: "use write method that takes stringOffset instead")

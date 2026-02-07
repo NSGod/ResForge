@@ -610,7 +610,7 @@ public enum LanguageID: Comparable, CustomStringConvertible, CustomDebugStringCo
 }
 
 public extension FontTable_name {
-    enum FontNameID: Comparable, CustomStringConvertible, CustomDebugStringConvertible {
+    enum FontNameID: Hashable, CustomStringConvertible, CustomDebugStringConvertible {
         case copyright                 // = 0
         case family                    // = 1
         case subfamily                 // = 2
@@ -689,6 +689,10 @@ public extension FontTable_name {
             return lhs.rawValue == rhs.rawValue
         }
 
+        public func hash(into hasher: inout Hasher) {
+            hasher.combine(rawValue)
+        }
+        
         public var description: String {
             switch self {
                 case .copyright:                return NSLocalizedString("Copyright", comment: "")
