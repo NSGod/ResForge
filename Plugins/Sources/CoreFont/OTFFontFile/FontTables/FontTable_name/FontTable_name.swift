@@ -39,18 +39,11 @@ final public class FontTable_name: FontTable {
         self.format = format
         count = try reader.read()
         stringOffset = try reader.read()
-        for _ in 0..<self.count {
-            let nRecord = try NameRecord(reader, stringOffset: stringOffset, table: self)
-            nameRecords.append(nRecord)
-        }
+        nameRecords = try (0..<count).map { _ in try NameRecord(reader, stringOffset: stringOffset, table: self) }
         if format == .format1 {
             langTagCount = try reader.read()
             if langTagCount > 0 {
-                languageTagRecords = []
-                for _ in 0..<langTagCount {
-                    let ltr = try LanguageTagRecord(reader, stringOffset: stringOffset, table: self)
-                    languageTagRecords?.append(ltr)
-                }
+                languageTagRecords = try (0..<langTagCount).map { _ in try LanguageTagRecord(reader, stringOffset: stringOffset, table: self) }
             }
         }
         self.parseState = .parsed
@@ -69,7 +62,10 @@ final public class FontTable_name: FontTable {
         }
         var hashNamesToRecords: [HashName: NameRecord] = [:]
         /// Allow shared string storage among records that share the same fontID and
-        /// where the data is the same
+        /// where the data is the same. For example, a Unicode platform entry for fontID of .postscript
+        /// has a value of "Helvetica" in UTF-16BE. A Windows platform entry for fontID of .postscript
+        /// (which will also be in UTF16-BE) that is also equal to "Helvetica" can simply reference the
+        /// same string storage that the Unicode entry is.
         for nameRecord in nameRecords {
             let hashName = HashName(hash: nameRecord.data.hashValue, nameID: nameRecord.nameID)
             if let existingRecord = hashNamesToRecords[hashName] {

@@ -83,7 +83,7 @@ public extension FontTable_name {
             handle.write(length)
             handle.write(offset)
             /// if our data has been set to nil, our offset is referencing an existing string,
-            /// so no need to write our data
+            /// so no need to write any data
             if let data {
                 handle.pushSavedOffset()
                 handle.seek(to: stringOffset + offset)

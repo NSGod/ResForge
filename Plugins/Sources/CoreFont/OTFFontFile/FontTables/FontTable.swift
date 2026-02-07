@@ -175,7 +175,7 @@ extension FontTable {
         .DSIG: 22,
     ]
 
-    static let rewriteOrder: [TableTag: Int] = [
+    static let ttfRewriteOrder: [TableTag: Int] = [
         .cmap: 1,
         .OS_2: 2,
         .glyf: 3, // creates/tweaks 'loca', 'hmtx'; could tweak 'head'

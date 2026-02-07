@@ -144,12 +144,12 @@ public enum UnitsPerEm: CustomStringConvertible {
 /// Given the specified PostScript font name, generate the filename for the
 /// referenced 'LWFN' font, following the 5-3-3 naming convention:
 /// Up to 5 characters from the first capitalized "word", then up to 3 chars for each following "word":
-/// PSName:                             Filename:
+/// PostScript name:                        Filename:
 /// GillSans-BoldCondensed              ->  GillSanBolCon
 /// SmithCoronaSuperSterling-Regular    ->  SmithCorSupSteReg
 /// Helvetica-BoldOblique               ->  HelveBolObl
 
-public func MDFilename(forPostScriptFontName psName: String) -> String {
+public func MD533Filename(forPostScriptFontName psName: String) -> String {
     var psName = psName
     psName = psName.replacingOccurrences(of: "-", with: "")
     let length = psName.count
@@ -183,7 +183,7 @@ public func MDFilename(forPostScriptFontName psName: String) -> String {
 public protocol FontMetrics {
     var unitsPerEm:         UnitsPerEm  { get }
     /// the following are all intended to be expressed in units per em,
-    /// not scaled to particular font point size
+    /// not scaled to particular font point size:
     var ascender:           CGFloat     { get }
     var descender:          CGFloat     { get }
     var leading:            CGFloat     { get }

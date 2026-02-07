@@ -50,7 +50,7 @@ final public class FontTable_OS2: FontTable {
     @objc public var sFamilyClass:              Int16 = 0 /// IBM font family class (high byte) & subclass (low byte)
     @objc public var panose:                    Panose!
                                                                   /// - Note: all 128 bits are there in all versions
-                                                                  ///     but only fully utilized in ver 1+
+                                                                  ///    but only fully utilized in ver 1+
     public var ulUnicodeRange1:                 UnicodeMask1 = [] /// UInt32; ver 0: bits 0-31
     public var ulUnicodeRange2:                 UnicodeMask2 = [] /// UInt32; ver 1+: bits 32-63
     public var ulUnicodeRange3:                 UnicodeMask3 = [] /// UInt32; ver 1+: bits 64-95

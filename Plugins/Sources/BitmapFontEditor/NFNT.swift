@@ -251,14 +251,11 @@ public final class NFNT: NSObject {
         /// the table.
 
         // FIXME: !! we should probably update this to use MacEncoding.
-        var pixelOffsets:   [Int16] = []
+        var pixelOffsets:   [Int16]
         var widthEntries:   [Int8] = []
         var offsetEntries:  [Int8] = []
 
-        for _ in firstChar...lastChar {
-            let pixelOffset: Int16 = try reader.read()
-            pixelOffsets.append(pixelOffset)
-        }
+        pixelOffsets = try (firstChar...lastChar).map { _ in try reader.read() }
 
         /// `Offset to width/offset table`. An integer value that specifies the offset to the
         /// offset/ width table from this point in the font record, in words. If this font has

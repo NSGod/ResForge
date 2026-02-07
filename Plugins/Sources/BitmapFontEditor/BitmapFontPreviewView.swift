@@ -22,13 +22,13 @@ public class BitmapFontPreviewView: NSView {
 		}
 	}
 	
-	@IBInspectable public var borderThickness: CGFloat = 0 {
+	@IBInspectable public var borderThickness:  CGFloat = 0 {
 		didSet {
 			self.needsDisplay = true
 		}
 	}
 	
-    @IBInspectable public var stringValue:    String {
+    @IBInspectable public var stringValue:      String {
         set {
             textStorage.string = newValue
             self.needsDisplay = true
@@ -58,7 +58,7 @@ public class BitmapFontPreviewView: NSView {
         }
     }
 
-    /// padding the text is inset from the edge, in px
+    /// padding the text is inset from the edge, in pt/px
 	public var padding:         CGFloat = 0 {
 		didSet {
 			syncSize()
@@ -97,6 +97,7 @@ public class BitmapFontPreviewView: NSView {
         self.needsDisplay = true
     }
 
+    /// this should be called for our programmatic creation
     public override func viewDidMoveToWindow() {
         syncSize()
         NotificationCenter.default.addObserver(self, selector: #selector(viewFrameChanged), name: Self.frameDidChangeNotification, object: self)

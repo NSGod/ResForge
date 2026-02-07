@@ -109,13 +109,13 @@ public extension FontTable_OS2 {
             self.rawValue = rawValue
         }
         public static let installableEmbedding:  FontType = []
-        /// bit 0; reserved, set to 0
+                                                                                    /// bit 0; reserved, set to 0
         public static let restrictedEmbedding:   FontType = .init(rawValue: 1 << 1) /// 0x0002, 2; bit 1; font cannot be
                                                                                     /// embedded (to work, must be only level of embedding selected)
         public static let previewPrintEmbedding: FontType = .init(rawValue: 1 << 2) /// 0x0004, 4; bit 2; font can be installed
                                                                                     /// temp for read-only doc access
         public static let editableEmbedding:     FontType = .init(rawValue: 1 << 3) /// 0x0008, 8; bit 3; font can be installed temp for doc editing
-        /// bits 4 - 7; reserved, set to 0
+                                                                                    /// bits 4 - 7; reserved, set to 0
         public static let noSubsetting:          FontType = .init(rawValue: 1 << 8) /// 0x0100, 256; bit 8; no subsetting prior to embedding
         public static let bitmapEmbedding:       FontType = .init(rawValue: 1 << 9) /// 0x0200, 512; bit 9; no outline data may be embedded, bitmap data only
     }
@@ -141,43 +141,44 @@ public extension FontTable_OS2 {
     }
 
     // FIXME: work on defining/expanding this?
+    // FIXME: this is only accurate for Latin Text?:
     final class Panose: FontTableNode {
-        @objc public var panose0: UInt8 = 0
-        @objc public var panose1: UInt8 = 0
-        @objc public var panose2: UInt8 = 0
-        @objc public var panose3: UInt8 = 0
-        @objc public var panose4: UInt8 = 0
-        @objc public var panose5: UInt8 = 0
-        @objc public var panose6: UInt8 = 0
-        @objc public var panose7: UInt8 = 0
-        @objc public var panose8: UInt8 = 0
-        @objc public var panose9: UInt8 = 0
+        @objc public var bFamilyType:       UInt8 = 0
+        @objc public var bSerifStyle:       UInt8 = 0
+        @objc public var bWeight:           UInt8 = 0
+        @objc public var bProportion:       UInt8 = 0
+        @objc public var bContrast:         UInt8 = 0
+        @objc public var bStrokeVariation:  UInt8 = 0
+        @objc public var bArmStyle:         UInt8 = 0
+        @objc public var bLetterform:       UInt8 = 0
+        @objc public var bMidline:          UInt8 = 0
+        @objc public var bXHeight:          UInt8 = 0
 
         public override init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable) throws {
             try super.init(reader, offset: offset, table: table)
-            panose0 = try reader.read()
-            panose1 = try reader.read()
-            panose2 = try reader.read()
-            panose3 = try reader.read()
-            panose4 = try reader.read()
-            panose5 = try reader.read()
-            panose6 = try reader.read()
-            panose7 = try reader.read()
-            panose8 = try reader.read()
-            panose9 = try reader.read()
+            bFamilyType = try reader.read()
+            bSerifStyle = try reader.read()
+            bWeight = try reader.read()
+            bProportion = try reader.read()
+            bContrast = try reader.read()
+            bStrokeVariation = try reader.read()
+            bArmStyle = try reader.read()
+            bLetterform = try reader.read()
+            bMidline = try reader.read()
+            bXHeight = try reader.read()
         }
 
         public override func write(to dataHandle: DataHandle) throws {
-            dataHandle.write(panose0)
-            dataHandle.write(panose1)
-            dataHandle.write(panose2)
-            dataHandle.write(panose3)
-            dataHandle.write(panose4)
-            dataHandle.write(panose5)
-            dataHandle.write(panose6)
-            dataHandle.write(panose7)
-            dataHandle.write(panose8)
-            dataHandle.write(panose9)
+            dataHandle.write(bFamilyType)
+            dataHandle.write(bSerifStyle)
+            dataHandle.write(bWeight)
+            dataHandle.write(bProportion)
+            dataHandle.write(bContrast)
+            dataHandle.write(bStrokeVariation)
+            dataHandle.write(bArmStyle)
+            dataHandle.write(bLetterform)
+            dataHandle.write(bMidline)
+            dataHandle.write(bXHeight)
         }
     }
 }

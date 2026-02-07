@@ -15,7 +15,7 @@ final public class FOND: NSObject {
         static let length = 52
     }
 
-    // FontFamilyRecord is the first 52 bytes of the FOND
+    /// FontFamilyRecord is the first 52 bytes of the FOND
     public var ffFlags:                 Flags            /// UInt16; flags for family
     @objc public var famID:             ResID            /// family ID number; `must match FOND resource ID`
     @objc public var firstChar:         Int16            /// ASCII code of 1st character
@@ -32,8 +32,8 @@ final public class FOND: NSObject {
     @objc public var styleOff:          Int32            /* offset to style mapping table from beginning of font family
                                                              resource to beginning of table, in bytes */
 
-                                                         // style property info; extra widths for different styles
-    @objc public var ewSPlain:          Fixed4Dot12      // should be 0
+                                                         /// style property info; extra widths for different styles
+    @objc public var ewSPlain:          Fixed4Dot12      /// should be 0
     @objc public var ewSBold:           Fixed4Dot12
     @objc public var ewSItalic:         Fixed4Dot12
     @objc public var ewSUnderline:      Fixed4Dot12
@@ -41,12 +41,12 @@ final public class FOND: NSObject {
     @objc public var ewSShadow:         Fixed4Dot12
     @objc public var ewSCondensed:      Fixed4Dot12
     @objc public var ewSExtended:       Fixed4Dot12
-    @objc public var ewSUnused:         Fixed4Dot12      // unused; should be 0
+    @objc public var ewSUnused:         Fixed4Dot12      /// unused; should be 0
 
-    @objc public var intl0:             Int16            // for international use
-    @objc public var intl1:             Int16            // for international use
+    @objc public var intl0:             Int16            /// for international use
+    @objc public var intl1:             Int16            /// for international use
 
-    @objc public var ffVersion:         Version          // version number
+    @objc public var ffVersion:         Version          /// version number
 
     // MARK: -
     @objc public var objcFFFlags:       Flags.RawValue {
@@ -54,6 +54,7 @@ final public class FOND: NSObject {
             return ffFlags.rawValue
         }
         set {
+            NSLog("\(type(of: self)).\(#function) SET: newValue == \(newValue)")
             self.willChangeValue(forKey: "objcFFFlags")
             ffFlags = Flags(rawValue: newValue)
             self.didChangeValue(forKey: "objcFFFlags")
@@ -255,7 +256,7 @@ final public class FOND: NSObject {
             famID = ResID(resource.id)
             /* FIXME: we need some way to communicate this up the chain with
              some sort of UI alerting user that resource was repaired and
-             needs to be saved etc. */
+             needs to be saved, etc. */
         }
         // FIXME: add validation/error-checking here
 
@@ -286,7 +287,7 @@ final public class FOND: NSObject {
          (The data in an 'sfnt' entry is exactly what a Windows .ttf contains:
          see my answer here https://stackoverflow.com/a/7418915/277952) */
 
-        /// Cache these results as this can be quite costly, and this method gets called a lot:
+        /// - Note: Cache these results as this can be quite costly, and this method gets called a lot:
         if let cachedUnitsPerEm = stylesToUnitsPerEm[fontStyle] {
             return cachedUnitsPerEm
         }
@@ -319,7 +320,7 @@ final public class FOND: NSObject {
             stylesToUnitsPerEm[fontStyle] = .postScriptStandard
             return .postScriptStandard
         }
-        let fontFilename = MDFilename(forPostScriptFontName: psName)
+        let fontFilename = MD533Filename(forPostScriptFontName: psName)
         guard let url = document.fileURL?.deletingLastPathComponent().appendingPathComponent(fontFilename) else {
             stylesToUnitsPerEm[fontStyle] = .postScriptStandard
             return .postScriptStandard
@@ -392,7 +393,7 @@ final public class FOND: NSObject {
     private func shiftOffsetsAndRanges(by deltaLength: Int) {
         do {
             try calculateOffsetsIfNeeded()
-            // NOTE: the table offsets could be empty (== 0), so check before modifying their values
+            /// - Note: the table offsets could be empty (== 0), so check before modifying their values
             if wTabOff > 0 {
                 wTabOff += Int32(deltaLength)
                 if var range = offsetTypesToRanges[.widthTable] {

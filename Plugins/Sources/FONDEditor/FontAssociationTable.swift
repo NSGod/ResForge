@@ -44,6 +44,7 @@ final public class FontAssociationTable: ResourceNode {
 }
 
 extension FontAssociationTable {
+
     final public class Entry: ResourceNode, Comparable {
         @objc public var fontPointSize:    Int16
         public var fontStyle:              MacFontStyle

@@ -67,6 +67,7 @@ extension KernTable {
             return MemoryLayout<UInt16>.size * 2 + Int(numKerns) * KernPair.length
         }
 
+        // FIXME: move this writing stuff out to a separate visitor/writer class
         public static let GPOSFeatureFileType: String = NSLocalizedString("'GPOS' Feature File", comment: "")
         public static let GPOSFeatureUTType:   String = kUTTypePlainText as String
         public static let CSVFileType:         String = NSLocalizedString("Comma-Separated Variables (CSV)", comment: "")
