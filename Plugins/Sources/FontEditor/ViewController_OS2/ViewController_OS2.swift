@@ -28,7 +28,7 @@ final class ViewController_OS2: FontTableViewController {
 
     var table:  FontTable_OS2
 
-    @objc var ulUnicodeRange1:  FontTable_OS2.UnicodeMask1.RawValue = 0 {
+    @objc var ulUnicodeRange1:  UInt32 = 0 {
         didSet {
             undoManager?.setActionName(NSLocalizedString("Change Unicode Range", comment: ""))
             undoManager?.registerUndo(withTarget: self, handler: {
@@ -46,7 +46,7 @@ final class ViewController_OS2: FontTableViewController {
         }
     }
 
-    @objc var ulUnicodeRange2:  FontTable_OS2.UnicodeMask2.RawValue = 0 {
+    @objc var ulUnicodeRange2:  UInt32 = 0 {
         didSet {
             undoManager?.setActionName(NSLocalizedString("Change Unicode Range", comment: ""))
             undoManager?.registerUndo(withTarget: self, handler: {
@@ -64,7 +64,7 @@ final class ViewController_OS2: FontTableViewController {
         }
     }
 
-    @objc var ulUnicodeRange3:  FontTable_OS2.UnicodeMask3.RawValue = 0 {
+    @objc var ulUnicodeRange3:  UInt32 = 0 {
         didSet {
             undoManager?.setActionName(NSLocalizedString("Change Unicode Range", comment: ""))
             undoManager?.registerUndo(withTarget: self, handler: {
@@ -77,7 +77,7 @@ final class ViewController_OS2: FontTableViewController {
         }
     }
 
-    @objc var ulUnicodeRange4:  FontTable_OS2.UnicodeMask4.RawValue = 0 {
+    @objc var ulUnicodeRange4:  UInt32 = 0 {
         didSet {
             undoManager?.setActionName(NSLocalizedString("Change Unicode Range", comment: ""))
             undoManager?.registerUndo(withTarget: self, handler: {
@@ -188,7 +188,7 @@ final class ViewController_OS2: FontTableViewController {
     deinit {
         fontTypeControl.unbind(NSBindingName("objectValue"))
         fontSelectionControl.unbind(NSBindingName("objectValue"))
-        let keys = ["version", "usWidthClass", "ySubscriptXSize", "ySubscriptYSize", "ySubscriptXOffset", "ySubscriptYOffset", "ySuperscriptXSize", "ySuperscriptYSize", "ySuperscriptXOffset", "ySuperscriptYOffset", "yStrikeoutSize", "yStrikeoutPosition", "sFamilyClass", "vendorID", "usFirstCharIndex", "usLastCharIndex", "sTypoAscender", "sTypoDescender", "sTypoLineGap", "usWinAscent", "usWinDescent", "sxHeight", "sCapHeight", "usDefaultChar", "usBreakChar", "usMaxContext", "usLowerOpticalPointSize", "usUpperOpticalPointSize"]
+        let keys = ["version", "usWidthClass", "ySubscriptXSize", "ySubscriptYSize", "ySubscriptXOffset", "ySubscriptYOffset", "ySuperscriptXSize", "ySuperscriptYSize", "ySuperscriptXOffset", "ySuperscriptYOffset", "yStrikeoutSize", "yStrikeoutPosition", "sFamilyClass", "vendorID", "usFirstCharIndex", "usLastCharIndex", "sTypoAscender", "sTypoDescender", "sTypoLineGap", "usWinAscent", "usWinDescent", "sxHeight", "sCapHeight", "usDefaultChar", "usBreakChar", "usMaxContext", "usLowerOpticalPointSize", "usUpperOpticalPointSize", "panose.bFamilyType", "panose.bSerifStyle", "panose.bWeight", "panose.bProportion", "panose.bContrast", "panose.bStrokeVariation", "panose.bArmStyle", "panose.bLetterform", "panose.bMidline", "panose.bXHeight"]
         keys.forEach({ table.removeObserver(self, forKeyPath: $0) })
     }
 
@@ -221,7 +221,16 @@ final class ViewController_OS2: FontTableViewController {
         table.addObserver(self, forKeyPath: "usMaxContext", options: [.new, .old], context: &table.usMaxContext)
         table.addObserver(self, forKeyPath: "usLowerOpticalPointSize", options: [.new, .old], context: &table.usLowerOpticalPointSize)
         table.addObserver(self, forKeyPath: "usUpperOpticalPointSize", options: [.new, .old], context: &table.usUpperOpticalPointSize)
-
+        table.addObserver(self, forKeyPath: "panose.bFamilyType", options: [.new, .old], context: &table.panose.bFamilyType)
+        table.addObserver(self, forKeyPath: "panose.bSerifStyle", options: [.new, .old], context: &table.panose.bSerifStyle)
+        table.addObserver(self, forKeyPath: "panose.bWeight", options: [.new, .old], context: &table.panose.bWeight)
+        table.addObserver(self, forKeyPath: "panose.bProportion", options: [.new, .old], context: &table.panose.bProportion)
+        table.addObserver(self, forKeyPath: "panose.bContrast", options: [.new, .old], context: &table.panose.bContrast)
+        table.addObserver(self, forKeyPath: "panose.bStrokeVariation", options: [.new, .old], context: &table.panose.bStrokeVariation)
+        table.addObserver(self, forKeyPath: "panose.bArmStyle", options: [.new, .old], context: &table.panose.bArmStyle)
+        table.addObserver(self, forKeyPath: "panose.bLetterform", options: [.new, .old], context: &table.panose.bLetterform)
+        table.addObserver(self, forKeyPath: "panose.bMidline", options: [.new, .old], context: &table.panose.bMidline)
+        table.addObserver(self, forKeyPath: "panose.bXHeight", options: [.new, .old], context: &table.panose.bXHeight)
         fontTypeControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "fsType", options: nil)
         fontSelectionControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "fsSelection", options: nil)
         super.viewDidLoad()
@@ -364,7 +373,7 @@ final class ViewController_OS2: FontTableViewController {
     }
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        NSLog("\(type(of: self)).\(#function) keyPath == \(String(describing: keyPath)), change == \(String(describing: change))")
+//        NSLog("\(type(of: self)).\(#function) keyPath == \(String(describing: keyPath)), change == \(String(describing: change))")
         guard let context = context else {
             // call super?
             return
@@ -591,6 +600,86 @@ final class ViewController_OS2: FontTableViewController {
                 $0.table.willChangeValue(forKey: "usUpperOpticalPointSize")
                 $0.table.usUpperOpticalPointSize = change![.oldKey] as! UInt16
                 $0.table.didChangeValue(forKey: "usUpperOpticalPointSize")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.panose.bFamilyType {
+            undoManager?.setActionName(NSLocalizedString("Change PANOSE Family Type", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.panose.willChangeValue(forKey: "bFamilyType")
+                $0.table.panose.bFamilyType = change![.oldKey] as! UInt8
+                $0.table.panose.didChangeValue(forKey: "bFamilyType")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.panose.bSerifStyle {
+            undoManager?.setActionName(NSLocalizedString("Change PANOSE Serif Style", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.panose.willChangeValue(forKey: "bSerifStyle")
+                $0.table.panose.bSerifStyle = change![.oldKey] as! UInt8
+                $0.table.panose.didChangeValue(forKey: "bSerifStyle")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.panose.bWeight {
+            undoManager?.setActionName(NSLocalizedString("Change PANOSE Weight", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.panose.willChangeValue(forKey: "bWeight")
+                $0.table.panose.bWeight = change![.oldKey] as! UInt8
+                $0.table.panose.didChangeValue(forKey: "bWeight")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.panose.bProportion {
+            undoManager?.setActionName(NSLocalizedString("Change PANOSE Proportion", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.panose.willChangeValue(forKey: "bProportion")
+                $0.table.panose.bProportion = change![.oldKey] as! UInt8
+                $0.table.panose.didChangeValue(forKey: "bProportion")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.panose.bContrast {
+            undoManager?.setActionName(NSLocalizedString("Change PANOSE Contrast", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.panose.willChangeValue(forKey: "bContrast")
+                $0.table.panose.bContrast = change![.oldKey] as! UInt8
+                $0.table.panose.didChangeValue(forKey: "bContrast")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.panose.bStrokeVariation {
+            undoManager?.setActionName(NSLocalizedString("Change PANOSE Stroke Variation", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.panose.willChangeValue(forKey: "bStrokeVariation")
+                $0.table.panose.bStrokeVariation = change![.oldKey] as! UInt8
+                $0.table.panose.didChangeValue(forKey: "bStrokeVariation")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.panose.bArmStyle {
+            undoManager?.setActionName(NSLocalizedString("Change PANOSE Arm Style", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.panose.willChangeValue(forKey: "bArmStyle")
+                $0.table.panose.bArmStyle = change![.oldKey] as! UInt8
+                $0.table.panose.didChangeValue(forKey: "bArmStyle")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.panose.bLetterform {
+            undoManager?.setActionName(NSLocalizedString("Change PANOSE Letterform", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.panose.willChangeValue(forKey: "bLetterform")
+                $0.table.panose.bLetterform = change![.oldKey] as! UInt8
+                $0.table.panose.didChangeValue(forKey: "bLetterform")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.panose.bMidline {
+            undoManager?.setActionName(NSLocalizedString("Change PANOSE Midline", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.panose.willChangeValue(forKey: "bMidline")
+                $0.table.panose.bMidline = change![.oldKey] as! UInt8
+                $0.table.panose.didChangeValue(forKey: "bMidline")
+            })
+            view.window?.isDocumentEdited = true
+        } else if context == &table.panose.bXHeight {
+            undoManager?.setActionName(NSLocalizedString("Change PANOSE x-Height", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.panose.willChangeValue(forKey: "bXHeight")
+                $0.table.panose.bXHeight = change![.oldKey] as! UInt8
+                $0.table.panose.didChangeValue(forKey: "bXHeight")
             })
             view.window?.isDocumentEdited = true
         }
