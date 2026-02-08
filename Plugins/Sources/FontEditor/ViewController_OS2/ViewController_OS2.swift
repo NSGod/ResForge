@@ -35,6 +35,7 @@ final class ViewController_OS2: FontTableViewController {
                 $0.willChangeValue(forKey: "ulUnicodeRange1")
                 $0.ulUnicodeRange1 = oldValue
                 $0.didChangeValue(forKey: "ulUnicodeRange1")
+                // the following doesn't appear to work properly:
                 if #available(macOS 14.4, *) {
                     if let undoCount = $0.undoManager?.undoCount, undoCount == 0 {
                         $0.view.window?.isDocumentEdited = false
@@ -53,6 +54,7 @@ final class ViewController_OS2: FontTableViewController {
                 $0.willChangeValue(forKey: "ulUnicodeRange2")
                 $0.ulUnicodeRange2 = oldValue
                 $0.didChangeValue(forKey: "ulUnicodeRange2")
+                // the following doesn't appear to work properly:
                 if #available(macOS 14.4, *) {
                     if let undoCount = $0.undoManager?.undoCount, undoCount == 0 {
                         $0.view.window?.isDocumentEdited = false
@@ -276,98 +278,97 @@ final class ViewController_OS2: FontTableViewController {
     }
 
     @IBAction func changeFontType(_ sender: Any) {
-        guard let sender = sender as? NSButton else { return }
-        let fontType: FontTable_OS2.FontType = .init(rawValue: UInt16(sender.tag))
+        let sender = sender as! NSButton
+        let fontType = UInt16(sender.tag)
         self.willChangeValue(forKey: "fsType")
         if sender.state == .on {
-            fsType |= fontType.rawValue
+            fsType |= fontType
         } else {
-            fsType &= ~fontType.rawValue
+            fsType &= ~fontType
         }
         self.didChangeValue(forKey: "fsType")
     }
     
     @IBAction func changeFontSelection(_ sender: Any) {
-        guard let sender = sender as? NSButton else { return }
-        let fontSelection: FontTable_OS2.Selection = .init(rawValue: UInt16(sender.tag))
+        let sender = sender as! NSButton
+        let fontSelection = UInt16(sender.tag)
         self.willChangeValue(forKey: "fsSelection")
         if sender.state == .on {
-            fsSelection |= fontSelection.rawValue
+            fsSelection |= fontSelection
         } else {
-            fsSelection &= ~fontSelection.rawValue
+            fsSelection &= ~fontSelection
         }
         self.didChangeValue(forKey: "fsSelection")
     }
 
     @IBAction func toggleUnicodeRange1(_ sender: Any) {
         let sender = sender as! NSButton
-        let mask: FontTable_OS2.UnicodeMask1 = .init(rawValue: UInt32(1 << sender.tag))
+        let mask = UInt32(1 << sender.tag)
         self.willChangeValue(forKey: "ulUnicodeRange1")
         if sender.state == .on {
-            ulUnicodeRange1 |= mask.rawValue
+            ulUnicodeRange1 |= mask
         } else {
-            ulUnicodeRange1 &= ~mask.rawValue
+            ulUnicodeRange1 &= ~mask
         }
         self.didChangeValue(forKey: "ulUnicodeRange1")
     }
 
     @IBAction func toggleUnicodeRange2(_ sender: Any) {
         let sender = sender as! NSButton
-        let mask: FontTable_OS2.UnicodeMask2 = .init(rawValue: UInt32(1 << sender.tag))
+        let mask = UInt32(1 << sender.tag)
         self.willChangeValue(forKey: "ulUnicodeRange2")
         if sender.state == .on {
-            ulUnicodeRange2 |= mask.rawValue
+            ulUnicodeRange2 |= mask
         } else {
-            ulUnicodeRange2 &= ~mask.rawValue
+            ulUnicodeRange2 &= ~mask
         }
         self.didChangeValue(forKey: "ulUnicodeRange2")
     }
 
     @IBAction func toggleUnicodeRange3(_ sender: Any) {
         let sender = sender as! NSButton
-        let mask: FontTable_OS2.UnicodeMask3 = .init(rawValue: UInt32(1 << sender.tag))
+        let mask = UInt32(1 << sender.tag)
         self.willChangeValue(forKey: "ulUnicodeRange3")
         if sender.state == .on {
-            ulUnicodeRange3 |= mask.rawValue
+            ulUnicodeRange3 |= mask
         } else {
-            ulUnicodeRange3 &= ~mask.rawValue
+            ulUnicodeRange3 &= ~mask
         }
         self.didChangeValue(forKey: "ulUnicodeRange3")
     }
 
     @IBAction func toggleUnicodeRange4(_ sender: Any) {
         let sender = sender as! NSButton
-        let mask: FontTable_OS2.UnicodeMask4 = .init(rawValue: UInt32(1 << sender.tag))
+        let mask = UInt32(1 << sender.tag)
         self.willChangeValue(forKey: "ulUnicodeRange4")
         if sender.state == .on {
-            ulUnicodeRange4 |= mask.rawValue
+            ulUnicodeRange4 |= mask
         } else {
-            ulUnicodeRange4 &= ~mask.rawValue
+            ulUnicodeRange4 &= ~mask
         }
         self.didChangeValue(forKey: "ulUnicodeRange4")
     }
 
-
     @IBAction func toggleCodePageRange1(_ sender: Any) {
         let sender = sender as! NSButton
-        let mask: FontTable_OS2.CodePageMask1 = .init(rawValue: UInt32(1 << sender.tag))
+        let mask = UInt32(1 << sender.tag)
         self.willChangeValue(forKey: "ulCodePageRange1")
         if sender.state == .on {
-            ulCodePageRange1 |= mask.rawValue
+            ulCodePageRange1 |= mask
         } else {
-            ulCodePageRange1 &= ~mask.rawValue
+            ulCodePageRange1 &= ~mask
         }
         self.didChangeValue(forKey: "ulCodePageRange1")
     }
 
     @IBAction func toggleCodePageRange2(_ sender: Any) {
         let sender = sender as! NSButton
-        let mask: FontTable_OS2.CodePageMask2 = .init(rawValue: UInt32(1 << sender.tag))
+        let mask = UInt32(1 << sender.tag)
         self.willChangeValue(forKey: "ulCodePageRange2")
         if sender.state == .on {
-            ulCodePageRange2 |= mask.rawValue
+            ulCodePageRange2 |= mask
         } else {
-            ulCodePageRange2 &= ~mask.rawValue
+            ulCodePageRange2 &= ~mask
         }
         self.didChangeValue(forKey: "ulCodePageRange2")
     }

@@ -18,7 +18,7 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
         PluginRegistry.register(self)
     }
 
-    @IBOutlet weak var directoryEntriesTableView:   NSTableView!
+    @IBOutlet weak var tableView:   NSTableView!
     @IBOutlet weak var tableTagField:               NSTextField!
     @IBOutlet weak var box:                         NSBox!
 
@@ -59,7 +59,7 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
 
     public override func windowDidLoad() {
         super.windowDidLoad()
-        window?.makeFirstResponder(directoryEntriesTableView)
+        window?.makeFirstResponder(tableView)
     }
 
     // MARK: -
@@ -68,15 +68,15 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
         do {
             let data = try fontFile.data()
             resource.data = data
+            tableView.deselectAll(self)
             self.willChangeValue(forKey: "fontFile")
             fontFile = try OTFFontFile(data)
             self.didChangeValue(forKey: "fontFile")
-            directoryEntriesTableView.deselectAll(self)
             box.contentView = Self.emptyView
             tableTagField.stringValue = ""
             setDocumentEdited(false)
             tableTagsToViewControllers.removeAll()
-            directoryEntriesTableView.reloadData()
+            tableView.reloadData()
         } catch {
             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
             self.presentError(error)
@@ -91,8 +91,9 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
     static let supportedTableTags: Set<TableTag> = Set([.head, .maxp, .name, .post, .hhea, .hmtx, .OS_2, .gasp])
 }
 
+// MARK: -
 extension FontEditor: NSTableViewDelegate, NSTableViewDataSource {
-    // MARK: - <NSTableViewDataSource>
+    // MARK: <NSTableViewDataSource>
     public func numberOfRows(in tableView: NSTableView) -> Int {
         return fontFile.directory.entries.count
     }
@@ -132,8 +133,8 @@ extension FontEditor: NSTableViewDelegate, NSTableViewDataSource {
     }
 
     public func tableViewSelectionDidChange(_ notification: Notification) {
-//        NSLog("\(type(of: self)).\(#function) notification == \(notification)")
-        let indexes = directoryEntriesTableView.selectedRowIndexes
+        NSLog("\(type(of: self)).\(#function) notification == \(notification)")
+        let indexes = tableView.selectedRowIndexes
         if indexes.count != 1 {
             box.contentView = Self.emptyView
             tableTagField.stringValue = ""

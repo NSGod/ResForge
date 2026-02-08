@@ -10,8 +10,8 @@
         <customObject id="-2" userLabel="File's Owner" customClass="FontEditor" customModule="FontEditor">
             <connections>
                 <outlet property="box" destination="ZQm-Fk-V6h" id="m5K-3A-V87"/>
-                <outlet property="directoryEntriesTableView" destination="c03-kG-D9e" id="CXZ-Qb-sc6"/>
                 <outlet property="tableTagField" destination="u2i-p1-3oQ" id="QBt-Zr-IxY"/>
+                <outlet property="tableView" destination="c03-kG-D9e" id="CXZ-Qb-sc6"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -133,7 +133,7 @@
                             <rect key="frame" x="1" y="1" width="323" height="538"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveName="directoryEntriesTableView2.0" rowHeight="18" headerView="Zn3-bs-QkB" viewBased="YES" id="c03-kG-D9e" userLabel="directoryEntriesTableView">
+                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveName="directoryEntriesTableView2.0" rowHeight="18" headerView="Zn3-bs-QkB" viewBased="YES" id="c03-kG-D9e" userLabel="tableView">
                                     <rect key="frame" x="0.0" y="-6" width="323" height="510"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <size key="intercellSpacing" width="17" height="0.0"/>
