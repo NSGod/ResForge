@@ -18,10 +18,7 @@ public extension FontTable_post {
         public required init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable) throws {
             try super.init(reader, offset: offset, table: table)
             numberOfGlyphs = try reader.read()
-            for _ in 0..<numberOfGlyphs {
-                let glyphID: GlyphID = try reader.read()
-                glyphNameIndexes.append(glyphID)
-            }
+            glyphNameIndexes = try (0..<numberOfGlyphs).map { _ in try reader.read() }
             while (reader.bytesRemaining > 0) {
                 let glyphName = try reader.readPString()
                 glyphNames.append(glyphName)

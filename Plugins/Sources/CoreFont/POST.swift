@@ -32,12 +32,7 @@ public struct POST {
     }
 
     public static func postResources(from resources: [Resource]) throws -> [POST] {
-        var postResources: [POST] = []
-        for resource in resources {
-            let post = try POST(resource: resource)
-            postResources.append(post)
-        }
-        return postResources
+        return try resources.map { try POST(resource: $0) }
     }
 
     // MARK: only .ascii output format is currently supported

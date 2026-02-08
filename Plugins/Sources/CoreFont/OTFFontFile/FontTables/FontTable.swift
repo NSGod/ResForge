@@ -174,24 +174,7 @@ extension FontTable {
         .PCLT: 21,
         .DSIG: 22,
     ]
-
-    static let ttfRewriteOrder: [TableTag: Int] = [
-        .cmap: 1,
-        .OS_2: 2,
-        .glyf: 3, // creates/tweaks 'loca', 'hmtx'; could tweak 'head'
-        .loca: 4, // could tweak 'head' during 'CFF ' to 'glyf'
-        .post: 5,
-        .maxp: 6, // tweaks 'head'
-        .feat: 7,
-        .name: 8,
-        .head: 9,
-        .hmtx: 10,
-        .hhea: 11,
-        .vmtx: 12,
-        .vhea: 13,
-    ]
 }
-
 
 /// `Ideally:`
 /// immediate parsing:

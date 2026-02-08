@@ -61,11 +61,11 @@ final public class FontTable_name: FontTable {
             let nameID: FontNameID
         }
         var hashNamesToRecords: [HashName: NameRecord] = [:]
-        /// Allow shared string storage among records that share the same fontID and
-        /// where the data is the same. For example, a Unicode platform entry for fontID of .postscript
-        /// has a value of "Helvetica" in UTF-16BE. A Windows platform entry for fontID of .postscript
+        /// Allow shared string storage among records that share the same fontNameID and
+        /// where the data is the same. For example, a Unicode platform entry for fontNameID of .postscript
+        /// has a value of "Helvetica" in UTF-16BE. A Windows platform entry for fontNameID of .postscript
         /// (which will also be in UTF16-BE) that is also equal to "Helvetica" can simply reference the
-        /// same string storage that the Unicode entry is.
+        /// same string storage that the Unicode entry does.
         for nameRecord in nameRecords {
             let hashName = HashName(hash: nameRecord.data.hashValue, nameID: nameRecord.nameID)
             if let existingRecord = hashNamesToRecords[hashName] {

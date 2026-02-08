@@ -43,12 +43,7 @@ public extension FontTable_post {
         }
 
         public class var standardAppleGlyphEntries: [GlyphEntry] {
-            var entries: [GlyphEntry] = []
-            for i in 0..<appleStdGlyphNames.count {
-                let entry = GlyphEntry(glyphID: GlyphID(i), glyphName: appleStdGlyphNames[i])
-                entries.append(entry)
-            }
-            return entries
+            return zip(appleStdGlyphNames.indices, appleStdGlyphNames).map { GlyphEntry(glyphID: GlyphID($0), glyphName: $1) }
         }
 
         public static var defaultNameStyle: NameStyle = .aHex

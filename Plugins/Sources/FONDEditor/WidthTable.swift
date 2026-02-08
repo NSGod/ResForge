@@ -43,7 +43,6 @@ extension WidthTable {
         public init(_ reader: BinaryDataReader, fond: FOND) throws {
             style = try reader.read()
             objcStyle = style.rawValue
-            widths = []
             // I'm not exactly sure why this is + 3, but that's what FontForge does
             // https://github.com/fontforge/fontforge/blob/7195402701ace7783753ef9424153eff48c9af44/fontforge/macbinary.c#L2342
             // this is why we neeed to be a FONDResourceNode w/ access to the FOND:

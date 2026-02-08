@@ -63,6 +63,30 @@ public struct OTFsfntFormat: RawRepresentable, Equatable {
     public static let vt1b:    OTFsfntFormat = .init(rawValue: 0x498182F0) // VT100-Bold
 }
 
+
+public func OTFReWritingOrderSort(lhs: TableTag, rhs: TableTag) -> Bool {
+    let a = ttfRewriteOrder[lhs] ?? Int.max
+    let b = ttfRewriteOrder[rhs] ?? Int.max
+    if a != b { return a < b }
+    return lhs < rhs
+}
+
+private let ttfRewriteOrder: [TableTag: Int] = [
+    .cmap: 1,
+    .OS_2: 2,
+    .glyf: 3, // creates/tweaks 'loca', 'hmtx'; could tweak 'head'
+    .loca: 4, // could tweak 'head' during 'CFF ' to 'glyf'
+    .post: 5,
+    .maxp: 6, // tweaks 'head'
+    .feat: 7,
+    .name: 8,
+    .head: 9,
+    .hmtx: 10,
+    .hhea: 11,
+    .vmtx: 12,
+    .vhea: 13,
+]
+
 public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, CustomStringConvertible {
 
     public let rawValue: Tag
