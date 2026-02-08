@@ -51,13 +51,18 @@ final public class FontTable_head: FontTable {
         case rightToLeftWithNeutrals        = 2
     }
 
+    @objc public enum IndexToLocFormat: Int16 {
+        case short          = 0 // loca table uses short
+        case long           = 1 // loca table uses long
+    }
+
     public static let checksumConstant:         UInt32 = 0xB1B0AFBA
     public static let checksumAdjustmentOffset: UInt32 = 8 // sizeof(UInt32) * 2
     public static let magicNumber:              UInt32 = 0x5F0F3CF5
 
     // MARK: -
-    @objc public var version:               Version = .default1_0   // UInt32; 0x00010000
-    @objc public var fontRevision:          Fixed = 0               // SInt32
+    @objc public var version:               Version = .default1_0   // Int32; 0x00010000
+    @objc public var fontRevision:          Fixed = 0               // Int32
     @objc public var checkSumAdjustment:    UInt32 = 0
     @objc public var magicNumber:           UInt32 = FontTable_head.magicNumber   // set to 0x5F0F3CF5
     public var flags:                       Flags = []
@@ -71,7 +76,7 @@ final public class FontTable_head: FontTable {
     public var macStyle:                    MacFontStyle = []       // UInt16; should be synced w/ OS/2 fsSelection bits
     @objc public var lowestRecPPEM:         UInt16 = 0              // smallest readable size in px
     @objc public var fontDirectionHint:     FontDirectionHint = .fullyMixedLeftToRight // deprecated? (set to 2)
-    @objc public var indexToLocFormat:      Int16 = 0               // 0 for short offsets, 2 for long
+    @objc public var indexToLocFormat:      IndexToLocFormat = .short   // 0 for short offsets, 1 for long
     @objc public var glyphDataFormat:       Int16 = 0               // 0 for current format
 
     // MARK: -

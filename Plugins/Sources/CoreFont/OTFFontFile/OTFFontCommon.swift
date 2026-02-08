@@ -63,113 +63,232 @@ public struct OTFsfntFormat: RawRepresentable, Equatable {
     public static let vt1b:    OTFsfntFormat = .init(rawValue: 0x498182F0) // VT100-Bold
 }
 
-public struct TableTag: RawRepresentable, Comparable, Hashable, CustomStringConvertible {
+public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, CustomStringConvertible {
+
     public let rawValue: Tag
 
     public init(rawValue: Tag) {
         self.rawValue = rawValue
     }
 
-    public static let BASE = Self(rawValue: Tag(fourCharString: "BASE")) // Baseline data table (opt)
-    public static let CFF_ = Self(rawValue: Tag(fourCharString: "CFF ")) // Compact Font Format 1.0        OT (req)
-    public static let CFF2 = Self(rawValue: Tag(fourCharString: "CFF2")) // Compact Font Format 2.0        OT (req)
-    public static let DSIG = Self(rawValue: Tag(fourCharString: "DSIG")) // digital signature (opt)
+    /// Baseline data table (opt)
+    public static let BASE = TableTag(rawValue: Tag(fourCharString: "BASE"))
 
-    public static let TYP1 = Self(rawValue: Tag(fourCharString: "TYP1")) //
-    public static let CID_ = Self(rawValue: Tag(fourCharString: "CID ")) //
-    public static let gcid = Self(rawValue: Tag(fourCharString: "gcid")) // glyphIDs to CMap CIDs table    TT (opt)
+    /// Compact Font Format 1.0        OT (req)
+    public static let CFF_ = TableTag(rawValue: Tag(fourCharString: "CFF "))
 
-    public static let BLND = Self(rawValue: Tag(fourCharString: "BLND")) //
+    /// Compact Font Format 2.0        OT (req)
+    public static let CFF2 = TableTag(rawValue: Tag(fourCharString: "CFF2"))
 
-    public static let EBDT = Self(rawValue: Tag(fourCharString: "EBDT")) // Embedded bitmap data (B&W/grayscale) (bitmap-only TT fonts)
-    public static let EBLC = Self(rawValue: Tag(fourCharString: "EBLC")) // Embedded bitmap location data (bitmap-only TT fonts)
-    public static let EBSC = Self(rawValue: Tag(fourCharString: "EBSC")) // Embedded bitmap scaling data (bitmap-only TT fonts)
+    /// digital signature (opt)
+    public static let DSIG = TableTag(rawValue: Tag(fourCharString: "DSIG"))
 
-    public static let CBDT = Self(rawValue: Tag(fourCharString: "CBDT")) // Color bitmap data
-    public static let CBLC = Self(rawValue: Tag(fourCharString: "CBLC")) // Color bitmap location data
+    /// ?
+    public static let TYP1 = TableTag(rawValue: Tag(fourCharString: "TYP1"))
 
-    public static let SVG_ = Self(rawValue: Tag(fourCharString: "SVG ")) // The SVG (Scalable Vector Graphics) table
+    /// ?
+    public static let CID_ = TableTag(rawValue: Tag(fourCharString: "CID "))
 
-    public static let COLR = Self(rawValue: Tag(fourCharString: "COLR")) // Color table
-    public static let CPAL = Self(rawValue: Tag(fourCharString: "CPAL")) // Color palette table
+    /// glyphIDs to CMap CIDs table    TT (opt)
+    public static let gcid = TableTag(rawValue: Tag(fourCharString: "gcid"))
 
-    public static let GDEF = Self(rawValue: Tag(fourCharString: "GDEF")) // Glyph definition data          OT (opt)
-    public static let GPOS = Self(rawValue: Tag(fourCharString: "GPOS")) // Glyph positioning data         OT & TT (opt)
-    public static let GSUB = Self(rawValue: Tag(fourCharString: "GSUB")) // Glyph substitution data        OT (opt)
-    public static let JSTF = Self(rawValue: Tag(fourCharString: "JSTF")) // Justification data             OT (opt)
-    public static let MATH = Self(rawValue: Tag(fourCharString: "MATH")) // Math layout data               OT (opt)
+    ///
+    public static let BLND = TableTag(rawValue: Tag(fourCharString: "BLND"))
 
-    public static let OS_2 = Self(rawValue: Tag(fourCharString: "OS/2")) // OS/2 and Windows-specific metrics (req)
-    public static let VORG = Self(rawValue: Tag(fourCharString: "VORG")) // Vertical Origin                OT only (opt)
+    /// Embedded bitmap data (B&W/grayscale) (bitmap-only TT fonts)
+    public static let EBDT = TableTag(rawValue: Tag(fourCharString: "EBDT"))
 
-    public static let STAT = Self(rawValue: Tag(fourCharString: "STAT")) // Style attr table (for variable fonts?) OT opt
+    /// Embedded bitmap location data (bitmap-only TT fonts)
+    public static let EBLC = TableTag(rawValue: Tag(fourCharString: "EBLC"))
 
-    public static let LTSH = Self(rawValue: Tag(fourCharString: "LTSH")) // linear threshold table         TT (opt)
-    public static let MERG = Self(rawValue: Tag(fourCharString: "MERG")) // Merge before antialiasing table (opt)
+    /// Embedded bitmap scaling data (bitmap-only TT fonts)
+    public static let EBSC = TableTag(rawValue: Tag(fourCharString: "EBSC"))
 
-    public static let VDMX = Self(rawValue: Tag(fourCharString: "VDMX")) // vertical device metrics        TT (opt)
-    public static let PCLT = Self(rawValue: Tag(fourCharString: "PCLT")) // PCL5 HP table (strongly discouraged) TT (opt)
+    /// Color bitmap data
+    public static let CBDT = TableTag(rawValue: Tag(fourCharString: "CBDT"))
 
-    public static let bdat = Self(rawValue: Tag(fourCharString: "bdat")) // Bitmap data table
-    public static let bhed = Self(rawValue: Tag(fourCharString: "bhed")) // Bitmap font header (Mac equiv to 'head' for bitmap-only TT fonts)
-    public static let bloc = Self(rawValue: Tag(fourCharString: "bloc")) // Bitmap location table
+    /// Color bitmap location data
+    public static let CBLC = TableTag(rawValue: Tag(fourCharString: "CBLC"))
 
-    public static let bsln = Self(rawValue: Tag(fourCharString: "bsln")) // baseline table
-    public static let cmap = Self(rawValue: Tag(fourCharString: "cmap")) // Character codes to glyph index mappings (req)
-    public static let cvt_ = Self(rawValue: Tag(fourCharString: "cvt ")) // Control Value Table            TT (opt)
-    public static let fdsc = Self(rawValue: Tag(fourCharString: "fdsc")) // font descriptors table         (opt)
+    /// The SVG (Scalable Vector Graphics) table
+    public static let SVG_ = TableTag(rawValue: Tag(fourCharString: "SVG "))
 
-    public static let evrs = Self(rawValue: Tag(fourCharString: "evrs")) // ??
+    /// Color table
+    public static let COLR = TableTag(rawValue: Tag(fourCharString: "COLR"))
 
-    public static let feat = Self(rawValue: Tag(fourCharString: "feat")) // feature table                  AAT TT (opt)
-    public static let ltag = Self(rawValue: Tag(fourCharString: "ltag")) // AAT TT (opt) OS X 10.9+ used with 'morx' & 'feat' tables
+    /// Color palette table
+    public static let CPAL = TableTag(rawValue: Tag(fourCharString: "CPAL"))
 
-    public static let fpgm = Self(rawValue: Tag(fourCharString: "fpgm")) // Font program                   TT (opt)
+    /// Glyph definition data          OT (opt)
+    public static let GDEF = TableTag(rawValue: Tag(fourCharString: "GDEF"))
 
-    public static let fond = Self(rawValue: Tag(fourCharString: "fond")) // Mac 'FOND' resources           TT (opt)
+    /// Glyph positioning data         OT & TT (opt)
+    public static let GPOS = TableTag(rawValue: Tag(fourCharString: "GPOS"))
 
-    public static let cvar = Self(rawValue: Tag(fourCharString: "cvar")) // 'cvt ' variations table        AAT (opt)
-    public static let fvar = Self(rawValue: Tag(fourCharString: "fvar")) // Font Variations Table          AAT (opt)
-    public static let gvar = Self(rawValue: Tag(fourCharString: "gvar")) // Glyph Variations Table         AAT (opt)
+    /// Glyph substitution data        OT (opt)
+    public static let GSUB = TableTag(rawValue: Tag(fourCharString: "GSUB"))
 
-    public static let fmtx = Self(rawValue: Tag(fourCharString: "fmtx")) // Font Metrics Table             AAT (opt)
-    public static let gasp = Self(rawValue: Tag(fourCharString: "gasp")) // Grid-fitting/Scan-conversion   TT (opt)
-    public static let glyf = Self(rawValue: Tag(fourCharString: "glyf")) // Glyph data                     TT (req) OT (opt)
+    /// Justification data             OT (opt)
+    public static let JSTF = TableTag(rawValue: Tag(fourCharString: "JSTF"))
 
-    public static let head = Self(rawValue: Tag(fourCharString: "head")) // Font header                    (req)
+    /// Math layout data               OT (opt)
+    public static let MATH = TableTag(rawValue: Tag(fourCharString: "MATH"))
 
-    public static let hhea = Self(rawValue: Tag(fourCharString: "hhea")) // Horizontal Header              (req)
-    public static let hmtx = Self(rawValue: Tag(fourCharString: "hmtx")) // Horizontal metrics             (req)
+    /// OS/2 and Windows-specific metrics (req)
+    public static let OS_2 = TableTag(rawValue: Tag(fourCharString: "OS/2"))
 
-    public static let hdmx = Self(rawValue: Tag(fourCharString: "hdmx")) // Horizontal device metrics    Mac (opt)
+    /// Vertical Origin                OT only (opt)
+    public static let VORG = TableTag(rawValue: Tag(fourCharString: "VORG"))
 
-    public static let just = Self(rawValue: Tag(fourCharString: "just")) // Justification table            AAT (opt)
-    public static let lcar = Self(rawValue: Tag(fourCharString: "lcar")) // Ligature caret table           AAT (opt)
+    /// Style attr table (for variable fonts?) OT opt
+    public static let STAT = TableTag(rawValue: Tag(fourCharString: "STAT"))
 
-    public static let loca = Self(rawValue: Tag(fourCharString: "loca")) // Index to location              TT (req)
-    public static let kern = Self(rawValue: Tag(fourCharString: "kern")) // Kerning table                  TT (opt)
-    public static let kerx = Self(rawValue: Tag(fourCharString: "kerx")) // Extended Kerning table         AAT (opt)
+    /// linear threshold table         TT (opt)
+    public static let LTSH = TableTag(rawValue: Tag(fourCharString: "LTSH"))
 
-    public static let maxp = Self(rawValue: Tag(fourCharString: "maxp")) // Maximum profile                (req)
+    /// Merge before antialiasing table (opt)
+    public static let MERG = TableTag(rawValue: Tag(fourCharString: "MERG"))
 
-    public static let meta = Self(rawValue: Tag(fourCharString: "meta")) // Metadata table (design lang, sup. lang) AAT (opt)
-    public static let mort = Self(rawValue: Tag(fourCharString: "mort")) // Glyph Metamorphosis table (deprecated) AAT (opt)
-    public static let morx = Self(rawValue: Tag(fourCharString: "morx")) // Extended Glyph Metamorphosis   AAT
+    /// vertical device metrics        TT (opt)
+    public static let VDMX = TableTag(rawValue: Tag(fourCharString: "VDMX"))
 
-    public static let name = Self(rawValue: Tag(fourCharString: "name")) // Naming table                   (req)
-    public static let opbd = Self(rawValue: Tag(fourCharString: "opbd")) // Optical bounds table           AAT (opt)
+    /// PCL5 HP table (strongly discouraged) TT (opt)
+    public static let PCLT = TableTag(rawValue: Tag(fourCharString: "PCLT"))
 
-    public static let post = Self(rawValue: Tag(fourCharString: "post")) // PostScript information         (req)
-    public static let prep = Self(rawValue: Tag(fourCharString: "prep")) // CV Program                     TT (opt)
-    public static let prop = Self(rawValue: Tag(fourCharString: "prop")) // Glyph Properties table
+    /// Anchor point table      AAT (opt)
+    public static let ankr = TableTag(rawValue: Tag(fourCharString: "ankr"))
 
-    public static let sbix = Self(rawValue: Tag(fourCharString: "sbix")) // Standard graphics format bitmap data (full color) (Apple-only?)
-    public static let trak = Self(rawValue: Tag(fourCharString: "trak")) // Tracking table                 AAT (opt)
+    /// Bitmap data table
+    public static let bdat = TableTag(rawValue: Tag(fourCharString: "bdat"))
 
-    public static let vhea = Self(rawValue: Tag(fourCharString: "vhea")) // Vertical header table          TT (opt)
-    public static let vmtx = Self(rawValue: Tag(fourCharString: "vmtx")) // Vertical metrics table         TT (opt)
+    /// Bitmap font header (Mac equiv to 'head' for bitmap-only TT fonts)
+    public static let bhed = TableTag(rawValue: Tag(fourCharString: "bhed"))
 
-    public static let Zapf = Self(rawValue: Tag(fourCharString: "Zapf")) //                                AAT (opt)
+    /// Bitmap location table
+    public static let bloc = TableTag(rawValue: Tag(fourCharString: "bloc"))
+
+    /// baseline table
+    public static let bsln = TableTag(rawValue: Tag(fourCharString: "bsln"))
+
+    /// Character codes to glyph index mappings (req)
+    public static let cmap = TableTag(rawValue: Tag(fourCharString: "cmap"))
+
+    /// Control Value Table            TT (opt)
+    public static let cvt_ = TableTag(rawValue: Tag(fourCharString: "cvt "))
+
+    /// font descriptors table         (opt)
+    public static let fdsc = TableTag(rawValue: Tag(fourCharString: "fdsc"))
+
+    /// ??
+    public static let evrs = TableTag(rawValue: Tag(fourCharString: "evrs"))
+
+    /// feature table                  AAT TT (opt)
+    public static let feat = TableTag(rawValue: Tag(fourCharString: "feat"))
+
+    /// AAT TT (opt) OS X 10.9+ used with 'morx' & 'feat' tables
+    public static let ltag = TableTag(rawValue: Tag(fourCharString: "ltag"))
+
+    /// Font program                   TT (opt)
+    public static let fpgm = TableTag(rawValue: Tag(fourCharString: "fpgm"))
+
+    /// Mac 'FOND' resources           TT (opt)
+    public static let fond = TableTag(rawValue: Tag(fourCharString: "fond"))
+
+    /// 'cvt ' variations table        AAT (opt)
+    public static let cvar = TableTag(rawValue: Tag(fourCharString: "cvar"))
+
+    /// Font Variations Table          AAT (opt)
+    public static let fvar = TableTag(rawValue: Tag(fourCharString: "fvar"))
+
+    /// Glyph Variations Table         AAT (opt)
+    public static let gvar = TableTag(rawValue: Tag(fourCharString: "gvar"))
+
+    /// Font Metrics Table             AAT (opt)
+    public static let fmtx = TableTag(rawValue: Tag(fourCharString: "fmtx"))
+
+    /// Grid-fitting/Scan-conversion   TT (opt)
+    public static let gasp = TableTag(rawValue: Tag(fourCharString: "gasp"))
+
+    /// Glyph data   TT (req) OT (opt)
+    public static let glyf = TableTag(rawValue: Tag(fourCharString: "glyf"))
+
+    /// Font header (req)
+    public static let head = TableTag(rawValue: Tag(fourCharString: "head"))
+
+    /// Horizontal Header (req)
+    public static let hhea = TableTag(rawValue: Tag(fourCharString: "hhea"))
+
+    /// Horizontal Metrics (req)
+    public static let hmtx = TableTag(rawValue: Tag(fourCharString: "hmtx"))
+
+    /// Horizontal device metrics    Mac (opt)
+    public static let hdmx = TableTag(rawValue: Tag(fourCharString: "hdmx"))
+
+    /// Hierarchical Variation Fonts  AAT (opt)
+    public static let hvgl = TableTag(rawValue: Tag(fourCharString: "hvgl"))
+
+    /// Hierarchical Variation Fonts  (used w/ 'hvgl') AAT (opt)
+    public static let hvpm = TableTag(rawValue: Tag(fourCharString: "hvpm"))
+
+    /// Justification table            AAT (opt)
+    public static let just = TableTag(rawValue: Tag(fourCharString: "just"))
+
+    /// Ligature caret table           AAT (opt)
+    public static let lcar = TableTag(rawValue: Tag(fourCharString: "lcar"))
+
+    /// Index to location              TT (req)
+    public static let loca = TableTag(rawValue: Tag(fourCharString: "loca"))
+
+    /// Kerning table                  TT (opt)
+    public static let kern = TableTag(rawValue: Tag(fourCharString: "kern"))
+
+    /// Extended Kerning table         AAT (opt)
+    public static let kerx = TableTag(rawValue: Tag(fourCharString: "kerx"))
+
+    /// Maximum profile                (req)
+    public static let maxp = TableTag(rawValue: Tag(fourCharString: "maxp"))
+
+    /// Metadata table (design lang, sup. lang) AAT (opt)
+    public static let meta = TableTag(rawValue: Tag(fourCharString: "meta"))
+
+    /// Glyph Metamorphosis table (deprecated) AAT (opt)
+    public static let mort = TableTag(rawValue: Tag(fourCharString: "mort"))
+
+    /// Extended Glyph Metamorphosis   AAT
+    public static let morx = TableTag(rawValue: Tag(fourCharString: "morx"))
+
+    /// Naming table                   (req)
+    public static let name = TableTag(rawValue: Tag(fourCharString: "name"))
+
+    /// Optical bounds table           AAT (opt)
+    public static let opbd = TableTag(rawValue: Tag(fourCharString: "opbd"))
+
+    /// PostScript information         (req)
+    public static let post = TableTag(rawValue: Tag(fourCharString: "post"))
+
+    /// CV Program                     TT (opt)
+    public static let prep = TableTag(rawValue: Tag(fourCharString: "prep"))
+
+    /// Glyph Properties table
+    public static let prop = TableTag(rawValue: Tag(fourCharString: "prop"))
+
+    /// Standard graphics format bitmap data (full color) (Apple-only?)
+    public static let sbix = TableTag(rawValue: Tag(fourCharString: "sbix"))
+
+    /// Tracking table                 AAT (opt)
+    public static let trak = TableTag(rawValue: Tag(fourCharString: "trak"))
+
+    /// Vertical header table          TT (opt)
+    public static let vhea = TableTag(rawValue: Tag(fourCharString: "vhea"))
+
+    /// Vertical metrics table         TT (opt)
+    public static let vmtx = TableTag(rawValue: Tag(fourCharString: "vmtx"))
+
+    /// cross-reference table (AAT) opt
+    public static let xref = TableTag(rawValue: Tag(fourCharString: "xref"))
+
+    ///                                AAT (opt)
+    public static let Zapf = TableTag(rawValue: Tag(fourCharString: "Zapf"))
 
     public var fourCharString: String {
         return rawValue.fourCharString
@@ -190,6 +309,9 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CustomStringConv
     public static func == (lhs: TableTag, rhs: TableTag) -> Bool {
         return lhs.rawValue == rhs.rawValue
     }
+
+    public static let allCases: [TableTag] = [.BASE, .CFF_, .CFF2, .DSIG, .TYP1, .CID_, .gcid, .BLND, .EBDT, .EBLC, .EBSC, .CBDT, .CBLC, .SVG_, .COLR, .CPAL, .GDEF, .GPOS, .GSUB, .JSTF, .MATH, .OS_2, .VORG, .STAT, .LTSH, .MERG, .VDMX, .PCLT, .ankr, .bdat, .bhed, .bloc, .bsln, .cmap, .cvt_, .fdsc, .evrs, .feat, .ltag, .fpgm, .fond, .cvar, .fvar, .gvar, .fmtx, .gasp, .glyf, .head, .hhea, .hmtx, .hdmx, .hvgl, .hvpm, .just, .lcar, .loca, .kern, .kerx, .maxp, .meta, .mort, .morx, .name, .opbd, .post, .prep, .prop, .sbix, .trak, .vhea, .vmtx, .xref, .Zapf]
+
 }
 
 @objc public enum PlatformID: UInt16, Comparable, CustomStringConvertible, CustomDebugStringConvertible {
