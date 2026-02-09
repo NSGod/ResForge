@@ -246,6 +246,20 @@ final class ViewController_OS2: FontTableViewController {
         }
     }
 
+    override func prepareToSave() throws {
+        NSLog("\(type(of: self)).\(#function)")
+        table.usWeightClass = FontTable_OS2.Weight(rawValue: usWeightClass)
+        table.fsType = FontTable_OS2.FontType(rawValue: fsType)
+        table.ulUnicodeRange1 = FontTable_OS2.UnicodeMask1(rawValue: ulUnicodeRange1)
+        table.ulUnicodeRange2 = FontTable_OS2.UnicodeMask2(rawValue: ulUnicodeRange2)
+        table.ulUnicodeRange3 = FontTable_OS2.UnicodeMask3(rawValue: ulUnicodeRange3)
+        table.ulUnicodeRange4 = FontTable_OS2.UnicodeMask4(rawValue: ulUnicodeRange4)
+        table.ulCodePageRange1 = FontTable_OS2.CodePageMask1(rawValue: ulCodePageRange1)
+        table.ulCodePageRange2 = FontTable_OS2.CodePageMask2(rawValue: ulCodePageRange2)
+        table.fsSelection = FontTable_OS2.Selection(rawValue: fsSelection)
+        view.window?.makeFirstResponder(nil)
+    }
+
     override func updateUI() {
         // allow us to be called before nib is loaded
         guard let version1UnicodeView else { return }
@@ -376,8 +390,7 @@ final class ViewController_OS2: FontTableViewController {
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
 //        NSLog("\(type(of: self)).\(#function) keyPath == \(String(describing: keyPath)), change == \(String(describing: change))")
         guard let context = context else {
-            // call super?
-            return
+            return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
         if context == &table.version {
             undoManager?.setActionName(NSLocalizedString("Change Version", comment: ""))

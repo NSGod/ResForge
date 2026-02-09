@@ -18,15 +18,16 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
         PluginRegistry.register(self)
     }
 
-    @IBOutlet weak var tableView:   NSTableView!
-    @IBOutlet weak var tableTagField:               NSTextField!
-    @IBOutlet weak var box:                         NSBox!
+    @IBOutlet weak var tableView:       NSTableView!
+    @IBOutlet weak var tableTagField:   NSTextField!
+    @IBOutlet weak var box:             NSBox!
 
     public var resource: 		Resource        /// `'sfnt'`
     let manager: 		        RFEditorManager
     @objc var fontFile:         OTFFontFile
 
     private var tableTagsToViewControllers: [TableTag: FontTableViewController] = [:]
+    private var originalData:   Data
 
     public override var windowNibName: NSNib.Name {
         return "FontEditor"
@@ -45,6 +46,7 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
         self.resource = resource
         self.manager = manager
         do {
+            originalData = resource.data
             fontFile = try OTFFontFile(resource.data)
         } catch {
             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
@@ -62,21 +64,45 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
         window?.makeFirstResponder(tableView)
     }
 
+    // FIXME: consolidate all loading view code when selection changes, etc.
+    func reloadFont() {
+        do {
+            let indexes = tableView.selectedRowIndexes
+            tableView.deselectAll(self)
+            self.willChangeValue(forKey: "fontFile")
+            fontFile = try OTFFontFile(resource.data)
+            self.didChangeValue(forKey: "fontFile")
+            box.contentView = Self.emptyView
+            tableTagField.stringValue = ""
+            tableTagsToViewControllers.removeAll()
+            tableView.reloadData()
+            if !indexes.isEmpty {
+                tableView.selectRowIndexes(indexes, byExtendingSelection: false)
+                let selectedDirEntry = fontFile.directory.entries[indexes.first!]
+                let viewControllerClass = FontTableViewController.class(for: selectedDirEntry.tableTag).self
+                guard let viewController = viewControllerClass.init(with: selectedDirEntry.table) else {
+                    NSLog("\(type(of: self)).\(#function) failed to create a controller for \(selectedDirEntry.tableTag)")
+                    return
+                }
+                box.contentView = viewController.view
+                tableTagsToViewControllers[selectedDirEntry.tableTag] = viewController
+                tableTagField.stringValue = selectedDirEntry.tableTag.fourCharString
+            }
+            window?.makeFirstResponder(tableView)
+        } catch {
+            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+        }
+    }
+
     // MARK: -
     @IBAction public func saveResource(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
         do {
-            let data = try fontFile.data()
-            resource.data = data
-            tableView.deselectAll(self)
-            self.willChangeValue(forKey: "fontFile")
-            fontFile = try OTFFontFile(data)
-            self.didChangeValue(forKey: "fontFile")
-            box.contentView = Self.emptyView
-            tableTagField.stringValue = ""
-            setDocumentEdited(false)
-            tableTagsToViewControllers.removeAll()
-            tableView.reloadData()
+            let tableTags: [TableTag] = tableTagsToViewControllers.keys.sorted(by: OTFReWritingOrderSort)
+            try tableTags.forEach({ try tableTagsToViewControllers[$0]!.prepareToSave() })
+            resource.data = try fontFile.data()
+            reloadFont()
+            window?.isDocumentEdited = false
         } catch {
             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
             self.presentError(error)
@@ -84,10 +110,11 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
     }
 
     @IBAction public func revertResource(_ sender: Any) {
+        NSLog("\(type(of: self)).\(#function)")
 
     }
 
-    static var emptyView: NSView = NSView(frame: NSMakeRect(0, 0, 400, 600))
+    static let emptyView: NSView = NSView(frame: NSMakeRect(0, 0, 400, 600))
     static let supportedTableTags: Set<TableTag> = Set([.head, .maxp, .name, .post, .hhea, .hmtx, .OS_2, .gasp])
 }
 
@@ -133,7 +160,7 @@ extension FontEditor: NSTableViewDelegate, NSTableViewDataSource {
     }
 
     public func tableViewSelectionDidChange(_ notification: Notification) {
-        NSLog("\(type(of: self)).\(#function) notification == \(notification)")
+//        NSLog("\(type(of: self)).\(#function) notification == \(notification)")
         let indexes = tableView.selectedRowIndexes
         if indexes.count != 1 {
             box.contentView = Self.emptyView

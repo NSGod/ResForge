@@ -7,7 +7,7 @@
 
 import Foundation
 
-class UnicodePointFormatter: NumberFormatter, @unchecked Sendable {
+final class UnicodePointFormatter: NumberFormatter, @unchecked Sendable {
 
     override func string(for obj: Any?) -> String? {
         guard let value: UInt32 = obj as? UInt32 else { return nil }

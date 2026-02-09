@@ -172,7 +172,7 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gj8-kj-deF">
+                <textField toolTip="Should be 0x00010000" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gj8-kj-deF">
                     <rect key="frame" x="138" y="482" width="80" height="19"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="border" drawsBackground="YES" id="Usc-BU-vth">
@@ -207,21 +207,24 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
-                        <binding destination="-2" name="value" keyPath="representedObject.objcFlags" id="Htk-ze-pyr"/>
+                        <binding destination="-2" name="value" keyPath="objcFlags" id="Djy-c3-XfO"/>
                         <outlet property="formatter" destination="WVS-OL-jHf" id="KiS-33-hz3"/>
                     </connections>
                 </textField>
-                <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="crj-KF-XC1">
+                <textField toolTip="Any value from 16 to 16384. If TrueType, a power of 2 is recommended." focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="crj-KF-XC1">
                     <rect key="frame" x="138" y="260" width="80" height="19"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="border" drawsBackground="YES" id="ZGt-aR-CJC">
+                        <numberFormatter key="formatter" formatterBehavior="default10_4" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="Wdn-Wy-7A2">
+                            <real key="minimum" value="16"/>
+                            <real key="maximum" value="16384"/>
+                        </numberFormatter>
                         <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
-                        <binding destination="-2" name="value" keyPath="representedObject.objcUnitsPerEm" id="5Dg-GA-eZm"/>
-                        <outlet property="formatter" destination="WVS-OL-jHf" id="OKK-mo-cqa"/>
+                        <binding destination="-2" name="value" keyPath="objcUnitsPerEm" id="7kc-mK-QL4"/>
                     </connections>
                 </textField>
                 <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5PO-Nd-nrv">
@@ -306,15 +309,19 @@
                     <rect key="frame" x="138" y="106" width="104" height="19"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="border" alignment="right" drawsBackground="YES" id="KUz-Ra-3cw">
+                        <numberFormatter key="formatter" formatterBehavior="default10_4" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="eVS-pu-2hJ">
+                            <real key="minimum" value="0.0"/>
+                            <real key="maximum" value="127"/>
+                        </numberFormatter>
                         <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
-                        <binding destination="-2" name="value" keyPath="representedObject.objcMacStyle" id="UJL-fD-1Cf"/>
+                        <binding destination="-2" name="value" keyPath="objcMacStyle" id="sUG-jF-GPX"/>
                     </connections>
                 </textField>
-                <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wqi-pf-eQ4">
+                <textField toolTip="Smallest readable size in pixels" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wqi-pf-eQ4">
                     <rect key="frame" x="138" y="84" width="80" height="19"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="border" drawsBackground="YES" id="4ma-9S-64f">
@@ -331,26 +338,32 @@
                     <rect key="frame" x="138" y="62" width="104" height="19"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="border" alignment="right" drawsBackground="YES" id="Ze8-2g-6nC">
+                        <numberFormatter key="formatter" formatterBehavior="default10_4" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="cuy-vq-hsv">
+                            <real key="minimum" value="-2"/>
+                            <real key="maximum" value="2"/>
+                        </numberFormatter>
                         <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.fontDirectionHint" id="SyI-3b-TOp"/>
-                        <outlet property="formatter" destination="9Cc-2i-F7L" id="7SV-dN-C5u"/>
                     </connections>
                 </textField>
                 <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c7A-QG-cYO">
                     <rect key="frame" x="138" y="40" width="104" height="19"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="border" alignment="right" drawsBackground="YES" id="4A9-5F-Fo3">
+                        <numberFormatter key="formatter" formatterBehavior="default10_4" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="oap-Ex-5GP">
+                            <real key="minimum" value="0.0"/>
+                            <real key="maximum" value="1"/>
+                        </numberFormatter>
                         <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.indexToLocFormat" id="hgL-73-L9j"/>
-                        <outlet property="formatter" destination="9Cc-2i-F7L" id="ViZ-ft-Z8Y"/>
                     </connections>
                 </textField>
                 <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EhT-6m-65b">
@@ -366,7 +379,7 @@
                         <outlet property="formatter" destination="Yvg-cq-Ryo" id="Eer-m0-c3e"/>
                     </connections>
                 </textField>
-                <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="evP-PR-2eG">
+                <textField toolTip="Should be 0x5F0F3CF5" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="evP-PR-2eG">
                     <rect key="frame" x="138" y="394" width="80" height="19"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="border" drawsBackground="YES" id="IFY-CM-Kqj">
@@ -379,7 +392,7 @@
                         <outlet property="formatter" destination="kru-CD-XrG" id="C9k-fT-7Kp"/>
                     </connections>
                 </textField>
-                <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PXE-nR-VOf">
+                <textField toolTip="0 for current format" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PXE-nR-VOf">
                     <rect key="frame" x="138" y="18" width="80" height="19"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="border" drawsBackground="YES" id="izp-dz-1Rw">
@@ -397,15 +410,19 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <datePickerCell key="cell" controlSize="small" borderStyle="bezel" alignment="left" useCurrentDate="YES" id="oIT-jX-Dp6">
                         <font key="font" metaFont="smallSystem"/>
-                        <date key="date" timeIntervalSinceReferenceDate="792087289.46403897">
-                            <!--2026-02-06 16:14:49 +0000-->
+                        <date key="date" timeIntervalSinceReferenceDate="792211342.89654696">
+                            <!--2026-02-08 02:42:22 +0000-->
                         </date>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <datePickerElements key="datePickerElements" year="YES" month="YES" day="YES" hour="YES" minute="YES" second="YES"/>
                     </datePickerCell>
                     <connections>
-                        <binding destination="-2" name="value" keyPath="representedObject.createdDate" id="94N-7U-5ha"/>
+                        <binding destination="-2" name="value" keyPath="representedObject.created" id="QCK-co-vHb">
+                            <dictionary key="options">
+                                <string key="NSValueTransformerName">FontEditor.SecondsSince1904DateTransformer</string>
+                            </dictionary>
+                        </binding>
                     </connections>
                 </datePicker>
                 <datePicker verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ymu-Nl-jjy">
@@ -413,15 +430,19 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <datePickerCell key="cell" controlSize="small" borderStyle="bezel" alignment="left" useCurrentDate="YES" id="gII-fu-7Tf">
                         <font key="font" metaFont="smallSystem"/>
-                        <date key="date" timeIntervalSinceReferenceDate="792087289.46647203">
-                            <!--2026-02-06 16:14:49 +0000-->
+                        <date key="date" timeIntervalSinceReferenceDate="792211342.89905202">
+                            <!--2026-02-08 02:42:22 +0000-->
                         </date>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <datePickerElements key="datePickerElements" year="YES" month="YES" day="YES" hour="YES" minute="YES" second="YES"/>
                     </datePickerCell>
                     <connections>
-                        <binding destination="-2" name="value" keyPath="representedObject.modifiedDate" id="uUm-Eu-Itm"/>
+                        <binding destination="-2" name="value" keyPath="representedObject.modified" id="QEP-b8-dTn">
+                            <dictionary key="options">
+                                <string key="NSValueTransformerName">FontEditor.SecondsSince1904DateTransformer</string>
+                            </dictionary>
+                        </binding>
                     </connections>
                 </datePicker>
                 <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RPv-hF-Vu1" customClass="BitfieldControl" customModule="CoreFont">
@@ -690,7 +711,7 @@
                     </subviews>
                 </customView>
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OB7-5i-rVt">
-                    <rect key="frame" x="247" y="59" width="224" height="22"/>
+                    <rect key="frame" x="247" y="61" width="192" height="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="-2: Left to right with neutrals" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="-2" imageScaling="proportionallyDown" inset="2" selectedItem="35s-Hh-CZu" id="Mvv-5z-Dss">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -710,7 +731,7 @@
                     </connections>
                 </popUpButton>
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iUh-FB-PTw">
-                    <rect key="frame" x="247" y="37" width="133" height="22"/>
+                    <rect key="frame" x="247" y="39" width="135" height="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="0: short offsets" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="DDg-bH-VjE" id="DK6-dR-gbu">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -739,18 +760,40 @@
                         <outlet property="formatter" destination="kru-CD-XrG" id="rBI-oZ-r0g"/>
                     </connections>
                 </textField>
+                <button toolTip="Now" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yut-su-vL5">
+                    <rect key="frame" x="418" y="239" width="18" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRefreshFreestandingTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="jJs-xI-wqS">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="now:" target="-2" id="x8c-Zw-auP"/>
+                    </connections>
+                </button>
+                <button toolTip="Now" tag="1" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zGl-cU-G0F">
+                    <rect key="frame" x="418" y="217" width="18" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRefreshFreestandingTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="46a-sq-XPI">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="now:" target="-2" id="ghH-An-CMh"/>
+                    </connections>
+                </button>
             </subviews>
             <point key="canvasLocation" x="79" y="60.5"/>
         </customView>
-        <numberFormatter formatterBehavior="custom10_4" allowsFloats="NO" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="WVS-OL-jHf" userLabel="unsignedShortNumberFormatter">
+        <numberFormatter formatterBehavior="custom10_4" allowsFloats="NO" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="WVS-OL-jHf" userLabel="uInt16NumberFormatter">
             <real key="minimum" value="0.0"/>
             <real key="maximum" value="65535"/>
         </numberFormatter>
-        <numberFormatter formatterBehavior="custom10_4" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="hmn-uK-Br5" userLabel="SInt64NumberFormatter">
+        <numberFormatter formatterBehavior="custom10_4" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="hmn-uK-Br5" userLabel="int64NumberFormatter">
             <real key="minimum" value="-9.2233720368547758e+18"/>
             <real key="maximum" value="9.2233720368547758e+18"/>
         </numberFormatter>
-        <numberFormatter formatterBehavior="custom10_4" allowsFloats="NO" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="Yvg-cq-Ryo" userLabel="unsignedIntNumberFormatter">
+        <numberFormatter formatterBehavior="custom10_4" allowsFloats="NO" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="Yvg-cq-Ryo" userLabel="uInt32NumberFormatter">
             <real key="minimum" value="0.0"/>
             <real key="maximum" value="4294967295"/>
         </numberFormatter>
@@ -758,7 +801,7 @@
             <real key="minimum" value="0.0"/>
             <real key="maximum" value="4294967295"/>
         </numberFormatter>
-        <numberFormatter formatterBehavior="custom10_4" allowsFloats="NO" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="9Cc-2i-F7L" userLabel="signedShortNumberFormatter">
+        <numberFormatter formatterBehavior="custom10_4" allowsFloats="NO" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="9Cc-2i-F7L" userLabel="int16NumberFormatter">
             <real key="minimum" value="-32768"/>
             <real key="maximum" value="32768"/>
         </numberFormatter>
@@ -767,4 +810,7 @@
             <real key="maximum" value="4294967295"/>
         </numberFormatter>
     </objects>
+    <resources>
+        <image name="NSRefreshFreestandingTemplate" width="19" height="19"/>
+    </resources>
 </document>

@@ -26,6 +26,10 @@ class FontTableViewController: NSViewController {
         super.viewDidLoad()
     }
 
+    func prepareToSave() throws {
+        // allows view controllers to try to end editing and then push any local vars back into their table
+    }
+
     @objc func updateUI() {
 
     }

@@ -52,8 +52,8 @@ final public class FontTable_head: FontTable {
     }
 
     @objc public enum IndexToLocFormat: Int16 {
-        case short          = 0 // loca table uses short
-        case long           = 1 // loca table uses long
+        case short          = 0 // loca table uses short offsets
+        case long           = 1 // loca table uses long offsets
     }
 
     public static let checksumConstant:         UInt32 = 0xB1B0AFBA
@@ -78,34 +78,6 @@ final public class FontTable_head: FontTable {
     @objc public var fontDirectionHint:     FontDirectionHint = .fullyMixedLeftToRight // deprecated? (set to 2)
     @objc public var indexToLocFormat:      IndexToLocFormat = .short   // 0 for short offsets, 1 for long
     @objc public var glyphDataFormat:       Int16 = 0               // 0 for current format
-
-    // MARK: -
-    @objc public var createdDate:           Date! {
-        didSet {
-            self.willChangeValue(forKey: "created")
-            created = createdDate.secondsSince1904
-            self.didChangeValue(forKey: "created")
-        }
-    }
-    @objc public var modifiedDate:          Date! {
-        didSet {
-            self.willChangeValue(forKey: "modified")
-            modified = modifiedDate.secondsSince1904
-            self.willChangeValue(forKey: "modified")
-        }
-    }
-
-    @objc public var objcFlags:             Flags.RawValue = 0 {
-        didSet { flags = Flags(rawValue: objcFlags) }
-    }
-    @objc public var objcMacStyle:          MacFontStyle.RawValue = 0 {
-        didSet { macStyle = MacFontStyle(rawValue: objcMacStyle) }
-    }
-    @objc public var objcUnitsPerEm:        UInt16 = 0 {
-        didSet {
-            unitsPerEm = UnitsPerEm(rawValue: objcUnitsPerEm)
-        }
-    }
 
     public override var calculatedChecksum: UInt32 {
         /// we're different in that we need to set checksumAdjustment
@@ -149,12 +121,6 @@ final public class FontTable_head: FontTable {
         fontDirectionHint = FontDirectionHint(rawValue: try reader.read()) ?? .rightToLeftWithNeutrals
         indexToLocFormat = try reader.read()
         glyphDataFormat = try reader.read()
-
-        objcFlags = flags.rawValue
-        objcUnitsPerEm = unitsPerEm.rawValue
-        objcMacStyle = macStyle.rawValue
-        createdDate = Date(secondsSince1904: created)
-        modifiedDate = Date(secondsSince1904: modified)
     }
 
     override func prepareToWrite() throws {

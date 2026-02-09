@@ -105,15 +105,10 @@ public class POSTExporter: AbstractEditor, ResourceEditor, ExportProvider, TypeI
 
     public static func export(_ resource: Resource, to url: URL) throws {
         NSLog("\(type(of: self)).\(#function) resource: \(resource), url: \(url.path)")
-
-//        if let document
+        /// not possible to complete given limitations of current API
     }
 
-    public func saveResource(_ sender: Any) {
+    public func saveResource(_ sender: Any) { }
 
-    }
-
-    public func revertResource(_ sender: Any) {
-
-    }
+    public func revertResource(_ sender: Any) { }
 }

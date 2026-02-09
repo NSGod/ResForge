@@ -61,6 +61,14 @@ final class FontTableDataViewController: FontTableViewController {
         updateUI()
     }
 
+    override func prepareToSave() throws {
+        NSLog("\(type(of: self)).\(#function)")
+    }
+
+    override func updateUI() {
+        NSLog("\(type(of: self)).\(#function) '\(table.tableTag.fourCharString)'")
+    }
+    
     // MARK: - <HFTextViewDelegate>
     func hexTextView(_ view: HFTextView, didChangeProperties properties: HFControllerPropertyBits) {
         if properties.contains(.contentValue) {
@@ -68,9 +76,4 @@ final class FontTableDataViewController: FontTableViewController {
 //            self.setDocumentEdited(true)
         }
     }
-
-    override func updateUI() {
-        NSLog("\(type(of: self)).\(#function) '\(table.tableTag.fourCharString)'")
-    }
-
 }

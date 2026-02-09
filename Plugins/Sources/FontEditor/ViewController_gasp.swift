@@ -33,6 +33,10 @@ final class ViewController_gasp: FontTableViewController, NSTableViewDelegate {
         }
     }
 
+    override func prepareToSave() throws {
+        NSLog("\(type(of: self)).\(#function)")
+    }
+
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         guard let tableColumn else { return nil }
         let identifier = tableColumn.identifier

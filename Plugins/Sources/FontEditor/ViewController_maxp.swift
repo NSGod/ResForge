@@ -34,6 +34,10 @@ final class ViewController_maxp: FontTableViewController {
         }
     }
 
+    override func prepareToSave() throws {
+        NSLog("\(type(of: self)).\(#function)")
+    }
+
     override func updateUI() {
         // allow us to be called before nib is loaded
         guard let version1View else { return }
