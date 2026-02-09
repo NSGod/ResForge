@@ -8,7 +8,7 @@
 import Foundation
 
 public class FONDResourceNode: ResourceNode {
-    public unowned var fond:   FOND    // weak
+    public weak var fond:   FOND!    // weak
 
     public init(fond: FOND) {
         self.fond = fond

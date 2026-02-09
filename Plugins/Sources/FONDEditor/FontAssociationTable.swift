@@ -14,8 +14,8 @@ final public class FontAssociationTable: ResourceNode {
     public var numberOfEntries:    Int16                           // number of entries - 1
     @objc public var entries:      [Entry]
 
-    @objc public override var length:    Int {
-        return MemoryLayout<Int16>.size + entries.count * Entry.length
+    @objc public override var totalNodeLength:    Int {
+        return MemoryLayout<Int16>.size + entries.count * Entry.nodeLength
     }
 
     public init(_ reader: BinaryDataReader) throws {
@@ -50,11 +50,12 @@ extension FontAssociationTable {
         public var fontStyle:              MacFontStyle
         @objc public var fontID:           ResID
 
+        /// needed for display:
         @objc public var objcFontStyle:    MacFontStyle.RawValue {
             didSet { fontStyle = .init(rawValue: objcFontStyle) }
         }
 
-        public override class var length: Int {
+        public override class var nodeLength: Int {
             return MemoryLayout<Int16>.size * 2 + MemoryLayout<MacFontStyle.RawValue>.size // 6
         }
 

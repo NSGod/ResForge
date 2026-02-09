@@ -30,7 +30,7 @@ final public class GlyphNameEncodingSubtable: ResourceNode {
     public var numberOfEntries:        Int16               // actual number of entries
     public var charCodesToGlyphNames:  [CharCode: String] = [:]
 
-    @objc public override var length: Int {
+    @objc public override var nodeLength: Int {
         set { _length = newValue }
         get { return _length }
     }
@@ -45,7 +45,7 @@ final public class GlyphNameEncodingSubtable: ResourceNode {
             charCodesToGlyphNames[charCode] = glyphName
         }
         super.init()
-        length = reader.bytesRead - before
+        nodeLength = reader.bytesRead - before
     }
 
     public func glyphName(for charCode: CharCode) -> String? {

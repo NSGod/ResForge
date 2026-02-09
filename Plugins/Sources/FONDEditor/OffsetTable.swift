@@ -13,8 +13,8 @@ final public class OffsetTable: ResourceNode {
     public var numberOfEntries:        Int16               // number of entries - 1
     @objc public var entries:          [Entry]
 
-    @objc public override var length:  Int {
-        return MemoryLayout<Int16>.size + entries.count * Entry.length
+    @objc public override var totalNodeLength: Int {
+        return MemoryLayout<Int16>.size + entries.count * Entry.nodeLength
     }
 
     public init(_ reader: BinaryDataReader) throws {
@@ -34,7 +34,7 @@ extension OffsetTable {
             super.init()
         }
 
-        public override class var length: Int {
+        public override class var nodeLength: Int {
             return MemoryLayout<Int32>.size     // 4
         }
     }

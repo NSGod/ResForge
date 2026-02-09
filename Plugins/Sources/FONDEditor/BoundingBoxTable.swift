@@ -11,11 +11,11 @@ import RFSupport
 import CoreFont
 
 final public class BoundingBoxTable: ResourceNode {
-    public var numberOfEntries:         Int16           // number of entries - 1
-    @objc public var entries:           [Entry]
+    public var numberOfEntries:                 Int16           // number of entries - 1
+    @objc public var entries:                   [Entry]
 
-    @objc public override var length:   Int {
-        return MemoryLayout<Int16>.size + entries.count * Entry.length
+    @objc public override var totalNodeLength:  Int {
+        return MemoryLayout<Int16>.size + entries.count * Entry.nodeLength
     }
 
     public init(_ reader: BinaryDataReader) throws {
@@ -34,11 +34,12 @@ extension BoundingBoxTable {
         @objc public var right:        Fixed4Dot12
         @objc public var top:          Fixed4Dot12
 
+        /// needed for display:
         @objc var objcStyle:    MacFontStyle.RawValue {
             didSet { style = .init(rawValue: objcStyle) }
         }
 
-        public override class var length: Int {
+        public override class var nodeLength: Int {
             return MemoryLayout<Int16>.size * 5 // 10
         }
 
@@ -50,6 +51,14 @@ extension BoundingBoxTable {
             top = try reader.read()
             objcStyle = style.rawValue
             super.init()
+        }
+
+        public override func write(to dataHandle: DataHandle) throws {
+            dataHandle.write(style)
+            dataHandle.write(left)
+            dataHandle.write(bottom)
+            dataHandle.write(right)
+            dataHandle.write(top)
         }
     }
 }

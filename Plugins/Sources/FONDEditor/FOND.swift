@@ -58,7 +58,7 @@ final public class FOND: NSObject {
             // can only have a Bounding Box table if we have an offset table to specify its offset
             guard let offsetTable = offsetTable else { return nil }
             // might have a bounding box table
-            let offsetTableOffset = Self.FontFamilyRecord.length + fontAssociationTable.length
+            let offsetTableOffset = Self.FontFamilyRecord.length + fontAssociationTable.totalNodeLength
             try reader.pushPosition(offsetTableOffset + Int(offsetTable.entries[0].offsetOfTable))
             boundingBoxTable = try BoundingBoxTable(reader)
             reader.popPosition()
@@ -141,55 +141,6 @@ final public class FOND: NSObject {
         return encoding
     }()
 
-     /// `Font family flags`. An integer value, the bits of which specify general characteristics
-     /// of the font family. This value is represented by the ffFlags field in the FamRec data type.
-     /// The bits in the ffFlags field have the following meanings:
-     ///
-     /// Bit    Meaning
-     /// 0      This bit is reserved by Apple and should be cleared to 0.
-     /// 1      This bit is set to 1 if the resource contains a glyph-width table.
-     /// 2–11   These bits are reserved by Apple and should be cleared to 0.
-     /// 12     This bit is set to 1 if the font family ignores the value of the FractEnable
-     ///          global variable when deciding whether to use fixed-point values for stylistic variations;
-     ///          the value of bit 13 is then the deciding factor. The value of the FractEnable global
-     ///          variable is set by the SetFractEnable procedure.
-     /// 13     This bit is set to 1 if the font family should use integer extra width for stylistic variations.
-     ///          If not set, the font family should compute the fixed-point extra width from the family
-     ///          style-mapping table, but only if the FractEnable global variable has a value of TRUE.
-     /// 14     This bit is set to 1 if the family fractional-width table is not used, and is cleared to 0 if the table is used.
-     /// 15     This bit is set to 1 if the font family describes fixed-width fonts, and is cleared to 0 if the font describes proportional fonts.
-
-    public struct Flags: OptionSet, Hashable {
-        public let rawValue: UInt16
-
-        public static let hasGlyphWidthTable       = Self(rawValue: 1 << 1)
-        public static let ignoreFractEnable        = Self(rawValue: 1 << 12)
-        public static let useIntegerWidths         = Self(rawValue: 1 << 13)
-        public static let dontUseFractWidthTable   = Self(rawValue: 1 << 14)
-        public static let isFixedWidth             = Self(rawValue: 1 << 15)
-
-        public init(rawValue: UInt16) {
-            self.rawValue = rawValue
-        }
-    }
-
-    /// `Version`. An integer value that specifies the version number of the font family resource, which
-    ///   indicates whether certain tables are available. This value is represented by the ffVersion field
-    ///   in the FamRec data type. Because this field has been used inconsistently in the system software,
-    ///   it is better to analyze the data in the resource itself instead of relying on the version number.
-    ///   The possible values are as follows:
-    ///   Value     Meaning
-    ///   0x0000    Created by the Macintosh system software. The font family resource will not have the glyph-width tables and the fields will contain 0.
-    ///   0x0001    Original format as designed by the font developer. This font family record probably has the width tables and most of the fields are filled.
-    ///   0x0002    This record may contain the offset and bounding-box tables.
-    ///   0x0003    This record definitely contains the offset and bounding-box tables.
-    @objc public enum Version : UInt16 {
-        case version0   = 0
-        case version1   = 1
-        case version2   = 2
-        case version3   = 3
-    }
-
     private enum TableOffsetType {
         case offsetTable
         case bboxTable
@@ -198,7 +149,7 @@ final public class FOND: NSObject {
         case kernTable
     }
 
-    private unowned var resource:           Resource
+    private var resource:                   Resource
     private var reader:                     BinaryDataReader
     @objc public var remainingTableData:    Data
 
@@ -347,7 +298,7 @@ final public class FOND: NSObject {
         if wTabOff > 0 { offsetsToOffsetTypes[wTabOff] = .widthTable }
         if styleOff > 0 { offsetsToOffsetTypes[styleOff] = .styleTable }
         if kernOff > 0 { offsetsToOffsetTypes[kernOff] = .kernTable }
-        let currentOffset: Int32 = Int32(Self.FontFamilyRecord.length) + Int32(fontAssociationTable.length)
+        let currentOffset: Int32 = Int32(Self.FontFamilyRecord.length) + Int32(fontAssociationTable.totalNodeLength)
         var orderedOffsets: [Int32] = Array(offsetsToOffsetTypes.keys)
         orderedOffsets.sort()
         if (orderedOffsets.count == 0 && currentOffset < reader.data.count) ||
@@ -369,12 +320,12 @@ final public class FOND: NSObject {
 
     public func add(_ entry: FontAssociationTable.Entry) throws {
         try fontAssociationTable.add(entry)
-        shiftOffsetsAndRanges(by: entry.length)
+        shiftOffsetsAndRanges(by: entry.nodeLength)
     }
 
     public func remove(_ entry: FontAssociationTable.Entry) throws {
         try fontAssociationTable.remove(entry)
-        shiftOffsetsAndRanges(by: -entry.length)
+        shiftOffsetsAndRanges(by: -entry.nodeLength)
     }
 
     private func shiftOffsetsAndRanges(by deltaLength: Int) {
@@ -410,3 +361,55 @@ final public class FOND: NSObject {
         }
     }
 }
+
+extension FOND {
+    /// `Font family flags`. An integer value, the bits of which specify general characteristics
+    /// of the font family. This value is represented by the ffFlags field in the FamRec data type.
+    /// The bits in the ffFlags field have the following meanings:
+    ///
+    /// Bit    Meaning
+    /// 0      This bit is reserved by Apple and should be cleared to 0.
+    /// 1      This bit is set to 1 if the resource contains a glyph-width table.
+    /// 2–11   These bits are reserved by Apple and should be cleared to 0.
+    /// 12     This bit is set to 1 if the font family ignores the value of the FractEnable
+    ///          global variable when deciding whether to use fixed-point values for stylistic variations;
+    ///          the value of bit 13 is then the deciding factor. The value of the FractEnable global
+    ///          variable is set by the SetFractEnable procedure.
+    /// 13     This bit is set to 1 if the font family should use integer extra width for stylistic variations.
+    ///          If not set, the font family should compute the fixed-point extra width from the family
+    ///          style-mapping table, but only if the FractEnable global variable has a value of TRUE.
+    /// 14     This bit is set to 1 if the family fractional-width table is not used, and is cleared to 0 if the table is used.
+    /// 15     This bit is set to 1 if the font family describes fixed-width fonts, and is cleared to 0 if the font describes proportional fonts.
+
+   public struct Flags: OptionSet, Hashable {
+       public let rawValue: UInt16
+
+       public static let hasGlyphWidthTable       = Self(rawValue: 1 << 1)
+       public static let ignoreFractEnable        = Self(rawValue: 1 << 12)
+       public static let useIntegerWidths         = Self(rawValue: 1 << 13)
+       public static let dontUseFractWidthTable   = Self(rawValue: 1 << 14)
+       public static let isFixedWidth             = Self(rawValue: 1 << 15)
+
+       public init(rawValue: UInt16) {
+           self.rawValue = rawValue
+       }
+   }
+
+   /// `Version`. An integer value that specifies the version number of the font family resource, which
+   ///   indicates whether certain tables are available. This value is represented by the ffVersion field
+   ///   in the FamRec data type. Because this field has been used inconsistently in the system software,
+   ///   it is better to analyze the data in the resource itself instead of relying on the version number.
+   ///   The possible values are as follows:
+   ///   Value     Meaning
+   ///   0x0000    Created by the Macintosh system software. The font family resource will not have the glyph-width tables and the fields will contain 0.
+   ///   0x0001    Original format as designed by the font developer. This font family record probably has the width tables and most of the fields are filled.
+   ///   0x0002    This record may contain the offset and bounding-box tables.
+   ///   0x0003    This record definitely contains the offset and bounding-box tables.
+   @objc public enum Version : UInt16 {
+       case version0   = 0
+       case version1   = 1
+       case version2   = 2
+       case version3   = 3
+   }
+}
+

@@ -18,10 +18,8 @@ final public class KernTable: FONDResourceNode {
     public var hasOutOfRangeCharCodes:      Bool = false
     private var fontStylesToEntries:        [MacFontStyle: Entry]
 
-    @objc public override var length:       Int {
-        var length = MemoryLayout<Int16>.size
-        for entry in self.entries { length += entry.length }
-        return length
+    @objc public override var totalNodeLength: Int {
+        return MemoryLayout<Int16>.size + entries.reduce(0) { $0 + $1.totalNodeLength }
     }
 
     public init(_ reader: BinaryDataReader, fond: FOND) throws {
@@ -59,12 +57,13 @@ extension KernTable {
         // MARK: AUX
         public var hasOutOfRangeCharCodes: Bool = false
 
+        // needed for display:
         @objc public var objcStyle:    MacFontStyle.RawValue {
             didSet { style = .init(rawValue: objcStyle) }
         }
 
-        @objc public override var length:    Int {
-            return MemoryLayout<UInt16>.size * 2 + Int(numKerns) * KernPair.length
+        @objc public override var totalNodeLength:    Int {
+            return MemoryLayout<UInt16>.size * 2 + Int(numKerns) * KernPair.nodeLength
         }
 
         // FIXME: move this writing stuff out to a separate visitor/writer class
@@ -115,6 +114,7 @@ extension KernTable {
             }
         }
 
+        // FIXME: move this writing stuff out to a separate visitor/writer class
         // FIXME: add better explanation about what this method is for
         /* This can be used to create a `feature` file used during conversion to OTF/TTF
             by Adobe AFDKO's hotconvert/makeotf to create a `GPOS` table containing the kern pairs */
@@ -187,7 +187,7 @@ public struct KernPair {
 }
 
 extension KernPair: Equatable, CustomStringConvertible {
-    public static var length: Int {
+    public static var nodeLength: Int {
         return MemoryLayout<UInt8>.size * 2 + MemoryLayout<Fixed4Dot12>.size // 4
     }
 

@@ -22,17 +22,47 @@ public final class StyleMappingTable: ResourceNode {
     public var reserved:                           Int32
     public var indexes:                            [UInt8]     // [48] Indexes into the Font Name Suffix subtable
 
-    @objc public var objcFontClass:                FontClass.RawValue {
-        didSet { fontClass = .init(rawValue: objcFontClass) }
-    }
-
     public var fontNameSuffixSubtable:             FontNameSuffixSubtable
     @objc public var glyphNameEncodingSubtable:    GlyphNameEncodingSubtable?
 
-    class public override var length: Int {
+    public class override var nodeLength: Int {
         MemoryLayout<FontClass.RawValue>.size + MemoryLayout<Int32>.size * 2 + 48  // 58 bytes
     }
 
+    // MARK: - init
+    public init(_ reader: BinaryDataReader, range knownRange: NSRange) throws {
+        let origOffset = reader.bytesRead
+        fontClass = try reader.read()
+        offset = try reader.read()
+        reserved = try reader.read()
+        indexes = []
+        for _ in 0..<48 {
+            let index: UInt8 = try reader.read()
+            indexes.append(index)
+        }
+        var nameSuffixRange = knownRange
+        nameSuffixRange.location += Self.nodeLength
+        nameSuffixRange.length -= Self.nodeLength
+        var glyphNameTableLength = 0
+        if offset != 0 {
+            glyphNameTableLength = NSMaxRange(knownRange) - (origOffset + Int(offset))
+            nameSuffixRange.length -= glyphNameTableLength
+        }
+        fontNameSuffixSubtable = try FontNameSuffixSubtable(reader, range: nameSuffixRange)
+        if offset != 0 {
+            try reader.pushPosition(origOffset + Int(offset))
+            glyphNameEncodingSubtable = try GlyphNameEncodingSubtable(reader)
+            reader.popPosition()
+        }
+    }
+
+    public func postScriptNameForFont(with style: MacFontStyle) -> String? {
+        let entryIndex = indexes[Int(style.compressed().rawValue)]
+        return fontNameSuffixSubtable.postScriptNameForFontEntry(at: entryIndex)
+    }
+}
+
+extension StyleMappingTable {
     /* Font class. An integer value that specifies a collection of flags that alert
      the printer driver to what type of PostScript font this font family is. This value
      is represented by the fontClass field of the StyleTable data type.
@@ -59,7 +89,6 @@ public final class StyleMappingTable: ResourceNode {
      10       This bit is set to 1 if the font family should have no additional intercharacter spacing other than the space character.
      11–15    Reserved. Should be set to 0.
      */
-
     public struct FontClass: OptionSet, Hashable {
         public let rawValue: UInt16
 
@@ -114,39 +143,6 @@ public final class StyleMappingTable: ResourceNode {
         public var debugDescription: String {
             return description
         }
-    }
-
-    // MARK: - init
-    public init(_ reader: BinaryDataReader, range knownRange: NSRange) throws {
-        let origOffset = reader.bytesRead
-        fontClass = try reader.read()
-        objcFontClass = fontClass.rawValue
-        offset = try reader.read()
-        reserved = try reader.read()
-        indexes = []
-        for _ in 0..<48 {
-            let index: UInt8 = try reader.read()
-            indexes.append(index)
-        }
-        var nameSuffixRange = knownRange
-        nameSuffixRange.location += Self.length
-        nameSuffixRange.length -= Self.length
-        var glyphNameTableLength = 0
-        if offset != 0 {
-            glyphNameTableLength = NSMaxRange(knownRange) - (origOffset + Int(offset))
-            nameSuffixRange.length -= glyphNameTableLength
-        }
-        fontNameSuffixSubtable = try FontNameSuffixSubtable(reader, range: nameSuffixRange)
-        if offset != 0 {
-            try reader.pushPosition(origOffset + Int(offset))
-            glyphNameEncodingSubtable = try GlyphNameEncodingSubtable(reader)
-            reader.popPosition()
-        }
-    }
-
-    public func postScriptNameForFont(with style: MacFontStyle) -> String? {
-        let entryIndex = indexes[Int(style.compressed().rawValue)]
-        return fontNameSuffixSubtable.postScriptNameForFontEntry(at: entryIndex)
     }
 }
 

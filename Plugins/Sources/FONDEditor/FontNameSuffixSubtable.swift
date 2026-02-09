@@ -44,6 +44,7 @@ public struct FontNameSuffixSubtable {
 
 // of all the FOND tables, this is the one I've encountered the most variation and issues with, hence all the debug logging
 extension FontNameSuffixSubtable {
+
     public init(_ reader: BinaryDataReader, range knownRange: NSRange) throws {
         stringCount = try reader.read()
         baseFontName = try reader.readPString()

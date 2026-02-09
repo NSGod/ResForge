@@ -14,10 +14,8 @@ final public class WidthTable: FONDResourceNode {
     public var numberOfEntries:    Int16               // number of entries - 1
     public var entries:            [Entry]
 
-    public override var length: Int {
-        var length = MemoryLayout<Int16>.size
-        for entry in self.entries { length += entry.length }
-        return length
+    public override var totalNodeLength: Int {
+        return MemoryLayout<Int16>.size + entries.reduce(0) { $0 + $1.totalNodeLength }
     }
 
     public init(_ reader: BinaryDataReader, fond: FOND) throws {
@@ -33,10 +31,12 @@ extension WidthTable {
         public var style:              MacFontStyle        // style entry applies to
         @objc public var widths:       [Fixed4Dot12]
 
+        /// needed for display:
         @objc public var objcStyle:    MacFontStyle.RawValue {
             didSet { style = .init(rawValue: self.objcStyle) }
         }
-        public override var length: Int {
+
+        public override var totalNodeLength: Int {
             return MemoryLayout<MacFontStyle.RawValue>.size + widths.count * MemoryLayout<Fixed4Dot12>.size
         }
 
