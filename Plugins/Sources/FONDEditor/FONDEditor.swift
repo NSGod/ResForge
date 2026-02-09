@@ -46,7 +46,8 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
     @objc var glyphNameEntries:             [GlyphNameEntry] = []
     @objc var effectiveGlyphNameEntries:    [GlyphNameEntry] = []
 
-    @objc var objcFontClass:                StyleMappingTable.FontClass.RawValue = 0
+    @objc var objcFFFlags:                  UInt16 = 0
+    @objc var objcFontClass:                UInt16 = 0
 
     public override var windowNibName: NSNib.Name {
         "FONDEditor"
@@ -62,7 +63,8 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
         self.manager = manager
         do {
             fond = try FOND(with: self.resource)
-            objcFontClass = fond.styleMappingTable?.objcFontClass ?? 0
+            objcFFFlags = fond.ffFlags.rawValue
+            objcFontClass = fond.styleMappingTable?.fontClass.rawValue ?? 0
             if let kernEntries = fond.kernTable?.entries {
                 kernPairs = kernEntries.map(KernTreeNode.init(representedObject:)).sorted(by: <)
             }
@@ -75,7 +77,6 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
             }
             // FIXME: should this be replacing rather than appending?
             effectiveGlyphNameEntries.append(contentsOf: fond.encoding.glyphNameEntries)
-
         } catch {
             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
             return nil
@@ -90,15 +91,15 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
     deinit {
         flagsBitfieldControl.unbind(NSBindingName("objectValue"))
         fontClassBitfieldControl.unbind(NSBindingName("objectValue"))
-        fond.styleMappingTable?.unbind(NSBindingName("objcFontClass"))
-        let keys = ["famID", "firstChar", "lastChar", "ascent", "descent", "leading", "widMax", "wTabOff", "kernOff", "styleOff", "ewSPlain", "ewSBold", "ewSItalic", "ewSUnderline", "ewSOutline", "ewSShadow", "ewSCondensed", "ewSExtended", "ewSUnused", "intl0", "intl1", "ffVersion"]
-        keys.forEach( { fond.removeObserver(self, forKeyPath: $0) } )
+        let fondKeys = ["famID", "firstChar", "lastChar", "ascent", "descent", "leading", "widMax", "wTabOff", "kernOff", "styleOff", "ewSPlain", "ewSBold", "ewSItalic", "ewSUnderline", "ewSOutline", "ewSShadow", "ewSCondensed", "ewSExtended", "ewSUnused", "intl0", "intl1", "ffVersion"]
+        fondKeys.forEach( { fond.removeObserver(self, forKeyPath: $0) } )
+        removeObserver(self, forKeyPath: "objcFFFlags")
+        removeObserver(self, forKeyPath: "objcFontClass")
     }
 
     public override func windowDidLoad() {
-        flagsBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "fond.objcFFFlags")
+        flagsBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFFFlags")
         fontClassBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFontClass")
-        fond.styleMappingTable?.bind(NSBindingName("objcFontClass"), to: self, withKeyPath: "objcFontClass")
         fontClassBitfieldControl.isEnabled = fond.styleOff != 0
         fontClassField.isEnabled = fond.styleOff != 0
         tabView.selectTabViewItem(at: UserDefaults.standard.integer(forKey: "FONDEditor.selectedTabIndex"))
@@ -115,6 +116,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
             tabView.tabViewItems[3].label = NSLocalizedString("✅ Glyph Name-Encoding Subtable", comment: "")
         }
         tableView.doubleAction = #selector(doubleClickOpenFont(_:))
+        addObserver(self, forKeyPath: "objcFFFlags", options: [.new, .old], context: &objcFFFlags)
         fond.addObserver(self, forKeyPath: "famID", options: [.new, .old], context: &fond.famID)
         fond.addObserver(self, forKeyPath: "firstChar", options: [.new, .old], context: &fond.firstChar)
         fond.addObserver(self, forKeyPath: "lastChar", options: [.new, .old], context: &fond.lastChar)
@@ -137,6 +139,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
         fond.addObserver(self, forKeyPath: "intl0", options: [.new, .old], context: &fond.intl0)
         fond.addObserver(self, forKeyPath: "intl1", options: [.new, .old], context: &fond.intl1)
         fond.addObserver(self, forKeyPath: "ffVersion", options: [.new, .old], context: &fond.ffVersion)
+        addObserver(self, forKeyPath: "objcFontClass", options: [.new, .old], context: &objcFontClass)
     }
 
     public func windowWillClose(_ notification: Notification) {
@@ -148,36 +151,36 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
     }
 
     @IBAction func changeFlags(_ sender: Any) {
-        guard let sender = sender as? NSButton else { return }
-        let isOn = sender.state == .on
-//        self.willChangeValue(forKey: "fond.objcFFFlags")
-        if isOn {
-            fond.objcFFFlags = fond.objcFFFlags | UInt16(sender.tag)
+        let sender = sender as! NSButton
+        willChangeValue(forKey: "objcFFFlags")
+        if sender.state == .on {
+            objcFFFlags = objcFFFlags | UInt16(sender.tag)
         } else {
-            fond.objcFFFlags = fond.objcFFFlags & ~UInt16(sender.tag)
+            objcFFFlags = objcFFFlags & ~UInt16(sender.tag)
         }
-//        self.didChangeValue(forKey: "fond.objcFFFlags")
+        didChangeValue(forKey: "objcFFFlags")
     }
 
     @IBAction func changeFontClass(_ sender: Any) {
-        guard let sender = sender as? NSButton else { return }
-        let isOn = sender.state == .on
-        if isOn {
-            self.objcFontClass = objcFontClass | UInt16(sender.tag)
+        let sender = sender as! NSButton
+        willChangeValue(forKey: "objcFontClass")
+        if sender.state == .on {
+            objcFontClass = objcFontClass | UInt16(sender.tag)
         } else {
-            self.objcFontClass = objcFontClass & ~UInt16(sender.tag)
+            objcFontClass = objcFontClass & ~UInt16(sender.tag)
         }
+        didChangeValue(forKey: "objcFontClass")
     }
     
     @IBAction public func saveResource(_ sender: Any) {
-
+        fond.ffFlags = FOND.Flags(rawValue: objcFFFlags)
+        fond.styleMappingTable?.fontClass = StyleMappingTable.FontClass(rawValue: objcFontClass)
 
     }
 
     @IBAction public func revertResource(_ sender: Any) {
 
     }
-
 
     @IBAction func openFont(_ sender: Any) {
         // try to get the row of the button we clicked.
@@ -291,10 +294,19 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
     }
 
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        guard let context = context else {
+        NSLog("\(type(of: self)).\(#function) keyPath == \(String(describing: keyPath))")
+        guard let context else {
             return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
-        if context == &fond.famID {
+        if context == &objcFFFlags {
+            undoManager?.setActionName(NSLocalizedString("Change Font Family Flags", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.willChangeValue(forKey: "objcFFFlags")
+                $0.objcFFFlags = change![.oldKey] as! UInt16
+                $0.didChangeValue(forKey: "objcFFFlags")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &fond.famID {
             undoManager?.setActionName(NSLocalizedString("Change Family ID", comment: ""))
             undoManager?.registerUndo(withTarget: self, handler: {
                 $0.fond.willChangeValue(forKey: "famID")
@@ -470,6 +482,14 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
                 $0.fond.willChangeValue(forKey: "ffVersion")
                 $0.fond.ffVersion = FOND.Version(rawValue: change![.oldKey] as! UInt16)!
                 $0.fond.didChangeValue(forKey: "ffVersion")
+            })
+            window?.isDocumentEdited = true
+        } else if context == &objcFontClass {
+            undoManager?.setActionName(NSLocalizedString("Change Font Class", comment: ""))
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.willChangeValue(forKey: "objcFontClass")
+                $0.objcFontClass = change![.oldKey] as! UInt16
+                $0.didChangeValue(forKey: "objcFontClass")
             })
             window?.isDocumentEdited = true
         }

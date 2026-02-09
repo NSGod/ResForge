@@ -48,24 +48,7 @@ final public class FOND: NSObject {
 
     @objc public var ffVersion:         Version          /// version number
 
-    // MARK: -
-    @objc public var objcFFFlags:       Flags.RawValue {
-        get {
-            return ffFlags.rawValue
-        }
-        set {
-            NSLog("\(type(of: self)).\(#function) SET: newValue == \(newValue)")
-            self.willChangeValue(forKey: "objcFFFlags")
-            ffFlags = Flags(rawValue: newValue)
-            self.didChangeValue(forKey: "objcFFFlags")
-        }
-    }
-
     @objc public var fontAssociationTable:  FontAssociationTable
-
-    private unowned var resource:           Resource
-    private var reader:                     BinaryDataReader
-    @objc public var remainingTableData:    Data
 
     @objc public var offsetTable:           OffsetTable?
 
@@ -214,6 +197,10 @@ final public class FOND: NSObject {
         case styleTable
         case kernTable
     }
+
+    private unowned var resource:           Resource
+    private var reader:                     BinaryDataReader
+    @objc public var remainingTableData:    Data
 
     // FIXME: switch to Swift Ranges?
     private var offsetTypesToRanges:    [TableOffsetType: NSRange] = [:]
