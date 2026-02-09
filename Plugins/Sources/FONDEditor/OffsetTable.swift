@@ -8,6 +8,7 @@
 
 import Foundation
 import RFSupport
+import CoreFont
 
 final public class OffsetTable: ResourceNode {
     public var numberOfEntries:        Int16               // number of entries - 1
@@ -21,6 +22,12 @@ final public class OffsetTable: ResourceNode {
         numberOfEntries = try reader.read()
         entries = try (0...numberOfEntries).map { _ in try Entry(reader) }
         super.init()
+    }
+
+    public override func write(to dataHandle: DataHandle) throws {
+        numberOfEntries = Int16(entries.count - 1)
+        dataHandle.write(numberOfEntries)
+        try entries.forEach { try $0.write(to: dataHandle) }
     }
 }
 
@@ -36,6 +43,10 @@ extension OffsetTable {
 
         public override class var nodeLength: Int {
             return MemoryLayout<Int32>.size     // 4
+        }
+
+        public override func write(to dataHandle: DataHandle) throws {
+            dataHandle.write(offsetOfTable)
         }
     }
 }

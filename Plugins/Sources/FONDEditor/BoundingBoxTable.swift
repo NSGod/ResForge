@@ -23,6 +23,12 @@ final public class BoundingBoxTable: ResourceNode {
         entries = try (0...numberOfEntries).map { _ in try Entry(reader) }
         super.init()
     }
+
+    public override func write(to dataHandle: DataHandle) throws {
+        numberOfEntries = Int16(entries.count - 1)
+        dataHandle.write(numberOfEntries)
+        try entries.forEach { try $0.write(to: dataHandle) }
+    }
 }
 
 extension BoundingBoxTable {

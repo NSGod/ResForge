@@ -24,6 +24,12 @@ final public class FontAssociationTable: ResourceNode {
         super.init()
     }
 
+    public override func write(to dataHandle: DataHandle) throws {
+        numberOfEntries = Int16(entries.count - 1)
+        dataHandle.write(numberOfEntries)
+        try entries.forEach { try $0.write(to: dataHandle) }
+    }
+    
     public func add(_ entry: Entry) throws {
         guard !entries.contains(entry) else {
             throw FONDError.fontAssociationTableEntriesRefSameFont
@@ -65,6 +71,12 @@ extension FontAssociationTable {
             fontID = try reader.read()
             objcFontStyle = fontStyle.rawValue
             super.init()
+        }
+
+        public override func write(to dataHandle: DataHandle) throws {
+            dataHandle.write(fontPointSize)
+            dataHandle.write(fontStyle)
+            dataHandle.write(fontID)
         }
 
         public static func < (lhs: Entry, rhs: Entry) -> Bool {

@@ -23,6 +23,12 @@ final public class WidthTable: FONDResourceNode {
         entries = try (0...numberOfEntries).map { _ in try Entry(reader, fond:fond) }
         super.init(fond:fond)
     }
+
+    public override func write(to dataHandle: DataHandle) throws {
+        numberOfEntries = Int16(entries.count - 1)
+        dataHandle.write(numberOfEntries)
+        try entries.forEach({ try $0.write(to: dataHandle) })
+    }
 }
 
 extension WidthTable {
@@ -49,6 +55,11 @@ extension WidthTable {
             let numGlyphs = fond.lastChar - fond.firstChar + 3
             widths = try (0..<numGlyphs).map { _ in try reader.read() }
             super.init(fond: fond)
+        }
+
+        public override func write(to dataHandle: DataHandle) throws {
+            dataHandle.write(style)
+            widths.forEach { dataHandle.write($0) }
         }
     }
 }

@@ -30,11 +30,11 @@ final public class GlyphNameEncodingSubtable: ResourceNode {
     public var numberOfEntries:        Int16               // actual number of entries
     public var charCodesToGlyphNames:  [CharCode: String] = [:]
 
-    @objc public override var nodeLength: Int {
-        set { _length = newValue }
-        get { return _length }
+    @objc public override var totalNodeLength: Int {
+        set { _nodeLength = newValue }
+        get { return _nodeLength }
     }
-    private var _length: Int = 0
+    private var _nodeLength: Int = 0
 
     public init(_ reader: BinaryDataReader) throws {
         let before = reader.bytesRead
@@ -45,7 +45,18 @@ final public class GlyphNameEncodingSubtable: ResourceNode {
             charCodesToGlyphNames[charCode] = glyphName
         }
         super.init()
-        nodeLength = reader.bytesRead - before
+        totalNodeLength = reader.bytesRead - before
+    }
+
+    public override func write(to dataHandle: DataHandle) throws {
+        numberOfEntries = Int16(charCodesToGlyphNames.count)
+        dataHandle.write(numberOfEntries)
+        let charCodes = charCodesToGlyphNames.keys.sorted(by: <)
+        for charCode in charCodes {
+            let glyphName = charCodesToGlyphNames[charCode]!
+            dataHandle.write(charCode)
+            try dataHandle.writePString(glyphName)
+        }
     }
 
     public func glyphName(for charCode: CharCode) -> String? {

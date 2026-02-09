@@ -35,6 +35,12 @@ final public class KernTable: FONDResourceNode {
         super.init(fond:fond)
     }
 
+    public override func write(to dataHandle: DataHandle) throws {
+        numberOfEntries = Int16(entries.count - 1)
+        dataHandle.write(numberOfEntries)
+        try entries.forEach { try $0.write(to: dataHandle) }
+    }
+
     public func entry(for fontStyle: MacFontStyle) -> Entry? {
         return fontStylesToEntries[fontStyle]
     }
@@ -66,12 +72,6 @@ extension KernTable {
             return MemoryLayout<UInt16>.size * 2 + Int(numKerns) * KernPair.nodeLength
         }
 
-        // FIXME: move this writing stuff out to a separate visitor/writer class
-        public static let GPOSFeatureFileType: String = NSLocalizedString("'GPOS' Feature File", comment: "")
-        public static let GPOSFeatureUTType:   String = kUTTypePlainText as String
-        public static let CSVFileType:         String = NSLocalizedString("Comma-Separated Variables (CSV)", comment: "")
-        public static let CSVUTType:           String = kUTTypeCommaSeparatedText as String
-
         public init(_ reader: BinaryDataReader, fond: FOND) throws {
             style = try reader.read()
             objcStyle = style.rawValue
@@ -85,97 +85,113 @@ extension KernTable {
             super.init(fond: fond)
         }
 
-        public struct KernExportConfig {
-            public enum Format {
-                case GPOS
-                case CSV
-            }
-            public static let gposDefault: KernExportConfig = .init()
-            public static let csvDefault: KernExportConfig = .init()
-
-            public var format:              Format = .GPOS
-            public var resolveGlyphNames:   Bool = true
-            public var scaleToUnitsPerEm:   Bool = true
-
-            public var pathExtension: String {
-                switch format {
-                    case .GPOS: return "txt"
-                    case .CSV: return "csv"
-                }
-            }
-        }
-
-        // feeding in the RFEditorManager will allow for a much better scaling to Units Per Em
-        public func representation(using config: KernExportConfig = .gposDefault, manager: RFEditorManager? = nil) -> String? {
-            if config.format == .GPOS {
-                return GPOSFeatureRepresentation(using: config, manager: manager)
-            } else {
-                return CSVRepresentation(using: config, manager: manager)
-            }
+        public override func write(to dataHandle: DataHandle) throws {
+            numKerns = UInt16(kernPairs.count)
+            dataHandle.write(style)
+            dataHandle.write(numKerns)
+            try kernPairs.forEach { try $0.write(to: dataHandle) }
         }
 
         // FIXME: move this writing stuff out to a separate visitor/writer class
-        // FIXME: add better explanation about what this method is for
-        /* This can be used to create a `feature` file used during conversion to OTF/TTF
-            by Adobe AFDKO's hotconvert/makeotf to create a `GPOS` table containing the kern pairs */
-        public func GPOSFeatureRepresentation(using config: KernExportConfig = .gposDefault, manager: RFEditorManager? = nil) -> String? {
-            var mString = """
-    languagesystem DFLT dflt;
-    languagesystem latn dflt;
+        public static let GPOSFeatureFileType: String = NSLocalizedString("'GPOS' Feature File", comment: "")
+        public static let GPOSFeatureUTType:   String = kUTTypePlainText as String
+        public static let CSVFileType:         String = NSLocalizedString("Comma-Separated Variables (CSV)", comment: "")
+        public static let CSVUTType:           String = kUTTypeCommaSeparatedText as String
+    }
+}
 
-    feature kern {\n
-    """
-            var mKernPairStrings: [String] = []
+extension KernTable.Entry {
+
+    public struct KernExportConfig {
+        public enum Format {
+            case GPOS
+            case CSV
+        }
+        public static let gposDefault: KernExportConfig = .init()
+        public static let csvDefault: KernExportConfig = .init()
+
+        public var format:              Format = .GPOS
+        public var resolveGlyphNames:   Bool = true
+        public var scaleToUnitsPerEm:   Bool = true
+
+        public var pathExtension: String {
+            switch format {
+                case .GPOS: return "txt"
+                case .CSV: return "csv"
+            }
+        }
+    }
+
+    // feeding in the RFEditorManager will allow for a much better scaling to Units Per Em
+    public func representation(using config: KernExportConfig = .gposDefault, manager: RFEditorManager? = nil) -> String? {
+        if config.format == .GPOS {
+            return GPOSFeatureRepresentation(using: config, manager: manager)
+        } else {
+            return CSVRepresentation(using: config, manager: manager)
+        }
+    }
+
+    // FIXME: move this writing stuff out to a separate visitor/writer class
+    // FIXME: add better explanation about what this method is for
+    /* This can be used to create a `feature` file used during conversion to OTF/TTF
+        by Adobe AFDKO's hotconvert/makeotf to create a `GPOS` table containing the kern pairs */
+    public func GPOSFeatureRepresentation(using config: KernExportConfig = .gposDefault, manager: RFEditorManager? = nil) -> String? {
+        var mString = """
+languagesystem DFLT dflt;
+languagesystem latn dflt;
+
+feature kern {\n
+"""
+        var mKernPairStrings: [String] = []
+        let unitsPerEm = self.fond.unitsPerEm(for: style, manager: manager)
+        for kernPair in kernPairs {
+            let firstGlyphName = config.resolveGlyphNames ? self.fond.glyphName(for: kernPair.kernFirst) : String(kernPair.kernFirst)
+            let secondGlyphName = config.resolveGlyphNames ? self.fond.glyphName(for: kernPair.kernSecond) : String(kernPair.kernSecond)
+            /* In cases where this FOND and kern pairs reference a PostScript outline font rather than TT,
+               I'd normally parse that Mac PostScript font file and check to make sure its encoding agrees
+               with the glyph names the FOND's encoding assigned, but, that's a bit outside the scope
+               of this editor. */
+            let value: Int16 = config.scaleToUnitsPerEm ? Int16(lround(Fixed4Dot12ToDouble(kernPair.kernWidth) * Double(unitsPerEm.rawValue))) : kernPair.kernWidth
+            if let firstGlyphName, let secondGlyphName {
+                mKernPairStrings.append("\tpos \(firstGlyphName) \(secondGlyphName) \(value);")
+            } else {
+                NSLog("\(type(of: self)).\(#function)() *** ERROR failed to get glyphNames for charCodes: \(kernPair.kernFirst), \(kernPair.kernSecond)")
+            }
+        }
+        mKernPairStrings.sort(by: { $0.localizedStandardCompare($1) == .orderedAscending })
+        mString += mKernPairStrings.joined(separator: "\n")
+        mString += "\n} kern;\n"
+        return mString
+    }
+
+    public func CSVRepresentation(using config: KernExportConfig = .csvDefault, manager: RFEditorManager? = nil) -> String? {
+        let stream = OutputStream(toMemory: ())
+        do {
+            let writer = try CSVWriter(stream: stream)
+            try writer.write(row: ["Kern First", "Kern Second", "Kern Width"])
             let unitsPerEm = self.fond.unitsPerEm(for: style, manager: manager)
             for kernPair in kernPairs {
-                let firstGlyphName = config.resolveGlyphNames ? self.fond.glyphName(for: kernPair.kernFirst) : String(kernPair.kernFirst)
-                let secondGlyphName = config.resolveGlyphNames ? self.fond.glyphName(for: kernPair.kernSecond) : String(kernPair.kernSecond)
+                guard let firstGlyphName = config.resolveGlyphNames ? self.fond.glyphName(for: kernPair.kernFirst) : String(kernPair.kernFirst) else {
+                    continue
+                }
+                guard let secondGlyphName = config.resolveGlyphNames ? self.fond.glyphName(for: kernPair.kernSecond) : String(kernPair.kernSecond) else {
+                    continue
+                }
                 /* In cases where this FOND and kern pairs reference a PostScript outline font rather than TT,
                    I'd normally parse that Mac PostScript font file and check to make sure its encoding agrees
                    with the glyph names the FOND's encoding assigned, but, that's a bit outside the scope
                    of this editor. */
                 let value: Int16 = config.scaleToUnitsPerEm ? Int16(lround(Fixed4Dot12ToDouble(kernPair.kernWidth) * Double(unitsPerEm.rawValue))) : kernPair.kernWidth
-                if let firstGlyphName, let secondGlyphName {
-                    mKernPairStrings.append("\tpos \(firstGlyphName) \(secondGlyphName) \(value);")
-                } else {
-                    NSLog("\(type(of: self)).\(#function)() *** ERROR failed to get glyphNames for charCodes: \(kernPair.kernFirst), \(kernPair.kernSecond)")
-                }
+                try writer.write(row: [firstGlyphName, secondGlyphName, String(value)])
             }
-            mKernPairStrings.sort(by: { $0.localizedStandardCompare($1) == .orderedAscending })
-            mString += mKernPairStrings.joined(separator: "\n")
-            mString += "\n} kern;\n"
-            return mString
+            writer.stream.close()
+        } catch {
+             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
         }
-
-        public func CSVRepresentation(using config: KernExportConfig = .csvDefault, manager: RFEditorManager? = nil) -> String? {
-            let stream = OutputStream(toMemory: ())
-            do {
-                let writer = try CSVWriter(stream: stream)
-                try writer.write(row: ["Kern First", "Kern Second", "Kern Width"])
-                let unitsPerEm = self.fond.unitsPerEm(for: style, manager: manager)
-                for kernPair in kernPairs {
-                    guard let firstGlyphName = config.resolveGlyphNames ? self.fond.glyphName(for: kernPair.kernFirst) : String(kernPair.kernFirst) else {
-                        continue
-                    }
-                    guard let secondGlyphName = config.resolveGlyphNames ? self.fond.glyphName(for: kernPair.kernSecond) : String(kernPair.kernSecond) else {
-                        continue
-                    }
-                    /* In cases where this FOND and kern pairs reference a PostScript outline font rather than TT,
-                       I'd normally parse that Mac PostScript font file and check to make sure its encoding agrees
-                       with the glyph names the FOND's encoding assigned, but, that's a bit outside the scope
-                       of this editor. */
-                    let value: Int16 = config.scaleToUnitsPerEm ? Int16(lround(Fixed4Dot12ToDouble(kernPair.kernWidth) * Double(unitsPerEm.rawValue))) : kernPair.kernWidth
-                    try writer.write(row: [firstGlyphName, secondGlyphName, String(value)])
-                }
-                writer.stream.close()
-            } catch {
-                 NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
-            }
-            if let data = stream.property(forKey: .dataWrittenToMemoryStreamKey) as? Data {
-                return String(data: data, encoding: .utf8)
-            }
-            return nil
+        if let data = stream.property(forKey: .dataWrittenToMemoryStreamKey) as? Data {
+            return String(data: data, encoding: .utf8)
         }
+        return nil
     }
 }
 
@@ -186,7 +202,7 @@ public struct KernPair {
     public var kernWidth:  Fixed4Dot12     // kerning distance, in pixels, for the 2 glyphs at size of 1pt; fixed-point 4.12 format
 }
 
-extension KernPair: Equatable, CustomStringConvertible {
+extension KernPair: Equatable, CustomStringConvertible, DataHandleWriting {
     public static var nodeLength: Int {
         return MemoryLayout<UInt8>.size * 2 + MemoryLayout<Fixed4Dot12>.size // 4
     }
@@ -195,6 +211,12 @@ extension KernPair: Equatable, CustomStringConvertible {
         kernFirst = try reader.read()
         kernSecond = try reader.read()
         kernWidth = try reader.read()
+    }
+
+    public func write(to dataHandle: DataHandle) throws {
+        dataHandle.write(kernFirst)
+        dataHandle.write(kernSecond)
+        dataHandle.write(kernWidth)
     }
 
     public var hasOutOfRangeCharCodes: Bool {
