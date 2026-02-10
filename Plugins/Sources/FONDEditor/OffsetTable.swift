@@ -11,11 +11,22 @@ import RFSupport
 import CoreFont
 
 final public class OffsetTable: ResourceNode {
+
     public var numberOfEntries:        Int16               // number of entries - 1
     @objc public var entries:          [Entry]
 
     @objc public override var totalNodeLength: Int {
         return MemoryLayout<Int16>.size + entries.count * Entry.nodeLength
+    }
+
+    public var isStandard: Bool {
+        return entries.count == 1 && entries[0].offsetOfTable == 6
+    }
+
+    public override init() {
+        numberOfEntries = 0
+        entries = [Entry()]
+        super.init()
     }
 
     public init(_ reader: BinaryDataReader) throws {
@@ -29,12 +40,21 @@ final public class OffsetTable: ResourceNode {
         dataHandle.write(numberOfEntries)
         try entries.forEach { try $0.write(to: dataHandle) }
     }
+
+    public static func == (lhs: OffsetTable, rhs: OffsetTable) -> Bool {
+        return lhs.numberOfEntries == rhs.numberOfEntries && lhs.entries == rhs.entries
+    }
 }
 
 extension OffsetTable {
 
     final public class Entry: ResourceNode {
         @objc public var offsetOfTable: Int32    // number of bytes from START OF THE OFFSET TABLE to the start of the table
+
+        public override init() {
+            offsetOfTable = 6
+            super.init()
+        }
 
         public init(_ reader: BinaryDataReader) throws {
             offsetOfTable = try reader.read()
@@ -47,6 +67,10 @@ extension OffsetTable {
 
         public override func write(to dataHandle: DataHandle) throws {
             dataHandle.write(offsetOfTable)
+        }
+
+        public static func == (lhs: Entry, rhs: Entry) -> Bool {
+            return lhs.offsetOfTable == rhs.offsetOfTable
         }
     }
 }

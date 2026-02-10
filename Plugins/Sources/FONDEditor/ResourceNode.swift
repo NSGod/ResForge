@@ -14,20 +14,20 @@ public class ResourceNode: NSObject, DataHandleWriting {
 
     /// size in bytes
     @objc public var nodeLength:        Int {
-        fatalError("subclasses must override")
+        fatalError("\(type(of: self)) subclasses must override")
     }
 
     /// size in bytes + size of associated child/sibling nodes
     @objc public var totalNodeLength:   Int {
-        fatalError("subclasses must override")
+        fatalError("\(type(of: self)) subclasses must override")
     }
 
     /// `class` size in bytes
     public class var nodeLength:        Int {
-        fatalError("subclasses must override")
+        fatalError("\(type(of: self)) subclasses must override")
     }
 
     public func write(to dataHandle: DataHandle) throws {
-        fatalError("subclasses must override")
+        fatalError("\(type(of: self)) subclasses must override")
     }
 }

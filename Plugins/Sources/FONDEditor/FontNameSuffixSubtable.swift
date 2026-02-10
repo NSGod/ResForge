@@ -8,6 +8,7 @@
 
 import Foundation
 import RFSupport
+import CoreFont
 
 ///       Index     Contents
 ///       1         \pExampleFont
@@ -43,7 +44,12 @@ public struct FontNameSuffixSubtable {
 }
 
 // of all the FOND tables, this is the one I've encountered the most variation and issues with, hence all the debug logging
-extension FontNameSuffixSubtable {
+extension FontNameSuffixSubtable: DataHandleWriting {
+
+    public var totalNodeLength: Int {
+
+        return 0
+    }
 
     public init(_ reader: BinaryDataReader, range knownRange: NSRange) throws {
         stringCount = try reader.read()
@@ -111,6 +117,10 @@ extension FontNameSuffixSubtable {
             entryIndexesToPostScriptNames[UInt8(i) + 2] = fullName
         }
         // NSLog("\(type(of: self)).\(#function)() entryIndexesToPostScriptNames == \(entryIndexesToPostScriptNames)")
+    }
+
+    public func write(to dataHandle: DataHandle) throws {
+        
     }
 
     public func postScriptNameForFontEntry(at oneBasedIndex: UInt8) -> String? {

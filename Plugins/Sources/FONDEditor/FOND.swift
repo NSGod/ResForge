@@ -197,12 +197,79 @@ final public class FOND: NSObject {
              needs to be saved, etc. */
         }
         // FIXME: add validation/error-checking here
-
         fontAssociationTable = try FontAssociationTable(reader)
         reader.pushSavedPosition()
         remainingTableData = try reader.readData(length: reader.bytesRemaining)
         reader.popPosition()
         super.init()
+    }
+
+    public func data() throws -> Data {
+        let handle = DataHandle()
+        _ = boundingBoxTable; _ = styleMappingTable
+        _ = widthTable; _ = kernTable
+        styleOff = 0; kernOff = 0; wTabOff = 0
+        if boundingBoxTable != nil {
+            if let offsetTable {
+                if !offsetTable.isStandard {
+                    self.offsetTable = OffsetTable()
+                }
+            } else {
+                offsetTable = OffsetTable()
+            }
+        } else {
+            offsetTable = nil
+        }
+        var offset = FontFamilyRecord.length + fontAssociationTable.totalNodeLength + (offsetTable?.totalNodeLength ?? 0) + (boundingBoxTable?.totalNodeLength ?? 0)
+        if let styleMappingTable {
+            styleOff = Int32(offset)
+            offset += styleMappingTable.totalNodeLength
+        }
+        if let widthTable {
+            wTabOff = Int32(offset)
+            offset += widthTable.totalNodeLength
+        }
+        if let kernTable {
+            kernOff = Int32(offset)
+        }
+        handle.write(ffFlags)
+        handle.write(famID)
+        handle.write(firstChar)
+        handle.write(lastChar)
+        handle.write(ascent)
+        handle.write(descent)
+        handle.write(leading)
+        handle.write(widMax)
+        handle.write(wTabOff)
+        handle.write(kernOff)
+        handle.write(styleOff)
+        handle.write(ewSPlain)
+        handle.write(ewSBold)
+        handle.write(ewSItalic)
+        handle.write(ewSUnderline)
+        handle.write(ewSOutline)
+        handle.write(ewSShadow)
+        handle.write(ewSCondensed)
+        handle.write(ewSExtended)
+        handle.write(ewSUnused)
+        handle.write(intl0)
+        handle.write(intl1)
+        handle.write(ffVersion)
+        try fontAssociationTable.write(to: handle)
+        if let offsetTable, let boundingBoxTable {
+            try offsetTable.write(to: handle)
+            try boundingBoxTable.write(to: handle)
+        }
+        if let styleMappingTable {
+            try styleMappingTable.write(to: handle)
+        }
+        if let widthTable {
+            try widthTable.write(to: handle)
+        }
+        if let kernTable {
+            try kernTable.write(to: handle)
+        }
+        return handle.data
     }
 
     public func unitsPerEm(for fontStyle: MacFontStyle, manager: RFEditorManager? = nil) -> UnitsPerEm {

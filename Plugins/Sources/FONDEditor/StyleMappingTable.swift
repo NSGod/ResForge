@@ -29,6 +29,10 @@ public final class StyleMappingTable: ResourceNode {
         MemoryLayout<FontClass.RawValue>.size + MemoryLayout<Int32>.size * 2 + 48  // 58 bytes
     }
 
+    public override var totalNodeLength: Int {
+        return Self.nodeLength + fontNameSuffixSubtable.totalNodeLength + (glyphNameEncodingSubtable?.totalNodeLength ?? 0)
+    }
+
     // MARK: - init
     public init(_ reader: BinaryDataReader, range knownRange: NSRange) throws {
         let origOffset = reader.bytesRead
@@ -53,6 +57,20 @@ public final class StyleMappingTable: ResourceNode {
             try reader.pushPosition(origOffset + Int(offset))
             glyphNameEncodingSubtable = try GlyphNameEncodingSubtable(reader)
             reader.popPosition()
+        }
+    }
+
+    public override func write(to dataHandle: DataHandle) throws {
+        if let glyphNameEncodingSubtable {
+            offset = Int32(Self.nodeLength + fontNameSuffixSubtable.totalNodeLength)
+        }
+        dataHandle.write(fontClass)
+        dataHandle.write(offset)
+        dataHandle.write(reserved)
+        indexes.forEach { dataHandle.write($0) }
+        try fontNameSuffixSubtable.write(to: dataHandle)
+        if let glyphNameEncodingSubtable {
+            try glyphNameEncodingSubtable.write(to: dataHandle)
         }
     }
 
