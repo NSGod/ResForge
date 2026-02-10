@@ -175,7 +175,12 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
     @IBAction public func saveResource(_ sender: Any) {
         fond.ffFlags = FOND.Flags(rawValue: objcFFFlags)
         fond.styleMappingTable?.fontClass = StyleMappingTable.FontClass(rawValue: objcFontClass)
-
+        do {
+            resource.data = try fond.data()
+        } catch {
+            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+        }
+        self.setDocumentEdited(false)
     }
 
     @IBAction public func revertResource(_ sender: Any) {

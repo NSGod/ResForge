@@ -40,6 +40,7 @@ public struct FontNameSuffixSubtable {
                                                                 // This is documented as always being a 256 byte long Pascal string,
                                                                 // but that's not the case.
     private var entryIndexesToPostScriptNames:  [UInt8: String]
+    private var stringDatas:                    [Data]
     private var _actualStringCount:             Int16           // actual actual string count
 }
 
@@ -47,8 +48,7 @@ public struct FontNameSuffixSubtable {
 extension FontNameSuffixSubtable: DataHandleWriting {
 
     public var totalNodeLength: Int {
-
-        return 0
+        return MemoryLayout<Int16>.size + baseFontName.count + 1 + stringDatas.map(\.count).reduce(0, +)
     }
 
     public init(_ reader: BinaryDataReader, range knownRange: NSRange) throws {
@@ -56,7 +56,7 @@ extension FontNameSuffixSubtable: DataHandleWriting {
         baseFontName = try reader.readPString()
         entryIndexesToPostScriptNames = [:]
         _actualStringCount = 1
-        var stringDatas : [Data] = []
+        stringDatas = []
         /// we already have the base font name, so go with `stringCount - 1`
         for _ in 0..<stringCount - 1 {
             if NSMaxRange(knownRange) == reader.bytesRead {
@@ -82,6 +82,7 @@ extension FontNameSuffixSubtable: DataHandleWriting {
         if _actualStringCount != stringCount {
             // I've encountered weird values here, hence the logging...
             NSLog("\(type(of: self)).\(#function)() *** WARNING: string count of \(stringCount) (byte-swapped: \(stringCount.byteSwapped)) appears to be wrong; actual string count: \(_actualStringCount)")
+            stringCount = _actualStringCount
         }
 
         /// Referring to the diagram at the top of this file, we're going to create a representation
@@ -120,7 +121,9 @@ extension FontNameSuffixSubtable: DataHandleWriting {
     }
 
     public func write(to dataHandle: DataHandle) throws {
-        
+        dataHandle.write(stringCount)
+        try dataHandle.writePString(baseFontName)
+        stringDatas.forEach { dataHandle.writeData($0) }
     }
 
     public func postScriptNameForFontEntry(at oneBasedIndex: UInt8) -> String? {
