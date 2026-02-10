@@ -18,7 +18,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
         PluginRegistry.register(self)
     }
 
-    @IBOutlet weak var boundingBoxTableView:            NSTableView!
+    @IBOutlet weak var bBoxTableView:                   NSTableView!
     @IBOutlet weak var kernTableOutlineView:            NSOutlineView!
     @IBOutlet weak var glyphWidthsOutlineView:          NSOutlineView!
     @IBOutlet weak var flagsBitfieldControl:            BitfieldControl!
@@ -27,14 +27,15 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
     @IBOutlet weak var tableView:                       NSTableView! // font assoc. table entries
 
     @IBOutlet var fontAssocTableEntriesController:      NSArrayController!
+    @IBOutlet var bBoxEntriesController:                NSArrayController!
     @IBOutlet var kernPairsTreeController:              NSTreeController!
+
     @IBOutlet weak var tabView:                         NSTabView!
 
     @IBOutlet var popover:                              NSPopover!
     @IBOutlet weak var popoverButton:                   NSButton!
 
     @IBOutlet weak var exportKernPairButton:            NSButton!
-    @IBOutlet var boundingBoxTableEntriesController:    NSArrayController!
 
     public let resource:                    Resource
     private let manager:                    RFEditorManager
@@ -63,20 +64,6 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
         self.manager = manager
         do {
             fond = try FOND(with: self.resource)
-            objcFFFlags = fond.ffFlags.rawValue
-            objcFontClass = fond.styleMappingTable?.fontClass.rawValue ?? 0
-            if let kernEntries = fond.kernTable?.entries {
-                kernPairs = kernEntries.map(KernTreeNode.init(representedObject:)).sorted(by: <)
-            }
-            if let widthEntries = fond.widthTable?.entries {
-                glyphWidths = widthEntries.map(WidthTreeNode.init(representedObject:)).sorted(by: <)
-            }
-            if let charCodesToGlyphNames = fond.styleMappingTable?.glyphNameEncodingSubtable?.charCodesToGlyphNames, charCodesToGlyphNames.count > 0 {
-                let entries = GlyphNameEntry.glyphNameEntries(with: charCodesToGlyphNames)
-                glyphNameEntries.append(contentsOf: entries)
-            }
-            // FIXME: should this be replacing rather than appending?
-            effectiveGlyphNameEntries.append(contentsOf: fond.encoding.glyphNameEntries)
         } catch {
             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
             return nil
@@ -100,21 +87,8 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
     public override func windowDidLoad() {
         flagsBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFFFlags")
         fontClassBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFontClass")
-        fontClassBitfieldControl.isEnabled = fond.styleOff != 0
-        fontClassField.isEnabled = fond.styleOff != 0
         tabView.selectTabViewItem(at: UserDefaults.standard.integer(forKey: "FONDEditor.selectedTabIndex"))
-        if fond.boundingBoxTable != nil {
-            tabView.tabViewItems[0].label = NSLocalizedString("✅ Bounding Box Table", comment: "")
-        }
-        if fond.kernOff != 0 {
-            tabView.tabViewItems[1].label = NSLocalizedString("✅ Kern Table", comment: "")
-        }
-        if fond.wTabOff != 0 {
-            tabView.tabViewItems[2].label = NSLocalizedString("✅ Glyph Width Table", comment: "")
-        }
-        if fond.styleMappingTable?.glyphNameEncodingSubtable != nil {
-            tabView.tabViewItems[3].label = NSLocalizedString("✅ Glyph Name-Encoding Subtable", comment: "")
-        }
+        loadFOND()
         tableView.doubleAction = #selector(doubleClickOpenFont(_:))
         addObserver(self, forKeyPath: "objcFFFlags", options: [.new, .old], context: &objcFFFlags)
         fond.addObserver(self, forKeyPath: "famID", options: [.new, .old], context: &fond.famID)
@@ -144,6 +118,43 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
 
     public func windowWillClose(_ notification: Notification) {
         UserDefaults.standard.set(tabView.indexOfTabViewItem(tabView.selectedTabViewItem!), forKey: "FONDEditor.selectedTabIndex")
+    }
+
+    private func loadFOND() {
+        fontClassBitfieldControl.isEnabled = fond.styleOff != 0
+        fontClassField.isEnabled = fond.styleOff != 0
+        if fond.boundingBoxTable != nil {
+            tabView.tabViewItems[0].label = NSLocalizedString("✅ Bounding Box Table", comment: "")
+        }
+        if fond.kernOff != 0 {
+            tabView.tabViewItems[1].label = NSLocalizedString("✅ Kern Table", comment: "")
+        }
+        if fond.wTabOff != 0 {
+            tabView.tabViewItems[2].label = NSLocalizedString("✅ Glyph Width Table", comment: "")
+        }
+        if fond.styleMappingTable?.glyphNameEncodingSubtable != nil {
+            tabView.tabViewItems[3].label = NSLocalizedString("✅ Glyph Name-Encoding Subtable", comment: "")
+        }
+        willChangeValue(forKey: "objcFFFlags")
+        objcFFFlags = fond.ffFlags.rawValue
+        didChangeValue(forKey: "objcFFFlags")
+        willChangeValue(forKey: "objcFontClass")
+        objcFontClass = fond.styleMappingTable?.fontClass.rawValue ?? 0
+        didChangeValue(forKey: "objcFontClass")
+        if let kernEntries = fond.kernTable?.entries {
+            let kernPairs = kernEntries.map(KernTreeNode.init(representedObject:)).sorted(by: <)
+            mutableArrayValue(forKey: "kernPairs").setArray(kernPairs)
+        }
+        if let widthEntries = fond.widthTable?.entries {
+            let glyphWidths = widthEntries.map(WidthTreeNode.init(representedObject:)).sorted(by: <)
+            mutableArrayValue(forKey: "glyphWidths").setArray(glyphWidths)
+        }
+        if let charCodesToGlyphNames = fond.styleMappingTable?.glyphNameEncodingSubtable?.charCodesToGlyphNames, charCodesToGlyphNames.count > 0 {
+            let entries = GlyphNameEntry.glyphNameEntries(with: charCodesToGlyphNames)
+            mutableArrayValue(forKey: "glyphNameEntries").setArray(entries)
+        }
+        // FIXME: should this be replacing rather than appending?
+        mutableArrayValue(forKey: "effectiveGlyphNameEntries").setArray( fond.encoding.glyphNameEntries)
     }
 
     @IBAction func showPopover(_ sender: Any) {
@@ -184,7 +195,15 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
     }
 
     @IBAction public func revertResource(_ sender: Any) {
-
+        undoManager?.removeAllActions()
+        willChangeValue(forKey: "fond")
+        do {
+           fond = try FOND(with: resource)
+        } catch {
+            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+        }
+        didChangeValue(forKey: "fond")
+        self.setDocumentEdited(false)
     }
 
     @IBAction func openFont(_ sender: Any) {
@@ -268,11 +287,8 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
     }
 
     private func selectedKernTableEntries() -> [KernTable.Entry] {
-        let objs = kernPairsTreeController.selectedObjects as? [KernTreeNode] ?? []
-        let entries: [KernTable.Entry] = objs.compactMap { kernTreeNode in
-            kernTreeNode.representedObject as? KernTable.Entry
-        }
-        return entries
+        guard let objs = kernPairsTreeController.selectedObjects as? [KernTreeNode] else { return [] }
+        return objs.compactMap { $0.representedObject as? KernTable.Entry }
     }
 
     // MARK: - <NSMenuItemValidation>
@@ -295,7 +311,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
             }
             return true
         }
-        return false
+        return super.validateMenuItem(menuItem)
     }
 
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -504,11 +520,11 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
 extension FONDEditor: NSTableViewDelegate, NSOutlineViewDelegate {
     // MARK: - <NSTableViewDelegate>
     public func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        if tableView == boundingBoxTableView {
+        if tableView == bBoxTableView {
             let view: NSTableCellView = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
             if let id = tableColumn?.identifier, id.rawValue == "style" { return view }
             /// need to set the unitsPerEm of the Fixed4Dot12ToEmValueFormatter
-            if let bboxEntries = boundingBoxTableEntriesController.arrangedObjects as? [BoundingBoxTable.Entry] {
+            if let bboxEntries = bBoxEntriesController.arrangedObjects as? [BoundingBoxTable.Entry] {
                 if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
                     let entry = bboxEntries[row]
                     formatter.unitsPerEm = fond.unitsPerEm(for: entry.style, manager: manager)
