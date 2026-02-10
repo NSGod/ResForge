@@ -83,7 +83,7 @@ final public class FontTable_name: FontTable {
         dataHandle.write(format)
         dataHandle.write(count)
         dataHandle.write(stringOffset)
-        try nameRecords.forEach({ try $0.write(to: dataHandle, stringOffset: stringOffset) })
+        try nameRecords.forEach{ try $0.write(to: dataHandle, stringOffset: stringOffset) }
         // FIXME: add support for format 1?
     }
 

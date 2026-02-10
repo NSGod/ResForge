@@ -10,6 +10,7 @@ import RFSupport
 import CoreFont
 
 extension NFNT {
+    
     struct Glyph {
         let charCode:       CharCode16
         let glyphRect:      NSRect

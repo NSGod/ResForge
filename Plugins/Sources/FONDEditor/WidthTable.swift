@@ -27,7 +27,7 @@ final public class WidthTable: FONDResourceNode {
     public override func write(to dataHandle: DataHandle) throws {
         numberOfEntries = Int16(entries.count - 1)
         dataHandle.write(numberOfEntries)
-        try entries.forEach({ try $0.write(to: dataHandle) })
+        try entries.forEach { try $0.write(to: dataHandle) }
     }
 }
 

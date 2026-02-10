@@ -39,11 +39,7 @@ public final class StyleMappingTable: ResourceNode {
         fontClass = try reader.read()
         offset = try reader.read()
         reserved = try reader.read()
-        indexes = []
-        for _ in 0..<48 {
-            let index: UInt8 = try reader.read()
-            indexes.append(index)
-        }
+        indexes = try (0..<48).map { _ in try reader.read() }
         var nameSuffixRange = knownRange
         nameSuffixRange.location += Self.nodeLength
         nameSuffixRange.length -= Self.nodeLength

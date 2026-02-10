@@ -14,8 +14,6 @@ import RFSupport
 
 final public class FontTable_head: FontTable {
 
-    public override class var usesLazyParsing: Bool { false }
-
     @objc public enum Version: Fixed {
         case default1_0 = 0x00010000
     }
@@ -90,7 +88,7 @@ final public class FontTable_head: FontTable {
                 $0.bindMemory(to: UInt32.self).map(\.bigEndian)
             }
             var calcChecksum: UInt32 = 0
-            tableLongs.forEach({ calcChecksum &+= $0 })
+            tableLongs.forEach { calcChecksum &+= $0 }
             return calcChecksum
         } catch {
             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
@@ -128,8 +126,6 @@ final public class FontTable_head: FontTable {
     }
 
     public override func write(to extDataHandle: DataHandle, updating entry: OTFsfntDirectoryEntry?) throws {
-//        try prepareToWrite()
-//        try write()
         let before: UInt32 = UInt32(extDataHandle.currentOffset)
         extDataHandle.write(version)
         extDataHandle.write(fontRevision)
@@ -156,4 +152,6 @@ final public class FontTable_head: FontTable {
         entry?.offset = before
         entry?.length = after - before
     }
+
+    public override class var usesLazyParsing: Bool { false }
 }

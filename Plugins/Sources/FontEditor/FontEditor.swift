@@ -99,7 +99,7 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
         NSLog("\(type(of: self)).\(#function)")
         do {
             let tableTags: [TableTag] = tableTagsToViewControllers.keys.sorted(by: OTFReWritingOrderSort)
-            try tableTags.forEach({ try tableTagsToViewControllers[$0]!.prepareToSave() })
+            try tableTags.forEach { try tableTagsToViewControllers[$0]!.prepareToSave() }
             resource.data = try fontFile.data()
             reloadFont()
             window?.isDocumentEdited = false

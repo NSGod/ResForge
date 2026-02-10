@@ -29,12 +29,12 @@ class NFNTTypesetter {
         mLineFragments.append(currentLineFragment)
         for word in sampleStringWords {
             let wordWidth = self.width(of: String(word))
-            // is the word wider than the entire line width?
+            /// is the word wider than the entire line width?
             if wordWidth <= maxLineWidth {
-                // If this is not the beginning of the line, is there room for a space + the word on this line?
+                /// If this is not the beginning of the line, is there room for a space + the word on this line?
                 if !isBeginningOfLine && (spaceWidth + wordWidth > (maxLineWidth - drawPoint.x)) {
-                    // if there isn't enough room on the current line for this word, finish this lineFragment, create a new one,
-                    // and reset the draw point, but only if we haven't surpassed the max number of lines
+                    /// if there isn't enough room on the current line for this word, finish this lineFragment, create a new one,
+                    /// and reset the draw point, but *only* if we haven't surpassed the max number of lines
                     if mLineFragments.count == maxNumberOfLineFragments {
                         return mLineFragments
                     }
@@ -63,7 +63,7 @@ class NFNTTypesetter {
                     }
                 }
             } else {
-                // we'll have to do char-wrapping
+                /// we'll have to do char-wrapping
                 for char: Character in word {
                     let currentLetter = "\(char)"
                     let letterWidth = self.width(of: currentLetter)

@@ -38,7 +38,7 @@ final public class FontTable_gasp: FontTable {
     override func write() throws {
         dataHandle.write(version)
         dataHandle.write(numRanges)
-        try ranges.forEach({ try $0.write(to: dataHandle) })
+        try ranges.forEach { try $0.write(to: dataHandle) }
     }
 }
 

@@ -95,7 +95,7 @@ final public class OTFFontFile: NSObject {
         try directory.write(to: dataHandle)
         var checksum = directory.calculatedChecksum(with: dataHandle)
         // add in the table checksums
-        directory.entries.forEach({ checksum &+= $0.checksum })
+        directory.entries.forEach { checksum &+= $0.checksum }
         // write 'head' table checksum adjustment
         dataHandle.seek(to: checksumOffset)
         let finalChecksum: UInt32 = FontTable_head.checksumConstant - checksum

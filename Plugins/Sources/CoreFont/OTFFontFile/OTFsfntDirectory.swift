@@ -55,7 +55,7 @@ final public class OTFsfntDirectory: OTFFontFileNode, DataHandleWriting {
         dataHandle.write(searchRange)
         dataHandle.write(entrySelector)
         dataHandle.write(rangeShift)
-        try entries.forEach({ try $0.write(to: dataHandle) })
+        try entries.forEach { try $0.write(to: dataHandle) }
     }
 
     public func entry(for tableTag: TableTag) -> OTFsfntDirectoryEntry? {
@@ -73,11 +73,7 @@ final public class OTFsfntDirectory: OTFFontFileNode, DataHandleWriting {
             $0.bindMemory(to: UInt32.self).map(\.bigEndian)
         }
         var calcChecksum: UInt32 = 0
-        tableLongs.forEach({ calcChecksum &+= $0 })
-        //		var calcChecksum : UInt32 = 0
-        //		for long in tableLongs {
-        //			calcChecksum &+= long
-        //		}
+        tableLongs.forEach { calcChecksum &+= $0 }
         return calcChecksum
     }
 
