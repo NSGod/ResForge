@@ -23,6 +23,31 @@ final public class FontTable_OS2: FontTable {
         case version5           = 5
         case none               = 0xffff
 
+        public var length: Int {
+            switch self {
+                case .version0:
+                    return 78
+                case .version1:
+                    return 86
+                case .version2, .version3, .version4:
+                    return 96
+                case .version5:
+                    return 100
+                case .none:
+                    return 0
+            }
+        }
+
+        public static func version(forLength length: Int) -> Version {
+            switch length {
+                case 78: return .version0
+                case 86: return .version1
+                case 96: return .version2
+                case 100: return .version5
+                default: return .version0
+            }
+        }
+
         public static func < (lhs: Version, rhs: Version) -> Bool {
             return lhs.rawValue < rhs.rawValue
         }
@@ -121,20 +146,31 @@ final public class FontTable_OS2: FontTable {
         sTypoLineGap = try reader.read()
         usWinAscent = try reader.read()
         usWinDescent = try reader.read()
-        if version >= .version1 {
-            ulCodePageRange1 = CodePageMask1(rawValue: try reader.read())
-            ulCodePageRange2 = CodePageMask2(rawValue: try reader.read())
-            if version >= .version2 {
-                sxHeight = try reader.read()
-                sCapHeight = try reader.read()
-                usDefaultChar = try reader.read()
-                usBreakChar = try reader.read()
-                usMaxContext = try reader.read()
-                if version >= .version5 {
-                    usLowerOpticalPointSize = try reader.read()
-                    usUpperOpticalPointSize = try reader.read()
+        /// Try to handle insufficient data for specified version gracefully.
+        /// If there's not enough data, see if we can knock back the version
+        /// number to match the amount of data found
+        var targetVersion = Version.version0
+        do {
+            if version >= .version1 {
+                ulCodePageRange1 = CodePageMask1(rawValue: try reader.read())
+                ulCodePageRange2 = CodePageMask2(rawValue: try reader.read())
+                targetVersion = .version1
+                if version >= .version2 {
+                    sxHeight = try reader.read()
+                    sCapHeight = try reader.read()
+                    usDefaultChar = try reader.read()
+                    usBreakChar = try reader.read()
+                    usMaxContext = try reader.read()
+                    targetVersion = .version2
+                    if version >= .version5 {
+                        usLowerOpticalPointSize = try reader.read()
+                        usUpperOpticalPointSize = try reader.read()
+                    }
                 }
             }
+        } catch {
+            NSLog("\(type(of: self)).\(#function)() *** WARNING: Failed to read all expected fields for FontTable_OS2.version\(version.rawValue), falling back to version \(targetVersion); byte count: \(tableData.count)")
+            version = targetVersion
         }
     }
 

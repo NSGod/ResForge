@@ -9,6 +9,17 @@ import Foundation
 import RFSupport
 import OrderedCollections
 
+public enum FontFileError: LocalizedError {
+    case invalidRange(TableTag)
+
+    public var errorDescription: String? {
+        switch self {
+            case .invalidRange(let tag):
+                return NSLocalizedString("Invalid range for table with tag \(tag.description)", comment: "")
+        }
+    }
+}
+
 public struct FontWritingOptions: OptionSet {
     public let rawValue: Int
     public init(rawValue: Int) {
@@ -43,13 +54,17 @@ final public class OTFFontFile: NSObject {
         }
         for entry in entries {
             let range = entry.range
-            let tableData = try reader.subdata(with: range)
-            let tableClass: FontTable.Type = FontTable.class(for: entry.tableTag).self
-            let table = try tableClass.init(with: tableData, tableTag: entry.tableTag, fontFile: self)
-            tables.append(table)
-            rangesToFontTables[range] = table
-            entry.table = table
-            tableTagsToTables[entry.tableTag] = table
+            do {
+                let tableData = try reader.subdata(with: range)
+                let tableClass: FontTable.Type = FontTable.class(for: entry.tableTag).self
+                let table = try tableClass.init(with: tableData, tableTag: entry.tableTag, fontFile: self)
+                tables.append(table)
+                rangesToFontTables[range] = table
+                entry.table = table
+                tableTagsToTables[entry.tableTag] = table
+            } catch {
+                throw FontFileError.invalidRange(entry.tableTag)
+            }
         }
         // sort tables into the order they're found in the font for display
         tables.sort { table1, table2 in
@@ -98,7 +113,7 @@ final public class OTFFontFile: NSObject {
         directory.entries.forEach { checksum &+= $0.checksum }
         // write 'head' table checksum adjustment
         dataHandle.seek(to: checksumOffset)
-        let finalChecksum: UInt32 = FontTable_head.checksumConstant - checksum
+        let finalChecksum: UInt32 = FontTable_head.checksumConstant &- checksum
         dataHandle.write(finalChecksum)
         data = dataHandle.data
         dataHandle = nil
