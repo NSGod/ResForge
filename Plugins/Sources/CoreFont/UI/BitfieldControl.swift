@@ -7,11 +7,29 @@
 
 import Cocoa
 
-/// A convient control that allows setting bitmasks via objectValue.
+/// A convient control that allows setting bitmasks via ``objectValue``.
 /// You should place checkboxes with tags set to each power-of-two value
-/// you wish to allow control over. Set the
-/// In -awakeFromNib, -viewDidLoad, or -windowDidLoad, set up a binding between
+/// you wish to allow control over. Set the checkboxes to call an action
+/// like the following:
 ///
+///   @IBAction func changeFlag( sender: Any) {
+///       let sender = sender as! NSButton
+///       willChangeValue(forKey: "flag")
+///       if sender.state == .on {
+///           flag = flag | UInt16(sender.tag)
+///       } else {
+///           flag = flag & ~UInt16(sender.tag)
+///       }
+///       didChangeValue(forKey: "flag")
+///   }
+///
+/// Using the `flag` variable shown above, in -awakeFromNib, -viewDidLoad,
+/// or -windowDidLoad, set up a binding between the control and `flag`:
+///
+///    `bitfieldControl.bind(NSBindingName("objectValue", to: self, withKeyPath: "flag")`
+///
+/// Then, if you change `flag` elsewhere, (through a direct textfield, for example)
+/// the changes will automatically propogate to the checkboxes.
 
 final public class BitfieldControl: NSControl {
     @IBInspectable public var backgroundColor:   NSColor? = nil {
@@ -32,10 +50,12 @@ final public class BitfieldControl: NSControl {
 
     @IBInspectable public var numberOfBits:      Int = 16         // 16 or 32
 
-    // to allow disabling or enabling of specific checkboxes via a mask
+    /// To allow disabling or enabling of specific checkboxes via a mask
+    /// For example, version 1 of a bitfield only defines bits 0 - 10, while a later
+    /// version defines more. Use the enabledMask to set the enabled ability of each checkbox
+    /// via a mask.
     public var enabledMask:       Int = 0 {
         didSet {
-//            NSLog("\(type(of: self)).\(#function)() enabledMask == \(enabledMask)")
             var i = 1
             let max = numberOfBits == 16 ? UInt32(UInt16.max) : UInt32.max
             while i < max {
@@ -63,7 +83,6 @@ final public class BitfieldControl: NSControl {
     @objc dynamic override public var objectValue: Any? {
         get { return super.objectValue }
         set {
-//            NSLog("\(type(of: self)).\(#function)() newValue == \(String(describing: newValue))")
             super.objectValue = newValue
             if objectValue == nil {
                 self.enabledMask = 0
@@ -107,5 +126,4 @@ final public class BitfieldControl: NSControl {
             super.draw(bounds)
         }
     }
-
 }
