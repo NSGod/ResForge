@@ -66,19 +66,19 @@ public final class PostScriptType1FontFile: NSObject {
         case binary     /// - Important: Binary read is supported; write is not currently supported
     }
 
-    @objc public let fullName:          String      // Frutiger 55 Roman    /FullName
-    @objc public let familyName:        String      // Frutiger             /FamilyName
-    @objc public let postScriptName:    String      // Frutiger-Roman       /FontName
-    @objc public let displayName:       String
+    @objc public private(set) var fullName:          String!      // Frutiger 55 Roman    /FullName
+    @objc public private(set) var familyName:        String!      // Frutiger             /FamilyName
+    @objc public private(set) var postScriptName:    String!      // Frutiger-Roman       /FontName
+    @objc public private(set) var displayName:       String!
 
-    @objc public let subFamilyName:     String?
-    @objc public let uniqueName:        String?
-    @objc public let copyright:         String?
-    @objc public let version:           String?
+    @objc public private(set) var subFamilyName:     String?
+    @objc public private(set) var uniqueName:        String?
+    @objc public private(set) var copyright:         String?
+    @objc public private(set) var version:           String?
 
-    @objc public let metrics:           PSFontMetrics
-    public let encoding:                CFStringEncoding
-    public let characterSet:            CharacterSet
+    @objc public var metrics:           PSFontMetrics!
+    public var encoding:                CFStringEncoding = 0
+    public var characterSet:            CharacterSet!
 
     public private(set) var font:       NSFont?
     private var descriptor:             NSFontDescriptor!
@@ -90,7 +90,6 @@ public final class PostScriptType1FontFile: NSObject {
     }
 
     /// A set of options that control what additional information is parsed from a PostScript Type 1 font file.
-    ///
     public struct ParseOptions: OptionSet {
         public let rawValue: Int
 
@@ -131,49 +130,14 @@ public final class PostScriptType1FontFile: NSObject {
         /// AFAIK, it's not possible to activate an individual `LWFN` file without also activating
         /// the font suitcase file that references it through a`FOND`, which probably isn't the best idea,
         /// given that we're potentially modifying the font behind `fontd`'s back.
-        guard let descriptor: NSFontDescriptor = CTFontManagerCreateFontDescriptorFromData(self.data as CFData) as NSFontDescriptor? else {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: no font descriptor")
+        guard let desc: NSFontDescriptor = CTFontManagerCreateFontDescriptorFromData(self.data as CFData) as NSFontDescriptor? else {
+            NSLog("\(type(of: self)).\(#function) *** ERROR: no font descriptor")
             throw CocoaError(.fileReadCorruptFile)
         }
-        self.descriptor = descriptor
-        let done = DispatchSemaphore(value: 0)
-        let naptime = DispatchTime.now() + .seconds(10)
-        let type = "\(type(of: self))"
-        var actErrors: CFArray?
-        DispatchQueue.global().async {
-            CTFontManagerRegisterFontDescriptors([descriptor] as CFArray, .process, true) { errors, descDone in
-                if (errors as NSArray).count > 0 {
-                    NSLog("\(type).\(#function)() errors == \(errors)")
-                    actErrors = errors
-                }
-                if descDone {
-                    done.signal()
-                }
-                return true
-            }
-        }
-        if done.wait(timeout: naptime) == .timedOut {
-            NSLog("\(type).\(#function)() *** ERROR: CTFontManagerRegisterFontDescriptors() timed out")
-        }
-        font = .init(descriptor: descriptor, size: 48)
-        guard let font else {
-            throw PostScriptError.activationFailed("Errors: \(actErrors.debugDescription)")
-        }
-        metrics = PSFontMetrics(font: font)
-        fullName = CTFontCopyFullName(font as CTFont) as String
-        familyName = CTFontCopyFamilyName(font as CTFont) as String
-        postScriptName = CTFontCopyPostScriptName(font as CTFont) as String
-        displayName = CTFontCopyDisplayName(font as CTFont) as String
-        subFamilyName = CTFontCopyName(font as CTFont, kCTFontSubFamilyNameKey) as String?
-        uniqueName = CTFontCopyName(font as CTFont, kCTFontUniqueNameKey) as String?
-        copyright = CTFontCopyName(font as CTFont, kCTFontCopyrightNameKey) as String?
-        version = CTFontCopyName(font as CTFont, kCTFontVersionNameKey) as String?
-
-        encoding = CTFontGetStringEncoding(font as CTFont)
-        characterSet = font.coveredCharacterSet
+        descriptor = desc
         super.init()
+        try activate()
         if !options.contains(.activate) {
-            // deactivate the font
             try deactivate()
         }
     }
@@ -201,16 +165,16 @@ public final class PostScriptType1FontFile: NSObject {
         let done = DispatchSemaphore(value: 0)
         let naptime = DispatchTime.now() + .seconds(10)
         let type = "\(type(of: self))"
-        var actErrors: CFArray?
+        var actErrors: [NSError] = []
         DispatchQueue.global().async {
             CTFontManagerRegisterFontDescriptors([self.descriptor] as CFArray, .process, true) { errors, descDone in
-                if (errors as NSArray).count > 0 {
-                    NSLog("\(type).\(#function)() errors == \(errors)")
-                    actErrors = errors
+                if let errors: [NSError] = (errors as NSArray) as? [NSError], errors.count > 0 {
+                    /// For .pfa, it always seems to give an .insufficientInfo error, but,
+                    /// AFAICT, it still activates it; log any other errors...
+                    actErrors = errors.filter { $0.code != CTFontManagerError.insufficientInfo.rawValue }
+                    actErrors.forEach { NSLog("\(type).\(#function) *** ERROR: \($0)") }
                 }
-                if descDone {
-                    done.signal()
-                }
+                if descDone { done.signal() }
                 return true
             }
         }
@@ -218,9 +182,20 @@ public final class PostScriptType1FontFile: NSObject {
             NSLog("\(type).\(#function)() *** ERROR: CTFontManagerRegisterFontDescriptors() timed out")
         }
         font = .init(descriptor: descriptor, size: 48)
-        guard font != nil else {
+        guard let font else {
             throw PostScriptError.activationFailed("Errors: \(actErrors.debugDescription)")
         }
+        metrics = PSFontMetrics(font: font)
+        fullName = CTFontCopyFullName(font as CTFont) as String
+        familyName = CTFontCopyFamilyName(font as CTFont) as String
+        postScriptName = CTFontCopyPostScriptName(font as CTFont) as String
+        displayName = CTFontCopyDisplayName(font as CTFont) as String
+        subFamilyName = CTFontCopyName(font as CTFont, kCTFontSubFamilyNameKey) as String?
+        uniqueName = CTFontCopyName(font as CTFont, kCTFontUniqueNameKey) as String?
+        copyright = CTFontCopyName(font as CTFont, kCTFontCopyrightNameKey) as String?
+        version = CTFontCopyName(font as CTFont, kCTFontVersionNameKey) as String?
+        encoding = CTFontGetStringEncoding(font as CTFont)
+        characterSet = font.coveredCharacterSet
     }
 
     public func deactivate() throws {
@@ -232,19 +207,20 @@ public final class PostScriptType1FontFile: NSObject {
         let type = "\(type(of: self))"
         DispatchQueue.global().async {
             CTFontManagerUnregisterFontDescriptors([self.descriptor] as CFArray, .process, ) { errors, descDone in
-                if (errors as NSArray).count > 0 {
-                    NSLog("\(#function)() errors == \(errors)")
+                if let errors: [NSError] = (errors as NSArray) as? [NSError], errors.count > 0 {
+                    /// For .pfa, it always seems to give an .insufficientInfo error, but,
+                    /// AFAICT, it still activates it; log any other errors...
+                    let errors = errors.filter { $0.code != CTFontManagerError.insufficientInfo.rawValue }
+                    if errors.count > 0 { NSLog("\(type).\(#function) *** ERRORs: \(errors)") }
                 }
-                if descDone {
-                    done.signal()
-                }
+                if descDone { done.signal() }
                 return true
             }
         }
         if done.wait(timeout: naptime) == .timedOut {
             NSLog("\(type).\(#function)() *** ERROR: CTFontManagerUnregisterFontDescriptors() timed out")
         }
-        self.font = nil
+        font = nil
     }
 
     private enum DataType: UInt8 {
