@@ -77,7 +77,7 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
         prevView.autoresizingMask = [.width, .height]
 		prevView.padding = 10
 		prevView.borderThickness = 2
-		prevView.borderColor = .darkGray
+		prevView.borderColor = .lightGray
         prevView.nfnt = nfnt
         previewView = prevView
         box.contentView = prevView
@@ -137,10 +137,10 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
         NSLog("\(type(of: self)).\(#function)()")
     }
 
-    static let keyPaths = Set(["firstChar", "lastChar", "widMax", "kernMax", "nDescent", "fRectWidth", "fRectHeight", "owTLoc", "ascent", "descent", "leading", "rowWords", "objcFontType"])
+    private static let keyPaths = Set(["firstChar", "lastChar", "widMax", "kernMax", "nDescent", "fRectWidth", "fRectHeight", "owTLoc", "ascent", "descent", "leading", "rowWords", "objcFontType"])
 
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        guard let context, let keyPath else {
+        guard let keyPath else {
             return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
 //        NSLog("\(type(of: self)).\(#function) keyPath == \(keyPath)")
