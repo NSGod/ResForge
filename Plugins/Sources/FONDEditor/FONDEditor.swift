@@ -85,6 +85,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
     }
 
     public override func windowDidLoad() {
+        super.windowDidLoad()
         flagsBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFFFlags")
         fontClassBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFontClass")
         tabView.selectTabViewItem(at: UserDefaults.standard.integer(forKey: "FONDEditor.selectedTabIndex"))

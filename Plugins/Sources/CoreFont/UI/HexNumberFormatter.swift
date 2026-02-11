@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class HexNumberFormatter: NumberFormatter, @unchecked Sendable {
+final public class HexNumberFormatter: NumberFormatter, @unchecked Sendable {
     @IBInspectable @objc var maxValue: NSNumber?
 
     public override init() {

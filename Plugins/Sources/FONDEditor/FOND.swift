@@ -229,7 +229,7 @@ final public class FOND: NSObject {
             wTabOff = Int32(offset)
             offset += widthTable.totalNodeLength
         }
-        if let kernTable {
+        if kernTable != nil {
             kernOff = Int32(offset)
         }
         handle.write(ffFlags)

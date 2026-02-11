@@ -13,7 +13,7 @@ import Cocoa
 /// In -awakeFromNib, -viewDidLoad, or -windowDidLoad, set up a binding between
 ///
 
-public class BitfieldControl: NSControl {
+final public class BitfieldControl: NSControl {
     @IBInspectable public var backgroundColor:   NSColor? = nil {
         didSet {
             self.needsDisplay = true
@@ -60,7 +60,7 @@ public class BitfieldControl: NSControl {
         super.awakeFromNib()
     }
 
-    @objc dynamic override open var objectValue: Any? {
+    @objc dynamic override public var objectValue: Any? {
         get { return super.objectValue }
         set {
 //            NSLog("\(type(of: self)).\(#function)() newValue == \(String(describing: newValue))")
@@ -88,7 +88,7 @@ public class BitfieldControl: NSControl {
     }
 
     // override to exclude ourself
-    override open func viewWithTag(_ tag: Int) -> NSView? {
+    public override func viewWithTag(_ tag: Int) -> NSView? {
         let view = super.viewWithTag(tag)
         if view != self { return view }
         let subviews = self.subviews
@@ -98,7 +98,7 @@ public class BitfieldControl: NSControl {
         return nil
     }
 
-    open override func draw(_ dirtyRect: NSRect) {
+    public override func draw(_ dirtyRect: NSRect) {
         let bounds = self.bounds
         if let backgroundColor = backgroundColor {
             backgroundColor.set()

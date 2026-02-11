@@ -183,7 +183,7 @@ public func MD533Filename(forPostScriptFontName psName: String) -> String {
 public protocol FontMetrics {
     var unitsPerEm:         UnitsPerEm  { get }
     /// the following are all intended to be expressed in units per em,
-    /// not scaled to particular font point size:
+    /// not scaled to a particular font point size:
     var ascender:           CGFloat     { get }
     var descender:          CGFloat     { get }
     var leading:            CGFloat     { get }

@@ -57,7 +57,7 @@ public final class StyleMappingTable: ResourceNode {
     }
 
     public override func write(to dataHandle: DataHandle) throws {
-        if let glyphNameEncodingSubtable {
+        if glyphNameEncodingSubtable != nil {
             offset = Int32(Self.nodeLength + fontNameSuffixSubtable.totalNodeLength)
         }
         dataHandle.write(fontClass)

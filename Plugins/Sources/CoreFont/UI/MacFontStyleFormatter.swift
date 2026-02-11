@@ -7,7 +7,7 @@
 
 import Foundation
 
-class MacFontStyleFormatter: NumberFormatter, @unchecked Sendable {
+final class MacFontStyleFormatter: NumberFormatter, @unchecked Sendable {
 
     override func string(for obj: Any?) -> String? {
         guard let style = obj as? MacFontStyle.RawValue else { return nil }
