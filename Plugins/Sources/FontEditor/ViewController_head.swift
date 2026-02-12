@@ -18,6 +18,12 @@ final class ViewController_head: FontTableViewController {
     @objc dynamic var objcMacStyle:     UInt16 = 0
     @objc dynamic var objcUnitsPerEm:   UInt16 = 0
 
+    private static var tableContext = 1
+    private static let tableKeyPaths = Set(["version", "fontRevision", "checksumAdjustment", "magicNumber",
+                                            "created", "modified", "xMin", "yMin", "xMax", "yMax",
+                                       "lowestRecPPEM", "fontDirectionHint", "indexToLocFormat", "glyphDataFormat"])
+    private static let keyPaths = Set(["objcFlags", "objcUnitsPerEm", "objcMacStyle"])
+
     required init?(with fontTable: FontTable) {
         self.table = fontTable as! FontTable_head
         super.init(with: fontTable)
@@ -33,33 +39,18 @@ final class ViewController_head: FontTableViewController {
     deinit {
         flagsControl.unbind(NSBindingName("objectValue"))
         macStyleControl.unbind(NSBindingName("objectValue"))
-        Self.tableKeyPaths.forEach { table.removeObserver(self, forKeyPath: $0, context: &Self.headContext) }
+        Self.tableKeyPaths.forEach { table.removeObserver(self, forKeyPath: $0, context: &Self.tableContext) }
         Self.keyPaths.forEach { removeObserver(self, forKeyPath: $0, context: nil) }
     }
-
-    private static var headContext = 1
 
     override func viewDidLoad() {
         super.viewDidLoad()
         flagsControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFlags")
         macStyleControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcMacStyle")
-        table.addObserver(self, forKeyPath: "version", options: [.new, .old], context: &Self.headContext)
-        table.addObserver(self, forKeyPath: "fontRevision", options: [.new, .old], context: &Self.headContext)
-        table.addObserver(self, forKeyPath: "checksumAdjustment", options: [.new, .old], context: &Self.headContext)
-        table.addObserver(self, forKeyPath: "magicNumber", options: [.new, .old], context: &Self.headContext)
+        Self.tableKeyPaths.forEach { table.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.tableContext) }
         addObserver(self, forKeyPath: "objcFlags", options: [.new, .old], context: nil)
         addObserver(self, forKeyPath: "objcUnitsPerEm", options: [.new, .old], context: nil)
-        table.addObserver(self, forKeyPath: "created", options: [.new, .old], context: &Self.headContext)
-        table.addObserver(self, forKeyPath: "modified", options: [.new, .old], context: &Self.headContext)
-        table.addObserver(self, forKeyPath: "xMin", options: [.new, .old], context: &Self.headContext)
-        table.addObserver(self, forKeyPath: "yMin", options: [.new, .old], context: &Self.headContext)
-        table.addObserver(self, forKeyPath: "xMax", options: [.new, .old], context: &Self.headContext)
-        table.addObserver(self, forKeyPath: "yMax", options: [.new, .old], context: &Self.headContext)
         addObserver(self, forKeyPath: "objcMacStyle", options: [.new, .old], context: nil)
-        table.addObserver(self, forKeyPath: "lowestRecPPEM", options: [.new, .old], context: &Self.headContext)
-        table.addObserver(self, forKeyPath: "fontDirectionHint", options: [.new, .old], context: &Self.headContext)
-        table.addObserver(self, forKeyPath: "indexToLocFormat", options: [.new, .old], context: &Self.headContext)
-        table.addObserver(self, forKeyPath: "glyphDataFormat", options: [.new, .old], context: &Self.headContext)
     }
 
     override var representedObject: Any? {
@@ -82,21 +73,19 @@ final class ViewController_head: FontTableViewController {
 
     @IBAction func changeFlags(_ sender: Any) {
         let sender = sender as! NSButton
-        let flags = UInt16(sender.tag)
         if sender.state == .on {
-            objcFlags |= flags
+            objcFlags |= UInt16(sender.tag)
         } else {
-            objcFlags &= ~flags
+            objcFlags &= ~UInt16(sender.tag)
         }
     }
 
     @IBAction func changeMacStyle(_ sender: Any) {
         let sender = sender as! NSButton
-        let macStyle = UInt16(sender.tag)
         if sender.state == .on {
-            objcMacStyle |= macStyle
+            objcMacStyle |= UInt16(sender.tag)
         } else {
-            objcMacStyle &= ~macStyle
+            objcMacStyle &= ~UInt16(sender.tag)
         }
     }
 
@@ -109,20 +98,15 @@ final class ViewController_head: FontTableViewController {
         }
     }
 
-    private static let tableKeyPaths = Set(["version", "fontRevision", "checksumAdjustment", "magicNumber",
-                                            "created", "modified", "xMin", "yMin", "xMax", "yMax",
-                                       "lowestRecPPEM", "fontDirectionHint", "indexToLocFormat", "glyphDataFormat"])
-    private static let keyPaths = Set(["objcFlags", "objcUnitsPerEm", "objcMacStyle"])
-
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard let keyPath else {
             return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
-        NSLog("\(type(of: self)).\(#function) keyPath: \(keyPath)")
+//        NSLog("\(type(of: self)).\(#function) keyPath: \(keyPath)")
         if !Self.tableKeyPaths.contains(keyPath) && !Self.keyPaths.contains(keyPath) {
             return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
-        if context == &Self.headContext {
+        if context == &Self.tableContext {
             undoManager?.registerUndo(withTarget: self, handler: {
                 $0.table.setValue(change![.oldKey], forKey: keyPath)
             })

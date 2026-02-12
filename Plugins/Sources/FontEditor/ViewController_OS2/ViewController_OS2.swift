@@ -56,19 +56,18 @@ final class ViewController_OS2: FontTableViewController {
     @objc dynamic var fsType:           UInt16 = 0
     @objc dynamic var fsSelection:      UInt16 = 0
 
-
     private var unicodeBlocksToNames:   [Int: String] = [:]
     private var codePageRangesToNames:  [Int: String] = [:]
     private static var tableContext = 1
     private static let keyPaths = Set(["ulUnicodeRange1", "ulUnicodeRange2", "ulUnicodeRange3", "ulUnicodeRange4", "ulCodePageRange1",
                                        "ulCodePageRange2", "usWeightClass", "fsType", "fsSelection"])
     private static let tableKeyPaths = Set(["version", "usWidthClass", "ySubscriptXSize", "ySubscriptYSize",
-		"ySubscriptXOffset", "ySubscriptYOffset", "ySuperscriptXSize", "ySuperscriptYSize", "ySuperscriptXOffset",
-		"ySuperscriptYOffset", "yStrikeoutSize", "yStrikeoutPosition", "sFamilyClass", "vendorID", "usFirstCharIndex",
-		"usLastCharIndex", "sTypoAscender", "sTypoDescender", "sTypoLineGap", "usWinAscent", "usWinDescent",
-		"sxHeight", "sCapHeight", "usDefaultChar", "usBreakChar", "usMaxContext", "usLowerOpticalPointSize",
-		"usUpperOpticalPointSize", "panose.bFamilyType", "panose.bSerifStyle", "panose.bWeight", "panose.bProportion",
-		"panose.bContrast", "panose.bStrokeVariation", "panose.bArmStyle", "panose.bLetterform", "panose.bMidline", "panose.bXHeight"])
+        "ySubscriptXOffset", "ySubscriptYOffset", "ySuperscriptXSize", "ySuperscriptYSize", "ySuperscriptXOffset",
+        "ySuperscriptYOffset", "yStrikeoutSize", "yStrikeoutPosition", "sFamilyClass", "vendorID", "usFirstCharIndex",
+        "usLastCharIndex", "sTypoAscender", "sTypoDescender", "sTypoLineGap", "usWinAscent", "usWinDescent",
+        "sxHeight", "sCapHeight", "usDefaultChar", "usBreakChar", "usMaxContext", "usLowerOpticalPointSize",
+        "usUpperOpticalPointSize", "panose.bFamilyType", "panose.bSerifStyle", "panose.bWeight", "panose.bProportion",
+        "panose.bContrast", "panose.bStrokeVariation", "panose.bArmStyle", "panose.bLetterform", "panose.bMidline", "panose.bXHeight"])
 
     required init?(with fontTable: FontTable) {
         table = fontTable as! FontTable_OS2
@@ -92,10 +91,10 @@ final class ViewController_OS2: FontTableViewController {
                 codePageRangesToNames[Int(key)!] = value
             }
         } catch {
-             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
         }
     }
-    
+
     @MainActor required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -108,53 +107,8 @@ final class ViewController_OS2: FontTableViewController {
     }
 
     override func viewDidLoad() {
-        table.addObserver(self, forKeyPath: "version", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "usWidthClass", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "ySubscriptXSize", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "ySubscriptYSize", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "ySubscriptXOffset", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "ySubscriptYOffset", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "ySuperscriptXSize", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "ySuperscriptYSize", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "ySuperscriptXOffset", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "ySuperscriptYOffset", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "yStrikeoutSize", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "yStrikeoutPosition", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "sFamilyClass", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "vendorID", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "usFirstCharIndex", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "usLastCharIndex", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "sTypoAscender", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "sTypoDescender", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "sTypoLineGap", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "usWinAscent", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "usWinDescent", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "sxHeight", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "sCapHeight", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "usDefaultChar", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "usBreakChar", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "usMaxContext", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "usLowerOpticalPointSize", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "usUpperOpticalPointSize", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "panose.bFamilyType", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "panose.bSerifStyle", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "panose.bWeight", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "panose.bProportion", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "panose.bContrast", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "panose.bStrokeVariation", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "panose.bArmStyle", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "panose.bLetterform", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "panose.bMidline", options: [.new, .old], context: &Self.tableContext)
-        table.addObserver(self, forKeyPath: "panose.bXHeight", options: [.new, .old], context: &Self.tableContext)
-        addObserver(self, forKeyPath: "usWeightClass", options: [.new, .old], context: nil)
-        addObserver(self, forKeyPath: "fsType", options: [.new, .old], context: nil)
-        addObserver(self, forKeyPath: "ulUnicodeRange1", options: [.new, .old], context: nil)
-        addObserver(self, forKeyPath: "ulUnicodeRange2", options: [.new, .old], context: nil)
-        addObserver(self, forKeyPath: "ulUnicodeRange3", options: [.new, .old], context: nil)
-        addObserver(self, forKeyPath: "ulUnicodeRange4", options: [.new, .old], context: nil)
-        addObserver(self, forKeyPath: "ulCodePageRange1", options: [.new, .old], context: nil)
-        addObserver(self, forKeyPath: "ulCodePageRange2", options: [.new, .old], context: nil)
-        addObserver(self, forKeyPath: "fsSelection", options: [.new, .old], context: nil)
+        Self.tableKeyPaths.forEach { table.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.tableContext) }
+        Self.keyPaths.forEach { addObserver(self, forKeyPath: $0, options: [.new, .old], context: nil) }
         fontTypeControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "fsType", options: nil)
         fontSelectionControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "fsSelection", options: nil)
         super.viewDidLoad()
@@ -221,7 +175,7 @@ final class ViewController_OS2: FontTableViewController {
             fsType &= ~UInt16(sender.tag)
         }
     }
-    
+
     @IBAction func changeFontSelection(_ sender: Any) {
         let sender = sender as! NSButton
         if sender.state == .on {
@@ -380,17 +334,9 @@ final class ViewController_OS2: FontTableViewController {
             undoManager?.setActionName(NSLocalizedString("Change PANOSE Midline", comment: ""))
         } else if keyPath == "panose.bXHeight" {
             undoManager?.setActionName(NSLocalizedString("Change PANOSE x-Height", comment: ""))
-        } else if keyPath == "ulUnicodeRange1" {
+        } else if keyPath.hasPrefix("ulUnicodeRange") {
             undoManager?.setActionName(NSLocalizedString("Change Unicode Range", comment: ""))
-        } else if keyPath == "ulUnicodeRange2" {
-            undoManager?.setActionName(NSLocalizedString("Change Unicode Range", comment: ""))
-        } else if keyPath == "ulUnicodeRange3" {
-            undoManager?.setActionName(NSLocalizedString("Change Unicode Range", comment: ""))
-        } else if keyPath == "ulUnicodeRange4" {
-            undoManager?.setActionName(NSLocalizedString("Change Unicode Range", comment: ""))
-        } else if keyPath == "ulCodePageRange1" {
-            undoManager?.setActionName(NSLocalizedString("Change Code Page Range", comment: ""))
-        } else if keyPath == "ulCodePageRange2" {
+        } else if keyPath.hasPrefix("ulCodePageRange") {
             undoManager?.setActionName(NSLocalizedString("Change Code Page Range", comment: ""))
         } else if keyPath == "usWeightClass" {
             undoManager?.setActionName(NSLocalizedString("Change Weight", comment: ""))
