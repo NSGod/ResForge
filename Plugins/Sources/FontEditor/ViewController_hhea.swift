@@ -25,7 +25,7 @@ final class ViewController_hhea: FontTableViewController {
     deinit {
         Self.tableKeyPaths.forEach { table.removeObserver(self, forKeyPath: $0, context: &Self.tableContext) }
     }
-    
+
     @MainActor required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -45,7 +45,7 @@ final class ViewController_hhea: FontTableViewController {
         guard let keyPath else {
             return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
-        NSLog("\(type(of: self)).\(#function) keyPath: \(keyPath)")
+//        NSLog("\(type(of: self)).\(#function) keyPath: \(keyPath)")
         if !Self.tableKeyPaths.contains(keyPath) {
             return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
