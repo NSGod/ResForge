@@ -2311,7 +2311,10 @@
                 <binding destination="-2" name="contentArray" keyPath="kernPairs" id="Cxu-Nb-xIU"/>
             </connections>
         </treeController>
-        <numberFormatter formatterBehavior="default10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="8qd-vG-szC" userLabel="f4Dot12Formatter" customClass="Fixed4Dot12NumberFormatter" customModule="CoreFont"/>
+        <numberFormatter formatterBehavior="default10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="8qd-vG-szC" userLabel="f4Dot12Formatter" customClass="Fixed4Dot12NumberFormatter" customModule="CoreFont">
+            <real key="minimum" value="-7"/>
+            <real key="maximum" value="7"/>
+        </numberFormatter>
         <numberFormatter formatterBehavior="custom10_4" numberStyle="decimal" usesGroupingSeparator="NO" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" id="xr1-bH-K56" userLabel="SInt16Formatter">
             <real key="minimum" value="-32768"/>
             <real key="maximum" value="32767"/>

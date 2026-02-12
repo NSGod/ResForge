@@ -39,7 +39,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
 
     public let resource:                    Resource
     private let manager:                    RFEditorManager
-    @objc var fond:                         FOND
+    @objc dynamic var fond:                 FOND
 
     @objc var kernPairs:                    [KernTreeNode] = []
     @objc var glyphWidths:                  [WidthTreeNode] = []
@@ -47,8 +47,14 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
     @objc var glyphNameEntries:             [GlyphNameEntry] = []
     @objc var effectiveGlyphNameEntries:    [GlyphNameEntry] = []
 
-    @objc var objcFFFlags:                  UInt16 = 0
-    @objc var objcFontClass:                UInt16 = 0
+    @objc dynamic var objcFFFlags:          UInt16 = 0
+    @objc dynamic var objcFontClass:        UInt16 = 0
+
+    private static var fondContext = 1
+    private static let fondKeyPaths = Set(["famID", "firstChar", "lastChar", "ascent", "descent", "leading", "widMax",
+        "wTabOff", "kernOff", "styleOff", "ewSPlain", "ewSBold", "ewSItalic", "ewSUnderline", "ewSOutline",
+        "ewSShadow", "ewSCondensed", "ewSExtended", "ewSUnused", "intl0", "intl1", "ffVersion"])
+    private static let keyPaths = Set(["objcFFFlags", "objcFontClass"])
 
     public override var windowNibName: NSNib.Name {
         "FONDEditor"
@@ -78,10 +84,8 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
     deinit {
         flagsBitfieldControl.unbind(NSBindingName("objectValue"))
         fontClassBitfieldControl.unbind(NSBindingName("objectValue"))
-        let fondKeys = ["famID", "firstChar", "lastChar", "ascent", "descent", "leading", "widMax", "wTabOff", "kernOff", "styleOff", "ewSPlain", "ewSBold", "ewSItalic", "ewSUnderline", "ewSOutline", "ewSShadow", "ewSCondensed", "ewSExtended", "ewSUnused", "intl0", "intl1", "ffVersion"]
-        fondKeys.forEach( { fond.removeObserver(self, forKeyPath: $0) } )
-        removeObserver(self, forKeyPath: "objcFFFlags")
-        removeObserver(self, forKeyPath: "objcFontClass")
+        Self.fondKeyPaths.forEach { fond.removeObserver(self, forKeyPath: $0) }
+        Self.keyPaths.forEach { removeObserver(self, forKeyPath: $0) }
     }
 
     public override func windowDidLoad() {
@@ -89,32 +93,10 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
         flagsBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFFFlags")
         fontClassBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFontClass")
         tabView.selectTabViewItem(at: UserDefaults.standard.integer(forKey: "FONDEditor.selectedTabIndex"))
-        loadFOND()
         tableView.doubleAction = #selector(doubleClickOpenFont(_:))
-        addObserver(self, forKeyPath: "objcFFFlags", options: [.new, .old], context: nil)
-        fond.addObserver(self, forKeyPath: "famID", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "firstChar", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "lastChar", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "ascent", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "descent", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "leading", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "widMax", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "wTabOff", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "kernOff", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "styleOff", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "ewSPlain", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "ewSBold", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "ewSItalic", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "ewSUnderline", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "ewSOutline", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "ewSShadow", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "ewSCondensed", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "ewSExtended", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "ewSUnused", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "intl0", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "intl1", options: [.new, .old], context: &Self.fondContext)
-        fond.addObserver(self, forKeyPath: "ffVersion", options: [.new, .old], context: &Self.fondContext)
-        addObserver(self, forKeyPath: "objcFontClass", options: [.new, .old], context: nil)
+        loadFOND()
+        Self.fondKeyPaths.forEach { fond.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.fondContext) }
+        Self.keyPaths.forEach { addObserver(self, forKeyPath: $0, options: [.new, .old], context: nil) }
     }
 
     public func windowWillClose(_ notification: Notification) {
@@ -136,12 +118,8 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
         if fond.styleMappingTable?.glyphNameEncodingSubtable != nil {
             tabView.tabViewItems[3].label = NSLocalizedString("✅ Glyph Name-Encoding Subtable", comment: "")
         }
-        willChangeValue(forKey: "objcFFFlags")
         objcFFFlags = fond.ffFlags.rawValue
-        didChangeValue(forKey: "objcFFFlags")
-        willChangeValue(forKey: "objcFontClass")
         objcFontClass = fond.styleMappingTable?.fontClass.rawValue ?? 0
-        didChangeValue(forKey: "objcFontClass")
         if let kernEntries = fond.kernTable?.entries {
             let kernPairs = kernEntries.map(KernTreeNode.init(representedObject:)).sorted(by: <)
             mutableArrayValue(forKey: "kernPairs").setArray(kernPairs)
@@ -154,7 +132,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
             let entries = GlyphNameEntry.glyphNameEntries(with: charCodesToGlyphNames)
             mutableArrayValue(forKey: "glyphNameEntries").setArray(entries)
         }
-        // FIXME: should this be replacing rather than appending?
+        // FIXME: should this be replacing rather than appending? YES
         mutableArrayValue(forKey: "effectiveGlyphNameEntries").setArray( fond.encoding.glyphNameEntries)
     }
 
@@ -164,24 +142,20 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
 
     @IBAction func changeFlags(_ sender: Any) {
         let sender = sender as! NSButton
-        willChangeValue(forKey: "objcFFFlags")
         if sender.state == .on {
             objcFFFlags = objcFFFlags | UInt16(sender.tag)
         } else {
             objcFFFlags = objcFFFlags & ~UInt16(sender.tag)
         }
-        didChangeValue(forKey: "objcFFFlags")
     }
 
     @IBAction func changeFontClass(_ sender: Any) {
         let sender = sender as! NSButton
-        willChangeValue(forKey: "objcFontClass")
         if sender.state == .on {
             objcFontClass = objcFontClass | UInt16(sender.tag)
         } else {
             objcFontClass = objcFontClass & ~UInt16(sender.tag)
         }
-        didChangeValue(forKey: "objcFontClass")
     }
     
     @IBAction public func saveResource(_ sender: Any) {
@@ -197,13 +171,11 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
 
     @IBAction public func revertResource(_ sender: Any) {
         undoManager?.removeAllActions()
-        willChangeValue(forKey: "fond")
         do {
            fond = try FOND(with: resource)
         } catch {
             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
         }
-        didChangeValue(forKey: "fond")
         self.setDocumentEdited(false)
     }
 
@@ -315,30 +287,21 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
         return super.validateMenuItem(menuItem)
     }
 
-    private static var fondContext = 1
-    private static let keyPaths = Set(["objcFFFlags", "famID", "firstChar", "lastChar", "ascent", "descent", "leading",
-    			"widMax", "wTabOff", "kernOff", "styleOff", "ewSPlain", "ewSBold", "ewSItalic", "ewSUnderline",
-                "ewSOutline", "ewSShadow", "ewSCondensed", "ewSExtended", "ewSUnused", "intl0", "intl1", "ffVersion", "objcFontClass"])
-
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard let keyPath else {
             return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
-        NSLog("\(type(of: self)).\(#function) keyPath == \(keyPath)")
-        if !Self.keyPaths.contains(keyPath) {
+        NSLog("\(type(of: self)).\(#function) keyPath : \(keyPath)")
+        if !Self.fondKeyPaths.contains(keyPath) && !Self.keyPaths.contains(keyPath) {
             return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
         if context == &Self.fondContext {
             undoManager?.registerUndo(withTarget: self, handler: {
-                $0.fond.willChangeValue(forKey: keyPath)
-                $0.fond.setValue(change![.oldKey], forKey: keyPath)
-                $0.fond.didChangeValue(forKey: keyPath)
+                $0.fond.setValue(change![.oldKey], forKeyPath: keyPath)
             })
         } else {
             undoManager?.registerUndo(withTarget: self, handler: {
-                $0.willChangeValue(forKey: keyPath)
                 $0.setValue(change![.oldKey], forKey: keyPath)
-                $0.didChangeValue(forKey: keyPath)
             })
         }
         window?.isDocumentEdited = true

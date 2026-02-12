@@ -16,37 +16,37 @@ final public class FOND: NSObject {
     }
 
     /// FontFamilyRecord is the first 52 bytes of the FOND
-    public var ffFlags:                 Flags            /// UInt16; flags for family
-    @objc public var famID:             ResID            /// family ID number; `must match FOND resource ID`
-    @objc public var firstChar:         Int16            /// ASCII code of 1st character
-    @objc public var lastChar:          Int16            /// ASCII code of last character
-    @objc public var ascent:            Fixed4Dot12      /// maximum ascent for 1pt font;  Fixed 4.12
-    @objc public var descent:           Fixed4Dot12      /// maximum descent for 1pt font; Fixed 4.12
-    @objc public var leading:           Fixed4Dot12      /// maximum leading for 1pt font; Fixed 4.12
-    @objc public var widMax:            Fixed4Dot12      /// maximum width for 1pt font;   Fixed 4.12
+    public var ffFlags:                     Flags           /// UInt16; flags for family
+    @objc public dynamic var famID:         ResID           /// family ID number; `must match FOND resource ID`
+    @objc public dynamic var firstChar:     Int16           /// ASCII code of 1st character
+    @objc public dynamic var lastChar:      Int16           /// ASCII code of last character
+    @objc public dynamic var ascent:        Fixed4Dot12     /// maximum ascent for 1pt font;  Fixed 4.12
+    @objc public dynamic var descent:       Fixed4Dot12     /// maximum descent for 1pt font; Fixed 4.12
+    @objc public dynamic var leading:       Fixed4Dot12     /// maximum leading for 1pt font; Fixed 4.12
+    @objc public dynamic var widMax:        Fixed4Dot12     /// maximum width for 1pt font;   Fixed 4.12
 
-    @objc public var wTabOff:           Int32            /* offset to family glyph-width table from beginning of font family
+    @objc public dynamic var wTabOff:       Int32           /* offset to family glyph-width table from beginning of font family
                                                               resource to beginning of table, in bytes */
-    @objc public var kernOff:           Int32            /* offset to kerning table from beginning of font family resource to
+    @objc public dynamic var kernOff:       Int32           /* offset to kerning table from beginning of font family resource to
                                                               beginning of table, in bytes */
-    @objc public var styleOff:          Int32            /* offset to style mapping table from beginning of font family
+    @objc public dynamic var styleOff:      Int32           /* offset to style mapping table from beginning of font family
                                                              resource to beginning of table, in bytes */
 
-                                                         /// style property info; extra widths for different styles
-    @objc public var ewSPlain:          Fixed4Dot12      /// should be 0
-    @objc public var ewSBold:           Fixed4Dot12
-    @objc public var ewSItalic:         Fixed4Dot12
-    @objc public var ewSUnderline:      Fixed4Dot12
-    @objc public var ewSOutline:        Fixed4Dot12
-    @objc public var ewSShadow:         Fixed4Dot12
-    @objc public var ewSCondensed:      Fixed4Dot12
-    @objc public var ewSExtended:       Fixed4Dot12
-    @objc public var ewSUnused:         Fixed4Dot12      /// unused; should be 0
+                                                            /// style property info; extra widths for different styles
+    @objc public dynamic var ewSPlain:      Fixed4Dot12     /// should be 0
+    @objc public dynamic var ewSBold:       Fixed4Dot12
+    @objc public dynamic var ewSItalic:     Fixed4Dot12
+    @objc public dynamic var ewSUnderline:  Fixed4Dot12
+    @objc public dynamic var ewSOutline:    Fixed4Dot12
+    @objc public dynamic var ewSShadow:     Fixed4Dot12
+    @objc public dynamic var ewSCondensed:  Fixed4Dot12
+    @objc public dynamic var ewSExtended:   Fixed4Dot12
+    @objc public dynamic var ewSUnused:     Fixed4Dot12     /// unused; should be 0
 
-    @objc public var intl0:             Int16            /// for international use
-    @objc public var intl1:             Int16            /// for international use
+    @objc public dynamic var intl0:         Int16           /// for international use
+    @objc public dynamic var intl1:         Int16           /// for international use
 
-    @objc public var ffVersion:         Version          /// version number
+    @objc public dynamic var ffVersion:     Version         /// version number
 
     @objc public var fontAssociationTable:  FontAssociationTable
 
