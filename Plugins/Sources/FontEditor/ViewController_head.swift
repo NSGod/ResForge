@@ -48,9 +48,7 @@ final class ViewController_head: FontTableViewController {
         flagsControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFlags")
         macStyleControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcMacStyle")
         Self.tableKeyPaths.forEach { table.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.tableContext) }
-        addObserver(self, forKeyPath: "objcFlags", options: [.new, .old], context: nil)
-        addObserver(self, forKeyPath: "objcUnitsPerEm", options: [.new, .old], context: nil)
-        addObserver(self, forKeyPath: "objcMacStyle", options: [.new, .old], context: nil)
+        Self.keyPaths.forEach { addObserver(self, forKeyPath: $0, options: [.new, .old], context: nil) }
     }
 
     override var representedObject: Any? {
