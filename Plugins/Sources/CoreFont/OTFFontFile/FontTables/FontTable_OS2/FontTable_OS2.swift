@@ -57,54 +57,52 @@ final public class FontTable_OS2: FontTable {
         }
     }
 
-    @objc public var version:                   Version = .version0
-    @objc public var xAvgCharWidth:             Int16 = 0
-    public var usWeightClass:                   Weight = .normal
-    @objc public var usWidthClass:              Width = .normal
-    public var fsType:                          FontType = .installableEmbedding
-    @objc public var ySubscriptXSize:           Int16 = 0
-    @objc public var ySubscriptYSize:           Int16 = 0
-    @objc public var ySubscriptXOffset:         Int16 = 0
-    @objc public var ySubscriptYOffset:         Int16 = 0
-    @objc public var ySuperscriptXSize:         Int16 = 0
-    @objc public var ySuperscriptYSize:         Int16 = 0
-    @objc public var ySuperscriptXOffset:       Int16 = 0
-    @objc public var ySuperscriptYOffset:       Int16 = 0
-    @objc public var yStrikeoutSize:            Int16 = 0
-    @objc public var yStrikeoutPosition:        Int16 = 0
-    @objc public var sFamilyClass:              Int16 = 0 /// IBM font family class (high byte) & subclass (low byte)
-    @objc public var panose:                    Panose!
+    @objc dynamic public var version:               Version = .version0
+    @objc dynamic public var xAvgCharWidth:         Int16 = 0
+    public var usWeightClass:                       Weight = .normal
+    @objc dynamic public var usWidthClass:          Width = .normal
+    public var fsType:                              FontType = .installableEmbedding
+    @objc dynamic public var ySubscriptXSize:       Int16 = 0
+    @objc dynamic public var ySubscriptYSize:       Int16 = 0
+    @objc dynamic public var ySubscriptXOffset:     Int16 = 0
+    @objc dynamic public var ySubscriptYOffset:     Int16 = 0
+    @objc dynamic public var ySuperscriptXSize:     Int16 = 0
+    @objc dynamic public var ySuperscriptYSize:     Int16 = 0
+    @objc dynamic public var ySuperscriptXOffset:   Int16 = 0
+    @objc dynamic public var ySuperscriptYOffset:   Int16 = 0
+    @objc dynamic public var yStrikeoutSize:        Int16 = 0
+    @objc dynamic public var yStrikeoutPosition:    Int16 = 0
+    @objc dynamic public var sFamilyClass:          Int16 = 0 /// IBM font family class (high byte) & subclass (low byte)
+    @objc dynamic public var panose:                Panose!
                                                                   /// - Note: all 128 bits are there in all versions
                                                                   ///    but only fully utilized in ver 1+
-    public var ulUnicodeRange1:                 UnicodeMask1 = [] /// UInt32; ver 0: bits 0-31
-    public var ulUnicodeRange2:                 UnicodeMask2 = [] /// UInt32; ver 1+: bits 32-63
-    public var ulUnicodeRange3:                 UnicodeMask3 = [] /// UInt32; ver 1+: bits 64-95
-    public var ulUnicodeRange4:                 UnicodeMask4 = [] /// UInt32; ver 1+: bits 96-127
+    public var ulUnicodeRange1:                     UnicodeMask1 = [] /// UInt32; ver 0: bits 0-31
+    public var ulUnicodeRange2:                     UnicodeMask2 = [] /// UInt32; ver 1+: bits 32-63
+    public var ulUnicodeRange3:                     UnicodeMask3 = [] /// UInt32; ver 1+: bits 64-95
+    public var ulUnicodeRange4:                     UnicodeMask4 = [] /// UInt32; ver 1+: bits 96-127
                                                                   ///
-    @objc public var vendorID:                  Tag = 0
+    @objc dynamic public var vendorID:              Tag = 0
 
-    public var fsSelection:                     Selection = .none
-    @objc public var usFirstCharIndex:          UVBMP = 0
-    @objc public var usLastCharIndex:           UVBMP = 0
-    @objc public var sTypoAscender:             Int16 = 0   // newer
-    @objc public var sTypoDescender:            Int16 = 0   // newer
-    @objc public var sTypoLineGap:              Int16 = 0   // newer; typical values average 7-10% units per em
-    @objc public var usWinAscent:               UInt16 = 0  // yMax in Windows or clipping can occur
-    @objc public var usWinDescent:              UInt16 = 0  // -yMin in Windows or clipping can occur
+    public var fsSelection:                         Selection = .none
+    @objc dynamic public var usFirstCharIndex:      UVBMP = 0
+    @objc dynamic public var usLastCharIndex:       UVBMP = 0
+    @objc dynamic public var sTypoAscender:         Int16 = 0   // newer
+    @objc dynamic public var sTypoDescender:        Int16 = 0   // newer
+    @objc dynamic public var sTypoLineGap:          Int16 = 0   // newer; typical values average 7-10% units per em
+    @objc dynamic public var usWinAscent:           UInt16 = 0  // yMax in Windows or clipping can occur
+    @objc dynamic public var usWinDescent:          UInt16 = 0  // -yMin in Windows or clipping can occur
 
-    public var ulCodePageRange1:                CodePageMask1 = [] // ver 1+
-    public var ulCodePageRange2:                CodePageMask2 = [] // ver 1+
+    public var ulCodePageRange1:                    CodePageMask1 = [] // ver 1+
+    public var ulCodePageRange2:                    CodePageMask2 = [] // ver 1+
 
-    @objc public var sxHeight:                  Int16 = 0   // ver 2+
-    @objc public var sCapHeight:                Int16 = 0   // ver 2+
-    @objc public var usDefaultChar:             UVBMP = 0   // ver 2+
-    @objc public var usBreakChar:               UVBMP = 0   // ver 2+
-    @objc public var usMaxContext:              UInt16 = 0  // ver 2+ max lookahead context: e.g. for ffl ligature, it'd be 2
+    @objc dynamic public var sxHeight:              Int16 = 0   // ver 2+
+    @objc dynamic public var sCapHeight:            Int16 = 0   // ver 2+
+    @objc dynamic public var usDefaultChar:         UVBMP = 0   // ver 2+
+    @objc dynamic public var usBreakChar:           UVBMP = 0   // ver 2+
+    @objc dynamic public var usMaxContext:          UInt16 = 0  // ver 2+ max lookahead context: e.g. for ffl ligature, it'd be 2
 
-    @objc public var usLowerOpticalPointSize:   UInt16 = 0  // ver 5+
-    @objc public var usUpperOpticalPointSize:   UInt16 = 0  // ver 5+
-
-    @objc public var objcWeightClass:           Weight.RawValue = 0
+    @objc dynamic public var usLowerOpticalPointSize:   UInt16 = 0  // ver 5+
+    @objc dynamic public var usUpperOpticalPointSize:   UInt16 = 0  // ver 5+
 
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)

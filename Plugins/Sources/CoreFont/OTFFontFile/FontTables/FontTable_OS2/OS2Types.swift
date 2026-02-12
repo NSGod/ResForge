@@ -143,16 +143,16 @@ public extension FontTable_OS2 {
     // FIXME: work on defining/expanding this?
     // FIXME: this is only accurate for Latin Text?:
     final class Panose: FontTableNode {
-        @objc public var bFamilyType:       UInt8 = 0
-        @objc public var bSerifStyle:       UInt8 = 0
-        @objc public var bWeight:           UInt8 = 0
-        @objc public var bProportion:       UInt8 = 0
-        @objc public var bContrast:         UInt8 = 0
-        @objc public var bStrokeVariation:  UInt8 = 0
-        @objc public var bArmStyle:         UInt8 = 0
-        @objc public var bLetterform:       UInt8 = 0
-        @objc public var bMidline:          UInt8 = 0
-        @objc public var bXHeight:          UInt8 = 0
+        @objc dynamic public var bFamilyType:       UInt8 = 0
+        @objc dynamic public var bSerifStyle:       UInt8 = 0
+        @objc dynamic public var bWeight:           UInt8 = 0
+        @objc dynamic public var bProportion:       UInt8 = 0
+        @objc dynamic public var bContrast:         UInt8 = 0
+        @objc dynamic public var bStrokeVariation:  UInt8 = 0
+        @objc dynamic public var bArmStyle:         UInt8 = 0
+        @objc dynamic public var bLetterform:       UInt8 = 0
+        @objc dynamic public var bMidline:          UInt8 = 0
+        @objc dynamic public var bXHeight:          UInt8 = 0
 
         public override init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable) throws {
             try super.init(reader, offset: offset, table: table)
