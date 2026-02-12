@@ -14,9 +14,9 @@ final class ViewController_head: FontTableViewController {
 
     var table:                              FontTable_head
 
-    @objc var objcFlags:        UInt16 = 0
-    @objc var objcMacStyle:     UInt16 = 0
-    @objc var objcUnitsPerEm:   UInt16 = 0
+    @objc dynamic var objcFlags:        UInt16 = 0
+    @objc dynamic var objcMacStyle:     UInt16 = 0
+    @objc dynamic var objcUnitsPerEm:   UInt16 = 0
 
     required init?(with fontTable: FontTable) {
         self.table = fontTable as! FontTable_head
@@ -33,30 +33,33 @@ final class ViewController_head: FontTableViewController {
     deinit {
         flagsControl.unbind(NSBindingName("objectValue"))
         macStyleControl.unbind(NSBindingName("objectValue"))
+        Self.tableKeyPaths.forEach { table.removeObserver(self, forKeyPath: $0, context: &Self.headContext) }
+        Self.keyPaths.forEach { removeObserver(self, forKeyPath: $0, context: nil) }
     }
+
+    private static var headContext = 1
 
     override func viewDidLoad() {
         super.viewDidLoad()
         flagsControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFlags")
         macStyleControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcMacStyle")
-
-        table.addObserver(self, forKeyPath: "version", options: [.new, .old], context: &table.version)
-        table.addObserver(self, forKeyPath: "fontRevision", options: [.new, .old], context: &table.fontRevision)
-        table.addObserver(self, forKeyPath: "checksumAdjustment", options: [.new, .old], context: &table.checkSumAdjustment)
-        table.addObserver(self, forKeyPath: "magicNumber", options: [.new, .old], context: &table.magicNumber)
-        addObserver(self, forKeyPath: "objcFlags", options: [.new, .old], context: &objcFlags)
-        addObserver(self, forKeyPath: "objcUnitsPerEm", options: [.new, .old], context: &objcUnitsPerEm)
-        table.addObserver(self, forKeyPath: "created", options: [.new, .old], context: &table.created)
-        table.addObserver(self, forKeyPath: "modified", options: [.new, .old], context: &table.modified)
-        table.addObserver(self, forKeyPath: "xMin", options: [.new, .old], context: &table.xMin)
-        table.addObserver(self, forKeyPath: "yMin", options: [.new, .old], context: &table.yMin)
-        table.addObserver(self, forKeyPath: "xMax", options: [.new, .old], context: &table.xMax)
-        table.addObserver(self, forKeyPath: "yMax", options: [.new, .old], context: &table.yMax)
-        addObserver(self, forKeyPath: "objcMacStyle", options: [.new, .old], context: &objcMacStyle)
-        table.addObserver(self, forKeyPath: "lowestRecPPEM", options: [.new, .old], context: &table.lowestRecPPEM)
-        table.addObserver(self, forKeyPath: "fontDirectionHint", options: [.new, .old], context: &table.fontDirectionHint)
-        table.addObserver(self, forKeyPath: "indexToLocFormat", options: [.new, .old], context: &table.indexToLocFormat)
-        table.addObserver(self, forKeyPath: "glyphDataFormat", options: [.new, .old], context: &table.glyphDataFormat)
+        table.addObserver(self, forKeyPath: "version", options: [.new, .old], context: &Self.headContext)
+        table.addObserver(self, forKeyPath: "fontRevision", options: [.new, .old], context: &Self.headContext)
+        table.addObserver(self, forKeyPath: "checksumAdjustment", options: [.new, .old], context: &Self.headContext)
+        table.addObserver(self, forKeyPath: "magicNumber", options: [.new, .old], context: &Self.headContext)
+        addObserver(self, forKeyPath: "objcFlags", options: [.new, .old], context: nil)
+        addObserver(self, forKeyPath: "objcUnitsPerEm", options: [.new, .old], context: nil)
+        table.addObserver(self, forKeyPath: "created", options: [.new, .old], context: &Self.headContext)
+        table.addObserver(self, forKeyPath: "modified", options: [.new, .old], context: &Self.headContext)
+        table.addObserver(self, forKeyPath: "xMin", options: [.new, .old], context: &Self.headContext)
+        table.addObserver(self, forKeyPath: "yMin", options: [.new, .old], context: &Self.headContext)
+        table.addObserver(self, forKeyPath: "xMax", options: [.new, .old], context: &Self.headContext)
+        table.addObserver(self, forKeyPath: "yMax", options: [.new, .old], context: &Self.headContext)
+        addObserver(self, forKeyPath: "objcMacStyle", options: [.new, .old], context: nil)
+        table.addObserver(self, forKeyPath: "lowestRecPPEM", options: [.new, .old], context: &Self.headContext)
+        table.addObserver(self, forKeyPath: "fontDirectionHint", options: [.new, .old], context: &Self.headContext)
+        table.addObserver(self, forKeyPath: "indexToLocFormat", options: [.new, .old], context: &Self.headContext)
+        table.addObserver(self, forKeyPath: "glyphDataFormat", options: [.new, .old], context: &Self.headContext)
     }
 
     override var representedObject: Any? {
@@ -80,181 +83,89 @@ final class ViewController_head: FontTableViewController {
     @IBAction func changeFlags(_ sender: Any) {
         let sender = sender as! NSButton
         let flags = UInt16(sender.tag)
-        self.willChangeValue(forKey: "objcFlags")
         if sender.state == .on {
             objcFlags |= flags
         } else {
             objcFlags &= ~flags
         }
-        self.didChangeValue(forKey: "objcFlags")
     }
 
     @IBAction func changeMacStyle(_ sender: Any) {
         let sender = sender as! NSButton
         let macStyle = UInt16(sender.tag)
-        self.willChangeValue(forKey: "objcMacStyle")
         if sender.state == .on {
             objcMacStyle |= macStyle
         } else {
             objcMacStyle &= ~macStyle
         }
-        self.didChangeValue(forKey: "objcMacStyle")
     }
 
     @IBAction func now(_ sender: Any) {
         let tag = (sender as! NSButton).tag
         if tag == 0 {
-            table.willChangeValue(forKey: "created")
             table.created = Date().secondsSince1904
-            table.didChangeValue(forKey: "created")
         } else {
-            table.willChangeValue(forKey: "modified")
             table.modified = Date().secondsSince1904
-            table.didChangeValue(forKey: "modified")
         }
     }
 
+    private static let tableKeyPaths = Set(["version", "fontRevision", "checksumAdjustment", "magicNumber",
+                                            "created", "modified", "xMin", "yMin", "xMax", "yMax",
+                                       "lowestRecPPEM", "fontDirectionHint", "indexToLocFormat", "glyphDataFormat"])
+    private static let keyPaths = Set(["objcFlags", "objcUnitsPerEm", "objcMacStyle"])
+
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-//        NSLog("\(type(of: self)).\(#function) keyPath: \(String(describing: keyPath))")
-        guard let context else {
+        guard let keyPath else {
             return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
-        if context == &table.version {
+        NSLog("\(type(of: self)).\(#function) keyPath: \(keyPath)")
+        if !Self.tableKeyPaths.contains(keyPath) && !Self.keyPaths.contains(keyPath) {
+            return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+        }
+        if context == &Self.headContext {
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.table.setValue(change![.oldKey], forKey: keyPath)
+            })
+        } else {
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.setValue(change![.oldKey], forKey: keyPath)
+            })
+        }
+        view.window?.isDocumentEdited = true
+        if keyPath == "version" {
             undoManager?.setActionName(NSLocalizedString("Change Version", comment: ""))
-            undoManager?.registerUndo(withTarget: self, handler: {
-                $0.table.willChangeValue(forKey: "version")
-                $0.table.version = FontTable_head.Version(rawValue: change![.oldKey] as! Int32)!
-                $0.table.didChangeValue(forKey: "version")
-            })
-            view.window?.isDocumentEdited = true
-        } else if context == &table.fontRevision {
+        } else if keyPath == "fontRevision" {
             undoManager?.setActionName(NSLocalizedString("Change Font Revision", comment: ""))
-            undoManager?.registerUndo(withTarget: self, handler: {
-                $0.table.willChangeValue(forKey: "fontRevision")
-                $0.table.fontRevision = change![.oldKey] as! Int32
-                $0.table.didChangeValue(forKey: "fontRevision")
-            })
-            view.window?.isDocumentEdited = true
-        } else if context == &table.checkSumAdjustment {
+        } else if keyPath == "checkSumAdjustment" {
             undoManager?.setActionName(NSLocalizedString("Change Checksum Adjustment", comment: ""))
-            undoManager?.registerUndo(withTarget: self, handler: {
-                $0.table.willChangeValue(forKey: "checkSumAdjustment")
-                $0.table.checkSumAdjustment = change![.oldKey] as! UInt32
-                $0.table.didChangeValue(forKey: "checkSumAdjustment")
-            })
-            view.window?.isDocumentEdited = true
-        } else if context == &table.magicNumber {
+        } else if keyPath == "magicNumber" {
             undoManager?.setActionName(NSLocalizedString("Change Magic Number", comment: ""))
-            undoManager?.registerUndo(withTarget: self, handler: {
-                $0.table.willChangeValue(forKey: "magicNumber")
-                $0.table.magicNumber = change![.oldKey] as! UInt32
-                $0.table.didChangeValue(forKey: "magicNumber")
-            })
-            view.window?.isDocumentEdited = true
-        } else if context == &objcFlags {
+        } else if keyPath == "objcFlags" {
             undoManager?.setActionName(NSLocalizedString("Change Flags", comment: ""))
-            undoManager?.registerUndo(withTarget: self, handler: {
-                $0.willChangeValue(forKey: "objcFlags")
-                $0.objcFlags = change![.oldKey] as! UInt16
-                $0.didChangeValue(forKey: "objcFlags")
-            })
-            view.window?.isDocumentEdited = true
-        } else if context == &objcUnitsPerEm {
+        } else if keyPath == "objcUnitsPerEm" {
             undoManager?.setActionName(NSLocalizedString("Change Units Per Em", comment: ""))
-            undoManager?.registerUndo(withTarget: self, handler: {
-                $0.willChangeValue(forKey: "objcUnitsPerEm")
-                $0.objcUnitsPerEm = change![.oldKey] as! UInt16
-                $0.didChangeValue(forKey: "objcUnitsPerEm")
-            })
-            view.window?.isDocumentEdited = true
-        } else if context == &table.created {
+        } else if keyPath == "created" {
             undoManager?.setActionName(NSLocalizedString("Change Created Date", comment: ""))
-            undoManager?.registerUndo(withTarget: self, handler: {
-                $0.table.willChangeValue(forKey: "created")
-                $0.table.created = change![.oldKey] as! Int64
-                $0.table.didChangeValue(forKey: "created")
-            })
-            view.window?.isDocumentEdited = true
-        } else if context == &table.modified {
+        } else if keyPath == "modified" {
             undoManager?.setActionName(NSLocalizedString("Change Modified Date", comment: ""))
-            undoManager?.registerUndo(withTarget: self, handler: {
-                $0.table.willChangeValue(forKey: "modified")
-                $0.table.modified = change![.oldKey] as! Int64
-                $0.table.didChangeValue(forKey: "modified")
-            })
-            view.window?.isDocumentEdited = true
-        } else if context == &table.xMin {
+        } else if keyPath == "xMin" {
             undoManager?.setActionName(NSLocalizedString("Change x-Min", comment: ""))
-            undoManager?.registerUndo(withTarget: self, handler: {
-                $0.table.willChangeValue(forKey: "xMin")
-                $0.table.xMin = change![.oldKey] as! Int16
-                $0.table.didChangeValue(forKey: "xMin")
-            })
-            view.window?.isDocumentEdited = true
-        } else if context == &table.yMin {
+        } else if keyPath == "yMin" {
             undoManager?.setActionName(NSLocalizedString("Change y-Min", comment: ""))
-            undoManager?.registerUndo(withTarget: self, handler: {
-                $0.table.willChangeValue(forKey: "yMin")
-                $0.table.yMin = change![.oldKey] as! Int16
-                $0.table.didChangeValue(forKey: "yMin")
-            })
-            view.window?.isDocumentEdited = true
-        } else if context == &table.xMax {
+        } else if keyPath == "xMax" {
             undoManager?.setActionName(NSLocalizedString("Change x-Max", comment: ""))
-            undoManager?.registerUndo(withTarget: self, handler: {
-                $0.table.willChangeValue(forKey: "xMax")
-                $0.table.xMax = change![.oldKey] as! Int16
-                $0.table.didChangeValue(forKey: "xMax")
-            })
-            view.window?.isDocumentEdited = true
-        } else if context == &table.yMax {
+        } else if keyPath == "yMax" {
             undoManager?.setActionName(NSLocalizedString("Change y-Max", comment: ""))
-            undoManager?.registerUndo(withTarget: self, handler: {
-                $0.table.willChangeValue(forKey: "yMax")
-                $0.table.yMax = change![.oldKey] as! Int16
-                $0.table.didChangeValue(forKey: "yMax")
-            })
-            view.window?.isDocumentEdited = true
-        } else if context == &objcMacStyle {
+        } else if keyPath == "objcMacStyle" {
             undoManager?.setActionName(NSLocalizedString("Change Mac Style", comment: ""))
-            undoManager?.registerUndo(withTarget: self, handler: {
-                $0.willChangeValue(forKey: "objcMacStyle")
-                $0.objcMacStyle = change![.oldKey] as! UInt16
-                $0.didChangeValue(forKey: "objcMacStyle")
-            })
-            view.window?.isDocumentEdited = true
-        } else if context == &table.lowestRecPPEM {
+        } else if keyPath == "lowestRecPPEM" {
             undoManager?.setActionName(NSLocalizedString("Change Lowest Recommended Pixels Per Em", comment: ""))
-            undoManager?.registerUndo(withTarget: self, handler: {
-                $0.table.willChangeValue(forKey: "lowestRecPPEM")
-                $0.table.lowestRecPPEM = change![.oldKey] as! UInt16
-                $0.table.didChangeValue(forKey: "lowestRecPPEM")
-            })
-            view.window?.isDocumentEdited = true
-        } else if context == &table.fontDirectionHint {
+        } else if keyPath == "fontDirectionHint" {
             undoManager?.setActionName(NSLocalizedString("Change Font Direction Hint", comment: ""))
-            undoManager?.registerUndo(withTarget: self, handler: {
-                $0.table.willChangeValue(forKey: "fontDirectionHint")
-                $0.table.fontDirectionHint = FontTable_head.FontDirectionHint(rawValue: change![.oldKey] as! Int16)!
-                $0.table.didChangeValue(forKey: "fontDirectionHint")
-            })
-            view.window?.isDocumentEdited = true
-        } else if context == &table.indexToLocFormat {
+        } else if keyPath == "indexToLocFormat" {
             undoManager?.setActionName(NSLocalizedString("Change Index to Location Format", comment: ""))
-            undoManager?.registerUndo(withTarget: self, handler: {
-                $0.table.willChangeValue(forKey: "indexToLocFormat")
-                $0.table.indexToLocFormat = FontTable_head.IndexToLocFormat(rawValue: change![.oldKey] as! Int16)!
-                $0.table.didChangeValue(forKey: "indexToLocFormat")
-            })
-            view.window?.isDocumentEdited = true
-        } else if context == &table.glyphDataFormat {
+        } else if keyPath == "glyphDataFormat" {
             undoManager?.setActionName(NSLocalizedString("Change Glyph Data Format", comment: ""))
-            undoManager?.registerUndo(withTarget: self, handler: {
-                $0.table.willChangeValue(forKey: "glyphDataFormat")
-                $0.table.glyphDataFormat = change![.oldKey] as! Int16
-                $0.table.didChangeValue(forKey: "glyphDataFormat")
-            })
-            view.window?.isDocumentEdited = true
         }
     }
 }

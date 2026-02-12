@@ -59,23 +59,23 @@ final public class FontTable_head: FontTable {
     public static let magicNumber:              UInt32 = 0x5F0F3CF5
 
     // MARK: -
-    @objc public var version:               Version = .default1_0   // Int32; 0x00010000
-    @objc public var fontRevision:          Fixed = 0               // Int32
-    @objc public var checkSumAdjustment:    UInt32 = 0
-    @objc public var magicNumber:           UInt32 = FontTable_head.magicNumber   // set to 0x5F0F3CF5
-    public var flags:                       Flags = []
-    public var unitsPerEm:                  UnitsPerEm = .custom(0) // UInt16; from 16-16384; if TT outlines, power-of-2 is recommended
-    @objc public var created:               Int64 = 0               // num seconds since midnight Jan 1, 1904 in GMT/UTC time zone
-    @objc public var modified:              Int64 = 0               // num seconds since midnight Jan 1, 1904 in GMT/UTC time zone
-    @objc public var xMin:                  Int16 = 0               // for all glyphs (only those w/ contours) bounding boxes
-    @objc public var yMin:                  Int16 = 0               // for all glyphs (only those w/ contours) bounding boxes
-    @objc public var xMax:                  Int16 = 0               // for all glyphs (only those w/ contours) bounding boxes
-    @objc public var yMax:                  Int16 = 0               // for all glyphs (only those w/ contours) bounding boxes
-    public var macStyle:                    MacFontStyle = []       // UInt16; should be synced w/ OS/2 fsSelection bits
-    @objc public var lowestRecPPEM:         UInt16 = 0              // smallest readable size in px
-    @objc public var fontDirectionHint:     FontDirectionHint = .fullyMixedLeftToRight // deprecated? (set to 2)
-    @objc public var indexToLocFormat:      IndexToLocFormat = .short   // 0 for short offsets, 1 for long
-    @objc public var glyphDataFormat:       Int16 = 0               // 0 for current format
+    @objc dynamic public var version:               Version = .default1_0   // Int32; 0x00010000
+    @objc dynamic public var fontRevision:          Fixed = 0               // Int32
+    @objc dynamic public var checkSumAdjustment:    UInt32 = 0
+    @objc dynamic public var magicNumber:           UInt32 = FontTable_head.magicNumber   // set to 0x5F0F3CF5
+    public var flags:                               Flags = []
+    public var unitsPerEm:                          UnitsPerEm = .custom(0) // UInt16; from 16-16384; if TT outlines, power-of-2 is recommended
+    @objc dynamic public var created:               Int64 = 0               // num seconds since midnight Jan 1, 1904 in GMT/UTC time zone
+    @objc dynamic public var modified:              Int64 = 0               // num seconds since midnight Jan 1, 1904 in GMT/UTC time zone
+    @objc dynamic public var xMin:                  Int16 = 0               // for all glyphs (only those w/ contours) bounding boxes
+    @objc dynamic public var yMin:                  Int16 = 0               // for all glyphs (only those w/ contours) bounding boxes
+    @objc dynamic public var xMax:                  Int16 = 0               // for all glyphs (only those w/ contours) bounding boxes
+    @objc dynamic public var yMax:                  Int16 = 0               // for all glyphs (only those w/ contours) bounding boxes
+    public var macStyle:                            MacFontStyle = []       // UInt16; should be synced w/ OS/2 fsSelection bits
+    @objc dynamic public var lowestRecPPEM:         UInt16 = 0              // smallest readable size in px
+    @objc dynamic public var fontDirectionHint:     FontDirectionHint = .fullyMixedLeftToRight // deprecated? (set to 2)
+    @objc dynamic public var indexToLocFormat:      IndexToLocFormat = .short   // 0 for short offsets, 1 for long
+    @objc dynamic public var glyphDataFormat:       Int16 = 0               // 0 for current format
 
     public override var calculatedChecksum: UInt32 {
         /// we're different in that we need to set checksumAdjustment
