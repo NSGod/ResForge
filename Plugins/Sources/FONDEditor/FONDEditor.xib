@@ -40,7 +40,7 @@
                 <binding destination="-2" name="contentArray" keyPath="fond.fontAssociationTable.entries" id="en0-WA-sBD"/>
             </connections>
         </arrayController>
-        <window title="FOND Editor" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" frameAutosaveName="FONDEditorWindow" animationBehavior="default" tabbingMode="disallowed" id="4Uc-O3-eRj">
+        <window title="FOND Editor" allowsToolTipsWhenApplicationIsInactive="NO" releasedWhenClosed="NO" frameAutosaveName="FONDEditorWindow" animationBehavior="default" tabbingMode="disallowed" id="4Uc-O3-eRj">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="604" width="1036" height="838"/>

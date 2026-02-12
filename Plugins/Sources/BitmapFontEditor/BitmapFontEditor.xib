@@ -24,7 +24,7 @@
             <real key="maximum" value="32767"/>
         </numberFormatter>
         <numberFormatter formatterBehavior="default10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="WuE-8k-2k5" userLabel="f4Dot12Formatter" customClass="Fixed4Dot12NumberFormatter" customModule="CoreFont"/>
-        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5" userLabel="window">
+        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5" userLabel="window">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <rect key="contentRect" x="196" y="240" width="661" height="624"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1169"/>
@@ -220,7 +220,6 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="objcFontType" id="fsf-nj-lhz"/>
-                            <outlet property="nextKeyView" destination="0QR-Ro-MbD" id="7Xu-YO-Bsm"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tln-Yk-aa6">
@@ -252,7 +251,6 @@
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.lastChar" id="vNj-G1-Bfc"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="5QI-K9-hL3"/>
-                            <outlet property="nextKeyView" destination="5AZ-rs-DUH" id="MEv-7V-4xk"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hSH-q8-K7V">
@@ -275,7 +273,6 @@
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.widMax" id="rOD-zf-Lx3"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="NVH-XH-D9i"/>
-                            <outlet property="nextKeyView" destination="oEp-zR-KTk" id="gyu-sf-fv4"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0QR-Ro-MbD">
@@ -289,7 +286,6 @@
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.firstChar" id="23g-cR-rkY"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="1XZ-eK-Htc"/>
-                            <outlet property="nextKeyView" destination="2FQ-HI-fJL" id="syE-Ey-2qQ"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1Ob-Ag-NRr">
@@ -313,7 +309,6 @@
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.kernMax" id="Nxe-R9-exH"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="qYO-CZ-Qax"/>
-                            <outlet property="nextKeyView" destination="Zcc-Un-TM1" id="gZW-Zo-Fdn"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9E2-VE-hXN">
@@ -336,7 +331,6 @@
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.nDescent" id="Zh8-oI-2O0"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="xc5-Br-Lhx"/>
-                            <outlet property="nextKeyView" destination="zHK-lr-S3L" id="9Vw-5b-ZCM"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wAj-vP-AFU">
@@ -360,7 +354,6 @@
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.fRectHeight" id="7ye-wn-QxP"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="N1p-SF-46Q"/>
-                            <outlet property="nextKeyView" destination="wiP-kd-DLV" id="xfT-8Z-uJ0"/>
                         </connections>
                     </textField>
                     <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="qgh-vb-RXp">
@@ -388,7 +381,6 @@
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.fRectWidth" id="O2y-m0-Vtk"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="naC-aH-zSb"/>
-                            <outlet property="nextKeyView" destination="F8P-8v-MdM" id="4it-wy-doh"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BRf-JY-1Xt">
@@ -415,7 +407,6 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.owTLoc" id="0OB-Be-X3D"/>
-                            <outlet property="nextKeyView" destination="bWW-qv-XyM" id="KWX-Fv-A5g"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EAt-fs-hIB">
@@ -439,7 +430,6 @@
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.ascent" id="x8N-Ih-Esp"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="oQN-4f-HyX"/>
-                            <outlet property="nextKeyView" destination="xks-Jh-bnR" id="RkJ-9p-Rmp"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kgr-5b-b39">
@@ -463,7 +453,6 @@
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.descent" id="bxg-sc-Dkg"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="1MO-er-2rr"/>
-                            <outlet property="nextKeyView" destination="Pgj-oT-8a3" id="ca6-zl-asL"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Saa-pX-N0R">
@@ -487,7 +476,6 @@
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.leading" id="LaX-Wb-GbZ"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="WQA-eg-96D"/>
-                            <outlet property="nextKeyView" destination="MYf-RA-wmh" id="9eL-dq-2lz"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CUY-C6-r8H">
@@ -510,7 +498,6 @@
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.rowWords" id="Jhu-ph-H6E"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="VSi-MQ-BQY"/>
-                            <outlet property="nextKeyView" destination="wLP-hA-sxH" id="3DC-e9-bhN"/>
                         </connections>
                     </textField>
                     <box fixedFrame="YES" boxType="custom" borderType="line" cornerRadius="4" translatesAutoresizingMaskIntoConstraints="NO" id="gbN-Oc-2O2">
