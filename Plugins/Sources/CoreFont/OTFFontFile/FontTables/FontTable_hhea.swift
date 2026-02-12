@@ -30,25 +30,25 @@ final public class FontTable_hhea: FontTable {
         case default1_0 = 0x00010000
     }
 
-    @objc public var version:               Version = .default1_0
-    @objc public var ascender:              Int16 = 0   // design intention
-    @objc public var descender:             Int16 = 0   // design intention
-    @objc public var lineGap:               Int16 = 0   // design intention
-    @objc public var advanceWidthMax:       UInt16 = 0  // calculated; must be consistent
-    @objc public var minLeftSideBearing:    Int16 = 0   // calculated; must be consistent
-    @objc public var minRightSideBearing:   Int16 = 0   // calculated; MIN (aWM - lsb - (xMax - xMin)); must be consistent
-    @objc public var xMaxExtent:            UInt16 = 0  // MAX (lsb + (xMax - xMin))
-    @objc public var caretSlopeRise:        Int16 = 0   // to calc slope of cursor; 1 for vertical
-    @objc public var caretSlopeRun:         Int16 = 0   // 0 for vertical
-    @objc public var caretOffset:           Int16 = 0
+    @objc dynamic public var version:               Version = .default1_0
+    @objc dynamic public var ascender:              Int16 = 0   // design intention
+    @objc dynamic public var descender:             Int16 = 0   // design intention
+    @objc dynamic public var lineGap:               Int16 = 0   // design intention
+    @objc dynamic public var advanceWidthMax:       UInt16 = 0  // calculated; must be consistent
+    @objc dynamic public var minLeftSideBearing:    Int16 = 0   // calculated; must be consistent
+    @objc dynamic public var minRightSideBearing:   Int16 = 0   // calculated; MIN (aWM - lsb - (xMax - xMin)); must be consistent
+    @objc dynamic public var xMaxExtent:            UInt16 = 0  // MAX (lsb + (xMax - xMin))
+    @objc dynamic public var caretSlopeRise:        Int16 = 0   // to calc slope of cursor; 1 for vertical
+    @objc dynamic public var caretSlopeRun:         Int16 = 0   // 0 for vertical
+    @objc dynamic public var caretOffset:           Int16 = 0
 
-    @objc public var reserved0:             Int16 = 0
-    @objc public var reserved1:             Int16 = 0
-    @objc public var reserved2:             Int16 = 0
-    @objc public var reserved3:             Int16 = 0
+    @objc dynamic public var reserved0:             Int16 = 0
+    @objc dynamic public var reserved1:             Int16 = 0
+    @objc dynamic public var reserved2:             Int16 = 0
+    @objc dynamic public var reserved3:             Int16 = 0
 
-    @objc public var metricDataFormat:      Int16 = 0   // 0 for current format
-    @objc public var numberOfHMetrics:      UInt16 = 0
+    @objc dynamic public var metricDataFormat:      Int16 = 0   // 0 for current format
+    @objc dynamic public var numberOfHMetrics:      UInt16 = 0
 
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
