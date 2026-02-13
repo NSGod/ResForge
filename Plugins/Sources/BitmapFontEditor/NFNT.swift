@@ -43,20 +43,36 @@ extension NFNT {
     }
 
     struct FontType: OptionSet {
-        let rawValue: UInt16
+        var rawValue: UInt16
         init(rawValue: UInt16) { self.rawValue = rawValue }
 
         static let hasImageHeightTable      = FontType(rawValue: 1 << 0)
         static let hasGlyphWidthTable       = FontType(rawValue: 1 << 1)
-        static let font2BitDepth            = FontType(rawValue: 1 << 2)
-        static let font4BitDepth            = FontType(rawValue: 1 << 3)
-        static let font8BitDepth            = FontType(rawValue: 12)
+        static let font2BitDepth            = FontType(rawValue: 1 << 2) // 4
+        static let font4BitDepth            = FontType(rawValue: 1 << 3) // 8
+        static let font8BitDepth            = FontType(rawValue: 12)     // 12
         static let hasFctbResource          = FontType(rawValue: 1 << 7)
         static let isSyntheticFont          = FontType(rawValue: 1 << 8)
         static let isColorFont              = FontType(rawValue: 1 << 9)
         static let reserved12               = FontType(rawValue: 1 << 12)   // reserved, should be 1
         static let isFixedWidthFont         = FontType(rawValue: 1 << 13)
         static let expandFontHeight         = FontType(rawValue: 1 << 14)
+
+        var fontBitDepthTag: Int {
+            if self.contains(.font8BitDepth) {
+                return Int(Self.font8BitDepth.rawValue)
+            } else if self.contains(.font4BitDepth) {
+                return Int(Self.font4BitDepth.rawValue)
+            } else if self.contains(.font2BitDepth) {
+                return Int(Self.font2BitDepth.rawValue)
+            } else {
+                return 0
+            }
+        }
+
+        mutating func set(fontBitDepth: UInt16) {
+            
+        }
 
         static func viewTag(forFontBitDepth: FontType) -> Int {
             switch forFontBitDepth {
@@ -76,22 +92,18 @@ public final class NFNT: NSObject {
     }
 
     var fontType:               FontType        // UInt16
-    @objc var firstChar:        Int16           // ASCII code of first character
-    @objc var lastChar:         Int16           // ASCII code of last character
-    @objc var widMax:           Int16           // maximum character width
-    @objc var kernMax:          Int16           // negative of maximum character kern
-    @objc var nDescent:         Int16           // negative of descent
-    @objc var fRectWidth:       Int16           // width of font rectangle
-    @objc var fRectHeight:      Int16           // height of font rectangle
-    @objc var owTLoc:           UInt16          // offset to offset/width table
-    @objc var ascent:           Int16           // ascent
-    @objc var descent:          Int16           // descent
-    @objc var leading:          Int16           // leading
-    @objc var rowWords:         Int16           // row width of bit image / 2
-
-    @objc var objcFontType:     FontType.RawValue {
-        didSet { fontType = FontType(rawValue: objcFontType) }
-    }
+    @objc dynamic var firstChar:        Int16           // ASCII code of first character
+    @objc dynamic var lastChar:         Int16           // ASCII code of last character
+    @objc dynamic var widMax:           Int16           // maximum character width
+    @objc dynamic var kernMax:          Int16           // negative of maximum character kern
+    @objc dynamic var nDescent:         Int16           // negative of descent
+    @objc dynamic var fRectWidth:       Int16           // width of font rectangle
+    @objc dynamic var fRectHeight:      Int16           // height of font rectangle
+    @objc dynamic var owTLoc:           UInt16          // offset to offset/width table
+    @objc dynamic var ascent:           Int16           // ascent
+    @objc dynamic var descent:          Int16           // descent
+    @objc dynamic var leading:          Int16           // leading
+    @objc dynamic var rowWords:         Int16           // row width of bit image / 2
 
     var lineHeight:             CGFloat { CGFloat(fRectHeight + leading) }
 
@@ -125,14 +137,12 @@ public final class NFNT: NSObject {
         return _bitmapImage
     }()
 
-    // FIXME: figure out something better for this?
     private var _glyphs:                [Glyph] = []
     private var _glyphEntries:          [String: Glyph] = [:]
     private var _bitmapImage:           NSImage?
 
-    unowned var resource:       Resource
+    private var resource:       Resource
     private var reader:         BinaryDataReader
-
     private var haveBuiltGlyphs: Bool = false
 
     // MARK: - init
@@ -152,7 +162,6 @@ public final class NFNT: NSObject {
         descent = try reader.read()
         leading = try reader.read()
         rowWords = try reader.read()
-        objcFontType = fontType.rawValue
     }
 
     private func buildImageAndGlyphsIfNeeded() throws {
@@ -220,7 +229,6 @@ public final class NFNT: NSObject {
         /// (called behind the scenes) didn't like the dimensions given.
         /// Actually, rather than using bitmapImageRepByConvertingToImageSpace:, which could fail in previous versions
         /// of OS X, we'll do the conversion ourselves.
-
         let sRGBRef = CGColorSpace.init(name: CGColorSpace.sRGB)!
         let bitmapContext = CGContext(data: nil,
                                       width: Int(rowWords) * 16,
@@ -301,6 +309,7 @@ public final class NFNT: NSObject {
 
         // FIXME: this needs work, I think
         for i in Int(firstChar)...Int(lastChar) {
+            // FIXME: make sure we don't get an outofbounds index on ascii
             let asciiEntryKey = ascii[i]
             if i >= firstChar && i < lastChar {
                 let pixelOffsetEntry = pixelOffsets[i - Int(firstChar)]
@@ -312,7 +321,7 @@ public final class NFNT: NSObject {
                 _glyphEntries[asciiEntryKey] = entry
                 _glyphs.append(entry)
             } else if i >= lastChar {
-                // FIXME: figure this out, I'm not really sure what I was thinking
+                // FIXME: !! figure this out, I'm not really sure what I was thinking
                 _glyphEntries[asciiEntryKey] = Glyph.nullGlyph
                 _glyphs.append(Glyph.nullGlyph)
             }
@@ -320,7 +329,6 @@ public final class NFNT: NSObject {
         haveBuiltGlyphs = true
         _bitmapImage = image
     }
-
 }
 
 fileprivate let ascii: [String] = [

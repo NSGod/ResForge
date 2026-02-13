@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24506" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24506"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -53,6 +52,9 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="changeFontType:" target="-2" id="123-I9-e2H"/>
+                                </connections>
                             </button>
                             <button tag="32768" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fLX-G2-7WX">
                                 <rect key="frame" x="-1" y="-1" width="184" height="16"/>
@@ -61,6 +63,9 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="changeFontType:" target="-2" id="c8L-RV-8an"/>
+                                </connections>
                             </button>
                             <button tag="64" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V1P-gR-KW7">
                                 <rect key="frame" x="-1" y="152" width="179" height="16"/>
@@ -69,6 +74,9 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="changeFontType:" target="-2" id="Fgf-3j-tSI"/>
+                                </connections>
                             </button>
                             <button tag="8192" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eYG-jn-vaP">
                                 <rect key="frame" x="-1" y="33" width="155" height="16"/>
@@ -77,6 +85,9 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="changeFontType:" target="-2" id="UYE-Cm-7mx"/>
+                                </connections>
                             </button>
                             <button tag="16" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EJW-OW-jxK">
                                 <rect key="frame" x="-1" y="186" width="179" height="16"/>
@@ -85,6 +96,9 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="changeFontType:" target="-2" id="wcV-AZ-gUZ"/>
+                                </connections>
                             </button>
                             <button tag="256" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WR2-8W-8J4">
                                 <rect key="frame" x="-1" y="118" width="149" height="16"/>
@@ -94,6 +108,9 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="changeFontType:" target="-2" id="3q6-gL-S8k"/>
+                                </connections>
                             </button>
                             <button tag="32" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7e2-RZ-M3p">
                                 <rect key="frame" x="-1" y="169" width="179" height="16"/>
@@ -102,6 +119,9 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="changeFontType:" target="-2" id="Po6-wW-aqv"/>
+                                </connections>
                             </button>
                             <button tag="2048" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jOQ-w7-2Qf">
                                 <rect key="frame" x="-1" y="67" width="184" height="16"/>
@@ -110,6 +130,9 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="changeFontType:" target="-2" id="k4k-sQ-DFI"/>
+                                </connections>
                             </button>
                             <button tag="128" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lFw-xX-src">
                                 <rect key="frame" x="-1" y="135" width="200" height="16"/>
@@ -118,6 +141,9 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="changeFontType:" target="-2" id="FCt-jj-OEr"/>
+                                </connections>
                             </button>
                             <button tag="1024" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dr0-Ur-FP6">
                                 <rect key="frame" x="-1" y="84" width="184" height="16"/>
@@ -126,6 +152,9 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="changeFontType:" target="-2" id="L8l-7O-kBu"/>
+                                </connections>
                             </button>
                             <button toolTip="This bit is set to 1 if the font contains colors other than black." tag="512" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4nU-Rf-LL6">
                                 <rect key="frame" x="-1" y="101" width="127" height="16"/>
@@ -134,6 +163,9 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="changeFontType:" target="-2" id="H4n-yM-ex7"/>
+                                </connections>
                             </button>
                             <button tag="4096" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Ny-Dx-Vuv">
                                 <rect key="frame" x="-1" y="50" width="184" height="16"/>
@@ -142,6 +174,9 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="changeFontType:" target="-2" id="D7K-ms-KpG"/>
+                                </connections>
                             </button>
                             <button tag="1" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hy6-Ap-J7a">
                                 <rect key="frame" x="-1" y="254" width="200" height="16"/>
@@ -161,6 +196,9 @@
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="changeFontType:" target="-2" id="PtJ-V5-L1d"/>
+                                </connections>
                             </button>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jHf-9U-3rw">
                                 <rect key="frame" x="-2" y="215" width="92" height="14"/>
@@ -180,14 +218,15 @@
                                     <menu key="menu" id="4NN-2e-xfC">
                                         <items>
                                             <menuItem title="1 bit" state="on" id="VOG-Yv-bh2"/>
-                                            <menuItem title="2 bit" tag="1" id="G7N-Ok-fJ6"/>
-                                            <menuItem title="4 bit" tag="2" id="mmH-Kp-7DF"/>
-                                            <menuItem title="8 bit" tag="3" id="EIo-RV-3Dr"/>
+                                            <menuItem title="2 bit" tag="4" id="G7N-Ok-fJ6"/>
+                                            <menuItem title="4 bit" tag="8" id="mmH-Kp-7DF"/>
+                                            <menuItem title="8 bit" tag="12" id="EIo-RV-3Dr"/>
                                         </items>
                                     </menu>
                                 </popUpButtonCell>
                                 <connections>
                                     <action selector="changeBitDepth:" target="-2" id="Ipq-VP-dlr"/>
+                                    <binding destination="-2" name="selectedTag" keyPath="objcBitDepth" id="bfe-mC-sfh"/>
                                 </connections>
                             </popUpButton>
                         </subviews>

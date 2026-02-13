@@ -33,7 +33,13 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
     private let manager:                    RFEditorManager
     @objc var nfnt:                         NFNT
 
-    @objc var objcFontType:                 UInt16
+    @objc dynamic var objcFontType:         UInt16
+    @objc dynamic var objcBitDepth:         UInt16
+
+    private static var nfntContext = 1
+    private static let nfntKeyPaths = Set(["firstChar", "lastChar", "widMax", "kernMax", "nDescent",
+                    "fRectWidth", "fRectHeight", "owTLoc", "ascent", "descent", "rowWords"])
+    private static let keyPaths = Set(["objcFontType", "objcBitDepth"])
 
     public override var windowNibName: NSNib.Name? {
         return "BitmapFontEditor"
@@ -49,6 +55,7 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
         do {
             nfnt = try NFNT(with: self.resource)
             objcFontType = nfnt.fontType.rawValue
+            objcBitDepth = objcFontType & ~0xFFF3
         } catch  {
             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
             return nil
@@ -62,13 +69,13 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
 
     deinit {
         fontTypeBitfieldControl.unbind(NSBindingName("objectValue"))
+        Self.nfntKeyPaths.forEach { nfnt.removeObserver(self, forKeyPath: $0) }
+        Self.keyPaths.forEach { removeObserver(self, forKeyPath: $0) }
     }
 
     public override func awakeFromNib() {
 //        NSLog("\(type(of: self)).\(#function)")
     }
-
-    static var nfntContext = 1
 
     public override func windowDidLoad() {
         super.windowDidLoad()
@@ -82,7 +89,6 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
         previewView = prevView
         box.contentView = prevView
         previewView.alignment = .center
-//        self.previewView.stringValue = "Spinhx of black quartz, judge my vow!"
         self.previewView.stringValue = """
             ABCDEFGHIJKLM
             NOPQRSTUVWXYZ
@@ -91,20 +97,8 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
             0123456789
             """
         fontTypeBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFontType")
-        bitDepthPopUpButton.selectItem(withTag: NFNT.FontType.viewTag(forFontBitDepth: nfnt.fontType))
-        nfnt.addObserver(self, forKeyPath: "firstChar", options: [.new, .old], context: &Self.nfntContext)
-        nfnt.addObserver(self, forKeyPath: "lastChar", options: [.new, .old], context: &Self.nfntContext)
-        nfnt.addObserver(self, forKeyPath: "widMax", options: [.new, .old], context: &Self.nfntContext)
-        nfnt.addObserver(self, forKeyPath: "kernMax", options: [.new, .old], context: &Self.nfntContext)
-        nfnt.addObserver(self, forKeyPath: "nDescent", options: [.new, .old], context: &Self.nfntContext)
-        nfnt.addObserver(self, forKeyPath: "fRectWidth", options: [.new, .old], context: &Self.nfntContext)
-        nfnt.addObserver(self, forKeyPath: "fRectHeight", options: [.new, .old], context: &Self.nfntContext)
-        nfnt.addObserver(self, forKeyPath: "owTLoc", options: [.new, .old], context: &Self.nfntContext)
-        nfnt.addObserver(self, forKeyPath: "ascent", options: [.new, .old], context: &Self.nfntContext)
-        nfnt.addObserver(self, forKeyPath: "descent", options: [.new, .old], context: &Self.nfntContext)
-        nfnt.addObserver(self, forKeyPath: "leading", options: [.new, .old], context: &Self.nfntContext)
-        nfnt.addObserver(self, forKeyPath: "rowWords", options: [.new, .old], context: &Self.nfntContext)
-        addObserver(self, forKeyPath: "objcFontType", options: [.new, .old], context: nil)
+        Self.nfntKeyPaths.forEach { nfnt.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.nfntContext) }
+        Self.keyPaths.forEach { addObserver(self, forKeyPath: $0, options: [.new, .old], context: nil) }
     }
 
     @IBAction func showPopover(_ sender: Any) {
@@ -113,20 +107,18 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
 
     @IBAction func changeFontType(_ sender: Any) {
         let sender = sender as! NSButton
-        willChangeValue(forKey: "objcFontType")
         if sender.state == .on {
             objcFontType = objcFontType | UInt16(sender.tag)
         } else {
             objcFontType = objcFontType & ~UInt16(sender.tag)
         }
-        didChangeValue(forKey: "objcFontType")
     }
 
     @IBAction func changeBitDepth(_ sender: Any) {
-        NSLog("\(type(of: self)).\(#function)")
-        guard let sender = sender as? NSPopUpButton else { return }
-
-        
+        let sender = sender as! NSPopUpButton
+        undoManager?.disableUndoRegistration()
+        objcFontType = (objcFontType & ~12) | UInt16(sender.selectedTag())
+        undoManager?.enableUndoRegistration()
     }
 
     public func saveResource(_ sender: Any) {
@@ -137,29 +129,30 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
         NSLog("\(type(of: self)).\(#function)()")
     }
 
-    private static let keyPaths = Set(["firstChar", "lastChar", "widMax", "kernMax", "nDescent", "fRectWidth", "fRectHeight", "owTLoc", "ascent", "descent", "leading", "rowWords", "objcFontType"])
-
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard let keyPath else {
             return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
 //        NSLog("\(type(of: self)).\(#function) keyPath == \(keyPath)")
-        if Self.keyPaths.contains(keyPath) {
-            if context == &Self.nfntContext {
-                undoManager?.registerUndo(withTarget: self, handler: {
-                    $0.nfnt.willChangeValue(forKey: keyPath)
-                    $0.nfnt.setValue(change![.oldKey], forKey: keyPath)
-                    $0.nfnt.didChangeValue(forKey: keyPath)
-                })
-            } else {
-                undoManager?.registerUndo(withTarget: self, handler: {
-                    $0.willChangeValue(forKey: keyPath)
-                    $0.setValue(change![.oldKey], forKey: keyPath)
-                    $0.didChangeValue(forKey: keyPath)
-                })
-            }
-            window?.isDocumentEdited = true
+        if !Self.nfntKeyPaths.contains(keyPath) && !Self.keyPaths.contains(keyPath) {
+            return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
+        if context == &Self.nfntContext {
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.nfnt.setValue(change![.oldKey], forKeyPath: keyPath)
+            })
+        } else {
+            undoManager?.registerUndo(withTarget: self, handler: {
+                $0.setValue(change![.oldKey], forKeyPath: keyPath)
+                if keyPath == "objcBitDepth" {
+                    let tag = change![.oldKey] as! UInt16
+                    $0.undoManager?.disableUndoRegistration()
+                    $0.objcFontType = (self.objcFontType & ~12) | tag
+                    $0.undoManager?.enableUndoRegistration()
+                }
+            })
+        }
+        window?.isDocumentEdited = true
         if keyPath == "firstChar" {
             undoManager?.setActionName(NSLocalizedString("Change First Character", comment: ""))
         } else if keyPath == "lastChar" {
@@ -184,8 +177,10 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
             undoManager?.setActionName(NSLocalizedString("Change Leading", comment: ""))
         } else if keyPath == "rowWords" {
             undoManager?.setActionName(NSLocalizedString("Change Image Row Words", comment: ""))
-        } else {
+        } else if keyPath == "objcFontType" {
             undoManager?.setActionName(NSLocalizedString("Change Font Type", comment: ""))
+        } else if keyPath == "objcBitDepth" {
+            undoManager?.setActionName(NSLocalizedString("Change Bit Depth", comment: ""))
         }
     }
 
@@ -208,7 +203,7 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
     }
 }
 
-// MARK: <PreviewProvider>
+// MARK: - <PreviewProvider>
 extension BitmapFontEditor: PreviewProvider {
 	static let previewView: BitmapFontPreviewView = BitmapFontPreviewView(frame: NSMakeRect(0, 0, 64, 64))
 	static var isSetup = false
