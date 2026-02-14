@@ -30,6 +30,11 @@ class FontTableViewController: NSViewController {
         // allows view controllers to try to end editing and then push any local vars back into their table
     }
 
+    override func viewDidAppear() {
+        super.viewDidAppear()
+        NSLog("\(type(of: self)).\(#function) undoManager == \(String(describing: undoManager))")
+    }
+
     @objc func updateUI() {
 
     }

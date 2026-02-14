@@ -58,17 +58,19 @@ final class ViewController_gasp: FontTableViewController, NSTableViewDelegate {
 
     @IBAction func changeBehavior(_ sender: Any) {
         let sender = sender as! NSButton
-        let behavior: UInt16 = UInt16(sender.tag)
         let row = (sender.superview! as! BitfieldControl).tag
         let range = (rangesController.arrangedObjects as! [FontTable_gasp.Range])[row]
         if sender.state == .on {
-            range.objcBehavior = range.objcBehavior | behavior
+            range.objcBehavior = range.objcBehavior | UInt16(sender.tag)
         } else {
-            range.objcBehavior = range.objcBehavior & ~behavior
+            range.objcBehavior = range.objcBehavior & ~UInt16(sender.tag)
         }
     }
 
     @IBAction func setVersion(_ sender: Any) {
         tableView.reloadData()
     }
+
+
+
 }

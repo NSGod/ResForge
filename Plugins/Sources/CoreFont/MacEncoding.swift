@@ -81,6 +81,7 @@ public struct MacEncoding: CustomStringConvertible {
         return AdobeGlyphList.glyphName(for: uv)
     }
 
+    // FIXME: this should be replacing, not adding?
     public mutating func add(custom glyphNameEntries: [GlyphNameEntry]) {
         if customCharCodesToGlyphNames == nil { customCharCodesToGlyphNames = [:] }
         if var customEntries = customCharCodesToGlyphNames {

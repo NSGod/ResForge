@@ -16,9 +16,9 @@ final public class FontTable_gasp: FontTable {
         case version1 = 1
     }
 
-    @objc public var version:       Version = .version0
-    @objc public var numRanges:     UInt16 = 0
-    @objc public var ranges:        [Range] = []    // sorted by PPEM
+    @objc public dynamic var version:       Version = .version0
+    @objc public dynamic var numRanges:     UInt16 = 0
+    @objc public dynamic var ranges:        [Range] = []    // sorted by PPEM
 
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
@@ -62,10 +62,10 @@ public extension FontTable_gasp {
             public static let version1Mask : Behavior = [.gridfit, .doGray, .symmetricGridfit, .symmetricSmoothing]
         }
 
-        @objc public var maxPPEM:       UInt16 = 0
-        public var behavior:            Behavior = .none
+        @objc public dynamic var maxPPEM:       UInt16 = 0
+        public var behavior:                    Behavior = .none
 
-        @objc public var objcBehavior:  UInt16 = 0 {
+        @objc public dynamic var objcBehavior:  UInt16 = 0 {
             didSet {
                 behavior = .init(rawValue: objcBehavior)
             }
@@ -83,15 +83,16 @@ public extension FontTable_gasp {
         }
 
         public override func write(to dataHandle: DataHandle) throws {
+            assert(behavior.rawValue == objcBehavior)
             dataHandle.write(maxPPEM)
             dataHandle.write(behavior)
         }
 
-        public static func < (lhs: FontTable_gasp.Range, rhs: FontTable_gasp.Range) -> Bool {
+        public static func < (lhs: Range, rhs: Range) -> Bool {
             return lhs.maxPPEM < rhs.maxPPEM
         }
 
-        public static func == (lhs: FontTable_gasp.Range, rhs: FontTable_gasp.Range) -> Bool {
+        public static func == (lhs: Range, rhs: Range) -> Bool {
             return lhs.maxPPEM == rhs.maxPPEM &&
             lhs.behavior == rhs.behavior
         }

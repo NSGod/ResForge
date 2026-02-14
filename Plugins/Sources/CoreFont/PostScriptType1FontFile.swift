@@ -123,7 +123,7 @@ public final class PostScriptType1FontFile: NSObject {
         /// Adobe's Font Development Kit for OpenType fonts (afdko), but we have an easier way.
         /// Despite .pfa/.pfb being a PC-originating format, there's actually built-in support
         /// for that format in macOS. In recent versions of macOS, QuickLook will happily
-        /// preview a .pfa while ignoring the Mac 'LWFN' next to it. In 10.15+, we can use
+        /// preview a .pfa file while ignoring the Mac 'LWFN' next to it. In 10.15+, we can use
         /// `CTFontManagerRegisterFontDescriptors()` to activate fonts without first having to
         /// write the data to a file. We can activate it, extract useful information and then
         /// deactivate it, without having to resort to using Adobe's parsing code.
@@ -169,7 +169,7 @@ public final class PostScriptType1FontFile: NSObject {
         DispatchQueue.global().async {
             CTFontManagerRegisterFontDescriptors([self.descriptor] as CFArray, .process, true) { errors, descDone in
                 if let errors: [NSError] = (errors as NSArray) as? [NSError], errors.count > 0 {
-                    /// For .pfa, it always seems to give an .insufficientInfo error, but,
+                    /// For .pfa, it always seems to give an `.insufficientInfo` error, but,
                     /// AFAICT, it still activates it; log any other errors...
                     actErrors = errors.filter { $0.code != CTFontManagerError.insufficientInfo.rawValue }
                     actErrors.forEach { NSLog("\(type).\(#function) *** ERROR: \($0)") }
@@ -208,7 +208,7 @@ public final class PostScriptType1FontFile: NSObject {
         DispatchQueue.global().async {
             CTFontManagerUnregisterFontDescriptors([self.descriptor] as CFArray, .process, ) { errors, descDone in
                 if let errors: [NSError] = (errors as NSArray) as? [NSError], errors.count > 0 {
-                    /// For .pfa, it always seems to give an .insufficientInfo error, but,
+                    /// For .pfa, it always seems to give an `.insufficientInfo` error, but,
                     /// AFAICT, it still activates it; log any other errors...
                     let errors = errors.filter { $0.code != CTFontManagerError.insufficientInfo.rawValue }
                     if errors.count > 0 { NSLog("\(type).\(#function) *** ERRORs: \(errors)") }
