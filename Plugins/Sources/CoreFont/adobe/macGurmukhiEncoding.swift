@@ -471,3 +471,183 @@ let macGurmukhiEncoding: [UVBMP] = [
     .undefined,   /* FE */
     .undefined,   /* FF */
 ]
+
+let uvsToMacGurmukhi: [UVBMP: CharCode] = [
+    0x0020:       0x20, /*  SPACE */
+    0x0021:       0x21, /*  EXCLAMATION MARK */
+    0x0022:       0x22, /*  QUOTATION MARK */
+    0x0023:       0x23, /*  NUMBER SIGN */
+    0x0024:       0x24, /*  DOLLAR SIGN */
+    0x0025:       0x25, /*  PERCENT SIGN */
+    0x0026:       0x26, /*  AMPERSAND */
+    0x0027:       0x27, /*  APOSTROPHE */
+    0x0028:       0x28, /*  LEFT PARENTHESIS */
+    0x0029:       0x29, /*  RIGHT PARENTHESIS */
+    0x002A:       0x2A, /*  ASTERISK */
+    0x002B:       0x2B, /*  PLUS SIGN */
+    0x002C:       0x2C, /*  COMMA */
+    0x002D:       0x2D, /*  HYPHEN-MINUS */
+    0x002E:       0x2E, /*  FULL STOP */
+    0x002F:       0x2F, /*  SOLIDUS */
+    0x0030:       0x30, /*  DIGIT ZERO */
+    0x0031:       0x31, /*  DIGIT ONE */
+    0x0032:       0x32, /*  DIGIT TWO */
+    0x0033:       0x33, /*  DIGIT THREE */
+    0x0034:       0x34, /*  DIGIT FOUR */
+    0x0035:       0x35, /*  DIGIT FIVE */
+    0x0036:       0x36, /*  DIGIT SIX */
+    0x0037:       0x37, /*  DIGIT SEVEN */
+    0x0038:       0x38, /*  DIGIT EIGHT */
+    0x0039:       0x39, /*  DIGIT NINE */
+    0x003A:       0x3A, /*  COLON */
+    0x003B:       0x3B, /*  SEMICOLON */
+    0x003C:       0x3C, /*  LESS-THAN SIGN */
+    0x003D:       0x3D, /*  EQUALS SIGN */
+    0x003E:       0x3E, /*  GREATER-THAN SIGN */
+    0x003F:       0x3F, /*  QUESTION MARK */
+    0x0040:       0x40, /*  COMMERCIAL AT */
+    0x0041:       0x41, /*  LATIN CAPITAL LETTER A */
+    0x0042:       0x42, /*  LATIN CAPITAL LETTER B */
+    0x0043:       0x43, /*  LATIN CAPITAL LETTER C */
+    0x0044:       0x44, /*  LATIN CAPITAL LETTER D */
+    0x0045:       0x45, /*  LATIN CAPITAL LETTER E */
+    0x0046:       0x46, /*  LATIN CAPITAL LETTER F */
+    0x0047:       0x47, /*  LATIN CAPITAL LETTER G */
+    0x0048:       0x48, /*  LATIN CAPITAL LETTER H */
+    0x0049:       0x49, /*  LATIN CAPITAL LETTER I */
+    0x004A:       0x4A, /*  LATIN CAPITAL LETTER J */
+    0x004B:       0x4B, /*  LATIN CAPITAL LETTER K */
+    0x004C:       0x4C, /*  LATIN CAPITAL LETTER L */
+    0x004D:       0x4D, /*  LATIN CAPITAL LETTER M */
+    0x004E:       0x4E, /*  LATIN CAPITAL LETTER N */
+    0x004F:       0x4F, /*  LATIN CAPITAL LETTER O */
+    0x0050:       0x50, /*  LATIN CAPITAL LETTER P */
+    0x0051:       0x51, /*  LATIN CAPITAL LETTER Q */
+    0x0052:       0x52, /*  LATIN CAPITAL LETTER R */
+    0x0053:       0x53, /*  LATIN CAPITAL LETTER S */
+    0x0054:       0x54, /*  LATIN CAPITAL LETTER T */
+    0x0055:       0x55, /*  LATIN CAPITAL LETTER U */
+    0x0056:       0x56, /*  LATIN CAPITAL LETTER V */
+    0x0057:       0x57, /*  LATIN CAPITAL LETTER W */
+    0x0058:       0x58, /*  LATIN CAPITAL LETTER X */
+    0x0059:       0x59, /*  LATIN CAPITAL LETTER Y */
+    0x005A:       0x5A, /*  LATIN CAPITAL LETTER Z */
+    0x005B:       0x5B, /*  LEFT SQUARE BRACKET */
+    0x005C:       0x5C, /*  REVERSE SOLIDUS */
+    0x005D:       0x5D, /*  RIGHT SQUARE BRACKET */
+    0x005E:       0x5E, /*  CIRCUMFLEX ACCENT */
+    0x005F:       0x5F, /*  LOW LINE */
+    0x0060:       0x60, /*  GRAVE ACCENT */
+    0x0061:       0x61, /*  LATIN SMALL LETTER A */
+    0x0062:       0x62, /*  LATIN SMALL LETTER B */
+    0x0063:       0x63, /*  LATIN SMALL LETTER C */
+    0x0064:       0x64, /*  LATIN SMALL LETTER D */
+    0x0065:       0x65, /*  LATIN SMALL LETTER E */
+    0x0066:       0x66, /*  LATIN SMALL LETTER F */
+    0x0067:       0x67, /*  LATIN SMALL LETTER G */
+    0x0068:       0x68, /*  LATIN SMALL LETTER H */
+    0x0069:       0x69, /*  LATIN SMALL LETTER I */
+    0x006A:       0x6A, /*  LATIN SMALL LETTER J */
+    0x006B:       0x6B, /*  LATIN SMALL LETTER K */
+    0x006C:       0x6C, /*  LATIN SMALL LETTER L */
+    0x006D:       0x6D, /*  LATIN SMALL LETTER M */
+    0x006E:       0x6E, /*  LATIN SMALL LETTER N */
+    0x006F:       0x6F, /*  LATIN SMALL LETTER O */
+    0x0070:       0x70, /*  LATIN SMALL LETTER P */
+    0x0071:       0x71, /*  LATIN SMALL LETTER Q */
+    0x0072:       0x72, /*  LATIN SMALL LETTER R */
+    0x0073:       0x73, /*  LATIN SMALL LETTER S */
+    0x0074:       0x74, /*  LATIN SMALL LETTER T */
+    0x0075:       0x75, /*  LATIN SMALL LETTER U */
+    0x0076:       0x76, /*  LATIN SMALL LETTER V */
+    0x0077:       0x77, /*  LATIN SMALL LETTER W */
+    0x0078:       0x78, /*  LATIN SMALL LETTER X */
+    0x0079:       0x79, /*  LATIN SMALL LETTER Y */
+    0x007A:       0x7A, /*  LATIN SMALL LETTER Z */
+    0x007B:       0x7B, /*  LEFT CURLY BRACKET */
+    0x007C:       0x7C, /*  VERTICAL LINE */
+    0x007D:       0x7D, /*  RIGHT CURLY BRACKET */
+    0x007E:       0x7E, /*  TILDE */
+    0x00D7:       0x80, /*  MULTIPLICATION SIGN */
+    0x2212:       0x81, /*  MINUS SIGN */
+    0x2013:       0x82, /*  EN DASH */
+    0x2014:       0x83, /*  EM DASH */
+    0x2018:       0x84, /*  LEFT SINGLE QUOTATION MARK */
+    0x2019:       0x85, /*  RIGHT SINGLE QUOTATION MARK */
+    0x2026:       0x86, /*  HORIZONTAL ELLIPSIS */
+    0x2022:       0x87, /*  BULLET */
+    0x00A9:       0x88, /*  COPYRIGHT SIGN */
+    0x00AE:       0x89, /*  REGISTERED SIGN */
+    0x2122:       0x8A, /*  TRADE MARK SIGN */
+    0x0A71:       0x90, /*  GURMUKHI ADDAK */
+    0x0A5C:       0x91, /*  GURMUKHI LETTER RRA, alternate (0xF860+0x0A21+0x0A3C) */
+    0x0A73:       0x92, /*  GURMUKHI URA */
+    0x0A72:       0x93, /*  GURMUKHI IRI */
+    0x0A74:       0x94, /*  GURMUKHI EK ONKAR */
+    0x0A02:       0xA2, /*  GURMUKHI SIGN BINDI */
+    0x0A05:       0xA4, /*  GURMUKHI LETTER A */
+    0x0A06:       0xA5, /*  GURMUKHI LETTER AA */
+    0x0A07:       0xA6, /*  GURMUKHI LETTER I */
+    0x0A08:       0xA7, /*  GURMUKHI LETTER II */
+    0x0A09:       0xA8, /*  GURMUKHI LETTER U */
+    0x0A0A:       0xA9, /*  GURMUKHI LETTER UU */
+    0x0A0F:       0xAC, /*  GURMUKHI LETTER EE */
+    0x0A10:       0xAD, /*  GURMUKHI LETTER AI */
+    0x0A13:       0xB0, /*  GURMUKHI LETTER OO */
+    0x0A14:       0xB1, /*  GURMUKHI LETTER AU */
+    0x0A15:       0xB3, /*  GURMUKHI LETTER KA */
+    0x0A16:       0xB4, /*  GURMUKHI LETTER KHA */
+    0x0A17:       0xB5, /*  GURMUKHI LETTER GA */
+    0x0A18:       0xB6, /*  GURMUKHI LETTER GHA */
+    0x0A19:       0xB7, /*  GURMUKHI LETTER NGA */
+    0x0A1A:       0xB8, /*  GURMUKHI LETTER CA */
+    0x0A1B:       0xB9, /*  GURMUKHI LETTER CHA */
+    0x0A1C:       0xBA, /*  GURMUKHI LETTER JA */
+    0x0A1D:       0xBB, /*  GURMUKHI LETTER JHA */
+    0x0A1E:       0xBC, /*  GURMUKHI LETTER NYA */
+    0x0A1F:       0xBD, /*  GURMUKHI LETTER TTA */
+    0x0A20:       0xBE, /*  GURMUKHI LETTER TTHA */
+    0x0A21:       0xBF, /*  GURMUKHI LETTER DDA */
+    0x0A22:       0xC0, /*  GURMUKHI LETTER DDHA */
+    0x0A23:       0xC1, /*  GURMUKHI LETTER NNA */
+    0x0A24:       0xC2, /*  GURMUKHI LETTER TA */
+    0x0A25:       0xC3, /*  GURMUKHI LETTER THA */
+    0x0A26:       0xC4, /*  GURMUKHI LETTER DA */
+    0x0A27:       0xC5, /*  GURMUKHI LETTER DHA */
+    0x0A28:       0xC6, /*  GURMUKHI LETTER NA */
+    0x0A2A:       0xC8, /*  GURMUKHI LETTER PA */
+    0x0A2B:       0xC9, /*  GURMUKHI LETTER PHA */
+    0x0A2C:       0xCA, /*  GURMUKHI LETTER BA */
+    0x0A2D:       0xCB, /*  GURMUKHI LETTER BHA */
+    0x0A2E:       0xCC, /*  GURMUKHI LETTER MA */
+    0x0A2F:       0xCD, /*  GURMUKHI LETTER YA */
+    0x0A30:       0xCF, /*  GURMUKHI LETTER RA */
+    0x0A32:       0xD1, /*  GURMUKHI LETTER LA */
+    0x0A35:       0xD4, /*  GURMUKHI LETTER VA */
+    0x0A36:       0xD5, /*  GURMUKHI LETTER SHA */
+    0x0A38:       0xD7, /*  GURMUKHI LETTER SA */
+    0x0A39:       0xD8, /*  GURMUKHI LETTER HA */
+    0x200E:       0xD9, /*  LEFT-TO-RIGHT MARK (invisible consonant) */
+    0x0A3E:       0xDA, /*  GURMUKHI VOWEL SIGN AA */
+    0x0A3F:       0xDB, /*  GURMUKHI VOWEL SIGN I */
+    0x0A40:       0xDC, /*  GURMUKHI VOWEL SIGN II */
+    0x0A41:       0xDD, /*  GURMUKHI VOWEL SIGN U */
+    0x0A42:       0xDE, /*  GURMUKHI VOWEL SIGN UU */
+    0x0A47:       0xE1, /*  GURMUKHI VOWEL SIGN EE */
+    0x0A48:       0xE2, /*  GURMUKHI VOWEL SIGN AI */
+    0x0A4B:       0xE5, /*  GURMUKHI VOWEL SIGN OO */
+    0x0A4C:       0xE6, /*  GURMUKHI VOWEL SIGN AU */
+    0x0A4D:       0xE8, /*  GURMUKHI SIGN VIRAMA (halant) */
+    0x0A3C:       0xE9, /*  GURMUKHI SIGN NUKTA */
+    0x0964:       0xEA, /*  DEVANAGARI DANDA */
+    0x0A66:       0xF1, /*  GURMUKHI DIGIT ZERO */
+    0x0A67:       0xF2, /*  GURMUKHI DIGIT ONE */
+    0x0A68:       0xF3, /*  GURMUKHI DIGIT TWO */
+    0x0A69:       0xF4, /*  GURMUKHI DIGIT THREE */
+    0x0A6A:       0xF5, /*  GURMUKHI DIGIT FOUR */
+    0x0A6B:       0xF6, /*  GURMUKHI DIGIT FIVE */
+    0x0A6C:       0xF7, /*  GURMUKHI DIGIT SIX */
+    0x0A6D:       0xF8, /*  GURMUKHI DIGIT SEVEN */
+    0x0A6E:       0xF9, /*  GURMUKHI DIGIT EIGHT */
+    0x0A6F:       0xFA, /*  GURMUKHI DIGIT NINE */
+]

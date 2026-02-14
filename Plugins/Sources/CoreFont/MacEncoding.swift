@@ -16,11 +16,16 @@ public struct MacEncoding: CustomStringConvertible {
 
     public private(set) var coveredCharCodes:      IndexSet
 
-    public init(name: String, encoding: [UVBMP]) {
+    private var customCharCodesToGlyphNames: [CharCode: String]?
+    private let encoding: [UVBMP]
+    private let uvsToCharCodes: [UVBMP: CharCode]
+
+    public init(name: String, encoding: [UVBMP], uvsToCharCodes: [UVBMP: CharCode]) {
         self.name = name
         self.encoding = encoding
+        self.uvsToCharCodes = uvsToCharCodes
         var covCharCodes = IndexSet()
-        for i in 0..<CharCode.max {
+        for i in 0...CharCode.max {
             let uv = encoding[Int(i)]
             if uv != .undefined {
                 covCharCodes.insert(Int(i))
@@ -30,27 +35,32 @@ public struct MacEncoding: CustomStringConvertible {
     }
 
     // The numbers in the brackets are MacScriptIDs...
-    public static let macRoman                 = MacEncoding(name: "[0] Mac Roman", encoding: macRomanEncoding)
-    public static let macArabic                = MacEncoding(name: "[4] Mac Arabic", encoding: macArabicEncoding)
-    public static let macHebrew                = MacEncoding(name: "[5] Mac Hebrew", encoding: macHebrewEncoding)
-    public static let macGreek                 = MacEncoding(name: "[6] Mac Greek", encoding: macGreekEncoding)
-    public static let macCyrillic              = MacEncoding(name: "[7] Mac Cyrillic", encoding: macCyrillicEncoding)
-    public static let macCentralEuropean       = MacEncoding(name: "[29] Mac CE", encoding: macCEEncoding)
-    public static let macTurkish               = MacEncoding(name: "[0] Mac Turkish", encoding: macTurkishEncoding)
-    public static let macThai                  = MacEncoding(name: "[21] Mac Thai", encoding: macThaiEncoding)
-    public static let macCroatian              = MacEncoding(name: "[0] Mac Croatian", encoding: macCroatianEncoding)
-    public static let macIcelandic             = MacEncoding(name: "[0] Mac Icelandic", encoding: macIcelandicEncoding)
-    public static let macDevanagari            = MacEncoding(name: "[9] Mac Devanagari", encoding: macDevanagariEncoding)
-    public static let macRomanian              = MacEncoding(name: "[0] Mac Romanian", encoding: macRomanianEncoding)
-    public static let macFarsi                 = MacEncoding(name: "[4] Mac Farsi", encoding: macFarsiEncoding)
-    public static let macGujarati              = MacEncoding(name: "[11] Mac Gujarati", encoding: macGujaratiEncoding)
-    public static let macGurmukhi              = MacEncoding(name: "[10] Mac Gurmukhi", encoding: macGurmukhiEncoding)
-    public static let macDingbats              = MacEncoding(name: "[0] Mac Dingbats", encoding: macDingbatsEncoding)
-    public static let macSymbol                = MacEncoding(name: "[0] Mac Symbol", encoding: macSymbolEncoding)
+    public static let macRoman                 = MacEncoding(name: "[0] Mac Roman", encoding: macRomanEncoding, uvsToCharCodes: uvsToMacRoman)
+    public static let macArabic                = MacEncoding(name: "[4] Mac Arabic", encoding: macArabicEncoding, uvsToCharCodes: uvsToMacArabic)
+    public static let macHebrew                = MacEncoding(name: "[5] Mac Hebrew", encoding: macHebrewEncoding, uvsToCharCodes: uvsToMacHebrew)
+    public static let macGreek                 = MacEncoding(name: "[6] Mac Greek", encoding: macGreekEncoding, uvsToCharCodes: uvsToMacGreek)
+    public static let macCyrillic              = MacEncoding(name: "[7] Mac Cyrillic", encoding: macCyrillicEncoding, uvsToCharCodes: uvsToMacCyrillic)
+    public static let macCentralEuropean       = MacEncoding(name: "[29] Mac CE", encoding: macCEEncoding, uvsToCharCodes: uvsToMacCE)
+    public static let macTurkish               = MacEncoding(name: "[0] Mac Turkish", encoding: macTurkishEncoding, uvsToCharCodes: uvsToMacTurkish)
+    public static let macThai                  = MacEncoding(name: "[21] Mac Thai", encoding: macThaiEncoding, uvsToCharCodes: uvsToMacThai)
+    public static let macCroatian              = MacEncoding(name: "[0] Mac Croatian", encoding: macCroatianEncoding, uvsToCharCodes: uvsToMacCroatian)
+    public static let macIcelandic             = MacEncoding(name: "[0] Mac Icelandic", encoding: macIcelandicEncoding, uvsToCharCodes: uvsToMacIcelandic)
+    public static let macDevanagari            = MacEncoding(name: "[9] Mac Devanagari", encoding: macDevanagariEncoding, uvsToCharCodes: uvsToMacDevanagari)
+    public static let macRomanian              = MacEncoding(name: "[0] Mac Romanian", encoding: macRomanianEncoding, uvsToCharCodes: uvsToMacRomanian)
+    public static let macFarsi                 = MacEncoding(name: "[4] Mac Farsi", encoding: macFarsiEncoding, uvsToCharCodes: uvsToMacFarsi)
+    public static let macGujarati              = MacEncoding(name: "[11] Mac Gujarati", encoding: macGujaratiEncoding, uvsToCharCodes: uvsToMacGujarati)
+    public static let macGurmukhi              = MacEncoding(name: "[10] Mac Gurmukhi", encoding: macGurmukhiEncoding, uvsToCharCodes: uvsToMacGurmukhi)
+    public static let macDingbats              = MacEncoding(name: "[0] Mac Dingbats", encoding: macDingbatsEncoding, uvsToCharCodes: uvsToMacDingbats)
+    public static let macSymbol                = MacEncoding(name: "[0] Mac Symbol", encoding: macSymbolEncoding, uvsToCharCodes: uvsToMacSymbol)
 
     // primitive:
     public func uv(for charCode: CharCode) -> UVBMP {
         return encoding[Int(charCode)]
+    }
+
+    // primitive:
+    public func charCode(for UV: UVBMP) -> CharCode? {
+        return uvsToCharCodes[UV]
     }
 
     public func glyphName(for charCode: CharCode) -> String? {
@@ -241,9 +251,6 @@ public struct MacEncoding: CustomStringConvertible {
         }
         return "MacEncoding(\(descriptions.count) glyphs): [\(descriptions.joined(separator: ",\n"))]"
     }
-
-    private var customCharCodesToGlyphNames: [CharCode: String]?
-    private let encoding: [UVBMP]
 
     fileprivate static let symbolPSName     = "Symbol"
     fileprivate static let dingbatsPSName1  = "ZapfDingbatsITC"

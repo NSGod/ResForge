@@ -459,3 +459,198 @@ let macDevanagariEncoding: [UVBMP] = [
     .undefined,   /* FE */
     .undefined,   /* FF */
 ]
+
+let uvsToMacDevanagari: [UVBMP: CharCode] = [
+    0x0020:       0x20, /*  SPACE */
+    0x0021:       0x21, /*  EXCLAMATION MARK */
+    0x0022:       0x22, /*  QUOTATION MARK */
+    0x0023:       0x23, /*  NUMBER SIGN */
+    0x0024:       0x24, /*  DOLLAR SIGN */
+    0x0025:       0x25, /*  PERCENT SIGN */
+    0x0026:       0x26, /*  AMPERSAND */
+    0x0027:       0x27, /*  APOSTROPHE */
+    0x0028:       0x28, /*  LEFT PARENTHESIS */
+    0x0029:       0x29, /*  RIGHT PARENTHESIS */
+    0x002A:       0x2A, /*  ASTERISK */
+    0x002B:       0x2B, /*  PLUS SIGN */
+    0x002C:       0x2C, /*  COMMA */
+    0x002D:       0x2D, /*  HYPHEN-MINUS */
+    0x002E:       0x2E, /*  FULL STOP */
+    0x002F:       0x2F, /*  SOLIDUS */
+    0x0030:       0x30, /*  DIGIT ZERO */
+    0x0031:       0x31, /*  DIGIT ONE */
+    0x0032:       0x32, /*  DIGIT TWO */
+    0x0033:       0x33, /*  DIGIT THREE */
+    0x0034:       0x34, /*  DIGIT FOUR */
+    0x0035:       0x35, /*  DIGIT FIVE */
+    0x0036:       0x36, /*  DIGIT SIX */
+    0x0037:       0x37, /*  DIGIT SEVEN */
+    0x0038:       0x38, /*  DIGIT EIGHT */
+    0x0039:       0x39, /*  DIGIT NINE */
+    0x003A:       0x3A, /*  COLON */
+    0x003B:       0x3B, /*  SEMICOLON */
+    0x003C:       0x3C, /*  LESS-THAN SIGN */
+    0x003D:       0x3D, /*  EQUALS SIGN */
+    0x003E:       0x3E, /*  GREATER-THAN SIGN */
+    0x003F:       0x3F, /*  QUESTION MARK */
+    0x0040:       0x40, /*  COMMERCIAL AT */
+    0x0041:       0x41, /*  LATIN CAPITAL LETTER A */
+    0x0042:       0x42, /*  LATIN CAPITAL LETTER B */
+    0x0043:       0x43, /*  LATIN CAPITAL LETTER C */
+    0x0044:       0x44, /*  LATIN CAPITAL LETTER D */
+    0x0045:       0x45, /*  LATIN CAPITAL LETTER E */
+    0x0046:       0x46, /*  LATIN CAPITAL LETTER F */
+    0x0047:       0x47, /*  LATIN CAPITAL LETTER G */
+    0x0048:       0x48, /*  LATIN CAPITAL LETTER H */
+    0x0049:       0x49, /*  LATIN CAPITAL LETTER I */
+    0x004A:       0x4A, /*  LATIN CAPITAL LETTER J */
+    0x004B:       0x4B, /*  LATIN CAPITAL LETTER K */
+    0x004C:       0x4C, /*  LATIN CAPITAL LETTER L */
+    0x004D:       0x4D, /*  LATIN CAPITAL LETTER M */
+    0x004E:       0x4E, /*  LATIN CAPITAL LETTER N */
+    0x004F:       0x4F, /*  LATIN CAPITAL LETTER O */
+    0x0050:       0x50, /*  LATIN CAPITAL LETTER P */
+    0x0051:       0x51, /*  LATIN CAPITAL LETTER Q */
+    0x0052:       0x52, /*  LATIN CAPITAL LETTER R */
+    0x0053:       0x53, /*  LATIN CAPITAL LETTER S */
+    0x0054:       0x54, /*  LATIN CAPITAL LETTER T */
+    0x0055:       0x55, /*  LATIN CAPITAL LETTER U */
+    0x0056:       0x56, /*  LATIN CAPITAL LETTER V */
+    0x0057:       0x57, /*  LATIN CAPITAL LETTER W */
+    0x0058:       0x58, /*  LATIN CAPITAL LETTER X */
+    0x0059:       0x59, /*  LATIN CAPITAL LETTER Y */
+    0x005A:       0x5A, /*  LATIN CAPITAL LETTER Z */
+    0x005B:       0x5B, /*  LEFT SQUARE BRACKET */
+    0x005C:       0x5C, /*  REVERSE SOLIDUS */
+    0x005D:       0x5D, /*  RIGHT SQUARE BRACKET */
+    0x005E:       0x5E, /*  CIRCUMFLEX ACCENT */
+    0x005F:       0x5F, /*  LOW LINE */
+    0x0060:       0x60, /*  GRAVE ACCENT */
+    0x0061:       0x61, /*  LATIN SMALL LETTER A */
+    0x0062:       0x62, /*  LATIN SMALL LETTER B */
+    0x0063:       0x63, /*  LATIN SMALL LETTER C */
+    0x0064:       0x64, /*  LATIN SMALL LETTER D */
+    0x0065:       0x65, /*  LATIN SMALL LETTER E */
+    0x0066:       0x66, /*  LATIN SMALL LETTER F */
+    0x0067:       0x67, /*  LATIN SMALL LETTER G */
+    0x0068:       0x68, /*  LATIN SMALL LETTER H */
+    0x0069:       0x69, /*  LATIN SMALL LETTER I */
+    0x006A:       0x6A, /*  LATIN SMALL LETTER J */
+    0x006B:       0x6B, /*  LATIN SMALL LETTER K */
+    0x006C:       0x6C, /*  LATIN SMALL LETTER L */
+    0x006D:       0x6D, /*  LATIN SMALL LETTER M */
+    0x006E:       0x6E, /*  LATIN SMALL LETTER N */
+    0x006F:       0x6F, /*  LATIN SMALL LETTER O */
+    0x0070:       0x70, /*  LATIN SMALL LETTER P */
+    0x0071:       0x71, /*  LATIN SMALL LETTER Q */
+    0x0072:       0x72, /*  LATIN SMALL LETTER R */
+    0x0073:       0x73, /*  LATIN SMALL LETTER S */
+    0x0074:       0x74, /*  LATIN SMALL LETTER T */
+    0x0075:       0x75, /*  LATIN SMALL LETTER U */
+    0x0076:       0x76, /*  LATIN SMALL LETTER V */
+    0x0077:       0x77, /*  LATIN SMALL LETTER W */
+    0x0078:       0x78, /*  LATIN SMALL LETTER X */
+    0x0079:       0x79, /*  LATIN SMALL LETTER Y */
+    0x007A:       0x7A, /*  LATIN SMALL LETTER Z */
+    0x007B:       0x7B, /*  LEFT CURLY BRACKET */
+    0x007C:       0x7C, /*  VERTICAL LINE */
+    0x007D:       0x7D, /*  RIGHT CURLY BRACKET */
+    0x007E:       0x7E, /*  TILDE */
+    0x00D7:       0x80, /*  MULTIPLICATION SIGN */
+    0x2212:       0x81, /*  MINUS SIGN */
+    0x2013:       0x82, /*  EN DASH */
+    0x2014:       0x83, /*  EM DASH */
+    0x2018:       0x84, /*  LEFT SINGLE QUOTATION MARK */
+    0x2019:       0x85, /*  RIGHT SINGLE QUOTATION MARK */
+    0x2026:       0x86, /*  HORIZONTAL ELLIPSIS */
+    0x2022:       0x87, /*  BULLET */
+    0x00A9:       0x88, /*  COPYRIGHT SIGN */
+    0x00AE:       0x89, /*  REGISTERED SIGN */
+    0x2122:       0x8A, /*  TRADE MARK SIGN */
+    0x0965:       0x90, /*  DEVANAGARI DOUBLE DANDA */
+    0x0970:       0x91, /*  DEVANAGARI ABBREVIATION SIGN */
+    0x0901:       0xA1, /*  DEVANAGARI SIGN CANDRABINDU */
+    0x0902:       0xA2, /*  DEVANAGARI SIGN ANUSVARA */
+    0x0903:       0xA3, /*  DEVANAGARI SIGN VISARGA */
+    0x0905:       0xA4, /*  DEVANAGARI LETTER A */
+    0x0906:       0xA5, /*  DEVANAGARI LETTER AA */
+    0x0907:       0xA6, /*  DEVANAGARI LETTER I */
+    0x0908:       0xA7, /*  DEVANAGARI LETTER II */
+    0x0909:       0xA8, /*  DEVANAGARI LETTER U */
+    0x090A:       0xA9, /*  DEVANAGARI LETTER UU */
+    0x090B:       0xAA, /*  DEVANAGARI LETTER VOCALIC R */
+    0x090E:       0xAB, /*  DEVANAGARI LETTER SHORT E */
+    0x090F:       0xAC, /*  DEVANAGARI LETTER E */
+    0x0910:       0xAD, /*  DEVANAGARI LETTER AI */
+    0x090D:       0xAE, /*  DEVANAGARI LETTER CANDRA E */
+    0x0912:       0xAF, /*  DEVANAGARI LETTER SHORT O */
+    0x0913:       0xB0, /*  DEVANAGARI LETTER O */
+    0x0914:       0xB1, /*  DEVANAGARI LETTER AU */
+    0x0911:       0xB2, /*  DEVANAGARI LETTER CANDRA O */
+    0x0915:       0xB3, /*  DEVANAGARI LETTER KA */
+    0x0916:       0xB4, /*  DEVANAGARI LETTER KHA */
+    0x0917:       0xB5, /*  DEVANAGARI LETTER GA */
+    0x0918:       0xB6, /*  DEVANAGARI LETTER GHA */
+    0x0919:       0xB7, /*  DEVANAGARI LETTER NGA */
+    0x091A:       0xB8, /*  DEVANAGARI LETTER CA */
+    0x091B:       0xB9, /*  DEVANAGARI LETTER CHA */
+    0x091C:       0xBA, /*  DEVANAGARI LETTER JA */
+    0x091D:       0xBB, /*  DEVANAGARI LETTER JHA */
+    0x091E:       0xBC, /*  DEVANAGARI LETTER NYA */
+    0x091F:       0xBD, /*  DEVANAGARI LETTER TTA */
+    0x0920:       0xBE, /*  DEVANAGARI LETTER TTHA */
+    0x0921:       0xBF, /*  DEVANAGARI LETTER DDA */
+    0x0922:       0xC0, /*  DEVANAGARI LETTER DDHA */
+    0x0923:       0xC1, /*  DEVANAGARI LETTER NNA */
+    0x0924:       0xC2, /*  DEVANAGARI LETTER TA */
+    0x0925:       0xC3, /*  DEVANAGARI LETTER THA */
+    0x0926:       0xC4, /*  DEVANAGARI LETTER DA */
+    0x0927:       0xC5, /*  DEVANAGARI LETTER DHA */
+    0x0928:       0xC6, /*  DEVANAGARI LETTER NA */
+    0x0929:       0xC7, /*  DEVANAGARI LETTER NNNA */
+    0x092A:       0xC8, /*  DEVANAGARI LETTER PA */
+    0x092B:       0xC9, /*  DEVANAGARI LETTER PHA */
+    0x092C:       0xCA, /*  DEVANAGARI LETTER BA */
+    0x092D:       0xCB, /*  DEVANAGARI LETTER BHA */
+    0x092E:       0xCC, /*  DEVANAGARI LETTER MA */
+    0x092F:       0xCD, /*  DEVANAGARI LETTER YA */
+    0x095F:       0xCE, /*  DEVANAGARI LETTER YYA */
+    0x0930:       0xCF, /*  DEVANAGARI LETTER RA */
+    0x0931:       0xD0, /*  DEVANAGARI LETTER RRA */
+    0x0932:       0xD1, /*  DEVANAGARI LETTER LA */
+    0x0933:       0xD2, /*  DEVANAGARI LETTER LLA */
+    0x0934:       0xD3, /*  DEVANAGARI LETTER LLLA */
+    0x0935:       0xD4, /*  DEVANAGARI LETTER VA */
+    0x0936:       0xD5, /*  DEVANAGARI LETTER SHA */
+    0x0937:       0xD6, /*  DEVANAGARI LETTER SSA */
+    0x0938:       0xD7, /*  DEVANAGARI LETTER SA */
+    0x0939:       0xD8, /*  DEVANAGARI LETTER HA */
+    0x200E:       0xD9, /*  LEFT-TO-RIGHT MARK (invisible consonant) */
+    0x093E:       0xDA, /*  DEVANAGARI VOWEL SIGN AA */
+    0x093F:       0xDB, /*  DEVANAGARI VOWEL SIGN I */
+    0x0940:       0xDC, /*  DEVANAGARI VOWEL SIGN II */
+    0x0941:       0xDD, /*  DEVANAGARI VOWEL SIGN U */
+    0x0942:       0xDE, /*  DEVANAGARI VOWEL SIGN UU */
+    0x0943:       0xDF, /*  DEVANAGARI VOWEL SIGN VOCALIC R */
+    0x0946:       0xE0, /*  DEVANAGARI VOWEL SIGN SHORT E */
+    0x0947:       0xE1, /*  DEVANAGARI VOWEL SIGN E */
+    0x0948:       0xE2, /*  DEVANAGARI VOWEL SIGN AI */
+    0x0945:       0xE3, /*  DEVANAGARI VOWEL SIGN CANDRA E */
+    0x094A:       0xE4, /*  DEVANAGARI VOWEL SIGN SHORT O */
+    0x094B:       0xE5, /*  DEVANAGARI VOWEL SIGN O */
+    0x094C:       0xE6, /*  DEVANAGARI VOWEL SIGN AU */
+    0x0949:       0xE7, /*  DEVANAGARI VOWEL SIGN CANDRA O */
+    0x094D:       0xE8, /*  DEVANAGARI SIGN VIRAMA (halant) */
+    0x093C:       0xE9, /*  DEVANAGARI SIGN NUKTA */
+    0x0964:       0xEA, /*  DEVANAGARI DANDA */
+    0x0966:       0xF1, /*  DEVANAGARI DIGIT ZERO */
+    0x0967:       0xF2, /*  DEVANAGARI DIGIT ONE */
+    0x0968:       0xF3, /*  DEVANAGARI DIGIT TWO */
+    0x0969:       0xF4, /*  DEVANAGARI DIGIT THREE */
+    0x096A:       0xF5, /*  DEVANAGARI DIGIT FOUR */
+    0x096B:       0xF6, /*  DEVANAGARI DIGIT FIVE */
+    0x096C:       0xF7, /*  DEVANAGARI DIGIT SIX */
+    0x096D:       0xF8, /*  DEVANAGARI DIGIT SEVEN */
+    0x096E:       0xF9, /*  DEVANAGARI DIGIT EIGHT */
+    0x096F:       0xFA, /*  DEVANAGARI DIGIT NINE */
+]

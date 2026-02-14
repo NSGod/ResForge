@@ -599,3 +599,230 @@ let macHebrewEncoding: [UVBMP] = [
     0x005B,       /* FE  LEFT SQUARE BRACKET, right-left */
     0x007C,       /* FF  VERTICAL LINE, right-left */
 ]
+
+let uvsToMacHebrew: [UVBMP: CharCode] = [
+    0x0020:       0x20, /*  SPACE, left-right */
+    0x0021:       0x21, /*  EXCLAMATION MARK, left-right */
+    0x0022:       0x22, /*  QUOTATION MARK, left-right */
+    0x0023:       0x23, /*  NUMBER SIGN, left-right */
+    0x0024:       0x24, /*  DOLLAR SIGN, left-right */
+    0x0025:       0x25, /*  PERCENT SIGN, left-right */
+    0x0026:       0x26, /*  AMPERSAND */
+    0x0027:       0x27, /*  APOSTROPHE, left-right */
+    0x0028:       0x28, /*  LEFT PARENTHESIS, left-right */
+    0x0029:       0x29, /*  RIGHT PARENTHESIS, left-right */
+    0x002A:       0x2A, /*  ASTERISK, left-right */
+    0x002B:       0x2B, /*  PLUS SIGN, left-right */
+    0x002C:       0x2C, /*  COMMA, left-right */
+    0x002D:       0x2D, /*  HYPHEN-MINUS, left-right */
+    0x002E:       0x2E, /*  FULL STOP, left-right */
+    0x002F:       0x2F, /*  SOLIDUS, left-right */
+    0x0030:       0x30, /*  DIGIT ZERO, left-right */
+    0x0031:       0x31, /*  DIGIT ONE, left-right */
+    0x0032:       0x32, /*  DIGIT TWO, left-right */
+    0x0033:       0x33, /*  DIGIT THREE, left-right */
+    0x0034:       0x34, /*  DIGIT FOUR, left-right */
+    0x0035:       0x35, /*  DIGIT FIVE, left-right */
+    0x0036:       0x36, /*  DIGIT SIX, left-right */
+    0x0037:       0x37, /*  DIGIT SEVEN, left-right */
+    0x0038:       0x38, /*  DIGIT EIGHT, left-right */
+    0x0039:       0x39, /*  DIGIT NINE, left-right */
+    0x003A:       0x3A, /*  COLON, left-right */
+    0x003B:       0x3B, /*  SEMICOLON, left-right */
+    0x003C:       0x3C, /*  LESS-THAN SIGN, left-right */
+    0x003D:       0x3D, /*  EQUALS SIGN, left-right */
+    0x003E:       0x3E, /*  GREATER-THAN SIGN, left-right */
+    0x003F:       0x3F, /*  QUESTION MARK, left-right */
+    0x0040:       0x40, /*  COMMERCIAL AT */
+    0x0041:       0x41, /*  LATIN CAPITAL LETTER A */
+    0x0042:       0x42, /*  LATIN CAPITAL LETTER B */
+    0x0043:       0x43, /*  LATIN CAPITAL LETTER C */
+    0x0044:       0x44, /*  LATIN CAPITAL LETTER D */
+    0x0045:       0x45, /*  LATIN CAPITAL LETTER E */
+    0x0046:       0x46, /*  LATIN CAPITAL LETTER F */
+    0x0047:       0x47, /*  LATIN CAPITAL LETTER G */
+    0x0048:       0x48, /*  LATIN CAPITAL LETTER H */
+    0x0049:       0x49, /*  LATIN CAPITAL LETTER I */
+    0x004A:       0x4A, /*  LATIN CAPITAL LETTER J */
+    0x004B:       0x4B, /*  LATIN CAPITAL LETTER K */
+    0x004C:       0x4C, /*  LATIN CAPITAL LETTER L */
+    0x004D:       0x4D, /*  LATIN CAPITAL LETTER M */
+    0x004E:       0x4E, /*  LATIN CAPITAL LETTER N */
+    0x004F:       0x4F, /*  LATIN CAPITAL LETTER O */
+    0x0050:       0x50, /*  LATIN CAPITAL LETTER P */
+    0x0051:       0x51, /*  LATIN CAPITAL LETTER Q */
+    0x0052:       0x52, /*  LATIN CAPITAL LETTER R */
+    0x0053:       0x53, /*  LATIN CAPITAL LETTER S */
+    0x0054:       0x54, /*  LATIN CAPITAL LETTER T */
+    0x0055:       0x55, /*  LATIN CAPITAL LETTER U */
+    0x0056:       0x56, /*  LATIN CAPITAL LETTER V */
+    0x0057:       0x57, /*  LATIN CAPITAL LETTER W */
+    0x0058:       0x58, /*  LATIN CAPITAL LETTER X */
+    0x0059:       0x59, /*  LATIN CAPITAL LETTER Y */
+    0x005A:       0x5A, /*  LATIN CAPITAL LETTER Z */
+    0x005B:       0x5B, /*  LEFT SQUARE BRACKET, left-right */
+    0x005C:       0x5C, /*  REVERSE SOLIDUS */
+    0x005D:       0x5D, /*  RIGHT SQUARE BRACKET, left-right */
+    0x005E:       0x5E, /*  CIRCUMFLEX ACCENT */
+    0x005F:       0x5F, /*  LOW LINE */
+    0x0060:       0x60, /*  GRAVE ACCENT */
+    0x0061:       0x61, /*  LATIN SMALL LETTER A */
+    0x0062:       0x62, /*  LATIN SMALL LETTER B */
+    0x0063:       0x63, /*  LATIN SMALL LETTER C */
+    0x0064:       0x64, /*  LATIN SMALL LETTER D */
+    0x0065:       0x65, /*  LATIN SMALL LETTER E */
+    0x0066:       0x66, /*  LATIN SMALL LETTER F */
+    0x0067:       0x67, /*  LATIN SMALL LETTER G */
+    0x0068:       0x68, /*  LATIN SMALL LETTER H */
+    0x0069:       0x69, /*  LATIN SMALL LETTER I */
+    0x006A:       0x6A, /*  LATIN SMALL LETTER J */
+    0x006B:       0x6B, /*  LATIN SMALL LETTER K */
+    0x006C:       0x6C, /*  LATIN SMALL LETTER L */
+    0x006D:       0x6D, /*  LATIN SMALL LETTER M */
+    0x006E:       0x6E, /*  LATIN SMALL LETTER N */
+    0x006F:       0x6F, /*  LATIN SMALL LETTER O */
+    0x0070:       0x70, /*  LATIN SMALL LETTER P */
+    0x0071:       0x71, /*  LATIN SMALL LETTER Q */
+    0x0072:       0x72, /*  LATIN SMALL LETTER R */
+    0x0073:       0x73, /*  LATIN SMALL LETTER S */
+    0x0074:       0x74, /*  LATIN SMALL LETTER T */
+    0x0075:       0x75, /*  LATIN SMALL LETTER U */
+    0x0076:       0x76, /*  LATIN SMALL LETTER V */
+    0x0077:       0x77, /*  LATIN SMALL LETTER W */
+    0x0078:       0x78, /*  LATIN SMALL LETTER X */
+    0x0079:       0x79, /*  LATIN SMALL LETTER Y */
+    0x007A:       0x7A, /*  LATIN SMALL LETTER Z */
+    0x007B:       0x7B, /*  LEFT CURLY BRACKET, left-right */
+    0x007C:       0x7C, /*  VERTICAL LINE, left-right */
+    0x007D:       0x7D, /*  RIGHT CURLY BRACKET, left-right */
+    0x007E:       0x7E, /*  TILDE */
+    .undefined:   0x7F, /* */
+    0x00C4:       0x80, /*  LATIN CAPITAL LETTER A WITH DIAERESIS */
+    0xFB1F:       0x81, /*  HEBREW LIGATURE YIDDISH YOD YOD PATAH */
+    0x00C7:       0x82, /*  LATIN CAPITAL LETTER C WITH CEDILLA */
+    0x00C9:       0x83, /*  LATIN CAPITAL LETTER E WITH ACUTE */
+    0x00D1:       0x84, /*  LATIN CAPITAL LETTER N WITH TILDE */
+    0x00D6:       0x85, /*  LATIN CAPITAL LETTER O WITH DIAERESIS */
+    0x00DC:       0x86, /*  LATIN CAPITAL LETTER U WITH DIAERESIS */
+    0x00E1:       0x87, /*  LATIN SMALL LETTER A WITH ACUTE */
+    0x00E0:       0x88, /*  LATIN SMALL LETTER A WITH GRAVE */
+    0x00E2:       0x89, /*  LATIN SMALL LETTER A WITH CIRCUMFLEX */
+    0x00E4:       0x8A, /*  LATIN SMALL LETTER A WITH DIAERESIS */
+    0x00E3:       0x8B, /*  LATIN SMALL LETTER A WITH TILDE */
+    0x00E5:       0x8C, /*  LATIN SMALL LETTER A WITH RING ABOVE */
+    0x00E7:       0x8D, /*  LATIN SMALL LETTER C WITH CEDILLA */
+    0x00E9:       0x8E, /*  LATIN SMALL LETTER E WITH ACUTE */
+    0x00E8:       0x8F, /*  LATIN SMALL LETTER E WITH GRAVE */
+    0x00EA:       0x90, /*  LATIN SMALL LETTER E WITH CIRCUMFLEX */
+    0x00EB:       0x91, /*  LATIN SMALL LETTER E WITH DIAERESIS */
+    0x00ED:       0x92, /*  LATIN SMALL LETTER I WITH ACUTE */
+    0x00EC:       0x93, /*  LATIN SMALL LETTER I WITH GRAVE */
+    0x00EE:       0x94, /*  LATIN SMALL LETTER I WITH CIRCUMFLEX */
+    0x00EF:       0x95, /*  LATIN SMALL LETTER I WITH DIAERESIS */
+    0x00F1:       0x96, /*  LATIN SMALL LETTER N WITH TILDE */
+    0x00F3:       0x97, /*  LATIN SMALL LETTER O WITH ACUTE */
+    0x00F2:       0x98, /*  LATIN SMALL LETTER O WITH GRAVE */
+    0x00F4:       0x99, /*  LATIN SMALL LETTER O WITH CIRCUMFLEX */
+    0x00F6:       0x9A, /*  LATIN SMALL LETTER O WITH DIAERESIS */
+    0x00F5:       0x9B, /*  LATIN SMALL LETTER O WITH TILDE */
+    0x00FA:       0x9C, /*  LATIN SMALL LETTER U WITH ACUTE */
+    0x00F9:       0x9D, /*  LATIN SMALL LETTER U WITH GRAVE */
+    0x00FB:       0x9E, /*  LATIN SMALL LETTER U WITH CIRCUMFLEX */
+    0x00FC:       0x9F, /*  LATIN SMALL LETTER U WITH DIAERESIS */
+//    0x0020:       0xA0, /*  SPACE, right-left */
+//    0x0021:       0xA1, /*  EXCLAMATION MARK, right-left */
+//    0x0022:       0xA2, /*  QUOTATION MARK, right-left */
+//    0x0023:       0xA3, /*  NUMBER SIGN, right-left */
+//    0x0024:       0xA4, /*  DOLLAR SIGN, right-left */
+//    0x0025:       0xA5, /*  PERCENT SIGN, right-left */
+    0x20AA:       0xA6, /*  NEW SHEQEL SIGN */
+//    0x0027:       0xA7, /*  APOSTROPHE, right-left */
+//    0x0028:       0xA8, /*  LEFT PARENTHESIS, right-left */
+//    0x0029:       0xA9, /*  RIGHT PARENTHESIS, right-left */
+//    0x002A:       0xAA, /*  ASTERISK, right-left */
+//    0x002B:       0xAB, /*  PLUS SIGN, right-left */
+//    0x002C:       0xAC, /*  COMMA, right-left */
+//    0x002D:       0xAD, /*  HYPHEN-MINUS, right-left */
+//    0x002E:       0xAE, /*  FULL STOP, right-left */
+//    0x002F:       0xAF, /*  SOLIDUS, right-left */
+//    0x0030:       0xB0, /*  DIGIT ZERO, right-left */
+//    0x0031:       0xB1, /*  DIGIT ONE, right-left */
+//    0x0032:       0xB2, /*  DIGIT TWO, right-left */
+//    0x0033:       0xB3, /*  DIGIT THREE, right-left */
+//    0x0034:       0xB4, /*  DIGIT FOUR, right-left */
+//    0x0035:       0xB5, /*  DIGIT FIVE, right-left */
+//    0x0036:       0xB6, /*  DIGIT SIX, right-left */
+//    0x0037:       0xB7, /*  DIGIT SEVEN, right-left */
+//    0x0038:       0xB8, /*  DIGIT EIGHT, right-left */
+//    0x0039:       0xB9, /*  DIGIT NINE, right-left */
+//    0x003A:       0xBA, /*  COLON, right-left */
+//    0x003B:       0xBB, /*  SEMICOLON, right-left */
+//    0x003C:       0xBC, /*  LESS-THAN SIGN, right-left */
+//    0x003D:       0xBD, /*  EQUALS SIGN, right-left */
+//    0x003E:       0xBE, /*  GREATER-THAN SIGN, right-left */
+//    0x003F:       0xBF, /*  QUESTION MARK, right-left */
+    0xF89A:       0xC0, /*  Hebrew ligature lamed holam (0xF86A+0x05DC+0x05B9) */
+    0x201E:       0xC1, /*  DOUBLE LOW-9 QUOTATION MARK, right-left */
+    0xF89B:       0xC2, /*  Hebrew canoral 1 */
+    0xF89C:       0xC3, /*  Hebrew canoral 2 */
+    0xF89D:       0xC4, /*  Hebrew canoral 3 */
+    0xF89E:       0xC5, /*  Hebrew canoral 4 */
+    0x05BC:       0xC6, /*  HEBREW POINT DAGESH OR MAPIQ */
+    0xFB4B:       0xC7, /*  HEBREW LETTER VAV WITH HOLAM */
+    0xFB35:       0xC8, /*  HEBREW LETTER VAV WITH DAGESH */
+    0x2026:       0xC9, /*  HORIZONTAL ELLIPSIS, right-left */
+    0x00A0:       0xCA, /*  NO-BREAK SPACE, right-left */
+    0x05B8:       0xCB, /*  HEBREW POINT QAMATS */
+    0x05B7:       0xCC, /*  HEBREW POINT PATAH */
+    0x05B5:       0xCD, /*  HEBREW POINT TSERE */
+    0x05B6:       0xCE, /*  HEBREW POINT SEGOL */
+    0x05B4:       0xCF, /*  HEBREW POINT HIRIQ */
+    0x2013:       0xD0, /*  EN DASH, right-left */
+    0x2014:       0xD1, /*  EM DASH, right-left */
+    0x201C:       0xD2, /*  LEFT DOUBLE QUOTATION MARK, right-left */
+    0x201D:       0xD3, /*  RIGHT DOUBLE QUOTATION MARK, right-left */
+    0x2018:       0xD4, /*  LEFT SINGLE QUOTATION MARK, right-left */
+    0x2019:       0xD5, /*  RIGHT SINGLE QUOTATION MARK, right-left */
+    0xFB2A:       0xD6, /*  HEBREW LETTER SHIN WITH SHIN DOT */
+    0xFB2B:       0xD7, /*  HEBREW LETTER SHIN WITH SIN DOT */
+    0x05BF:       0xD8, /*  HEBREW POINT RAFE */
+    0x05B0:       0xD9, /*  HEBREW POINT SHEVA */
+    0x05B2:       0xDA, /*  HEBREW POINT HATAF PATAH */
+    0x05B1:       0xDB, /*  HEBREW POINT HATAF SEGOL */
+    0x05BB:       0xDC, /*  HEBREW POINT QUBUTS */
+    0x05B9:       0xDD, /*  HEBREW POINT HOLAM */
+    0xF89F:       0xDE, /*  HEBREW POINT QAMATS, alternate form "qamats qatan" (0x05B8+0xF87F) */
+    0x05B3:       0xDF, /*  HEBREW POINT HATAF QAMATS */
+    0x05D0:       0xE0, /*  HEBREW LETTER ALEF */
+    0x05D1:       0xE1, /*  HEBREW LETTER BET */
+    0x05D2:       0xE2, /*  HEBREW LETTER GIMEL */
+    0x05D3:       0xE3, /*  HEBREW LETTER DALET */
+    0x05D4:       0xE4, /*  HEBREW LETTER HE */
+    0x05D5:       0xE5, /*  HEBREW LETTER VAV */
+    0x05D6:       0xE6, /*  HEBREW LETTER ZAYIN */
+    0x05D7:       0xE7, /*  HEBREW LETTER HET */
+    0x05D8:       0xE8, /*  HEBREW LETTER TET */
+    0x05D9:       0xE9, /*  HEBREW LETTER YOD */
+    0x05DA:       0xEA, /*  HEBREW LETTER FINAL KAF */
+    0x05DB:       0xEB, /*  HEBREW LETTER KAF */
+    0x05DC:       0xEC, /*  HEBREW LETTER LAMED */
+    0x05DD:       0xED, /*  HEBREW LETTER FINAL MEM */
+    0x05DE:       0xEE, /*  HEBREW LETTER MEM */
+    0x05DF:       0xEF, /*  HEBREW LETTER FINAL NUN */
+    0x05E0:       0xF0, /*  HEBREW LETTER NUN */
+    0x05E1:       0xF1, /*  HEBREW LETTER SAMEKH */
+    0x05E2:       0xF2, /*  HEBREW LETTER AYIN */
+    0x05E3:       0xF3, /*  HEBREW LETTER FINAL PE */
+    0x05E4:       0xF4, /*  HEBREW LETTER PE */
+    0x05E5:       0xF5, /*  HEBREW LETTER FINAL TSADI */
+    0x05E6:       0xF6, /*  HEBREW LETTER TSADI */
+    0x05E7:       0xF7, /*  HEBREW LETTER QOF */
+    0x05E8:       0xF8, /*  HEBREW LETTER RESH */
+    0x05E9:       0xF9, /*  HEBREW LETTER SHIN */
+    0x05EA:       0xFA, /*  HEBREW LETTER TAV */
+//    0x007D:       0xFB, /*  RIGHT CURLY BRACKET, right-left */
+//    0x005D:       0xFC, /*  RIGHT SQUARE BRACKET, right-left */
+//    0x007B:       0xFD, /*  LEFT CURLY BRACKET, right-left */
+//    0x005B:       0xFE, /*  LEFT SQUARE BRACKET, right-left */
+//    0x007C:       0xFF, /*  VERTICAL LINE, right-left */
+]
