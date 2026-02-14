@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24506" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24506"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,6 +12,7 @@
                 <outlet property="bitDepthPopUpButton" destination="hd4-0v-R7c" id="sia-XS-MIA"/>
                 <outlet property="box" destination="gbN-Oc-2O2" id="xEc-Dx-otj"/>
                 <outlet property="fontTypeBitfieldControl" destination="5aj-GY-zA2" id="5Na-aW-uHY"/>
+                <outlet property="overviewPreviewView" destination="CE1-bc-1ez" id="zYi-wg-BLB"/>
                 <outlet property="popover" destination="XSO-mT-6GH" id="FcX-hM-DiG"/>
                 <outlet property="popoverButton" destination="2jR-1S-GSs" id="UC9-Yl-VhR"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
@@ -565,6 +567,54 @@
                             <action selector="showPopover:" target="-2" id="PUH-lA-w7L"/>
                         </connections>
                     </button>
+                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h2n-R1-2gI">
+                        <rect key="frame" x="257" y="23" width="29" height="14"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="x 16:" id="ful-ik-JFo">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Br-MQ-LNW">
+                        <rect key="frame" x="289" y="20" width="60" height="19"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="border" alignment="right" drawsBackground="YES" id="PEf-XT-sKL">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <binding destination="-2" name="value" keyPath="nfnt.rowWords" id="uDs-Np-N5u">
+                                <dictionary key="options">
+                                    <string key="NSValueTransformerName">BitmapFontEditor.MultiplyValueTransformer</string>
+                                </dictionary>
+                            </binding>
+                            <outlet property="formatter" destination="KzF-GY-0HX" id="s3z-A6-aFa"/>
+                        </connections>
+                    </textField>
+                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CvY-Jh-Il7">
+                        <rect key="frame" x="350" y="23" width="17" height="14"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="px" id="kkV-7L-YVr">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CE1-bc-1ez" customClass="BitmapFontPreviewView" customModule="BitmapFontEditor">
+                        <rect key="frame" x="275" y="47" width="366" height="267"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                <color key="value" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="borderThickness">
+                                <real key="value" value="2"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="string" keyPath="stringValue" value="ABC"/>
+                        </userDefinedRuntimeAttributes>
+                    </customView>
                 </subviews>
             </view>
             <connections>

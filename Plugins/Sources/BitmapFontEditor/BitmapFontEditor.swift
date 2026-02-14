@@ -25,7 +25,8 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
     /// not working without crashing. So create it programatically and set the box's `contentView`
     @IBOutlet weak var box:                         NSBox!
     @IBOutlet weak var previewView:                 BitmapFontPreviewView!
-
+    @IBOutlet weak var overviewPreviewView:         BitmapFontPreviewView!
+    
     @IBOutlet var popover:                          NSPopover!
     @IBOutlet weak var popoverButton:               NSButton!
 
@@ -74,10 +75,12 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
     }
 
     public override func awakeFromNib() {
-//        NSLog("\(type(of: self)).\(#function)")
+        NSLog("\(type(of: self)).\(#function)")
+        overviewPreviewView.nfnt = nfnt
     }
 
     public override func windowDidLoad() {
+        NSLog("\(type(of: self)).\(#function)")
         super.windowDidLoad()
         let bounds = box.bounds
         let prevView = BitmapFontPreviewView(frame: bounds)

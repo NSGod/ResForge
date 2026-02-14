@@ -68,6 +68,8 @@ public class BitmapFontPreviewView: NSView {
 
     var textStorage:            NFNTTextStorage
 
+    private var _setupViewFrameChanges = false
+
     public override init(frame frameRect: NSRect) {
         textStorage = NFNTTextStorage()
         let layoutManager = NFNTLayoutManager()
@@ -90,17 +92,25 @@ public class BitmapFontPreviewView: NSView {
         NotificationCenter.default.removeObserver(self)
     }
 
-    /// actually, this won't be called unless we're in the nib, which we aren't
+    /// actually, this won't be called unless we're in the nib, which we might not be
     public override func awakeFromNib() {
+        NSLog("\(type(of: self)).\(#function)")
         syncSize()
-        NotificationCenter.default.addObserver(self, selector: #selector(viewFrameChanged), name: Self.frameDidChangeNotification, object: self)
+        if !_setupViewFrameChanges {
+            NotificationCenter.default.addObserver(self, selector: #selector(viewFrameChanged), name: Self.frameDidChangeNotification, object: self)
+            _setupViewFrameChanges = true
+        }
         self.needsDisplay = true
     }
 
     /// this should be called for our programmatic creation
     public override func viewDidMoveToWindow() {
+        NSLog("\(type(of: self)).\(#function)")
         syncSize()
-        NotificationCenter.default.addObserver(self, selector: #selector(viewFrameChanged), name: Self.frameDidChangeNotification, object: self)
+        if !_setupViewFrameChanges {
+            NotificationCenter.default.addObserver(self, selector: #selector(viewFrameChanged), name: Self.frameDidChangeNotification, object: self)
+            _setupViewFrameChanges = true
+        }
         self.needsDisplay = true
     }
 
@@ -126,6 +136,9 @@ public class BitmapFontPreviewView: NSView {
 			borderColor.setStroke()
 			NSBezierPath(rect: self.bounds).stroke()
 		}
-        textStorage.layoutManager.drawGlyphs(at: NSMakePoint(padding, padding))
+        /// allow us to exist w/o an nfnt
+        if textStorage.nfnt != nil {
+            textStorage.layoutManager.drawGlyphs(at: NSMakePoint(padding, padding))
+        }
     }
 }
