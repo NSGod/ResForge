@@ -1,6 +1,6 @@
 //
 //  KernTable.swift
-//  FONDEditor
+//  CoreFont
 //
 //  Created by Mark Douma on 12/23/2025.
 //
@@ -8,7 +8,6 @@
 
 import Foundation
 import RFSupport
-import CoreFont
 import CSV
 
 final public class KernTable: FONDResourceNode {
@@ -56,7 +55,7 @@ extension KernTable {
         ///       and I *have* encountered fonts that have more than 32,767 kern pairs, so make it an `UInt16`
         ///
         public var numKerns:           UInt16  /// Number of kern pairs that follow (and NOT the entryLength/length
-                                               /// of the data that follows this struct as is documented).
+                                               /// of the data that follows this struct as is documented in IM).
 
         public var kernPairs:          [KernPair]
 
@@ -101,14 +100,13 @@ extension KernTable {
 }
 
 extension KernTable.Entry {
-
     public struct KernExportConfig {
         public enum Format {
             case GPOS
             case CSV
         }
-        public static let gposDefault: KernExportConfig = .init()
-        public static let csvDefault: KernExportConfig = .init()
+        public static let gposDefault: KernExportConfig = .init(format: .GPOS, resolveGlyphNames: true, scaleToUnitsPerEm: true)
+        public static let csvDefault: KernExportConfig = .init(format: .CSV, resolveGlyphNames: true, scaleToUnitsPerEm: true)
 
         public var format:              Format = .GPOS
         public var resolveGlyphNames:   Bool = true
@@ -119,6 +117,12 @@ extension KernTable.Entry {
                 case .GPOS: return "txt"
                 case .CSV: return "csv"
             }
+        }
+
+        public init(format: Format, resolveGlyphNames: Bool, scaleToUnitsPerEm: Bool) {
+            self.format = format
+            self.resolveGlyphNames = resolveGlyphNames
+            self.scaleToUnitsPerEm = scaleToUnitsPerEm
         }
     }
 

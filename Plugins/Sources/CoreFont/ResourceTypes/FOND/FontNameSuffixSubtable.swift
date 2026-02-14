@@ -1,6 +1,6 @@
 //
 //  FontNameSuffixSubtable.swift
-//  FONDEditor
+//  CoreFont
 //
 //  Created by Mark Douma on 12/24/2025.
 //
@@ -8,7 +8,6 @@
 
 import Foundation
 import RFSupport
-import CoreFont
 
 ///       Index     Contents
 ///       1         \pExampleFont

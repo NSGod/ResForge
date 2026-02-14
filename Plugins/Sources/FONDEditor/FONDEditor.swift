@@ -259,9 +259,9 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
         }
     }
 
-    private func selectedKernTableEntries() -> [KernTable.Entry] {
+    private func selectedKernTableEntries() -> [CoreFont.KernTable.Entry] {
         guard let objs = kernPairsTreeController.selectedObjects as? [KernTreeNode] else { return [] }
-        return objs.compactMap { $0.representedObject as? KernTable.Entry }
+        return objs.compactMap { $0.representedObject as? CoreFont.KernTable.Entry }
     }
 
     // MARK: - <NSMenuItemValidation>
@@ -406,7 +406,7 @@ extension FONDEditor: NSTableViewDelegate, NSOutlineViewDelegate {
     public func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         if outlineView == kernTableOutlineView {
             guard let representedObject = ((item as? NSTreeNode)?.representedObject as? KernTreeNode)?.representedObject else { return nil }
-            if representedObject is KernTable.Entry {
+            if representedObject is CoreFont.KernTable.Entry {
                 if tableColumn?.identifier.rawValue == "style"{
                     return outlineView.makeView(withIdentifier: tableColumn!.identifier, owner: self)
                 } else if tableColumn?.identifier.rawValue == "kernWidth" {
@@ -416,7 +416,7 @@ extension FONDEditor: NSTableViewDelegate, NSOutlineViewDelegate {
             } else if representedObject is KernPairNode {
                 if tableColumn?.identifier.rawValue == "style" { return nil }
                 let view: NSTableCellView = outlineView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
-                if let entry: KernTable.Entry = ((item as? NSTreeNode)?.representedObject as? KernTreeNode)?.parent?.representedObject as? KernTable.Entry {
+                if let entry: CoreFont.KernTable.Entry = ((item as? NSTreeNode)?.representedObject as? KernTreeNode)?.parent?.representedObject as? CoreFont.KernTable.Entry {
                     if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
                         formatter.unitsPerEm = fond.unitsPerEm(for: entry.style, manager: manager)
                     }

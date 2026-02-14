@@ -1,6 +1,6 @@
 //
 //  FontAssociationTable.swift
-//  FONDEditor
+//  CoreFont
 //
 //  Created by Mark Douma on 12/23/2025.
 //
@@ -8,7 +8,6 @@
 
 import Foundation
 import RFSupport
-import CoreFont
 
 final public class FontAssociationTable: ResourceNode {
     public var numberOfEntries:    Int16                           // number of entries - 1

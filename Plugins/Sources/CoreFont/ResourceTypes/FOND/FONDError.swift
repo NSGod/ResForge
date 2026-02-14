@@ -1,6 +1,6 @@
 //
 //  FONDError.swift
-//  FONDEditor
+//  CoreFont
 //
 //  Created by Mark Douma on 1/4/2026.
 //

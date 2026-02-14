@@ -1,6 +1,6 @@
 //
 //  FOND.swift
-//  FONDEditor
+//  CoreFont
 //
 //  Created by Mark Douma on 12/22/2025.
 //
@@ -8,7 +8,6 @@
 
 import Foundation
 import RFSupport
-import CoreFont
 
 final public class FOND: NSObject {
     private struct FontFamilyRecord {
@@ -270,6 +269,20 @@ final public class FOND: NSObject {
             try kernTable.write(to: handle)
         }
         return handle.data
+    }
+
+    private static let keys = Set(["famID", "firstChar", "lastChar", "ascent", "descent", "leading", "widMax",
+           "wTabOff", "kernOff", "styleOff", "ewSPlain", "ewSBold", "ewSItalic", "ewSUnderline", "ewSOutline",
+           "ewSShadow", "ewSCondensed", "ewSExtended", "ewSUnused", "intl0", "intl1", "ffVersion"])
+    
+    public override func setNilValueForKey(_ key: String) {
+        NSLog("\(type(of: self)).\(#function) key: \(key)")
+        if Self.keys.contains(key) {
+            NSLog("\(type(of: self)).\(#function) key: \(key)")
+            setValue(value(forKey: key), forKey: key)
+        } else {
+            super.setNilValueForKey(key)
+        }
     }
 
     public func unitsPerEm(for fontStyle: MacFontStyle, manager: RFEditorManager? = nil) -> UnitsPerEm {

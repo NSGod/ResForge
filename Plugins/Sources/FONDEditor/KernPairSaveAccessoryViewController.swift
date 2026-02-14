@@ -46,9 +46,10 @@ class KernPairSaveAccessoryViewController: NSViewController {
         }
     }
 
-    var config: KernTable.Entry.KernExportConfig {
-        KernTable.Entry.KernExportConfig(format: (selectedFileType == KernTable.Entry.GPOSFeatureFileType ? .GPOS : .CSV),
-                                        resolveGlyphNames: shouldResolveGlyphNames, scaleToUnitsPerEm: scaleToUnitsPerEm)
+    var config: CoreFont.KernTable.Entry.KernExportConfig {
+        CoreFont.KernTable.Entry.KernExportConfig(format: (selectedFileType == CoreFont.KernTable.Entry.GPOSFeatureFileType ? .GPOS : .CSV),
+                                       resolveGlyphNames: shouldResolveGlyphNames,
+                                       scaleToUnitsPerEm: scaleToUnitsPerEm)
     }
 
     private static let SaveFileTypeKey:         String = "KernPairs.SaveFileType"

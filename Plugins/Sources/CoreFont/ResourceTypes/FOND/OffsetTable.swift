@@ -1,6 +1,6 @@
 //
 //  OffsetTable.swift
-//  FONDEditor
+//  CoreFont
 //
 //  Created by Mark Douma on 12/23/2025.
 //
@@ -8,10 +8,8 @@
 
 import Foundation
 import RFSupport
-import CoreFont
 
 final public class OffsetTable: ResourceNode {
-
     public var numberOfEntries:        Int16               // number of entries - 1
     @objc public var entries:          [Entry]
 
@@ -23,6 +21,7 @@ final public class OffsetTable: ResourceNode {
         return entries.count == 1 && entries[0].offsetOfTable == 6
     }
 
+    /// create the standard entry for a Bounding Box Table
     public override init() {
         numberOfEntries = 0
         entries = [Entry()]

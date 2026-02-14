@@ -1,12 +1,11 @@
 //
 //  ResourceNode.swift
-//  FONDEditor
+//  CoreFont
 //
 //  Created by Mark Douma on 1/2/2026.
 //
 
 import Foundation
-import CoreFont
 
 public class ResourceNode: NSObject, DataHandleWriting {
     /// The following 3 properties must be overridden by any subclasses
