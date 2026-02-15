@@ -82,11 +82,11 @@ final class ViewController_OS2: FontTableViewController {
         fsSelection = table.fsSelection.rawValue
         super.init(with: fontTable)
         do {
-            let uBlocksToNames: [String: String] = try NSDictionary(contentsOf: Bundle.module.url(forResource: "MDUnicodeBlocksOS2", withExtension: "plist")!, error: ()) as! [String: String]
+            let uBlocksToNames: [String: String] = try NSDictionary(contentsOf: Bundle.module.url(forResource: "UnicodeBlocksOS2", withExtension: "plist")!, error: ()) as! [String: String]
             for (key, value) in uBlocksToNames {
                 unicodeBlocksToNames[Int(key)!] = value
             }
-            let cPageRangesToNames: [String: String] = try NSDictionary(contentsOf: Bundle.module.url(forResource: "MDCodePageRangesOS2", withExtension: "plist")!, error: ()) as! [String: String]
+            let cPageRangesToNames: [String: String] = try NSDictionary(contentsOf: Bundle.module.url(forResource: "CodePageRangesOS2", withExtension: "plist")!, error: ()) as! [String: String]
             for (key, value) in cPageRangesToNames {
                 codePageRangesToNames[Int(key)!] = value
             }
