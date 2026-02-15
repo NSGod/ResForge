@@ -107,5 +107,4 @@ final class ViewController_maxp: FontTableViewController {
             undoManager?.setActionName(NSLocalizedString("Change Max Component Depth", comment: ""))
         }
     }
-
 }

@@ -22,17 +22,17 @@ final public class FontTable_post: FontTable {
         case version4_0     = 0x00040000  // for CID fonts?
     }
 
-    @objc public var version:               Version = .version1_0
-    @objc public var italicAngle:           Fixed = 0   // Italic angle in cntr-clockwise degrees from vert.
-    @objc public var underlinePosition:     Int16 = 0   //
-    @objc public var underlineThickness:    Int16 = 0   // should match thickness of U+005F LOW LINE & OS/2.yStrikeoutSize
-    @objc public var isFixedPitch:          UInt32 = 0
-    @objc public var minMemType42:          UInt32 = 0
-    @objc public var maxMemType42:          UInt32 = 0
-    @objc public var minMemType1:           UInt32 = 0
-    @objc public var maxMemType1:           UInt32 = 0
+    @objc dynamic public var version:               Version = .version1_0
+    @objc dynamic public var italicAngle:           Fixed = 0   // Italic angle in cntr-clockwise degrees from vert.
+    @objc dynamic public var underlinePosition:     Int16 = 0   //
+    @objc dynamic public var underlineThickness:    Int16 = 0   // should match thickness of U+005F LOW LINE & OS/2.yStrikeoutSize
+    @objc dynamic public var isFixedPitch:          UInt32 = 0
+    @objc dynamic public var minMemType42:          UInt32 = 0
+    @objc dynamic public var maxMemType42:          UInt32 = 0
+    @objc dynamic public var minMemType1:           UInt32 = 0
+    @objc dynamic public var maxMemType1:           UInt32 = 0
 
-    @objc public var format:                Format? // nil for .version3_0
+    @objc dynamic public var format:                Format? // nil for .version3_0
 
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)

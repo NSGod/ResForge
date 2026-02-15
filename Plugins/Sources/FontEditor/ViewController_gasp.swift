@@ -70,7 +70,4 @@ final class ViewController_gasp: FontTableViewController, NSTableViewDelegate {
     @IBAction func setVersion(_ sender: Any) {
         tableView.reloadData()
     }
-
-
-
 }
