@@ -12,16 +12,18 @@ import Cocoa
 /// you wish to allow control over. Set the checkboxes to call an action
 /// like the following:
 ///
-///   @IBAction func changeFlag( sender: Any) {
-///       let sender = sender as! NSButton
-///       willChangeValue(forKey: "flag")
-///       if sender.state == .on {
-///           flag = flag | UInt16(sender.tag)
-///       } else {
-///           flag = flag & ~UInt16(sender.tag)
-///       }
-///       didChangeValue(forKey: "flag")
-///   }
+///    ```
+///    @objc dynamic var flag: UInt16 = 0
+///
+///    @IBAction func changeFlag( sender: Any) {
+///        let sender = sender as! NSButton
+///        if sender.state == .on {
+///            flag = flag | UInt16(sender.tag)
+///        } else {
+///            flag = flag & ~UInt16(sender.tag)
+///        }
+///    }
+///    ```
 ///
 /// Using the `flag` variable shown above, in -awakeFromNib, -viewDidLoad,
 /// or -windowDidLoad, set up a binding between the control and `flag`:
