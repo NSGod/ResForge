@@ -172,7 +172,8 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
     @IBAction public func revertResource(_ sender: Any) {
         undoManager?.removeAllActions()
         do {
-           fond = try FOND(with: resource)
+            fond = try FOND(with: resource)
+            loadFOND()
         } catch {
             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
         }
