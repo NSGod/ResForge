@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct MacEncoding: CustomStringConvertible {
+public class MacEncoding: Copyable, CustomStringConvertible {
     public let name:                               String
     public private(set) var isCustomEncoding:      Bool = false
     public var logsInvalidCharCodes:               Bool = false
@@ -32,6 +32,19 @@ public struct MacEncoding: CustomStringConvertible {
             }
         }
         coveredCharCodes = covCharCodes
+    }
+
+    init(with other: MacEncoding) {
+        self.name = other.name
+        self.encoding = other.encoding
+        self.uvsToCharCodes = other.uvsToCharCodes
+        self.coveredCharCodes = other.coveredCharCodes
+        self.isCustomEncoding = other.isCustomEncoding
+        self.logsInvalidCharCodes = other.logsInvalidCharCodes
+    }
+
+    public func copy() -> MacEncoding {
+        return MacEncoding(with: self)
     }
 
     // The numbers in the brackets are MacScriptIDs...
@@ -81,8 +94,15 @@ public struct MacEncoding: CustomStringConvertible {
         return AdobeGlyphList.glyphName(for: uv)
     }
 
-    // FIXME: this should be replacing, not adding?
-    public mutating func add(custom glyphNameEntries: [GlyphNameEntry]) {
+    // FIXME: this should be replacing, not adding? YES
+    public func custom(byReplacing glyphNameEntries: [GlyphNameEntry]) -> MacEncoding {
+        let custom = self.copy()
+        add(custom: glyphNameEntries)
+        return custom
+    }
+
+    // FIXME: this should be replacing, not adding? YES
+    func add(custom glyphNameEntries: [GlyphNameEntry]) {
         if customCharCodesToGlyphNames == nil { customCharCodesToGlyphNames = [:] }
         if var customEntries = customCharCodesToGlyphNames {
             for entry in glyphNameEntries {

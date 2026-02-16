@@ -77,7 +77,7 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
 
     public override func awakeFromNib() {
         NSLog("\(type(of: self)).\(#function)")
-        overviewPreviewView.nfnt = nfnt
+        loadResource()
     }
 
     public override func windowDidLoad() {
@@ -106,8 +106,17 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
     }
 
     private func loadResource() {
+        var string: String = ""
+        for glyph in nfnt.glyphs {
+            if glyph.uv != .undefined {
+                if let scalar = UnicodeScalar(glyph.uv) {
+                    string.append("\(Character(scalar))")
+                }
+            }
+        }
+        overviewPreviewView.alignment = .center
+        overviewPreviewView.stringValue = string
         overviewPreviewView.nfnt = nfnt
-        var glyphKeys: OrderedDictionary<String, NFNT.Glyph> = OrderedDictionary(nfnt.glyphEntries)
     }
 
     @IBAction func showPopover(_ sender: Any) {
@@ -154,6 +163,8 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
         undoManager?.removeAllActions()
         setDocumentEdited(false)
         undoManager?.enableUndoRegistration()
+        previewView.nfnt = nfnt
+        loadResource()
     }
 
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {

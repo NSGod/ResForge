@@ -134,8 +134,8 @@ final public class FOND: NSObject {
         NSLog("\(type(of: self)).\(#function)() resID: \(resource.id), scriptID: \(scriptID)")
         var encoding = MacEncoding.encodingFor(scriptID: scriptID, postScriptFontName: basePostScriptName)
         if let customGlyphs = self.styleMappingTable?.glyphNameEncodingSubtable {
-            // FIXME: or should this be replacing existing?
-            encoding.add(custom: GlyphNameEntry.glyphNameEntries(with: customGlyphs.charCodesToGlyphNames))
+            // FIXME: or should this be replacing existing? YES
+            encoding = encoding.custom(byReplacing: GlyphNameEntry.glyphNameEntries(with: customGlyphs.charCodesToGlyphNames))
         }
         return encoding
     }()
@@ -305,20 +305,20 @@ final public class FOND: NSObject {
          (The data in an 'sfnt' entry is exactly what a Windows .ttf contains:
          see my answer here https://stackoverflow.com/a/7418915/277952) */
 
-        /// - Note: Cache these results as this can be quite costly, and this method gets called a lot:
+        /// - Note: cache these results as this can be quite costly, and this method gets called a lot:
         if let cachedUnitsPerEm = stylesToUnitsPerEm[fontStyle] {
             return cachedUnitsPerEm
         }
         for entry in fontAssociationTable.entries {
             if entry.fontStyle == fontStyle && entry.fontPointSize == 0 {
                 guard let manager,
-                    let resource: Resource = manager.findResource(type: ResourceType("sfnt"), id: Int(entry.fontID), currentDocumentOnly: true) else {
+                      let resource: Resource = manager.findResource(type: .sfnt, id: Int(entry.fontID), currentDocumentOnly: true) else {
                     stylesToUnitsPerEm[fontStyle] = .trueTypeStandard
                     return .trueTypeStandard
                 }
                 do {
-                    let otfFontFile: OTFFontFile = try OTFFontFile(resource.data)
-                    guard let unitsPerEm: UnitsPerEm = otfFontFile.headTable?.unitsPerEm else {
+                    let otfFontFile = try OTFFontFile(resource.data)
+                    guard let unitsPerEm = otfFontFile.headTable?.unitsPerEm else {
                         stylesToUnitsPerEm[fontStyle] = .trueTypeStandard
                         return .trueTypeStandard
                     }

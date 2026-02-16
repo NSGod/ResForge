@@ -8,6 +8,13 @@
 import Foundation
 import RFSupport
 
+extension ResourceType {
+    public static let nfnt = ResourceType("NFNT")
+    public static let sfnt = ResourceType("sfnt")
+    public static let fond = ResourceType("FOND")
+    public static let post = ResourceType("POST")
+}
+
 public typealias ResID         = Int16
 
 public typealias CharCode      = UInt8
@@ -87,11 +94,11 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
         return description
     }
 
-    /// Assuming Condensed and Extended are mutually-exclusive, that makes the maximum value
+    /// Assuming `.condensed` and `.extended` are mutually-exclusive, that makes the maximum value
     /// of all possible combination of styles to be 32 + 8 + 4 + 2 + 1 = 47. Add 1 for no
     /// style and you have 48. So, when trying to look up the PostScript name in the
     /// StyleMappingTable, we compress the style value first before finding the index in indexes UInt8[48].
-    /// This is used when getting the PostScript name of the font
+    /// This is used when getting the PostScript name of the font.
     public func compressed() -> MacFontStyle {
         var rawValue: UInt16 = 0
         if self.contains(.bold) { rawValue += 1 }

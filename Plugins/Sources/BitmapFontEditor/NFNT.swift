@@ -13,6 +13,7 @@ extension NFNT {
     
     struct Glyph {
         let charCode:       CharCode16
+        let uv:             UVBMP
         let glyphRect:      NSRect
         let offset:         Int8
         let width:          Int8
@@ -28,9 +29,9 @@ extension NFNT {
 
         weak var nfnt:      NFNT!
 
-        static let nullGlyph: Glyph = .init(with: .zero, offset: -1, width: -1, charCode: CharCode16.max, nfnt:nil)
+        static let nullGlyph: Glyph = .init(with: .zero, offset: -1, width: -1, charCode: CharCode16.max, uv: .undefined, nfnt:nil)
 
-        init(with glyphRect: NSRect, offset: Int8, width: Int8, charCode: CharCode16, nfnt: NFNT?) {
+        init(with glyphRect: NSRect, offset: Int8, width: Int8, charCode: CharCode16, uv: UVBMP, nfnt: NFNT?) {
             self.offset = offset
             self.width = width
             if self.offset == -1 && self.width == -1 {
@@ -39,6 +40,7 @@ extension NFNT {
                 self.glyphRect = glyphRect
             }
             self.charCode = charCode
+            self.uv = uv
             self.nfnt = nfnt
         }
     }
@@ -133,6 +135,36 @@ public final class NFNT: NSObject {
     private var glyphWidths:                [Fixed8Dot8]?
     private var imageHeights:               [Int16]?
 
+    lazy var encoding:                      MacEncoding = {
+        guard let manager else { return .macRoman }
+        /// we want the 'FOND' resource with the lowest `fontStyle` value that references our 'NFNT',
+        /// since that 'FOND' will usually have the most info
+        let fondResources = manager.allResources(ofType: .fond, currentDocumentOnly: false)
+        var targetFOND: FOND? = nil
+        var fontStyle: MacFontStyle? = nil
+        for fondResource in fondResources {
+            do {
+                let fond = try FOND(with: fondResource)
+                for entry in fond.fontAssociationTable.entries {
+                    if entry.fontID == resource.id {
+                        if let currentTargetFOND = targetFOND, let currentFontStyle = fontStyle {
+                            if entry.fontStyle < currentFontStyle {
+                                targetFOND = fond
+                                fontStyle = entry.fontStyle
+                            }
+                        } else {
+                            targetFOND = fond
+                            fontStyle = entry.fontStyle
+                        }
+                    }
+                }
+            } catch {
+                NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+            }
+        }
+        return targetFOND?.encoding ?? .macRoman
+    }()
+
     // MARK: -
     private var _glyphs:            [Glyph] = []
     private var _glyphEntries:      [String: Glyph] = [:]
@@ -142,10 +174,12 @@ public final class NFNT: NSObject {
     private var resource:           Resource
     private var reader:             BinaryDataReader
     private var haveBuiltGlyphs:    Bool = false
+    private var manager:            RFEditorManager?
 
     // MARK: - init
-    init(with resource: Resource) throws {
+    init(with resource: Resource, manager: RFEditorManager? = nil) throws {
         reader = BinaryDataReader(resource.data)
+        self.manager = manager
         self.resource = resource
         fontType = FontType(rawValue: try reader.read())
         firstChar = try reader.read()
@@ -362,7 +396,14 @@ public final class NFNT: NSObject {
                 let offsetEntry = offsets[i - Int(firstChar)]
                 let widthEntry = widths[i - Int(firstChar)]
                 let glyphRect = NSMakeRect(CGFloat(pixelOffsetEntry), 0.0, CGFloat(pixelOffsetEntryPlusOne - pixelOffsetEntry), CGFloat(fRectHeight))
-                let entry = Glyph(with: glyphRect, offset: offsetEntry, width: widthEntry, charCode: CharCode16(i - Int(firstChar)), nfnt: self)
+                let charCode = CharCode16(i - Int(firstChar))
+                let uv: UVBMP
+                if charCode > CharCode.max {
+                    uv = .undefined
+                } else {
+                    uv = encoding.uv(for: CharCode(charCode))
+                }
+                let entry = Glyph(with: glyphRect, offset: offsetEntry, width: widthEntry, charCode: charCode, uv: uv, nfnt: self)
                 _glyphEntries[asciiEntryKey] = entry
                 _glyphs.append(entry)
             } else if i >= lastChar {
@@ -383,7 +424,6 @@ public final class NFNT: NSObject {
 
     public static let notDef = ".notdef"
 }
-
 
 
 fileprivate let ascii: [String] = [
