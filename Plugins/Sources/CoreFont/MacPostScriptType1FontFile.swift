@@ -35,7 +35,7 @@ public struct MacPostScriptType1FontFile {
     public init(data: Data) throws {
         resourceFile = ClassicFormat()
         let resourceMap: ResourceMap = try resourceFile.read(data)
-        guard var resources: [Resource] = resourceMap[ResourceType("POST")], resources.count > 0 else {
+        guard var resources: [Resource] = resourceMap[.post], resources.count > 0 else {
             throw MacPostScriptType1FontFileError.notAPostScriptFont
         }
         // MARK: make sure to sort the 'POST' resources by ID in case they're out of order (by indexes) in the font file

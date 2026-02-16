@@ -197,7 +197,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
 
     private func openFont(at rowIndex: Int) {
         let entry = (fontAssocTableEntriesController.arrangedObjects as! [FontAssociationTable.Entry])[rowIndex]
-        if let font: Resource = manager.findResource(type: ResourceType(entry.fontPointSize == 0 ? "sfnt" : "NFNT"), id: Int(entry.fontID), currentDocumentOnly: true) {
+        if let font: Resource = manager.findResource(type: entry.fontPointSize == 0 ? .sfnt : .nfnt , id: Int(entry.fontID), currentDocumentOnly: true) {
             manager.open(resource: font)
         }
     }
