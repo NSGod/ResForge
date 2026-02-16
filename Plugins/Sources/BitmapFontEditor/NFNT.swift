@@ -21,7 +21,7 @@ extension NFNT {
             return Int16(glyphRect.origin.x)
         }
 
-        /// `.notdef`
+        /// `.notdef` ?
         var isMissingGlyph: Bool {
             self.offset == -1 && self.width == -1 && self.glyphRect == .zero
         }
@@ -43,21 +43,23 @@ extension NFNT {
         }
     }
 
-    struct FontType: OptionSet {
-        var rawValue: UInt16
-        init(rawValue: UInt16) { self.rawValue = rawValue }
+    public struct FontType: OptionSet {
+        public let rawValue: UInt16
+        public init(rawValue: UInt16) { self.rawValue = rawValue }
 
-        static let hasImageHeightTable      = FontType(rawValue: 1 << 0)
-        static let hasGlyphWidthTable       = FontType(rawValue: 1 << 1)
-        static let font2BitDepth            = FontType(rawValue: 1 << 2) // 4
-        static let font4BitDepth            = FontType(rawValue: 1 << 3) // 8
-        static let font8BitDepth            = FontType(rawValue: 12)     // 12
-        static let hasFctbResource          = FontType(rawValue: 1 << 7)
-        static let isSyntheticFont          = FontType(rawValue: 1 << 8)
-        static let isColorFont              = FontType(rawValue: 1 << 9)
-        static let reserved12               = FontType(rawValue: 1 << 12)   // reserved, should be 1
-        static let isFixedWidthFont         = FontType(rawValue: 1 << 13)
-        static let expandFontHeight         = FontType(rawValue: 1 << 14)
+        public static let hasImageHeightTable      = FontType(rawValue: 1 << 0)
+        public static let hasGlyphWidthTable       = FontType(rawValue: 1 << 1)
+        public static let font2BitDepth            = FontType(rawValue: 1 << 2)  // 4
+        public static let font4BitDepth            = FontType(rawValue: 1 << 3)  // 8
+        public static let font8BitDepth            = FontType(rawValue: 12)      // 12
+        public static let hasFctbResource          = FontType(rawValue: 1 << 7)
+        public static let isSyntheticFont          = FontType(rawValue: 1 << 8)
+        public static let isColorFont              = FontType(rawValue: 1 << 9)
+        // 10 - 11; reserved, should be 0
+        public static let reserved12               = FontType(rawValue: 1 << 12) // reserved, should be 1
+        public static let isFixedWidthFont         = FontType(rawValue: 1 << 13)
+        public static let expandFontHeight         = FontType(rawValue: 1 << 14) // reserved, should be 0
+        // 15 reserved, should be 0
     }
 }
 
@@ -66,7 +68,7 @@ public final class NFNT: NSObject {
         static let length = 26
     }
 
-    var fontType:                   FontType    /// UInt16
+    public var fontType:            FontType    /// UInt16
     @objc dynamic var firstChar:    Int16       /// ASCII code of first character
     @objc dynamic var lastChar:     Int16       /// ASCII code of last character
     @objc dynamic var widMax:       Int16       /// maximum character width
@@ -86,18 +88,17 @@ public final class NFNT: NSObject {
     lazy var glyphs:            [Glyph] = {
         do {
             try buildImageAndGlyphsIfNeeded()
-            return _glyphs
         } catch {
             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
         }
         return _glyphs
     }()
 
-    // FIXME: this should be CharCodes to Glyphs, should it not?
+    // FIXME: this should be CharCode16s to Glyphs, should it not?
+    // actually, UVBMP or Character would make more sense than char codes
     lazy var glyphEntries:      [String: Glyph] = {
         do {
             try buildImageAndGlyphsIfNeeded()
-            return _glyphEntries
         } catch {
             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
         }
@@ -109,7 +110,6 @@ public final class NFNT: NSObject {
     lazy var bitmapImage:       NSImage? = {
         do {
             try buildImageAndGlyphsIfNeeded()
-            return _bitmapImage
         } catch {
             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
         }
@@ -130,6 +130,10 @@ public final class NFNT: NSObject {
     private var widths:                     [Int8]!
     private var offsets:                    [Int8]!
 
+    private var glyphWidths:                [Fixed8Dot8]?
+    private var imageHeights:               [Int16]?
+
+    // MARK: -
     private var _glyphs:            [Glyph] = []
     private var _glyphEntries:      [String: Glyph] = [:]
     private var _bitmapImage:       NSImage?
@@ -181,7 +185,22 @@ public final class NFNT: NSObject {
         if let pixelOffsets {
             pixelOffsets.forEach { handle.write($0) }
         }
-        // FIXME: incomplete
+        if let widths, let offsets {
+            zip(widths, offsets).forEach {
+                if $0 == -1 && $1 == -1 {
+                    handle.write(-1 as Int16)
+                } else {
+                    let widthOffset: Int16 = Int16($0) | (Int16($1) << 8)
+                    handle.write(widthOffset)
+                }
+            }
+        }
+        if let glyphWidths {
+            glyphWidths.forEach { handle.write($0) }
+        }
+        if let imageHeights {
+            imageHeights.forEach { handle.write($0) }
+        }
         return handle.data
     }
 
@@ -199,7 +218,6 @@ public final class NFNT: NSObject {
         }
         try reader.pushPosition(Int(FontRec.length))
         defer { reader.popPosition() }
-
         if rowWords == 0 {
             /// this contains no bitmap data
             NSLog("\(type(of: self)).\(#function)() **** NOTICE: rowWords == 0 && this NFNT contains no bitmap data. Resource length: \(resource.data.count)")
@@ -285,12 +303,11 @@ public final class NFNT: NSObject {
         /// the table.
 
         // FIXME: !! we should probably update this to use MacEncoding.
-//        var pixelOffsets:   [Int16]
-        var widthEntries:   [Int8] = []
-        var offsetEntries:  [Int8] = []
-
-//        pixelOffsets = try (firstChar...lastChar).map { _ in try reader.read() }
-        pixelOffsets = try (Int(firstChar)...Int(lastChar) + 1).map { _ in try reader.read() }
+        //        pixelOffsets = try (firstChar...lastChar).map { _ in try reader.read() }
+        //        pixelOffsets = try (Int(firstChar)...Int(lastChar) + 1).map { _ in try reader.read() }
+        pixelOffsets = try (Int(firstChar)...Int(lastChar) + 2).map { _ in try reader.read() }
+        widths = []
+        offsets = []
 
         /// `Offset to width/offset table`. An integer value that specifies the offset to the
         /// offset/ width table from this point in the font record, `*in words*`. If this font has
@@ -321,29 +338,29 @@ public final class NFNT: NSObject {
         /// zero, the glyph origin corresponds with the left edge of the bit image. Missing glyphs
         /// are represented by a word value of –1. The last word of this table is also –1,
         /// representing the end.
-//        for _ in firstChar..<lastChar {
-        for _ in firstChar...lastChar {
+        //        for _ in firstChar..<lastChar {
+        //        for _ in firstChar...lastChar {
+        for _ in Int(firstChar)...Int(lastChar) + 2 {
             let widthOffset: Int16 = try reader.read()
             if widthOffset == -1 {
-                widthEntries.append(-1)
-                offsetEntries.append(-1)
+                widths.append(-1)
+                offsets.append(-1)
             } else {
                 let widthEntry: Int8 = Int8(widthOffset & 0x00ff)   // low-order byte
                 let offsetEntry: Int8 = Int8(widthOffset >> 8)      // high-order byte
-                widthEntries.append(widthEntry)
-                offsetEntries.append(offsetEntry)
+                widths.append(widthEntry)
+                offsets.append(offsetEntry)
             }
         }
 
         // FIXME: this needs work, I think
-        for i in Int(firstChar)...Int(lastChar) {
-            // FIXME: make sure we don't get an outofbounds index on `ascii`
-            let asciiEntryKey = ascii[i]
-            if i >= firstChar && i < lastChar {
+        for i in Int(firstChar)...Int(lastChar) + 2 {
+            let asciiEntryKey = i < ascii.count ? ascii[i] : "\(i)"
+            if i >= Int(firstChar)  && i < Int(lastChar) + 2 {
                 let pixelOffsetEntry = pixelOffsets[i - Int(firstChar)]
                 let pixelOffsetEntryPlusOne = pixelOffsets[i - Int(firstChar) + 1]
-                let offsetEntry = offsetEntries[i - Int(firstChar)]
-                let widthEntry = widthEntries[i - Int(firstChar)]
+                let offsetEntry = offsets[i - Int(firstChar)]
+                let widthEntry = widths[i - Int(firstChar)]
                 let glyphRect = NSMakeRect(CGFloat(pixelOffsetEntry), 0.0, CGFloat(pixelOffsetEntryPlusOne - pixelOffsetEntry), CGFloat(fRectHeight))
                 let entry = Glyph(with: glyphRect, offset: offsetEntry, width: widthEntry, charCode: CharCode16(i - Int(firstChar)), nfnt: self)
                 _glyphEntries[asciiEntryKey] = entry
@@ -355,8 +372,19 @@ public final class NFNT: NSObject {
             }
         }
         haveBuiltGlyphs = true
+        /// never encountered these, but worth a shot
+        if reader.bytesRemaining > 0 {
+            glyphWidths = try (Int(firstChar)...Int(lastChar) + 2).map { _ in try reader.read() }
+        }
+        if fontType.contains(.hasImageHeightTable) {
+            imageHeights = try (Int(firstChar)...Int(lastChar) + 2).map { _ in try reader.read() }
+        }
     }
+
+    public static let notDef = ".notdef"
 }
+
+
 
 fileprivate let ascii: [String] = [
     "0x00",
@@ -561,7 +589,7 @@ fileprivate let ascii: [String] = [
     "«",
     "»",
     "…",
-    "NBSP",
+    " ",
     "À",
     "Ã",
     "Õ",
@@ -615,4 +643,7 @@ fileprivate let ascii: [String] = [
     "˝",
     "˛",
     "ˇ",
+    "<257>",
+    "<258>",
+    NFNT.notDef,
 ]

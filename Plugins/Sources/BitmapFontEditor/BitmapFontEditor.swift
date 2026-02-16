@@ -8,6 +8,7 @@
 import Cocoa
 import RFSupport
 import CoreFont
+import OrderedCollections
 
 public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvider, ExportProvider, NSTableViewDelegate {
     public static var bundle: Bundle { .module }
@@ -104,6 +105,11 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
         Self.keyPaths.forEach { addObserver(self, forKeyPath: $0, options: [.new, .old], context: nil) }
     }
 
+    private func loadResource() {
+        overviewPreviewView.nfnt = nfnt
+        var glyphKeys: OrderedDictionary<String, NFNT.Glyph> = OrderedDictionary(nfnt.glyphEntries)
+    }
+
     @IBAction func showPopover(_ sender: Any) {
         popover.show(relativeTo: popoverButton.bounds, of: popoverButton, preferredEdge: .maxX)
     }
@@ -126,10 +132,28 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
 
     public func saveResource(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)()")
+        nfnt.fontType = NFNT.FontType(rawValue: objcFontType)
+        do {
+            resource.data = try nfnt.data()
+        } catch {
+            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+        }
+        setDocumentEdited(false)
     }
 
     public func revertResource(_ sender: Any) {
-        NSLog("\(type(of: self)).\(#function)()")
+        NSLog("\(type(of: self)).\(#function)")
+        undoManager?.disableUndoRegistration()
+        do {
+            nfnt = try NFNT(with: resource)
+            objcFontType = nfnt.fontType.rawValue
+            objcBitDepth = objcFontType & ~0xFFF3
+        } catch {
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+        }
+        undoManager?.removeAllActions()
+        setDocumentEdited(false)
+        undoManager?.enableUndoRegistration()
     }
 
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {

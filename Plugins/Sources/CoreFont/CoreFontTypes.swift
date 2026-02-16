@@ -39,6 +39,8 @@ public func DoubleToFixed4Dot12(_ x: Double) -> Fixed4Dot12 {
     Fixed4Dot12(x * Double(fixed4) + (x < 0 ? -0.5 : 0.5))
 }
 
+public typealias Fixed8Dot8   = Int16
+
 public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible {
     public let rawValue: UInt16
 
