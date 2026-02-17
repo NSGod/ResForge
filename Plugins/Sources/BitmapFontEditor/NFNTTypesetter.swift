@@ -29,6 +29,8 @@ class NFNTTypesetter {
         mLineFragments.append(currentLineFragment)
         for word in sampleStringWords {
             let wordWidth = self.width(of: String(word))
+            /// if the word contains all missing glyphs, its width could be 0
+            if wordWidth == 0 { continue }
             /// is the word wider than the entire line width?
             if wordWidth <= maxLineWidth {
                 /// If this is not the beginning of the line, is there room for a space + the word on this line?
@@ -51,12 +53,15 @@ class NFNTTypesetter {
                 if !isBeginningOfLine {
                     // FIXME: figure out what to do for a space if font doesn't have one
                     if let spaceGlyph = nfnt.glyphEntries[" "] {
-                        currentLineFragment.add(spaceGlyph)
-                        drawPoint.x += CGFloat(nfnt.kernMax + Int16(spaceGlyph.offset)) + CGFloat(spaceGlyph.width)
+                        if !spaceGlyph.isMissing {
+                            currentLineFragment.add(spaceGlyph)
+                            drawPoint.x += CGFloat(nfnt.kernMax + Int16(spaceGlyph.offset)) + CGFloat(spaceGlyph.width)
+                        }
                     }
                 }
                 for char: Character in word {
                     if let glyph = nfnt.glyphEntries["\(char)"] {
+                        if glyph.isMissing { continue }
                         drawPoint.x += CGFloat(nfnt.kernMax + Int16(glyph.offset) + Int16(glyph.width))
                         currentLineFragment.add(glyph)
                         if isBeginningOfLine { isBeginningOfLine = false }
@@ -67,21 +72,28 @@ class NFNTTypesetter {
                 for char: Character in word {
                     let currentLetter = "\(char)"
                     let letterWidth = self.width(of: currentLetter)
+                    /// if the glyph isMissing, width could be 0
+                    if letterWidth == 0 { continue }
+                    /// is there enough room left on this line for the next glyph?
                     if letterWidth > (maxLineWidth - drawPoint.x) {
-                        /// If there isn't enough room on the current line for this word,
-                        /// finish this lineFragment, create a new one, and reset
-                        /// the draw point, but *only* if we haven't surpassed the max
-                        /// number of lines.
+                        /// If there isn't enough room on the current line for this glyph,
+                        /// finish this lineFragment, create a new one, and reset the draw point,
+                        /// but *only* if we haven't surpassed the max number of lines.
                         if mLineFragments.count == maxNumberOfLineFragments {
                             return mLineFragments
                         }
                         drawPoint.x = point.x
                         drawPoint.y += nfnt.lineHeight
-                        currentLineFragment = NFNTLineFragment(frame: NSMakeRect(drawPoint.x, drawPoint.y, maxLineWidth, nfnt.lineHeight), alignment: alignment)
+                        currentLineFragment = NFNTLineFragment(frame: NSMakeRect(drawPoint.x,
+                                                                                 drawPoint.y,
+                                                                                 maxLineWidth,
+                                                                                 nfnt.lineHeight),
+                                                               alignment: alignment)
                         mLineFragments.append(currentLineFragment)
-                        isBeginningOfLine = true // ??
+                        isBeginningOfLine = true
                     }
                     if let glyph = nfnt.glyphEntries["\(char)"] {
+                        if glyph.isMissing { continue }
                         drawPoint.x += CGFloat(nfnt.kernMax + Int16(glyph.offset) + Int16(glyph.width))
                         currentLineFragment.add(glyph)
                         if isBeginningOfLine { isBeginningOfLine = false }
@@ -97,7 +109,9 @@ class NFNTTypesetter {
         var widths: [CGFloat] = []
         for char: Character in string {
             if let glyph = nfnt.glyphEntries["\(char)"] {
-                widths.append(CGFloat(nfnt.kernMax + Int16(glyph.offset) + Int16(glyph.width)))
+                if !glyph.isMissing {
+                    widths.append(CGFloat(nfnt.kernMax + Int16(glyph.offset) + Int16(glyph.width)))
+                }
             }
         }
         return widths

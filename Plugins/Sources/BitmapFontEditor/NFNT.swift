@@ -22,8 +22,8 @@ extension NFNT {
             return Int16(glyphRect.origin.x)
         }
 
-        /// `.notdef` ?
-        var isMissingGlyph: Bool {
+        /// `.notdef` ? NO
+        var isMissing: Bool {
             self.offset == -1 && self.width == -1 && self.glyphRect == .zero
         }
 
@@ -139,14 +139,14 @@ public final class NFNT: NSObject {
         guard let manager else { return .macRoman }
         /// we want the 'FOND' resource that has a font association table entry that
         /// references our 'NFNT', and which has the lowest possible `fontStyle` value,
-        /// since that 'FOND' will usually have the most info. For example, let's say
-        /// our 'NFNT' is for Helvetica-Bold 24. It will likely be referenced in 2 different
+        /// since that 'FOND' will usually have the most accurate info. For example, let's say
+        /// our 'NFNT' is for `Helvetica-Bold 24`. It will likely be referenced in 2 different
         /// 'FOND's:
-        /// 1) The 'FOND' named plain "Helvetica" where the font association table has an
-        /// entry for our 'NFNT' where the font style is 1 for bold. This refers to taking the
+        /// 1) The 'FOND' named plain `"Helvetica"` where the font association table has an
+        /// entry for our 'NFNT' where the font style is `1` for bold. This refers to taking the
         /// plain style Helvetica and applying the Bold style mask to it to produce the bold variant.
-        /// 2) The 'FOND' named "Helvetica Bold" where the font association table has an entry
-        /// for our 'NFNT' where the style is 0, or plain (meaning unadulterated from standard, which is bold).
+        /// 2) The 'FOND' named `"Helvetica Bold"` where the font association table has an entry
+        /// for our 'NFNT' where the style is `0`, or plain (meaning unadulterated from standard, which is bold).
         /// We prefer 2) over 1).
         let fondResources = manager.allResources(ofType: .fond, currentDocumentOnly: false)
         var targetFOND: FOND? = nil
