@@ -8,7 +8,8 @@
 import Foundation
 
 // for display
-final public class GlyphNameEntry: NSObject, Comparable {
+final public class GlyphNameEntry: NSObject, NSCopying, Comparable {
+
     @objc public let charCode:       CharCode
     @objc public let uv:             UVBMP
     @objc public let character:      String      // glyph
@@ -31,6 +32,11 @@ final public class GlyphNameEntry: NSObject, Comparable {
         charName = UnicodeScalar(self.uv)?.properties.name ?? "???"
         self.glyphName = glyphName
         super.init()
+    }
+
+    public func copy(with zone: NSZone? = nil) -> Any {
+        let copy = GlyphNameEntry(charCode: charCode, uv: uv, glyphName: glyphName)
+        return copy
     }
 
     public class func glyphNameEntries(with encoding: MacEncoding) -> [GlyphNameEntry] {

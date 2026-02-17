@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class MacEncoding: Copyable, CustomStringConvertible {
+public final class MacEncoding: Copyable, CustomStringConvertible {
     public let name:                               String
     public private(set) var isCustomEncoding:      Bool = false
     public var logsInvalidCharCodes:               Bool = false
@@ -17,7 +17,7 @@ public class MacEncoding: Copyable, CustomStringConvertible {
     public private(set) var coveredCharCodes:      IndexSet
 
     private var customCharCodesToGlyphNames: [CharCode: String]?
-    private let encoding: [UVBMP]
+    public let encoding: [UVBMP]
     private let uvsToCharCodes: [UVBMP: CharCode]
 
     public init(name: String, encoding: [UVBMP], uvsToCharCodes: [UVBMP: CharCode]) {
@@ -35,15 +35,17 @@ public class MacEncoding: Copyable, CustomStringConvertible {
     }
 
     init(with other: MacEncoding) {
-        self.name = other.name
-        self.encoding = other.encoding
-        self.uvsToCharCodes = other.uvsToCharCodes
-        self.coveredCharCodes = other.coveredCharCodes
-        self.isCustomEncoding = other.isCustomEncoding
-        self.logsInvalidCharCodes = other.logsInvalidCharCodes
+        name = other.name + " (Custom)"
+        encoding = other.encoding
+        uvsToCharCodes = other.uvsToCharCodes
+        coveredCharCodes = other.coveredCharCodes
+        isCustomEncoding = other.isCustomEncoding
+        logsInvalidCharCodes = other.logsInvalidCharCodes
+        glyphNameEntries = other.glyphNameEntries.map { $0.copy() as! GlyphNameEntry }
     }
 
     public func copy() -> MacEncoding {
+        NSLog("\(type(of: self)).\(#function)")
         return MacEncoding(with: self)
     }
 
@@ -96,6 +98,7 @@ public class MacEncoding: Copyable, CustomStringConvertible {
 
     // FIXME: this should be replacing, not adding? YES
     public func custom(byReplacing glyphNameEntries: [GlyphNameEntry]) -> MacEncoding {
+        NSLog("\(type(of: self)).\(#function)")
         let custom = self.copy()
         add(custom: glyphNameEntries)
         return custom

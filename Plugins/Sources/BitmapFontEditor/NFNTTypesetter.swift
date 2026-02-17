@@ -25,7 +25,7 @@ class NFNTTypesetter {
         var drawPoint = point
         let nfnt: NFNT = layoutManager.textStorage.nfnt
         let alignment: NSTextAlignment = layoutManager.textStorage.alignment
-        var currentLineFragment = NFNTLineFragment(with: NSMakeRect(drawPoint.x, drawPoint.y, maxLineWidth, nfnt.lineHeight), alignment: alignment)
+        var currentLineFragment = NFNTLineFragment(frame: NSMakeRect(drawPoint.x, drawPoint.y, maxLineWidth, nfnt.lineHeight), alignment: alignment)
         mLineFragments.append(currentLineFragment)
         for word in sampleStringWords {
             let wordWidth = self.width(of: String(word))
@@ -40,7 +40,7 @@ class NFNTTypesetter {
                     }
                     drawPoint.x = point.x
                     drawPoint.y += nfnt.lineHeight
-                    currentLineFragment = NFNTLineFragment(with: NSMakeRect(drawPoint.x,
+                    currentLineFragment = NFNTLineFragment(frame: NSMakeRect(drawPoint.x,
                                                                             drawPoint.y,
                                                                             maxLineWidth,
                                                                             nfnt.lineHeight),
@@ -77,7 +77,7 @@ class NFNTTypesetter {
                         }
                         drawPoint.x = point.x
                         drawPoint.y += nfnt.lineHeight
-                        currentLineFragment = NFNTLineFragment(with: NSMakeRect(drawPoint.x, drawPoint.y, maxLineWidth, nfnt.lineHeight), alignment: alignment)
+                        currentLineFragment = NFNTLineFragment(frame: NSMakeRect(drawPoint.x, drawPoint.y, maxLineWidth, nfnt.lineHeight), alignment: alignment)
                         mLineFragments.append(currentLineFragment)
                         isBeginningOfLine = true // ??
                     }

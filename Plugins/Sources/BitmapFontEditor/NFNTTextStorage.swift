@@ -52,4 +52,8 @@ class NFNTTextStorage {
             layoutManager.textStorage = self
         }
     }
+
+    init() {
+        alignment = .left
+    }
 }

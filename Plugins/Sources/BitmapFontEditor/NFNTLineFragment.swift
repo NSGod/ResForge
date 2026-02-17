@@ -26,7 +26,7 @@ class NFNTLineFragment {
 
     private var generatedGlyphWidths: CGFloat = 0
 
-    init(with frame: NSRect, alignment: NSTextAlignment) {
+    init(frame: NSRect, alignment: NSTextAlignment) {
         self.frame = frame
         self.alignment = alignment
     }

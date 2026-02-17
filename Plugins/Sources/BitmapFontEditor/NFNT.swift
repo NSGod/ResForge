@@ -29,9 +29,9 @@ extension NFNT {
 
         weak var nfnt:      NFNT!
 
-        static let nullGlyph: Glyph = .init(with: .zero, offset: -1, width: -1, charCode: CharCode16.max, uv: .undefined, nfnt:nil)
+        static let nullGlyph: Glyph = .init(glyphRect: .zero, offset: -1, width: -1, charCode: CharCode16.max, uv: .undefined, nfnt:nil)
 
-        init(with glyphRect: NSRect, offset: Int8, width: Int8, charCode: CharCode16, uv: UVBMP, nfnt: NFNT?) {
+        init(glyphRect: NSRect, offset: Int8, width: Int8, charCode: CharCode16, uv: UVBMP, nfnt: NFNT?) {
             self.offset = offset
             self.width = width
             if self.offset == -1 && self.width == -1 {
@@ -137,8 +137,17 @@ public final class NFNT: NSObject {
 
     lazy var encoding:                      MacEncoding = {
         guard let manager else { return .macRoman }
-        /// we want the 'FOND' resource with the lowest `fontStyle` value that references our 'NFNT',
-        /// since that 'FOND' will usually have the most info
+        /// we want the 'FOND' resource that has a font association table entry that
+        /// references our 'NFNT', and which has the lowest possible `fontStyle` value,
+        /// since that 'FOND' will usually have the most info. For example, let's say
+        /// our 'NFNT' is for Helvetica-Bold 24. It will likely be referenced in 2 different
+        /// 'FOND's:
+        /// 1) The 'FOND' named plain "Helvetica" where the font association table has an
+        /// entry for our 'NFNT' where the font style is 1 for bold. This refers to taking the
+        /// plain style Helvetica and applying the Bold style mask to it to produce the bold variant.
+        /// 2) The 'FOND' named "Helvetica Bold" where the font association table has an entry
+        /// for our 'NFNT' where the style is 0, or plain (meaning unadulterated from standard, which is bold).
+        /// We prefer 2) over 1).
         let fondResources = manager.allResources(ofType: .fond, currentDocumentOnly: false)
         var targetFOND: FOND? = nil
         var fontStyle: MacFontStyle? = nil
@@ -389,21 +398,26 @@ public final class NFNT: NSObject {
 
         // FIXME: this needs work, I think
         for i in Int(firstChar)...Int(lastChar) + 2 {
-            let asciiEntryKey = i < ascii.count ? ascii[i] : "\(i)"
+            let charCode = CharCode16(i - Int(firstChar))
+            let uv: UVBMP
+            if charCode > CharCode.max {
+                uv = .undefined
+            } else {
+                uv = encoding.uv(for: CharCode(charCode))
+            }
+            let asciiEntryKey: String
+            if uv != .undefined, let scalar = UnicodeScalar(uv) {
+                asciiEntryKey = String(scalar)
+            } else {
+                asciiEntryKey = "\(i)"
+            }
             if i >= Int(firstChar)  && i < Int(lastChar) + 2 {
                 let pixelOffsetEntry = pixelOffsets[i - Int(firstChar)]
                 let pixelOffsetEntryPlusOne = pixelOffsets[i - Int(firstChar) + 1]
                 let offsetEntry = offsets[i - Int(firstChar)]
                 let widthEntry = widths[i - Int(firstChar)]
                 let glyphRect = NSMakeRect(CGFloat(pixelOffsetEntry), 0.0, CGFloat(pixelOffsetEntryPlusOne - pixelOffsetEntry), CGFloat(fRectHeight))
-                let charCode = CharCode16(i - Int(firstChar))
-                let uv: UVBMP
-                if charCode > CharCode.max {
-                    uv = .undefined
-                } else {
-                    uv = encoding.uv(for: CharCode(charCode))
-                }
-                let entry = Glyph(with: glyphRect, offset: offsetEntry, width: widthEntry, charCode: charCode, uv: uv, nfnt: self)
+                let entry = Glyph(glyphRect: glyphRect, offset: offsetEntry, width: widthEntry, charCode: charCode, uv: uv, nfnt: self)
                 _glyphEntries[asciiEntryKey] = entry
                 _glyphs.append(entry)
             } else if i >= lastChar {
@@ -424,266 +438,3 @@ public final class NFNT: NSObject {
 
     public static let notDef = ".notdef"
 }
-
-
-fileprivate let ascii: [String] = [
-    "0x00",
-    "0x01",
-    "0x02",
-    "0x03",
-    "0x04",
-    "0x05",
-    "0x06",
-    "0x07",
-    "0x08",
-    "0x09",
-    "LF",
-    "0x0b",
-    "0x0c",
-    "CR",
-    "0x0e",
-    "0x0f",
-    "0x10",
-    "0x11",
-    "0x12",
-    "0x13",
-    "0x14",
-    "0x15",
-    "0x16",
-    "0x17",
-    "0x18",
-    "0x19",
-    "0x1a",
-    "0x1b",
-    "0x1c",
-    "0x1d",
-    "0x1e",
-    "0x1f",
-    " ",
-    "!",
-    "\"",
-    "#",
-    "$",
-    "%",
-    "&",
-    "'",
-    "(",
-    ")",
-    "*",
-    "+",
-    ",",
-    "-",
-    ".",
-    "/",
-    "0",
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    ":",
-    ";",
-    "<",
-    "=",
-    ">",
-    "?",
-    "@",
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
-    "F",
-    "G",
-    "H",
-    "I",
-    "J",
-    "K",
-    "L",
-    "M",
-    "N",
-    "O",
-    "P",
-    "Q",
-    "R",
-    "S",
-    "T",
-    "U",
-    "V",
-    "W",
-    "X",
-    "Y",
-    "Z",
-    "[",
-    "\\",
-    "]",
-    "^",
-    "_",
-    "`",
-    "a",
-    "b",
-    "c",
-    "d",
-    "e",
-    "f",
-    "g",
-    "h",
-    "i",
-    "j",
-    "k",
-    "l",
-    "m",
-    "n",
-    "o",
-    "p",
-    "q",
-    "r",
-    "s",
-    "t",
-    "u",
-    "v",
-    "w",
-    "x",
-    "y",
-    "z",
-    "{",
-    "|",
-    "}",
-    "~",
-    "DEL",
-    "Ä",
-    "Å",
-    "Ç",
-    "É",
-    "Ñ",
-    "Ö",
-    "Ü",
-    "á",
-    "à",
-    "â",
-    "ä",
-    "ã",
-    "å",
-    "ç",
-    "é",
-    "è",
-    "ê",
-    "ë",
-    "í",
-    "ì",
-    "î",
-    "ï",
-    "ñ",
-    "ó",
-    "ò",
-    "ô",
-    "ö",
-    "õ",
-    "ú",
-    "ù",
-    "û",
-    "ü",
-    "†",
-    "°",
-    "¢",
-    "£",
-    "§",
-    "•",
-    "¶",
-    "ß",
-    "®",
-    "©",
-    "™",
-    "´",
-    "¨",
-    "≠",
-    "Æ",
-    "Ø",
-    "∞",
-    "±",
-    "≤",
-    "≥",
-    "¥",
-    "µ",
-    "∂",
-    "∑",
-    "∏",
-    "π",
-    "∫",
-    "ª",
-    "º",
-    "Ω",
-    "æ",
-    "ø",
-    "¿",
-    "¡",
-    "¬",
-    "√",
-    "ƒ",
-    "≈",
-    "∆",
-    "«",
-    "»",
-    "…",
-    " ",
-    "À",
-    "Ã",
-    "Õ",
-    "Œ",
-    "œ",
-    "–",
-    "—",
-    "“",
-    "”",
-    "‘",
-    "’",
-    "÷",
-    "◊",
-    "ÿ",
-    "Ÿ",
-    "⁄",
-    "€",
-    "‹",
-    "›",
-    "ﬁ",
-    "ﬂ",
-    "‡",
-    "·",
-    "‚",
-    "„",
-    "‰",
-    "Â",
-    "Ê",
-    "Á",
-    "Ë",
-    "È",
-    "Í",
-    "Î",
-    "Ï",
-    "Ì",
-    "Ó",
-    "Ô",
-    "",
-    "Ò",
-    "Ú",
-    "Û",
-    "Ù",
-    "ı",
-    "ˆ",
-    "˜",
-    "¯",
-    "˘",
-    "˙",
-    "˚",
-    "¸",
-    "˝",
-    "˛",
-    "ˇ",
-    "<257>",
-    "<258>",
-    NFNT.notDef,
-]

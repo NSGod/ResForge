@@ -38,6 +38,14 @@ public class BitmapFontPreviewView: NSView {
         }
     }
 
+    /// padding the text is inset from the edge, in pt/px
+    @IBInspectable public var padding:         CGFloat = 0 {
+        didSet {
+            syncSize()
+            self.needsDisplay = true
+        }
+    }
+
     public var alignment:       NSTextAlignment {
         set {
             textStorage.alignment = newValue
@@ -57,14 +65,6 @@ public class BitmapFontPreviewView: NSView {
             return textStorage.nfnt
         }
     }
-
-    /// padding the text is inset from the edge, in pt/px
-	public var padding:         CGFloat = 0 {
-		didSet {
-			syncSize()
-			self.needsDisplay = true
-		}
-	}
 
     var textStorage:            NFNTTextStorage
 
