@@ -118,8 +118,7 @@ public class BitmapFontPreviewView: NSView {
 
     @objc private func viewFrameChanged(_ notification: Notification) {
         syncSize()
-        // ??
-        // self.needsDisplay = true
+        // self.needsDisplay = true // ??
     }
 
     private func syncSize() {

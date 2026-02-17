@@ -2338,7 +2338,7 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" selectable="YES" id="a0v-hn-ILC">
                         <font key="font" metaFont="smallSystem"/>
-                        <string key="title">Script &amp; FOND ID mapping:
+                        <mutableString key="title">Script ID &amp; FOND ID mapping:
      0           - 128         Reserved for Apple
      129	- 16383	Roman
      16384	- 16895	Japanese
@@ -2372,7 +2372,7 @@
      30720	- 31231	Central European Roman
      31232	- 31743	Vietnamese
      31744	- 32255	Extended Arabic
-     32256	- 32767	Uninterpreted Symbols</string>
+     32256	- 32767	Uninterpreted Symbols</mutableString>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>

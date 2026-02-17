@@ -60,7 +60,7 @@ class NFNTLayoutManager {
         drawRect.origin = point
         for lineFragment in lineFragments {
             drawRect.origin = lineFragment.alignedFrame.origin
-            // add in the padding
+            // add back in the padding
             drawRect.origin.x += point.x
             drawRect.origin.y += point.y
             for glyph in lineFragment.generatedGlyphs {
@@ -70,12 +70,11 @@ class NFNTLayoutManager {
                     drawRect.size.width = CGFloat(glyph.width)
                     NSColor.white.setFill()
                     NSBezierPath(rect: drawRect).fill()
-                    drawRect.origin.x += CGFloat(glyph.width)
                 } else {
                     drawRect.size.width = glyph.glyphRect.size.width
                     glyph.nfnt.bitmapImage?.draw(in: drawRect, from: glyph.glyphRect, operation: .plusDarker, fraction: 1.0, respectFlipped: true, hints: nil)
-                    drawRect.origin.x += glyph.glyphRect.size.width
                 }
+                drawRect.origin.x += CGFloat(glyph.width)
             }
         }
     }

@@ -14,9 +14,9 @@ class NFNTLineFragment {
     var alignedFrame:       NSRect {
         var _alignedFrame = frame
         if alignment == .center {
-            _alignedFrame.origin.x = floor((NSWidth(frame) - generatedGlyphWidths) / 2)
+            _alignedFrame.origin.x = floor((NSWidth(frame) - widthOfGlyphs) / 2)
         } else if alignment == .right {
-            _alignedFrame.origin.x = floor(NSWidth(frame) - generatedGlyphWidths)
+            _alignedFrame.origin.x = floor(NSWidth(frame) - widthOfGlyphs)
         }
         return _alignedFrame
     }
@@ -24,7 +24,7 @@ class NFNTLineFragment {
     var generatedGlyphs:    [NFNT.Glyph] = []
     var alignment:          NSTextAlignment
 
-    private var generatedGlyphWidths: CGFloat = 0
+    private var widthOfGlyphs: CGFloat = 0
 
     init(frame: NSRect, alignment: NSTextAlignment) {
         self.frame = frame
@@ -33,6 +33,6 @@ class NFNTLineFragment {
 
     func add(_ glyph: NFNT.Glyph) {
         generatedGlyphs.append(glyph)
-        generatedGlyphWidths += CGFloat(((glyph.nfnt.kernMax + Int16(glyph.offset)) + Int16(glyph.width)))
+        widthOfGlyphs += CGFloat(((glyph.nfnt.kernMax + Int16(glyph.offset)) + Int16(glyph.width)))
     }
 }
