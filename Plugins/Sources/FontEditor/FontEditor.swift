@@ -22,9 +22,9 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
     @IBOutlet weak var tableTagField:   NSTextField!
     @IBOutlet weak var box:             NSBox!
 
-    public var resource: 		Resource        /// `'sfnt'`
-    let manager: 		        RFEditorManager
-    @objc var fontFile:         OTFFontFile
+    public var resource: 		    Resource        /// `'sfnt'`
+    let manager: 		            RFEditorManager
+    @objc dynamic var fontFile:     OTFFontFile
 
     private var tableTagsToViewControllers: [TableTag: FontTableViewController] = [:]
     private var originalData:   Data
@@ -69,12 +69,10 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
         do {
             let indexes = tableView.selectedRowIndexes
             tableView.deselectAll(self)
-            self.willChangeValue(forKey: "fontFile")
-            fontFile = try OTFFontFile(resource.data)
-            self.didChangeValue(forKey: "fontFile")
             box.contentView = Self.emptyView
             tableTagField.stringValue = ""
             tableTagsToViewControllers.removeAll()
+            fontFile = try OTFFontFile(resource.data)
             tableView.reloadData()
             if !indexes.isEmpty {
                 tableView.selectRowIndexes(indexes, byExtendingSelection: false)
@@ -111,7 +109,8 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
 
     @IBAction public func revertResource(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
-
+        reloadFont()
+        window?.isDocumentEdited = false
     }
 
     static let emptyView: NSView = NSView(frame: NSMakeRect(0, 0, 400, 600))
