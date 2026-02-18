@@ -1,6 +1,6 @@
 //
 //  FontTable_gasp.swift
-//  FontEditor
+//  CoreFont
 //
 //  Created by Mark Douma on 1/25/2026.
 //

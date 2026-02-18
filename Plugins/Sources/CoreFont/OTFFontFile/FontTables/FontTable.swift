@@ -86,8 +86,8 @@ open class FontTable: OTFFontFileNode {
 
     public static func `class`(for tableTag: TableTag) -> FontTable.Type {
         if tableTag == .OS_2 { return FontTable_OS2.self }
+        if tableTag == .cvt_ { return FontTable_cvt.self }
 //        if tableTag == .CID_ { return FontTable_CID.self }
-//        if tableTag == .cvt_ { return FontTable_cvt.self }
 //        if tableTag == .CFF_ { return FontTable_CFF.self }
         if let theClass: FontTable.Type = NSClassFromString("CoreFont.FontTable_\(tableTag.fourCharString)") as? FontTable.Type {
             return theClass
@@ -111,6 +111,7 @@ open class FontTable: OTFFontFileNode {
     public var hmtxTable: FontTable_hmtx? { table(for: .hmtx) as? FontTable_hmtx }
     public var os2Table:  FontTable_OS2?  { table(for: .OS_2) as? FontTable_OS2 }
     public var gaspTable: FontTable_gasp? { table(for: .gasp) as? FontTable_gasp }
+    public var cvtTable:  FontTable_cvt?  { table(for: .cvt_) as? FontTable_cvt  }
 
     public var fontNumGlyphs: Int {
         return fontFile.numGlyphs

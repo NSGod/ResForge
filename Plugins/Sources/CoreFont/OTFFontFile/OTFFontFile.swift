@@ -35,7 +35,6 @@ final public class OTFFontFile: NSObject {
 
     private var data:               Data
     private let reader:             BinaryDataReader
-    private var dataHandle:         DataHandle!
 
     private var tableTagsToTables:  [TableTag: FontTable] = [:]
     // this is to help determine table indexes for display in UI:
@@ -85,7 +84,7 @@ final public class OTFFontFile: NSObject {
     }
 
 	public func data(with options: FontWritingOptions = .none) throws -> Data {
-        dataHandle = DataHandle()
+        let dataHandle = DataHandle()
         // entries must be sorted by table tag
         directory.sortEntries()
         // sort tables into optimized loading order
@@ -116,7 +115,6 @@ final public class OTFFontFile: NSObject {
         let finalChecksum: UInt32 = FontTable_head.checksumConstant &- checksum
         dataHandle.write(finalChecksum)
         data = dataHandle.data
-        dataHandle = nil
         return data
     }
 
@@ -181,6 +179,9 @@ final public class OTFFontFile: NSObject {
     }
     public var gaspTable: FontTable_gasp? {
         return table(for: .gasp) as? FontTable_gasp
+    }
+    public var cvtTable: FontTable_cvt? {
+        return table(for: .cvt_ ) as? FontTable_cvt
     }
     public func table(for tableTag: TableTag) -> FontTable? {
         return tableTagsToTables[tableTag]
