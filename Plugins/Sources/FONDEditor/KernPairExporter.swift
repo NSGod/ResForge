@@ -43,7 +43,7 @@ public class KernPairExporter {
     }
 
     // feeding in the RFEditorManager will allow for a much better scaling to Units Per Em
-    public static func representation(of entry: CoreFont.KernTable.Entry, using config: Config = .gposDefault, manager: RFEditorManager? = nil) -> String? {
+    public static func representation(of entry: FOND.KernTable.Entry, using config: Config = .gposDefault, manager: RFEditorManager? = nil) -> String? {
         if config.format == .GPOS {
             return GPOSFeatureRepresentation(of: entry, using: config, manager: manager)
         } else {
@@ -54,7 +54,7 @@ public class KernPairExporter {
     // FIXME: add better explanation about what this method is for
     /* This can be used to create a `feature` file used during conversion to OTF/TTF
         by Adobe AFDKO's hotconvert/makeotf to create a `GPOS` table containing the kern pairs */
-    public static func GPOSFeatureRepresentation(of entry: CoreFont.KernTable.Entry, using config: Config = .gposDefault, manager: RFEditorManager? = nil) -> String? {
+    public static func GPOSFeatureRepresentation(of entry: FOND.KernTable.Entry, using config: Config = .gposDefault, manager: RFEditorManager? = nil) -> String? {
         var mString = """
 languagesystem DFLT dflt;
 languagesystem latn dflt;
@@ -83,7 +83,7 @@ feature kern {\n
         return mString
     }
 
-    public static func CSVRepresentation(of entry: CoreFont.KernTable.Entry, using config: Config = .csvDefault, manager: RFEditorManager? = nil) -> String? {
+    public static func CSVRepresentation(of entry: FOND.KernTable.Entry, using config: Config = .csvDefault, manager: RFEditorManager? = nil) -> String? {
         let stream = OutputStream(toMemory: ())
         do {
             let writer = try CSVWriter(stream: stream)

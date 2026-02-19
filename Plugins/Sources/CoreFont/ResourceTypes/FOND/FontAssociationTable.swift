@@ -9,46 +9,49 @@
 import Foundation
 import RFSupport
 
-final public class FontAssociationTable: ResourceNode {
-    public var numberOfEntries:    Int16                           // number of entries - 1
-    @objc public var entries:      [Entry]
+extension FOND {
 
-    @objc public override var totalNodeLength:    Int {
-        return MemoryLayout<Int16>.size + entries.count * Entry.nodeLength
-    }
+    final public class FontAssociationTable: ResourceNode {
+        public var numberOfEntries:    Int16                           // number of entries - 1
+        @objc public var entries:      [Entry]
 
-    public init(_ reader: BinaryDataReader) throws {
-        numberOfEntries = try reader.read()
-        entries = try (0...numberOfEntries).map { _ in try Entry(reader) }
-        super.init()
-    }
-
-    public override func write(to dataHandle: DataHandle) throws {
-        numberOfEntries = Int16(entries.count - 1)
-        dataHandle.write(numberOfEntries)
-        try entries.forEach { try $0.write(to: dataHandle) }
-    }
-    
-    public func add(_ entry: Entry) throws {
-        guard !entries.contains(entry) else {
-            throw FONDError.fontAssociationTableEntriesRefSameFont
+        @objc public override var totalNodeLength:    Int {
+            return MemoryLayout<Int16>.size + entries.count * Entry.nodeLength
         }
-        entries.append(entry)
-        entries.sort(by: <)
-        numberOfEntries = Int16(entries.count - 1)
-    }
 
-    public func remove(_ entry: Entry) throws {
-        guard entries.contains(entry) else {
-            throw FONDError.noSuchFontAssociationTableEntry
+        public init(_ reader: BinaryDataReader) throws {
+            numberOfEntries = try reader.read()
+            entries = try (0...numberOfEntries).map { _ in try Entry(reader) }
+            super.init()
         }
-        entries.append(entry)
-        entries.sort(by: <)
-        numberOfEntries = Int16(entries.count - 1)
+
+        public override func write(to dataHandle: DataHandle) throws {
+            numberOfEntries = Int16(entries.count - 1)
+            dataHandle.write(numberOfEntries)
+            try entries.forEach { try $0.write(to: dataHandle) }
+        }
+
+        public func add(_ entry: Entry) throws {
+            guard !entries.contains(entry) else {
+                throw FONDError.fontAssociationTableEntriesRefSameFont
+            }
+            entries.append(entry)
+            entries.sort(by: <)
+            numberOfEntries = Int16(entries.count - 1)
+        }
+
+        public func remove(_ entry: Entry) throws {
+            guard entries.contains(entry) else {
+                throw FONDError.noSuchFontAssociationTableEntry
+            }
+            entries.append(entry)
+            entries.sort(by: <)
+            numberOfEntries = Int16(entries.count - 1)
+        }
     }
 }
 
-extension FontAssociationTable {
+extension FOND.FontAssociationTable {
 
     final public class Entry: ResourceNode, Comparable {
         @objc public var fontPointSize:    Int16

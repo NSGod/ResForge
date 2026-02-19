@@ -9,28 +9,31 @@
 import Foundation
 import RFSupport
 
-final public class WidthTable: FONDResourceNode {
-    public var numberOfEntries:    Int16               // number of entries - 1
-    public var entries:            [Entry]
+extension FOND {
 
-    public override var totalNodeLength: Int {
-        return MemoryLayout<Int16>.size + entries.reduce(0) { $0 + $1.totalNodeLength }
-    }
+    final public class WidthTable: FONDResourceNode {
+        public var numberOfEntries:    Int16               // number of entries - 1
+        public var entries:            [Entry]
 
-    public init(_ reader: BinaryDataReader, fond: FOND) throws {
-        numberOfEntries = try reader.read()
-        entries = try (0...numberOfEntries).map { _ in try Entry(reader, fond:fond) }
-        super.init(fond:fond)
-    }
+        public override var totalNodeLength: Int {
+            return MemoryLayout<Int16>.size + entries.reduce(0) { $0 + $1.totalNodeLength }
+        }
 
-    public override func write(to dataHandle: DataHandle) throws {
-        numberOfEntries = Int16(entries.count - 1)
-        dataHandle.write(numberOfEntries)
-        try entries.forEach { try $0.write(to: dataHandle) }
+        public init(_ reader: BinaryDataReader, fond: FOND) throws {
+            numberOfEntries = try reader.read()
+            entries = try (0...numberOfEntries).map { _ in try Entry(reader, fond:fond) }
+            super.init(fond:fond)
+        }
+
+        public override func write(to dataHandle: DataHandle) throws {
+            numberOfEntries = Int16(entries.count - 1)
+            dataHandle.write(numberOfEntries)
+            try entries.forEach { try $0.write(to: dataHandle) }
+        }
     }
 }
 
-extension WidthTable {
+extension FOND.WidthTable {
 
     final public class Entry: FONDResourceNode {
         public var style:              MacFontStyle        // style entry applies to

@@ -14,68 +14,71 @@ import RFSupport
 // information about the character-encoding scheme that the font designer used,
 // and a mechanism for obtaining the name of the appropriate printer font."
 
-// Style-mapping table : 58 bytes
-public final class StyleMappingTable: ResourceNode {
-    public var fontClass:                          FontClass   // UInt16
-    public var offset:                             Int32       // offset from the start of this table to the glyph-name-encoding subtable component
-    public var reserved:                           Int32
-    public var indexes:                            [UInt8]     // [48] Indexes into the Font Name Suffix subtable
+extension FOND {
 
-    public var fontNameSuffixSubtable:             FontNameSuffixSubtable
-    @objc public var glyphNameEncodingSubtable:    GlyphNameEncodingSubtable?
+    // Style-mapping table : 58 bytes
+    public final class StyleMappingTable: ResourceNode {
+        public var fontClass:                          FontClass   // UInt16
+        public var offset:                             Int32       // offset from the start of this table to the glyph-name-encoding subtable component
+        public var reserved:                           Int32
+        public var indexes:                            [UInt8]     // [48] Indexes into the Font Name Suffix subtable
 
-    public class override var nodeLength: Int {
-        MemoryLayout<FontClass.RawValue>.size + MemoryLayout<Int32>.size * 2 + 48  // 58 bytes
-    }
+        public var fontNameSuffixSubtable:             FontNameSuffixSubtable
+        @objc public var glyphNameEncodingSubtable:    GlyphNameEncodingSubtable?
 
-    public override var totalNodeLength: Int {
-        return Self.nodeLength + fontNameSuffixSubtable.totalNodeLength + (glyphNameEncodingSubtable?.totalNodeLength ?? 0)
-    }
-
-    // MARK: - init
-    public init(_ reader: BinaryDataReader, range knownRange: NSRange) throws {
-        let origOffset = reader.bytesRead
-        fontClass = try reader.read()
-        offset = try reader.read()
-        reserved = try reader.read()
-        indexes = try (0..<48).map { _ in try reader.read() }
-        var nameSuffixRange = knownRange
-        nameSuffixRange.location += Self.nodeLength
-        nameSuffixRange.length -= Self.nodeLength
-        var glyphNameTableLength = 0
-        if offset != 0 {
-            glyphNameTableLength = NSMaxRange(knownRange) - (origOffset + Int(offset))
-            nameSuffixRange.length -= glyphNameTableLength
+        public class override var nodeLength: Int {
+            MemoryLayout<FontClass.RawValue>.size + MemoryLayout<Int32>.size * 2 + 48  // 58 bytes
         }
-        fontNameSuffixSubtable = try FontNameSuffixSubtable(reader, range: nameSuffixRange)
-        if offset != 0 {
-            try reader.pushPosition(origOffset + Int(offset))
-            glyphNameEncodingSubtable = try GlyphNameEncodingSubtable(reader)
-            reader.popPosition()
-        }
-    }
 
-    public override func write(to dataHandle: DataHandle) throws {
-        if glyphNameEncodingSubtable != nil {
-            offset = Int32(Self.nodeLength + fontNameSuffixSubtable.totalNodeLength)
+        public override var totalNodeLength: Int {
+            return Self.nodeLength + fontNameSuffixSubtable.totalNodeLength + (glyphNameEncodingSubtable?.totalNodeLength ?? 0)
         }
-        dataHandle.write(fontClass)
-        dataHandle.write(offset)
-        dataHandle.write(reserved)
-        indexes.forEach { dataHandle.write($0) }
-        try fontNameSuffixSubtable.write(to: dataHandle)
-        if let glyphNameEncodingSubtable {
-            try glyphNameEncodingSubtable.write(to: dataHandle)
-        }
-    }
 
-    public func postScriptNameForFont(with style: MacFontStyle) -> String? {
-        let entryIndex = indexes[Int(style.compressed().rawValue)]
-        return fontNameSuffixSubtable.postScriptNameForFontEntry(at: entryIndex)
+        // MARK: - init
+        public init(_ reader: BinaryDataReader, range knownRange: NSRange) throws {
+            let origOffset = reader.bytesRead
+            fontClass = try reader.read()
+            offset = try reader.read()
+            reserved = try reader.read()
+            indexes = try (0..<48).map { _ in try reader.read() }
+            var nameSuffixRange = knownRange
+            nameSuffixRange.location += Self.nodeLength
+            nameSuffixRange.length -= Self.nodeLength
+            var glyphNameTableLength = 0
+            if offset != 0 {
+                glyphNameTableLength = NSMaxRange(knownRange) - (origOffset + Int(offset))
+                nameSuffixRange.length -= glyphNameTableLength
+            }
+            fontNameSuffixSubtable = try FontNameSuffixSubtable(reader, range: nameSuffixRange)
+            if offset != 0 {
+                try reader.pushPosition(origOffset + Int(offset))
+                glyphNameEncodingSubtable = try GlyphNameEncodingSubtable(reader)
+                reader.popPosition()
+            }
+        }
+
+        public override func write(to dataHandle: DataHandle) throws {
+            if glyphNameEncodingSubtable != nil {
+                offset = Int32(Self.nodeLength + fontNameSuffixSubtable.totalNodeLength)
+            }
+            dataHandle.write(fontClass)
+            dataHandle.write(offset)
+            dataHandle.write(reserved)
+            indexes.forEach { dataHandle.write($0) }
+            try fontNameSuffixSubtable.write(to: dataHandle)
+            if let glyphNameEncodingSubtable {
+                try glyphNameEncodingSubtable.write(to: dataHandle)
+            }
+        }
+
+        public func postScriptNameForFont(with style: MacFontStyle) -> String? {
+            let entryIndex = indexes[Int(style.compressed().rawValue)]
+            return fontNameSuffixSubtable.postScriptNameForFontEntry(at: entryIndex)
+        }
     }
 }
 
-extension StyleMappingTable {
+extension FOND.StyleMappingTable {
     /* Font class. An integer value that specifies a collection of flags that alert
      the printer driver to what type of PostScript font this font family is. This value
      is represented by the fontClass field of the StyleTable data type.

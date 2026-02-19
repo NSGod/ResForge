@@ -9,43 +9,46 @@
 import Foundation
 import RFSupport
 
-final public class KernTable: FONDResourceNode {
-    public var numberOfEntries:             Int16              // number of entries - 1
-    public var entries:                     [Entry]
+extension FOND {
 
-    public var hasOutOfRangeCharCodes:      Bool = false
-    private var fontStylesToEntries:        [MacFontStyle: Entry]
+    final public class KernTable: FONDResourceNode {
+        public var numberOfEntries:             Int16              // number of entries - 1
+        public var entries:                     [Entry]
 
-    @objc public override var totalNodeLength: Int {
-        return MemoryLayout<Int16>.size + entries.reduce(0) { $0 + $1.totalNodeLength }
-    }
+        public var hasOutOfRangeCharCodes:      Bool = false
+        private var fontStylesToEntries:        [MacFontStyle: Entry]
 
-    public init(_ reader: BinaryDataReader, fond: FOND) throws {
-        numberOfEntries = try reader.read()
-        entries = []
-        fontStylesToEntries = [:]
-        for _ in 0...numberOfEntries {
-            let entry = try Entry(reader, fond: fond)
-            entries.append(entry)
-            fontStylesToEntries[entry.style] = entry
-            hasOutOfRangeCharCodes = hasOutOfRangeCharCodes ? true : entry.hasOutOfRangeCharCodes
+        @objc public override var totalNodeLength: Int {
+            return MemoryLayout<Int16>.size + entries.reduce(0) { $0 + $1.totalNodeLength }
         }
-        super.init(fond:fond)
-    }
 
-    public override func write(to dataHandle: DataHandle) throws {
-        numberOfEntries = Int16(entries.count - 1)
-        dataHandle.write(numberOfEntries)
-        try entries.forEach { try $0.write(to: dataHandle) }
-    }
+        public init(_ reader: BinaryDataReader, fond: FOND) throws {
+            numberOfEntries = try reader.read()
+            entries = []
+            fontStylesToEntries = [:]
+            for _ in 0...numberOfEntries {
+                let entry = try Entry(reader, fond: fond)
+                entries.append(entry)
+                fontStylesToEntries[entry.style] = entry
+                hasOutOfRangeCharCodes = hasOutOfRangeCharCodes ? true : entry.hasOutOfRangeCharCodes
+            }
+            super.init(fond:fond)
+        }
 
-    public func entry(for fontStyle: MacFontStyle) -> Entry? {
-        return fontStylesToEntries[fontStyle]
+        public override func write(to dataHandle: DataHandle) throws {
+            numberOfEntries = Int16(entries.count - 1)
+            dataHandle.write(numberOfEntries)
+            try entries.forEach { try $0.write(to: dataHandle) }
+        }
+
+        public func entry(for fontStyle: MacFontStyle) -> Entry? {
+            return fontStylesToEntries[fontStyle]
+        }
     }
 }
 
 // MARK: -
-extension KernTable {
+extension FOND.KernTable {
 
     final public class Entry: FONDResourceNode {
         public var style:              MacFontStyle            // style this entry applies to
@@ -92,41 +95,41 @@ extension KernTable {
     }
 }
 
-// MARK: - KernPair
-public struct KernPair {
-    public var kernFirst:  UInt8           // 1st character of kerned pair
-    public var kernSecond: UInt8           // 2nd character of kerned pair
-    public var kernWidth:  Fixed4Dot12     // kerning distance, in pixels, for the 2 glyphs at size of 1pt; fixed-point 4.12 format
-}
+extension FOND.KernTable {
 
-extension KernPair: Equatable, CustomStringConvertible, DataHandleWriting {
-    public static var nodeLength: Int {
-        return MemoryLayout<UInt8>.size * 2 + MemoryLayout<Fixed4Dot12>.size // 4
-    }
+    public struct KernPair {
+        public var kernFirst:  UInt8           // 1st character of kerned pair
+        public var kernSecond: UInt8           // 2nd character of kerned pair
+        public var kernWidth:  Fixed4Dot12     // kerning distance, in pixels, for the 2 glyphs at size of 1pt; fixed-point 4.12 format
 
-    public init(_ reader: BinaryDataReader) throws {
-        kernFirst = try reader.read()
-        kernSecond = try reader.read()
-        kernWidth = try reader.read()
-    }
+        public static var nodeLength: Int {
+            return MemoryLayout<UInt8>.size * 2 + MemoryLayout<Fixed4Dot12>.size // 4
+        }
 
-    public func write(to dataHandle: DataHandle) throws {
-        dataHandle.write(kernFirst)
-        dataHandle.write(kernSecond)
-        dataHandle.write(kernWidth)
-    }
+        public init(_ reader: BinaryDataReader) throws {
+            kernFirst = try reader.read()
+            kernSecond = try reader.read()
+            kernWidth = try reader.read()
+        }
 
-    public var hasOutOfRangeCharCodes: Bool {
-        // FIXME: this is no longer true for the "enhanced/expanded" macRomanEncoding?
-        return kernFirst < 0x20 || kernSecond < 0x20 || kernFirst == 0x7F || kernSecond == 0x7F
-    }
+        public func write(to dataHandle: DataHandle) throws {
+            dataHandle.write(kernFirst)
+            dataHandle.write(kernSecond)
+            dataHandle.write(kernWidth)
+        }
 
-    /// bare-bones `description` that doesn't try to resolve glyph names or factor in unitsPerEm
-    public var description: String {
-        return "\(kernFirst), \(kernSecond), \(Fixed4Dot12ToDouble(kernWidth))"
-    }
+        public var hasOutOfRangeCharCodes: Bool {
+            // FIXME: this is no longer true for the "enhanced/expanded" macRomanEncoding?
+            return kernFirst < 0x20 || kernSecond < 0x20 || kernFirst == 0x7F || kernSecond == 0x7F
+        }
 
-    public static func == (lhs: KernPair, rhs: KernPair) -> Bool {
-        return lhs.kernFirst == rhs.kernFirst && lhs.kernSecond == rhs.kernSecond && lhs.kernWidth == rhs.kernWidth
+        /// bare-bones `description` that doesn't try to resolve glyph names or factor in unitsPerEm
+        public var description: String {
+            return "\(kernFirst), \(kernSecond), \(Fixed4Dot12ToDouble(kernWidth))"
+        }
+
+        public static func == (lhs: FOND.KernTable.KernPair, rhs: FOND.KernTable.KernPair) -> Bool {
+            return lhs.kernFirst == rhs.kernFirst && lhs.kernSecond == rhs.kernSecond && lhs.kernWidth == rhs.kernWidth
+        }
     }
 }

@@ -160,7 +160,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
     
     @IBAction public func saveResource(_ sender: Any) {
         fond.ffFlags = FOND.Flags(rawValue: objcFFFlags)
-        fond.styleMappingTable?.fontClass = StyleMappingTable.FontClass(rawValue: objcFontClass)
+        fond.styleMappingTable?.fontClass = FOND.StyleMappingTable.FontClass(rawValue: objcFontClass)
         do {
             resource.data = try fond.data()
         } catch {
@@ -196,7 +196,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
     }
 
     private func openFont(at rowIndex: Int) {
-        let entry = (fontAssocTableEntriesController.arrangedObjects as! [FontAssociationTable.Entry])[rowIndex]
+        let entry = (fontAssocTableEntriesController.arrangedObjects as! [FOND.FontAssociationTable.Entry])[rowIndex]
         if let font: Resource = manager.findResource(type: entry.fontPointSize == 0 ? .sfnt : .nfnt , id: Int(entry.fontID), currentDocumentOnly: true) {
             manager.open(resource: font)
         }
@@ -260,9 +260,9 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
         }
     }
 
-    private func selectedKernTableEntries() -> [CoreFont.KernTable.Entry] {
+    private func selectedKernTableEntries() -> [FOND.KernTable.Entry] {
         guard let objs = kernPairsTreeController.selectedObjects as? [KernTreeNode] else { return [] }
-        return objs.compactMap { $0.representedObject as? CoreFont.KernTable.Entry }
+        return objs.compactMap { $0.representedObject as? FOND.KernTable.Entry }
     }
 
     // MARK: - <NSMenuItemValidation>
@@ -365,7 +365,7 @@ extension FONDEditor: NSTableViewDelegate, NSOutlineViewDelegate {
             let view: NSTableCellView = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
             if let id = tableColumn?.identifier, id.rawValue == "style" { return view }
             /// need to set the unitsPerEm of the Fixed4Dot12ToEmValueFormatter
-            if let bboxEntries = bBoxEntriesController.arrangedObjects as? [BoundingBoxTable.Entry] {
+            if let bboxEntries = bBoxEntriesController.arrangedObjects as? [FOND.BoundingBoxTable.Entry] {
                 if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
                     let entry = bboxEntries[row]
                     formatter.unitsPerEm = fond.unitsPerEm(for: entry.style, manager: manager)
@@ -375,7 +375,7 @@ extension FONDEditor: NSTableViewDelegate, NSOutlineViewDelegate {
         } else if tableView == self.tableView {
             let view: NSTableCellView = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
             if let id = tableColumn?.identifier, id.rawValue != "fontName" { return view }
-            if let entries = fontAssocTableEntriesController.arrangedObjects as? [FontAssociationTable.Entry] {
+            if let entries = fontAssocTableEntriesController.arrangedObjects as? [FOND.FontAssociationTable.Entry] {
                 let entry = entries[row]
                 if let fontName = fond.postScriptNameForFont(with: entry.fontStyle) {
                     let name = (entry.fontPointSize == 0 ? fontName : "\(fontName) \(entry.fontPointSize)")
@@ -407,7 +407,7 @@ extension FONDEditor: NSTableViewDelegate, NSOutlineViewDelegate {
     public func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         if outlineView == kernTableOutlineView {
             guard let representedObject = ((item as? NSTreeNode)?.representedObject as? KernTreeNode)?.representedObject else { return nil }
-            if representedObject is CoreFont.KernTable.Entry {
+            if representedObject is FOND.KernTable.Entry {
                 if tableColumn?.identifier.rawValue == "style"{
                     return outlineView.makeView(withIdentifier: tableColumn!.identifier, owner: self)
                 } else if tableColumn?.identifier.rawValue == "kernWidth" {
@@ -417,7 +417,7 @@ extension FONDEditor: NSTableViewDelegate, NSOutlineViewDelegate {
             } else if representedObject is KernPairNode {
                 if tableColumn?.identifier.rawValue == "style" { return nil }
                 let view: NSTableCellView = outlineView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
-                if let entry: CoreFont.KernTable.Entry = ((item as? NSTreeNode)?.representedObject as? KernTreeNode)?.parent?.representedObject as? CoreFont.KernTable.Entry {
+                if let entry: FOND.KernTable.Entry = ((item as? NSTreeNode)?.representedObject as? KernTreeNode)?.parent?.representedObject as? FOND.KernTable.Entry {
                     if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
                         formatter.unitsPerEm = fond.unitsPerEm(for: entry.style, manager: manager)
                     }
@@ -429,7 +429,7 @@ extension FONDEditor: NSTableViewDelegate, NSOutlineViewDelegate {
                 if tableColumn?.identifier.rawValue == "style" { return nil }
                 let view: NSTableCellView = outlineView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
                 if tableColumn?.identifier.rawValue == "glyphWidth" {
-                    if let entry: WidthTable.Entry = (item.representedObject as? WidthTreeNode)?.parent?.representedObject as? WidthTable.Entry {
+                    if let entry: FOND.WidthTable.Entry = (item.representedObject as? WidthTreeNode)?.parent?.representedObject as? FOND.WidthTable.Entry {
                         if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
                             formatter.unitsPerEm = fond.unitsPerEm(for: entry.style, manager: manager)
                         }

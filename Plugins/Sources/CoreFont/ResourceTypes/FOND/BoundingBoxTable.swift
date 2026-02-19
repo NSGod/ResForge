@@ -9,29 +9,32 @@
 import Foundation
 import RFSupport
 
-final public class BoundingBoxTable: ResourceNode {
-    public var numberOfEntries:                 Int16           // number of entries - 1
-    @objc public var entries:                   [Entry]
+extension FOND {
 
-    @objc public override var totalNodeLength:  Int {
-        return MemoryLayout<Int16>.size + entries.count * Entry.nodeLength
-    }
+    final public class BoundingBoxTable: ResourceNode {
+        public var numberOfEntries:                 Int16           // number of entries - 1
+        @objc public var entries:                   [Entry]
 
-    public init(_ reader: BinaryDataReader) throws {
-        numberOfEntries = try reader.read()
-        entries = try (0...numberOfEntries).map { _ in try Entry(reader) }
-        super.init()
-    }
+        @objc public override var totalNodeLength:  Int {
+            return MemoryLayout<Int16>.size + entries.count * Entry.nodeLength
+        }
 
-    public override func write(to dataHandle: DataHandle) throws {
-        numberOfEntries = Int16(entries.count - 1)
-        dataHandle.write(numberOfEntries)
-        try entries.forEach { try $0.write(to: dataHandle) }
+        public init(_ reader: BinaryDataReader) throws {
+            numberOfEntries = try reader.read()
+            entries = try (0...numberOfEntries).map { _ in try Entry(reader) }
+            super.init()
+        }
+
+        public override func write(to dataHandle: DataHandle) throws {
+            numberOfEntries = Int16(entries.count - 1)
+            dataHandle.write(numberOfEntries)
+            try entries.forEach { try $0.write(to: dataHandle) }
+        }
     }
 }
 
-extension BoundingBoxTable {
-    
+extension FOND.BoundingBoxTable {
+
     final public class Entry: ResourceNode {
         public var style:              MacFontStyle
         @objc public var left:         Fixed4Dot12

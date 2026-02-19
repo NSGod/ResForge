@@ -25,40 +25,43 @@ import RFSupport
             This section beginning on page 4-105, provides an example of using this table.
  */
 
-final public class GlyphNameEncodingSubtable: ResourceNode {
-    public var numberOfEntries:        Int16               // actual number of entries
-    public var charCodesToGlyphNames:  [CharCode: String] = [:]
+extension FOND {
+    
+    final public class GlyphNameEncodingSubtable: ResourceNode {
+        public var numberOfEntries:        Int16               // actual number of entries
+        public var charCodesToGlyphNames:  [CharCode: String] = [:]
 
-    @objc public override var totalNodeLength: Int {
-        set { _nodeLength = newValue }
-        get { return _nodeLength }
-    }
-    private var _nodeLength: Int = 0
-
-    public init(_ reader: BinaryDataReader) throws {
-        let before = reader.bytesRead
-        numberOfEntries = try reader.read()
-        for _ in 0..<numberOfEntries {
-            let charCode: CharCode = try reader.read()
-            let glyphName = try reader.readPString()
-            charCodesToGlyphNames[charCode] = glyphName
+        @objc public override var totalNodeLength: Int {
+            set { _nodeLength = newValue }
+            get { return _nodeLength }
         }
-        super.init()
-        totalNodeLength = reader.bytesRead - before
-    }
+        private var _nodeLength: Int = 0
 
-    public override func write(to dataHandle: DataHandle) throws {
-        numberOfEntries = Int16(charCodesToGlyphNames.count)
-        dataHandle.write(numberOfEntries)
-        let charCodes = charCodesToGlyphNames.keys.sorted(by: <)
-        for charCode in charCodes {
-            let glyphName = charCodesToGlyphNames[charCode]!
-            dataHandle.write(charCode)
-            try dataHandle.writePString(glyphName)
+        public init(_ reader: BinaryDataReader) throws {
+            let before = reader.bytesRead
+            numberOfEntries = try reader.read()
+            for _ in 0..<numberOfEntries {
+                let charCode: CharCode = try reader.read()
+                let glyphName = try reader.readPString()
+                charCodesToGlyphNames[charCode] = glyphName
+            }
+            super.init()
+            totalNodeLength = reader.bytesRead - before
         }
-    }
 
-    public func glyphName(for charCode: CharCode) -> String? {
-        return charCodesToGlyphNames[charCode]
+        public override func write(to dataHandle: DataHandle) throws {
+            numberOfEntries = Int16(charCodesToGlyphNames.count)
+            dataHandle.write(numberOfEntries)
+            let charCodes = charCodesToGlyphNames.keys.sorted(by: <)
+            for charCode in charCodes {
+                let glyphName = charCodesToGlyphNames[charCode]!
+                dataHandle.write(charCode)
+                try dataHandle.writePString(glyphName)
+            }
+        }
+
+        public func glyphName(for charCode: CharCode) -> String? {
+            return charCodesToGlyphNames[charCode]
+        }
     }
 }

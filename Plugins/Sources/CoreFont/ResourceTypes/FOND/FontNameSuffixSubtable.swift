@@ -33,115 +33,115 @@ import RFSupport
 ///       So, the full PostScript name for the bold style is ExampleFont-Bold
 ///       
 
-public struct FontNameSuffixSubtable {
-    public var stringCount:                     Int16           // actual string count
-    public var baseFontName:                    String          // Index 1 shown above
-                                                                // This is documented as always being a 256 byte long Pascal string,
-                                                                // but that's not the case.
-    private var entryIndexesToPostScriptNames:  [UInt8: String]
-    private var stringDatas:                    [Data]
-    private var _actualStringCount:             Int16           // actual actual string count
-}
+extension FOND {
 
-// of all the FOND tables, this is the one I've encountered the most variation and issues with, hence all the debug logging
-extension FontNameSuffixSubtable: DataHandleWriting {
+    // of all the FOND tables, this is the one I've encountered the most variation and issues with, hence all the debug logging
+    public struct FontNameSuffixSubtable: DataHandleWriting {
+        public var stringCount:                     Int16           // actual string count
+        public var baseFontName:                    String          // Index 1 shown above
+                                                                    // This is documented as always being a 256 byte long Pascal string,
+                                                                    // but that's not the case.
+        private var entryIndexesToPostScriptNames:  [UInt8: String]
+        private var stringDatas:                    [Data]
+        private var _actualStringCount:             Int16           // actual actual string count
 
-    public var totalNodeLength: Int {
-        return MemoryLayout<Int16>.size + baseFontName.count + 1 + stringDatas.map(\.count).reduce(0, +)
-    }
-
-    public init(_ reader: BinaryDataReader, range knownRange: NSRange) throws {
-        stringCount = try reader.read()
-        baseFontName = try reader.readPString()
-        entryIndexesToPostScriptNames = [:]
-        _actualStringCount = 1
-        stringDatas = []
-        /// we already have the base font name, so go with `stringCount - 1`
-        for _ in 0..<stringCount - 1 {
-            if NSMaxRange(knownRange) == reader.bytesRead {
-                NSLog("\(type(of: self)).\(#function)() *** NOTICE: appear to have hit end of data; breaking")
-                break
-            }
-            var length: UInt8 = 0
-            do {
-                length = try reader.peek()
-            } catch {
-                NSLog("\(type(of: self)).\(#function)() *** WARNING: hit end of data; breaking...")
-                break
-            }
-            if length == 0 {
-                NSLog("\(type(of: self)).\(#function)() *** NOTICE: next length is 0; breaking...")
-                break
-            }
-            let data = try reader.readData(length: Int(length + 1))
-            stringDatas.append(data)
-            _actualStringCount += 1
+        public var totalNodeLength: Int {
+            return MemoryLayout<Int16>.size + baseFontName.count + 1 + stringDatas.map(\.count).reduce(0, +)
         }
 
-        if _actualStringCount != stringCount {
-            // I've encountered weird values here, hence the logging...
-            NSLog("\(type(of: self)).\(#function)() *** WARNING: string count of \(stringCount) (byte-swapped: \(stringCount.byteSwapped)) appears to be wrong; actual string count: \(_actualStringCount)")
-            stringCount = _actualStringCount
-        }
-
-        /// Referring to the diagram at the top of this file, we're going to create a representation
-        /// where Indexes 2-8 are fully expanded into the full PostScript names.
-        /// We won't bother filling in 9 - 12 since they'll no longer be needed
-        entryIndexesToPostScriptNames[1] = baseFontName
-
-        var done = false
-        for i in 0..<Int(_actualStringCount) - 1 {
-            var fullName = baseFontName
-            let entryData = stringDatas[i]
-            let length: UInt8 = entryData[entryData.startIndex]
-
-            /// now parse the index entries in the string, starting at index 1 (since index 0 is
-            /// the length byte of the Pascal string)
-            for j in 1...Int(length) {
-                /// we need to subtract 2 here because:
-                /// a) these are 1-indexed rather than 0-indexed, and
-                /// b) we don't have baseFontName included, which would be the first item
-                let nameIndex: UInt8 = entryData[entryData.startIndex + j] - 2
-                if nameIndex > _actualStringCount {
-                    // we're probably at the end of the index entry strings and at the start of the actual name strings
-                    // FIXME: is there a better way for this?
-                    done = true
+        public init(_ reader: BinaryDataReader, range knownRange: NSRange) throws {
+            stringCount = try reader.read()
+            baseFontName = try reader.readPString()
+            entryIndexesToPostScriptNames = [:]
+            _actualStringCount = 1
+            stringDatas = []
+            /// we already have the base font name, so go with `stringCount - 1`
+            for _ in 0..<stringCount - 1 {
+                if NSMaxRange(knownRange) == reader.bytesRead {
+                    NSLog("\(type(of: self)).\(#function)() *** NOTICE: appear to have hit end of data; breaking")
                     break
                 }
-                let suffix = try stringFromPString(with: stringDatas[Int(nameIndex)])
-                fullName += suffix
+                var length: UInt8 = 0
+                do {
+                    length = try reader.peek()
+                } catch {
+                    NSLog("\(type(of: self)).\(#function)() *** WARNING: hit end of data; breaking...")
+                    break
+                }
+                if length == 0 {
+                    NSLog("\(type(of: self)).\(#function)() *** NOTICE: next length is 0; breaking...")
+                    break
+                }
+                let data = try reader.readData(length: Int(length + 1))
+                stringDatas.append(data)
+                _actualStringCount += 1
             }
-            if done {
-                break
+
+            if _actualStringCount != stringCount {
+                // I've encountered weird values here, hence the logging...
+                NSLog("\(type(of: self)).\(#function)() *** WARNING: string count of \(stringCount) (byte-swapped: \(stringCount.byteSwapped)) appears to be wrong; actual string count: \(_actualStringCount)")
+                stringCount = _actualStringCount
             }
-            entryIndexesToPostScriptNames[UInt8(i) + 2] = fullName
-        }
-        // NSLog("\(type(of: self)).\(#function)() entryIndexesToPostScriptNames == \(entryIndexesToPostScriptNames)")
-    }
 
-    public func write(to dataHandle: DataHandle) throws {
-        dataHandle.write(stringCount)
-        try dataHandle.writePString(baseFontName)
-        stringDatas.forEach { dataHandle.writeData($0) }
-    }
+            /// Referring to the diagram at the top of this file, we're going to create a representation
+            /// where Indexes 2-8 are fully expanded into the full PostScript names.
+            /// We won't bother filling in 9 - 12 since they'll no longer be needed
+            entryIndexesToPostScriptNames[1] = baseFontName
 
-    public func postScriptNameForFontEntry(at oneBasedIndex: UInt8) -> String? {
-        if oneBasedIndex > _actualStringCount {
-            NSLog("\(type(of: self)).\(#function)() *** WARNING: fontEntryIndex of \(oneBasedIndex) is beyond total string count (\(_actualStringCount))")
-            return nil
-        }
-        return entryIndexesToPostScriptNames[oneBasedIndex]
-    }
+            var done = false
+            for i in 0..<Int(_actualStringCount) - 1 {
+                var fullName = baseFontName
+                let entryData = stringDatas[i]
+                let length: UInt8 = entryData[entryData.startIndex]
 
-    private func stringFromPString(with data: Data) throws -> String {
-        let length = data.withUnsafeBytes {
-            $0.loadUnaligned(as: UInt8.self)
+                /// now parse the index entries in the string, starting at index 1 (since index 0 is
+                /// the length byte of the Pascal string)
+                for j in 1...Int(length) {
+                    /// we need to subtract 2 here because:
+                    /// a) these are 1-indexed rather than 0-indexed, and
+                    /// b) we don't have baseFontName included, which would be the first item
+                    let nameIndex: UInt8 = entryData[entryData.startIndex + j] - 2
+                    if nameIndex > _actualStringCount {
+                        // we're probably at the end of the index entry strings and at the start of the actual name strings
+                        // FIXME: is there a better way for this?
+                        done = true
+                        break
+                    }
+                    let suffix = try stringFromPString(with: stringDatas[Int(nameIndex)])
+                    fullName += suffix
+                }
+                if done {
+                    break
+                }
+                entryIndexesToPostScriptNames[UInt8(i) + 2] = fullName
+            }
+            // NSLog("\(type(of: self)).\(#function)() entryIndexesToPostScriptNames == \(entryIndexesToPostScriptNames)")
         }
-        guard length > 0 else { return "" }
-        guard data.count > 1 else { return "" }
-        guard let string = String(data: data[data.startIndex+1..<data.endIndex], encoding: .macOSRoman) else {
-            throw BinaryDataReaderError.stringDecodeFailure
+
+        public func write(to dataHandle: DataHandle) throws {
+            dataHandle.write(stringCount)
+            try dataHandle.writePString(baseFontName)
+            stringDatas.forEach { dataHandle.writeData($0) }
         }
-        return string
+
+        public func postScriptNameForFontEntry(at oneBasedIndex: UInt8) -> String? {
+            if oneBasedIndex > _actualStringCount {
+                NSLog("\(type(of: self)).\(#function)() *** WARNING: fontEntryIndex of \(oneBasedIndex) is beyond total string count (\(_actualStringCount))")
+                return nil
+            }
+            return entryIndexesToPostScriptNames[oneBasedIndex]
+        }
+
+        private func stringFromPString(with data: Data) throws -> String {
+            let length = data.withUnsafeBytes {
+                $0.loadUnaligned(as: UInt8.self)
+            }
+            guard length > 0 else { return "" }
+            guard data.count > 1 else { return "" }
+            guard let string = String(data: data[data.startIndex+1..<data.endIndex], encoding: .macOSRoman) else {
+                throw BinaryDataReaderError.stringDecodeFailure
+            }
+            return string
+        }
     }
 }
