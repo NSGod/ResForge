@@ -41,6 +41,7 @@ public extension Date {
 public extension URL {
     // FIXME: need to make sure this doesn't exceed NAME_MAX
     func assuringUniqueFilename() -> URL {
+        var targetURL = self
         do {
             if try !checkResourceIsReachable() { return self }
             let parentDirURL = self.deletingLastPathComponent()
@@ -70,15 +71,19 @@ public extension URL {
                 if index == 0 { index = 2 }
                 var targetName = "\(targetBasename) \(index)"
                 if extLength != 0 { targetName += ".\(ext)" }
-                let targetURL = parentDirURL.appendingPathComponent(targetName, isDirectory: false)
-                if !(try targetURL.checkResourceIsReachable()) { return targetURL }
+                targetURL = parentDirURL.appendingPathComponent(targetName, isDirectory: false)
+                if try !targetURL.checkResourceIsReachable() {
+                    return targetURL
+                }
                 if index == 0 {
                     index = 2
                 } else { index += 1 }
             }
         } catch {
-
+            if let error = error as? CocoaError, error.code != CocoaError.fileReadNoSuchFile {
+                NSLog("\(type(of: self)).\(#function) ERROR: \(error)")
+            }
         }
-        return self
+        return targetURL
     }
 }
