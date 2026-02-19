@@ -11,7 +11,7 @@ import CoreFont
 final class KernTreeNode: NSTreeNode, Comparable {
 
     override init(representedObject modelObject: Any?) {
-        if let entry = modelObject as? CoreFont.KernTable.Entry {
+        if let entry = modelObject as? FOND.KernTable.Entry {
             var mKernTreeNodes: [KernTreeNode] = []
             entry.fond.encoding.logsInvalidCharCodes = true
             for kernPair in entry.kernPairs {
@@ -36,7 +36,7 @@ final class KernTreeNode: NSTreeNode, Comparable {
 
     static func < (lhs: KernTreeNode, rhs: KernTreeNode) -> Bool {
         /// `representedObject` can be either a `KernTable.Entry` or a `KernPairNode`
-        if let lhs = lhs.representedObject as? CoreFont.KernTable.Entry, let rhs = rhs.representedObject as? CoreFont.KernTable.Entry {
+        if let lhs = lhs.representedObject as? FOND.KernTable.Entry, let rhs = rhs.representedObject as? FOND.KernTable.Entry {
             return lhs.style < rhs.style
         }
         return false

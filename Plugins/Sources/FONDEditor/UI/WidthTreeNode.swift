@@ -11,7 +11,7 @@ import CoreFont
 final class WidthTreeNode: NSTreeNode, Comparable {
 
     override init(representedObject modelObject: Any?) {
-        if let entry = modelObject as? WidthTable.Entry {
+        if let entry = modelObject as? FOND.WidthTable.Entry {
             var mTreeNodes: [WidthTreeNode] = []
             let widthNodes: [WidthNode] = WidthNode.widthNodes(widthTableEntry: entry)
             for node in widthNodes {
@@ -32,7 +32,7 @@ final class WidthTreeNode: NSTreeNode, Comparable {
 
     static func < (lhs: WidthTreeNode, rhs: WidthTreeNode) -> Bool {
         /// `representedObject` can be either `WidthNode` or `WidthTable.Entry`
-        if let lhs = lhs.representedObject as? WidthTable.Entry, let rhs = rhs.representedObject as? WidthTable.Entry {
+        if let lhs = lhs.representedObject as? FOND.WidthTable.Entry, let rhs = rhs.representedObject as? FOND.WidthTable.Entry {
             return lhs.style < rhs.style
         }
         return false

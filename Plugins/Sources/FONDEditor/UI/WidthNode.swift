@@ -18,7 +18,7 @@ final class WidthNode: NSObject {
         self.glyphWidth = glyphWidth
     }
 
-    class func widthNodes(widthTableEntry: WidthTable.Entry) -> [WidthNode] {
+    class func widthNodes(widthTableEntry: FOND.WidthTable.Entry) -> [WidthNode] {
         var nodes: [WidthNode] = []
         let fond = widthTableEntry.fond!
         var charCode = fond.firstChar
