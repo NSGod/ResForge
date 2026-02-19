@@ -79,8 +79,7 @@ let package = Package(
         .target(
             name: "CoreFont",
             dependencies: [.target(name: "RFSupport"),
-                           .product(name: "OrderedCollections", package:"swift-collections"),
-                           .product(name: "CSV", package:"CSV.swift")]),
+                           .product(name: "OrderedCollections", package:"swift-collections")]),
         .target(name: "FONDEditor",
             dependencies: [.target(name: "RFSupport"),
                            .target(name: "CoreFont"),

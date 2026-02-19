@@ -14,40 +14,19 @@ class KernPairSaveAccessoryViewController: NSViewController {
     @IBOutlet weak var scaleCheckbox:   NSButton!
     @IBOutlet weak var resolveCheckbox: NSButton!
 
-    @objc var allowedFileTypes:         [String] = [KernTable.Entry.GPOSFeatureFileType,
-                                                    KernTable.Entry.CSVFileType]
-    @objc var selectedFileType:         String {
+    @objc dynamic var allowedFileTypes: [String] = [KernPairExporter.GPOSFeatureFileType,
+                                                    KernPairExporter.CSVFileType]
+    @objc dynamic var selectedFileType: String {
         didSet {
-            guard let panel else { return }
-            /// try to change filename extension in save panel's field
-            /// by limiting the allowed UT types to the currently selected one.
-            if selectedFileType == KernTable.Entry.GPOSFeatureFileType {
-                panel.allowedFileTypes = [KernTable.Entry.GPOSFeatureUTType]
-                shouldResolveGlyphNames = true
-                scaleToUnitsPerEm = true
-            } else {
-                panel.allowedFileTypes = [KernTable.Entry.CSVUTType]
-            }
-            /// GPOS format must have both scale and glyph names resolved
-            scaleCheckbox.isEnabled = selectedFileType != KernTable.Entry.GPOSFeatureFileType
-            resolveCheckbox.isEnabled = selectedFileType != KernTable.Entry.GPOSFeatureFileType
+            updateUI()
         }
     }
 
-    @objc var shouldResolveGlyphNames:  Bool {
-        didSet {
-            NSLog("\(type(of: self)).\(#function) didSet")
-        }
-    }
+    @objc dynamic var shouldResolveGlyphNames:  Bool
+    @objc dynamic var scaleToUnitsPerEm:        Bool
 
-    @objc var scaleToUnitsPerEm:        Bool {
-        didSet {
-            NSLog("\(type(of: self)).\(#function) didSet")
-        }
-    }
-
-    var config: CoreFont.KernTable.Entry.KernExportConfig {
-        CoreFont.KernTable.Entry.KernExportConfig(format: (selectedFileType == CoreFont.KernTable.Entry.GPOSFeatureFileType ? .GPOS : .CSV),
+    var config: KernPairExporter.KernExportConfig {
+        KernPairExporter.KernExportConfig(format: (selectedFileType == KernPairExporter.GPOSFeatureFileType ? .GPOS : .CSV),
                                        resolveGlyphNames: shouldResolveGlyphNames,
                                        scaleToUnitsPerEm: scaleToUnitsPerEm)
     }
@@ -57,7 +36,7 @@ class KernPairSaveAccessoryViewController: NSViewController {
     private static let ScaleToUnitsPerEmKey:    String = "KernPairs.ScaleToUnitsPerEm"
 
     required init(with panel: NSSavePanel) {
-        let defaults: [String : Any] = [Self.SaveFileTypeKey: KernTable.Entry.GPOSFeatureFileType,
+        let defaults: [String : Any] = [Self.SaveFileTypeKey: KernPairExporter.GPOSFeatureFileType,
                         Self.ResolveGlyphNamesKey: true,
                         Self.ScaleToUnitsPerEmKey: true]
         UserDefaults.standard.register(defaults: defaults)
@@ -75,6 +54,25 @@ class KernPairSaveAccessoryViewController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        updateUI()
+    }
+
+    func updateUI() {
+        guard let panel else { return }
+        /// Try to change filename extension in save panel's field
+        /// by limiting the allowed UT types to the currently selected one.
+        /// This only appears to work to change .txt to .csv, but not the
+        /// other way around.
+        if selectedFileType == KernPairExporter.GPOSFeatureFileType {
+            panel.allowedFileTypes = [KernPairExporter.GPOSFeatureUTType]
+            shouldResolveGlyphNames = true
+            scaleToUnitsPerEm = true
+        } else {
+            panel.allowedFileTypes = [KernPairExporter.CSVUTType]
+        }
+        /// GPOS format must have both scale and glyph names resolved
+        scaleCheckbox.isEnabled = selectedFileType != KernPairExporter.GPOSFeatureFileType
+        resolveCheckbox.isEnabled = selectedFileType != KernPairExporter.GPOSFeatureFileType
     }
 
     func saveOptions() {

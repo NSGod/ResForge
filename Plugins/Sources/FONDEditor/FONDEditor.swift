@@ -209,8 +209,8 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
         var panel: NSSavePanel!
         if entries.count == 1 {
             panel = NSSavePanel()
-            panel.allowedFileTypes = [KernTable.Entry.GPOSFeatureUTType,
-                                      KernTable.Entry.CSVUTType]
+            panel.allowedFileTypes = [KernPairExporter.GPOSFeatureUTType,
+                                      KernPairExporter.CSVUTType]
 			let entry = entries[0]
 			if let name = fond.postScriptNameForFont(with: entry.style) {
 				if let filename = (name as NSString).appendingPathExtension("txt") {
@@ -236,7 +236,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
                 viewController.saveOptions()
                 let config = viewController.config
                 if entries.count == 1 {
-                    guard let rep: String = entries.first!.representation(using: config, manager: manager) else { return }
+					guard let rep: String = KernPairExporter.representation(of: entries.first!, using: config, manager: manager) else { return }
                     do {
                         try rep.write(to: panel.url!, atomically: true, encoding: .utf8)
                     } catch {
@@ -246,7 +246,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
                     guard let parentDirURL = panel.url else { return }
                     for entry in entries {
                         if let name = fond.postScriptNameForFont(with: entry.style) {
-                            guard let rep = entry.representation(using: config, manager: manager) else { continue }
+							guard let rep = KernPairExporter.representation(of: entry, using: config, manager: manager) else { continue }
                             let url = parentDirURL.appendingPathComponent(name).appendingPathExtension(config.pathExtension).assuringUniqueFilename()
                             do {
                                 try rep.write(to: url, atomically: true, encoding: .utf8)
