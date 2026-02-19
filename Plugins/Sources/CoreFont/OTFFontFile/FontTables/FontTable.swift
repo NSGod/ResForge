@@ -21,7 +21,6 @@ open class FontTable: OTFFontFileNode {
     public var paddedTableData:     Data {
         var paddedData = tableData
         paddedData.count = paddedData.count.uint32AlignedCount
-//        paddedData.count = (paddedData.count + 3 ) & -4
         return paddedData
     }
 

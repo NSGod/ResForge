@@ -48,7 +48,8 @@ final public class OTFFontFile: NSObject {
         directory = try OTFsfntDirectory(reader, fontFile: self)
         var entries = directory.entries
         entries.sort {
-            // load/font tables in a specified order, since parsing some rely on presence of others
+            /// load/font tables in a specified order, since parsing some
+            /// rely on presence of already-parsed others
             return OTFsfntDirectoryEntry.sortForParsing(lhs: $0, rhs: $1)
         }
         for entry in entries {
@@ -100,10 +101,10 @@ final public class OTFFontFile: NSObject {
         var checksumOffset: UInt32 = 0
         for entry in directory.entries {
             // fill in dir entry checksums
+            entry.checksum = entry.table.calculatedChecksum
             if entry.tableTag == .head {
                 checksumOffset = entry.offset + FontTable_head.checksumAdjustmentOffset
             }
-            entry.checksum = entry.table.calculatedChecksum
         }
         dataHandle.seek(to: 0)
         try directory.write(to: dataHandle)
@@ -119,13 +120,11 @@ final public class OTFFontFile: NSObject {
     }
 
     private func sortTables() {
-        NSLog("\(type(of: self)).\(#function) tables (BEFORE) == \(tables.map(\.tableTag.fourCharString))")
         tables.sort(by: FontTable.OTFWritingOrderSort)
-        NSLog("\(type(of: self)).\(#function) tables (AFTER) == \(tables.map(\.tableTag.fourCharString))")
     }
 
     public var numGlyphs: Int {
-        if glyphLookupType == .undetermined { self .initGlyphNameLookup() }
+        if glyphLookupType == .undetermined { initGlyphNameLookup() }
         // FIXME: !! allow for other methods to get glyph count (see /afdko/c/spot/source/global.c for more info)
         if glyphLookupType == .post || glyphLookupType == .cmap {
             return Int(maxpTable?.numGlyphs ?? 0)
@@ -142,7 +141,7 @@ final public class OTFFontFile: NSObject {
 
     public func glyphName(for glyphID: Glyph32ID) -> String {
         // FIXME: !! deal with other methods of getting glyph names
-        if glyphLookupType == .undetermined { self .initGlyphNameLookup() }
+        if glyphLookupType == .undetermined { initGlyphNameLookup() }
         var glyphName = ""
         if glyphLookupType == .post {
             glyphName = postTable?.glyphName(for: glyphID) ?? ""

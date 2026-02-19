@@ -18,23 +18,23 @@ final public class FontTable_maxp: FontTable {
         case version1_0     = 0x00010000 // 65536   // for TT outlines
     }
 
-    @objc public dynamic var version:               Version = .version0_5   // 0x00010000 (1.0, TT) or 0x00005000 (0.5, PS CFF))
-    @objc public dynamic var numGlyphs:             UInt16 = 0  // number of glyphs in the font
+    @objc dynamic public var version:               Version = .version0_5   // 0x00010000 (1.0, TT) or 0x00005000 (0.5, PS CFF))
+    @objc dynamic public var numGlyphs:             UInt16 = 0  // number of glyphs in the font
 
     // only in .version1_0 for TT fonts:
-    @objc public dynamic var maxPoints:             UInt16 = 0  // max points in non-compound glyph
-    @objc public dynamic var maxContours:           UInt16 = 0  // max contours in non-compound glyph
-    @objc public dynamic var maxCompositePoints:    UInt16 = 0  // max points in compound glyph
-    @objc public dynamic var maxCompositeContours:  UInt16 = 0  // max contours in compound glyph
-    @objc public dynamic var maxZones:              UInt16 = 0  // set to 2
-    @objc public dynamic var maxTwilightPoints:     UInt16 = 0  // points used in Twilight Zone (Z0)
-    @objc public dynamic var maxStorage:            UInt16 = 0  // number of Storage Area locations
-    @objc public dynamic var maxFunctionDefs:       UInt16 = 0  // number of FDEFs
-    @objc public dynamic var maxInstructionDefs:    UInt16 = 0  // number of IDEFs
-    @objc public dynamic var maxStackElements:      UInt16 = 0  // max stack depth
-    @objc public dynamic var maxSizeOfInstructions: UInt16 = 0  // byte count for glyph instructions
-    @objc public dynamic var maxComponentElements:  UInt16 = 0  // number of glyphs referenced at top level
-    @objc public dynamic var maxComponentDepth:     UInt16 = 0  // levels of recursion; set to 0 if font only has simple glyphs; max is 16;
+    @objc dynamic public var maxPoints:             UInt16 = 0  // max points in non-compound glyph
+    @objc dynamic public var maxContours:           UInt16 = 0  // max contours in non-compound glyph
+    @objc dynamic public var maxCompositePoints:    UInt16 = 0  // max points in compound glyph
+    @objc dynamic public var maxCompositeContours:  UInt16 = 0  // max contours in compound glyph
+    @objc dynamic public var maxZones:              UInt16 = 0  // set to 2
+    @objc dynamic public var maxTwilightPoints:     UInt16 = 0  // points used in Twilight Zone (Z0)
+    @objc dynamic public var maxStorage:            UInt16 = 0  // number of Storage Area locations
+    @objc dynamic public var maxFunctionDefs:       UInt16 = 0  // number of FDEFs
+    @objc dynamic public var maxInstructionDefs:    UInt16 = 0  // number of IDEFs
+    @objc dynamic public var maxStackElements:      UInt16 = 0  // max stack depth
+    @objc dynamic public var maxSizeOfInstructions: UInt16 = 0  // byte count for glyph instructions
+    @objc dynamic public var maxComponentElements:  UInt16 = 0  // number of glyphs referenced at top level
+    @objc dynamic public var maxComponentDepth:     UInt16 = 0  // levels of recursion; set to 0 if font only has simple glyphs; max is 16;
                                                                 // set to 1 if all compound glyphs are simple
 
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {

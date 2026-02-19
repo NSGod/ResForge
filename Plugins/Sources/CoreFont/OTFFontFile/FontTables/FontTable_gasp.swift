@@ -16,9 +16,9 @@ final public class FontTable_gasp: FontTable {
         case version1 = 1
     }
 
-    @objc public dynamic var version:       Version = .version0
-    @objc public dynamic var numRanges:     UInt16 = 0
-    @objc public dynamic var ranges:        [Range] = []    // sorted by PPEM
+    @objc dynamic public var version:       Version = .version0
+    @objc dynamic public var numRanges:     UInt16 = 0
+    @objc dynamic public var ranges:        [Range] = []    // sorted by PPEM
 
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
@@ -62,10 +62,10 @@ public extension FontTable_gasp {
             public static let version1Mask : Behavior = [.gridfit, .doGray, .symmetricGridfit, .symmetricSmoothing]
         }
 
-        @objc public dynamic var maxPPEM:       UInt16 = 0
+        @objc dynamic public var maxPPEM:       UInt16 = 0
         public var behavior:                    Behavior = .none
 
-        @objc public dynamic var objcBehavior:  UInt16 = 0 {
+        @objc dynamic public var objcBehavior:  UInt16 = 0 {
             didSet {
                 behavior = .init(rawValue: objcBehavior)
             }

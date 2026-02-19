@@ -49,8 +49,4 @@ open class FontTableNode: NSObject, NSCopying, DataHandleWriting {
     public func write(to dataHandle: DataHandle) throws {
         fatalError("subclasses must override")
     }
-
-    @objc public func compare(to other: FontTableNode) -> ComparisonResult {
-        return .orderedSame
-    }
 }
