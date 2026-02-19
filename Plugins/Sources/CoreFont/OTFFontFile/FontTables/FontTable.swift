@@ -120,26 +120,6 @@ open class FontTable: OTFFontFileNode {
     public func fontGlyphName(for glyphID: Glyph32ID) -> String? {
         return fontFile.glyphName(for: glyphID)
     }
-
-    /// currently unutilized:
-    class var usesLazyParsing: Bool { true }
-
-    enum ParseState {
-        case unparsed
-        case parsing
-        case parsed
-    }
-    var parseState:     ParseState = .unparsed
-
-    public func parseTableData() throws {
-    }
-
-    func parseTableDataIfNeeded() throws {
-        if parseState != .unparsed { return }
-        parseState = .parsing
-        try parseTableData()
-        parseState = .parsed
-    }
 }
 
 extension FontTable {

@@ -31,7 +31,6 @@ final public class FontTable_name: FontTable {
 	// MARK: -
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
-        self.parseState = .parsing
         let format: UInt16 = try reader.read()
         guard let format = Format(rawValue: format) else {
             throw FontTableError.unknownFormat("Unknown 'name' table format (\(format))")
@@ -46,7 +45,6 @@ final public class FontTable_name: FontTable {
                 languageTagRecords = try (0..<langTagCount).map { _ in try LanguageTagRecord(reader, stringOffset: stringOffset, table: self) }
             }
         }
-        self.parseState = .parsed
     }
 
     override func prepareToWrite() throws {
@@ -61,9 +59,9 @@ final public class FontTable_name: FontTable {
             let nameID: FontNameID
         }
         var hashNamesToRecords: [HashName: NameRecord] = [:]
-        /// Allow shared string storage among records that share the same fontNameID and
-        /// where the data is the same. For example, a Unicode platform entry for fontNameID of .postscript
-        /// has a value of "Helvetica" in UTF-16BE. A Windows platform entry for fontNameID of .postscript
+        /// Allow shared string storage among records that share the same `fontNameID` and
+        /// where the data is the same. For example, a Unicode platform entry for `fontNameID` of `.postscript`
+        /// has a value of "Helvetica" in UTF-16BE. A Windows platform entry for `fontNameID` of `.postscript`
         /// (which will also be in UTF16-BE) that is also equal to "Helvetica" can simply reference the
         /// same string storage that the Unicode entry does.
         for nameRecord in nameRecords {

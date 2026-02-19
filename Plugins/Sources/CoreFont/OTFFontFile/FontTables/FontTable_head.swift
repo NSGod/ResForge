@@ -152,6 +152,4 @@ final public class FontTable_head: FontTable {
         entry?.offset = before
         entry?.length = after - before
     }
-
-    public override class var usesLazyParsing: Bool { false }
 }
