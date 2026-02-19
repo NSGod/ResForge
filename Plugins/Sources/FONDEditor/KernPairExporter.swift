@@ -11,20 +11,18 @@ import CoreFont
 import CSV
 
 public class KernPairExporter {
-
-    // FIXME: move this writing stuff out to a separate visitor/writer class
     public static let GPOSFeatureFileType: String = NSLocalizedString("'GPOS' Feature File", comment: "")
     public static let GPOSFeatureUTType:   String = kUTTypePlainText as String
     public static let CSVFileType:         String = NSLocalizedString("Comma-Separated Variables (CSV)", comment: "")
     public static let CSVUTType:           String = kUTTypeCommaSeparatedText as String
 
-    public struct KernExportConfig {
+    public struct Config {
         public enum Format {
             case GPOS
             case CSV
         }
-        public static let gposDefault: KernExportConfig = .init(format: .GPOS, resolveGlyphNames: true, scaleToUnitsPerEm: true)
-        public static let csvDefault: KernExportConfig = .init(format: .CSV, resolveGlyphNames: true, scaleToUnitsPerEm: true)
+        public static let gposDefault: Config = .init(format: .GPOS, resolveGlyphNames: true, scaleToUnitsPerEm: true)
+        public static let csvDefault: Config = .init(format: .CSV, resolveGlyphNames: true, scaleToUnitsPerEm: true)
 
         public var format:              Format = .GPOS
         public var resolveGlyphNames:   Bool = true
@@ -45,7 +43,7 @@ public class KernPairExporter {
     }
 
     // feeding in the RFEditorManager will allow for a much better scaling to Units Per Em
-    public static func representation(of entry: CoreFont.KernTable.Entry, using config: KernExportConfig = .gposDefault, manager: RFEditorManager? = nil) -> String? {
+    public static func representation(of entry: CoreFont.KernTable.Entry, using config: Config = .gposDefault, manager: RFEditorManager? = nil) -> String? {
         if config.format == .GPOS {
             return GPOSFeatureRepresentation(of: entry, using: config, manager: manager)
         } else {
@@ -53,11 +51,10 @@ public class KernPairExporter {
         }
     }
 
-    // FIXME: move this writing stuff out to a separate visitor/writer class
     // FIXME: add better explanation about what this method is for
     /* This can be used to create a `feature` file used during conversion to OTF/TTF
         by Adobe AFDKO's hotconvert/makeotf to create a `GPOS` table containing the kern pairs */
-    public static func GPOSFeatureRepresentation(of entry: CoreFont.KernTable.Entry, using config: KernExportConfig = .gposDefault, manager: RFEditorManager? = nil) -> String? {
+    public static func GPOSFeatureRepresentation(of entry: CoreFont.KernTable.Entry, using config: Config = .gposDefault, manager: RFEditorManager? = nil) -> String? {
         var mString = """
 languagesystem DFLT dflt;
 languagesystem latn dflt;
@@ -86,7 +83,7 @@ feature kern {\n
         return mString
     }
 
-    public static func CSVRepresentation(of entry: CoreFont.KernTable.Entry, using config: KernExportConfig = .csvDefault, manager: RFEditorManager? = nil) -> String? {
+    public static func CSVRepresentation(of entry: CoreFont.KernTable.Entry, using config: Config = .csvDefault, manager: RFEditorManager? = nil) -> String? {
         let stream = OutputStream(toMemory: ())
         do {
             let writer = try CSVWriter(stream: stream)
@@ -115,7 +112,4 @@ feature kern {\n
         }
         return nil
     }
-
-
-
 }

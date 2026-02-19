@@ -25,8 +25,8 @@ class KernPairSaveAccessoryViewController: NSViewController {
     @objc dynamic var shouldResolveGlyphNames:  Bool
     @objc dynamic var scaleToUnitsPerEm:        Bool
 
-    var config: KernPairExporter.KernExportConfig {
-        KernPairExporter.KernExportConfig(format: (selectedFileType == KernPairExporter.GPOSFeatureFileType ? .GPOS : .CSV),
+    var config: KernPairExporter.Config {
+        KernPairExporter.Config(format: (selectedFileType == KernPairExporter.GPOSFeatureFileType ? .GPOS : .CSV),
                                        resolveGlyphNames: shouldResolveGlyphNames,
                                        scaleToUnitsPerEm: scaleToUnitsPerEm)
     }
