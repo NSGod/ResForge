@@ -49,9 +49,6 @@ open class FontTable: OTFFontFileNode {
         self.tableTag = tableTag
         reader = BinaryDataReader(tableData)
         try super.init(fontFile: fontFile)
-//        if !Self.usesLazyParsing {
-//            try parseTableData()
-//        }
     }
 
     /// give table a chance to update its in memory data structures
