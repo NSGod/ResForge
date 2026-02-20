@@ -222,6 +222,12 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
         }
     }
 
+    // MARK: - <NSControlTextEditingDelegate>
+    public func control(_ control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
+        if fieldEditor.string.isEmpty { return false }
+        return true
+    }
+
     public static func placeholderName(for resource: Resource) -> String? {
         // TODO: parse FONDs and label NFNTs according to font association entries?
         return nil

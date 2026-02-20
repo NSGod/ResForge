@@ -261,6 +261,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="objcFontType" id="fsf-nj-lhz"/>
+                            <outlet property="delegate" destination="-2" id="3hO-Uh-GZl"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tln-Yk-aa6">
@@ -291,6 +292,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.lastChar" id="vNj-G1-Bfc"/>
+                            <outlet property="delegate" destination="-2" id="hTE-If-AoC"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="5QI-K9-hL3"/>
                         </connections>
                     </textField>
@@ -313,6 +315,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.widMax" id="rOD-zf-Lx3"/>
+                            <outlet property="delegate" destination="-2" id="Rod-3U-0t9"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="NVH-XH-D9i"/>
                         </connections>
                     </textField>
@@ -326,6 +329,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.firstChar" id="23g-cR-rkY"/>
+                            <outlet property="delegate" destination="-2" id="3fb-Af-JfO"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="1XZ-eK-Htc"/>
                         </connections>
                     </textField>
@@ -349,6 +353,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.kernMax" id="Nxe-R9-exH"/>
+                            <outlet property="delegate" destination="-2" id="HiC-I3-0mn"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="qYO-CZ-Qax"/>
                         </connections>
                     </textField>
@@ -371,6 +376,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.nDescent" id="Zh8-oI-2O0"/>
+                            <outlet property="delegate" destination="-2" id="qcM-Kb-Y80"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="xc5-Br-Lhx"/>
                         </connections>
                     </textField>
@@ -394,6 +400,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.fRectHeight" id="7ye-wn-QxP"/>
+                            <outlet property="delegate" destination="-2" id="C1U-a9-ZUp"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="N1p-SF-46Q"/>
                         </connections>
                     </textField>
@@ -421,6 +428,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.fRectWidth" id="O2y-m0-Vtk"/>
+                            <outlet property="delegate" destination="-2" id="OxD-5n-UsV"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="naC-aH-zSb"/>
                         </connections>
                     </textField>
@@ -448,6 +456,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.owTLoc" id="0OB-Be-X3D"/>
+                            <outlet property="delegate" destination="-2" id="A6w-Wm-uqM"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EAt-fs-hIB">
@@ -470,6 +479,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.ascent" id="x8N-Ih-Esp"/>
+                            <outlet property="delegate" destination="-2" id="KSY-rL-Agm"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="oQN-4f-HyX"/>
                         </connections>
                     </textField>
@@ -493,6 +503,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.descent" id="bxg-sc-Dkg"/>
+                            <outlet property="delegate" destination="-2" id="DKb-Pn-NrQ"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="1MO-er-2rr"/>
                         </connections>
                     </textField>
@@ -516,6 +527,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.leading" id="LaX-Wb-GbZ"/>
+                            <outlet property="delegate" destination="-2" id="kBU-ct-JWp"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="WQA-eg-96D"/>
                         </connections>
                     </textField>
@@ -538,6 +550,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="nfnt.rowWords" id="Jhu-ph-H6E"/>
+                            <outlet property="delegate" destination="-2" id="dto-5m-zl8"/>
                             <outlet property="formatter" destination="KzF-GY-0HX" id="VSi-MQ-BQY"/>
                         </connections>
                     </textField>
