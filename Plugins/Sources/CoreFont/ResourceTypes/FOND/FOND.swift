@@ -271,20 +271,6 @@ final public class FOND: NSObject {
         return handle.data
     }
 
-    private static let keys = Set(["famID", "firstChar", "lastChar", "ascent", "descent", "leading", "widMax",
-           "wTabOff", "kernOff", "styleOff", "ewSPlain", "ewSBold", "ewSItalic", "ewSUnderline", "ewSOutline",
-           "ewSShadow", "ewSCondensed", "ewSExtended", "ewSUnused", "intl0", "intl1", "ffVersion"])
-    
-    public override func setNilValueForKey(_ key: String) {
-        NSLog("\(type(of: self)).\(#function) key: \(key)")
-        if Self.keys.contains(key) {
-            NSLog("\(type(of: self)).\(#function) key: \(key)")
-            setValue(value(forKey: key), forKey: key)
-        } else {
-            super.setNilValueForKey(key)
-        }
-    }
-
     public func unitsPerEm(for fontStyle: MacFontStyle, manager: RFEditorManager? = nil) -> UnitsPerEm {
         /* Here we'll assume that if there's a mix of entries for both TrueType
          (fontPointSize of 0) and Bitmap fonts, that the bitmap fonts are merely for

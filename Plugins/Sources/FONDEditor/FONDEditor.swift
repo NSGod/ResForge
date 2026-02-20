@@ -9,7 +9,7 @@ import Cocoa
 import RFSupport
 import CoreFont
 
-public class FONDEditor : AbstractEditor, ResourceEditor {
+public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDelegate {
     public static var bundle: Bundle { .module }
     public static let supportedTypes = [
         "FOND",
@@ -202,6 +202,13 @@ public class FONDEditor : AbstractEditor, ResourceEditor {
         }
     }
 
+    // MARK: - <NSControlTextEditingDelegate>
+    public func control(_ control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
+        if fieldEditor.string.isEmpty { return false }
+        return true
+    }
+
+    // MARK: -
     @IBAction func exportKernPairs(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
         let entries = selectedKernTableEntries()

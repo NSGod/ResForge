@@ -269,6 +269,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="objcFFFlags" id="xc9-kg-oeV"/>
+                            <outlet property="delegate" destination="-2" id="i1W-Am-hOe"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5E9-Tn-tMR">
@@ -303,6 +304,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.lastChar" id="bef-rO-Xbh"/>
+                            <outlet property="delegate" destination="-2" id="PWK-ZE-vZD"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MQs-qU-7wl">
@@ -324,6 +326,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.ascent" id="1Td-TG-wbg"/>
+                            <outlet property="delegate" destination="-2" id="nvz-1Q-5tC"/>
                             <outlet property="formatter" destination="8qd-vG-szC" id="itL-DQ-WEG"/>
                         </connections>
                     </textField>
@@ -341,6 +344,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.firstChar" id="afN-7M-Z4b"/>
+                            <outlet property="delegate" destination="-2" id="dea-FI-cgY"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CmI-qC-7ug">
@@ -362,6 +366,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.descent" id="bZ8-yz-wWF"/>
+                            <outlet property="delegate" destination="-2" id="hJ2-EL-UqP"/>
                             <outlet property="formatter" destination="8qd-vG-szC" id="Jqc-qx-L0n"/>
                         </connections>
                     </textField>
@@ -384,6 +389,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.leading" id="NAA-Mx-lqr"/>
+                            <outlet property="delegate" destination="-2" id="EL2-xe-GF3"/>
                             <outlet property="formatter" destination="8qd-vG-szC" id="6PR-lL-ApC"/>
                         </connections>
                     </textField>
@@ -417,6 +423,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.wTabOff" id="ZgS-1Z-bXK"/>
+                            <outlet property="delegate" destination="-2" id="pj4-yR-1xZ"/>
                         </connections>
                     </textField>
                     <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="jyu-EV-Xrd">
@@ -446,6 +453,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.famID" id="4rP-TF-axk"/>
+                            <outlet property="delegate" destination="-2" id="kkA-oV-CZt"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7gK-LS-ZLL">
@@ -467,6 +475,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.widMax" id="Ion-TO-tCX"/>
+                            <outlet property="delegate" destination="-2" id="Kd8-lF-VhZ"/>
                             <outlet property="formatter" destination="8qd-vG-szC" id="J83-0d-7Ja"/>
                         </connections>
                     </textField>
@@ -500,6 +509,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.kernOff" id="Kd5-3M-ZW1"/>
+                            <outlet property="delegate" destination="-2" id="Qzq-hT-M62"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rfh-j4-EJ3">
@@ -532,6 +542,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.styleOff" id="snv-pH-k4u"/>
+                            <outlet property="delegate" destination="-2" id="X1D-Ks-XuP"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SK1-9w-vHh">
@@ -557,6 +568,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.ewSPlain" id="AFF-am-WKR"/>
+                            <outlet property="delegate" destination="-2" id="dTp-YY-vyt"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lu8-7n-SjB">
@@ -578,6 +590,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.ewSBold" id="JFO-xG-p6n"/>
+                            <outlet property="delegate" destination="-2" id="QQS-Y5-atm"/>
                             <outlet property="formatter" destination="8qd-vG-szC" id="57e-ev-muJ"/>
                         </connections>
                     </textField>
@@ -600,6 +613,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.ewSItalic" id="Qwf-Gh-qLq"/>
+                            <outlet property="delegate" destination="-2" id="3nS-kn-ICX"/>
                             <outlet property="formatter" destination="8qd-vG-szC" id="XL5-xW-1FE"/>
                         </connections>
                     </textField>
@@ -622,6 +636,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.ewSUnderline" id="qH5-bV-mt8"/>
+                            <outlet property="delegate" destination="-2" id="g4L-gH-rKj"/>
                             <outlet property="formatter" destination="8qd-vG-szC" id="JzV-Ha-Llj"/>
                         </connections>
                     </textField>
@@ -644,6 +659,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.ewSOutline" id="9fG-S9-8pz"/>
+                            <outlet property="delegate" destination="-2" id="lnX-Vl-xLJ"/>
                             <outlet property="formatter" destination="8qd-vG-szC" id="28O-2g-rhS"/>
                         </connections>
                     </textField>
@@ -666,6 +682,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.ewSShadow" id="r9I-A2-BqX"/>
+                            <outlet property="delegate" destination="-2" id="Rtg-jC-56C"/>
                             <outlet property="formatter" destination="8qd-vG-szC" id="92g-Ji-R7U"/>
                         </connections>
                     </textField>
@@ -688,6 +705,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.ewSCondensed" id="EEJ-cJ-SMb"/>
+                            <outlet property="delegate" destination="-2" id="OEG-wG-IJn"/>
                             <outlet property="formatter" destination="8qd-vG-szC" id="nQl-0k-Bt7"/>
                         </connections>
                     </textField>
@@ -710,6 +728,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.ewSExtended" id="ft1-Sf-Ahb"/>
+                            <outlet property="delegate" destination="-2" id="g08-3H-rN7"/>
                             <outlet property="formatter" destination="8qd-vG-szC" id="Nar-85-VJY"/>
                         </connections>
                     </textField>
@@ -736,6 +755,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.ewSUnused" id="dWx-oD-jRG"/>
+                            <outlet property="delegate" destination="-2" id="L2y-PD-b2G"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7rK-LD-HeI">
@@ -757,6 +777,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.intl0" id="3H6-BA-TvI"/>
+                            <outlet property="delegate" destination="-2" id="FDi-Hi-0K8"/>
                             <outlet property="formatter" destination="xr1-bH-K56" id="rEf-RV-wrB"/>
                         </connections>
                     </textField>
@@ -783,6 +804,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.ffVersion" id="8JU-Jc-A1J"/>
+                            <outlet property="delegate" destination="-2" id="rOi-xv-aTa"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eh0-0P-ECz">
@@ -804,6 +826,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="fond.intl1" id="tCg-44-pNb"/>
+                            <outlet property="delegate" destination="-2" id="EYu-nT-yXY"/>
                             <outlet property="formatter" destination="xr1-bH-K56" id="UL4-40-879"/>
                         </connections>
                     </textField>
@@ -1943,6 +1966,7 @@
                         </textFieldCell>
                         <connections>
                             <binding destination="-2" name="value" keyPath="objcFontClass" id="4r2-P4-Mqj"/>
+                            <outlet property="delegate" destination="-2" id="my7-ND-9bi"/>
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="v71-ia-bBO">
@@ -2338,7 +2362,7 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" selectable="YES" id="a0v-hn-ILC">
                         <font key="font" metaFont="smallSystem"/>
-                        <mutableString key="title">Script ID &amp; FOND ID mapping:
+                        <string key="title">Script ID &amp; FOND ID mapping:
      0           - 128         Reserved for Apple
      129	- 16383	Roman
      16384	- 16895	Japanese
@@ -2372,7 +2396,7 @@
      30720	- 31231	Central European Roman
      31232	- 31743	Vietnamese
      31744	- 32255	Extended Arabic
-     32256	- 32767	Uninterpreted Symbols</mutableString>
+     32256	- 32767	Uninterpreted Symbols</string>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>

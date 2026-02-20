@@ -152,7 +152,7 @@ final public class OTFFontFile: NSObject {
         } else if glyphLookupType == .AGL {
 
         }
-        return glyphName.isEmpty ? "<\(glyphID)" : glyphName
+        return glyphName.isEmpty ? "<\(glyphID)>" : glyphName
     }
 
     public var headTable: FontTable_head? {
