@@ -85,7 +85,7 @@ public final class MacEncoding: Copyable, CustomStringConvertible {
         let uv = uv(for: charCode)
         guard let glyphName = glyphName(for: uv) else {
             if logsInvalidCharCodes {
-                NSLog("\(type(of: self)).\(#function)() INVALID charCode: \(charCode)")
+                NSLog("\(type(of: self)).\(#function) INVALID charCode: \(charCode)")
             }
             return nil
         }

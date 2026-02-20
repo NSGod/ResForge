@@ -91,7 +91,7 @@ final class ViewController_OS2: FontTableViewController {
                 codePageRangesToNames[Int(key)!] = value
             }
         } catch {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
         }
     }
 

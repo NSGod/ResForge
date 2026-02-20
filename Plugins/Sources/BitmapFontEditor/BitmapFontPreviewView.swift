@@ -94,7 +94,7 @@ public class BitmapFontPreviewView: NSView {
 
     /// actually, this won't be called unless we're in the nib, which we might not be
     public override func awakeFromNib() {
-        NSLog("\(type(of: self)).\(#function)")
+//        NSLog("\(type(of: self)).\(#function)")
         syncSize()
         if !_setupViewFrameChanges {
             NotificationCenter.default.addObserver(self, selector: #selector(viewFrameChanged), name: Self.frameDidChangeNotification, object: self)
@@ -105,7 +105,7 @@ public class BitmapFontPreviewView: NSView {
 
     /// this should be called for our programmatic creation
     public override func viewDidMoveToWindow() {
-        NSLog("\(type(of: self)).\(#function)")
+//        NSLog("\(type(of: self)).\(#function)")
         syncSize()
         if !_setupViewFrameChanges {
             NotificationCenter.default.addObserver(self, selector: #selector(viewFrameChanged), name: Self.frameDidChangeNotification, object: self)

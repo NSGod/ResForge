@@ -63,7 +63,7 @@ final public class FOND: NSObject {
             reader.popPosition()
             return boundingBoxTable
         } catch {
-             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+             NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
         }
         return nil
     }()
@@ -77,7 +77,7 @@ final public class FOND: NSObject {
             reader.popPosition()
             return widthTable
         } catch {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
         }
         return nil
     }()
@@ -87,7 +87,7 @@ final public class FOND: NSObject {
         do {
             try calculateOffsetsIfNeeded()
             guard let styleMappingRange = offsetTypesToRanges[.styleTable] else {
-                NSLog("\(type(of: self)).\(#function)() *** ERROR: could not determine styleMappingRange!")
+                NSLog("\(type(of: self)).\(#function) *** ERROR: could not determine styleMappingRange!")
                 return nil
             }
             try reader.pushPosition(Int(styleOff))
@@ -95,7 +95,7 @@ final public class FOND: NSObject {
             reader.popPosition()
             return styleMappingTable
         } catch {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
         }
         return nil
     }()
@@ -106,14 +106,14 @@ final public class FOND: NSObject {
             try calculateOffsetsIfNeeded()
             if let kernRange = offsetTypesToRanges[.kernTable] {
             } else {
-                NSLog("\(type(of: self)).\(#function)() *** WARNING: could not determine kernTableRange; attempting parse anyway...")
+                NSLog("\(type(of: self)).\(#function) *** WARNING: could not determine kernTableRange; attempting parse anyway...")
             }
             try reader.pushPosition(Int(kernOff))
             kernTable = try KernTable(reader, fond:self)
             reader.popPosition()
             return kernTable
         } catch {
-             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+             NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
         }
         return nil
     }()
@@ -131,7 +131,7 @@ final public class FOND: NSObject {
     public lazy var encoding:               MacEncoding = {
         // FIXME: improve non-MacRoman encodings
         let scriptID = MacEncoding.scriptID(for: ResID(resource.id))
-        NSLog("\(type(of: self)).\(#function)() resID: \(resource.id), scriptID: \(scriptID)")
+        NSLog("\(type(of: self)).\(#function) resID: \(resource.id), scriptID: \(scriptID)")
         var encoding = MacEncoding.encodingFor(scriptID: scriptID, postScriptFontName: basePostScriptName)
         if let customGlyphs = self.styleMappingTable?.glyphNameEncodingSubtable {
             // FIXME: or should this be replacing existing? YES
@@ -311,7 +311,7 @@ final public class FOND: NSObject {
                     stylesToUnitsPerEm[fontStyle] = unitsPerEm
                     return unitsPerEm
                 } catch {
-                     NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+                     NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
                     stylesToUnitsPerEm[fontStyle] = .trueTypeStandard
                     return .trueTypeStandard
                 }
@@ -340,7 +340,7 @@ final public class FOND: NSObject {
                 NSLog("\(type(of: self)).\(#function) unitsPerEm: \(pfaFont.metrics.unitsPerEm) for \(url.path)")
                 return pfaFont.metrics.unitsPerEm
             } catch {
-                 NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+                 NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
             }
         }
         // If 'LWFN' can't be found, fall back to default
@@ -423,7 +423,7 @@ final public class FOND: NSObject {
              the OffsetTable itself. Since that table is located after the font
              association entries, no adjustments to its values are needed. */
         } catch {
-             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+             NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
         }
     }
 }

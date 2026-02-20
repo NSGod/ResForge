@@ -71,7 +71,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDe
         do {
             fond = try FOND(with: self.resource)
         } catch {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
             return nil
         }
         super.init(window: nil)
@@ -164,7 +164,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDe
         do {
             resource.data = try fond.data()
         } catch {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
         }
         self.setDocumentEdited(false)
     }
@@ -175,7 +175,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDe
             fond = try FOND(with: resource)
             loadFOND()
         } catch {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
         }
         self.setDocumentEdited(false)
     }
@@ -258,7 +258,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDe
                             do {
                                 try rep.write(to: url, atomically: true, encoding: .utf8)
                             } catch {
-                                 NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+                                 NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
                             }
                         }
                     }

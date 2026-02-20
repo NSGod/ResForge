@@ -144,7 +144,7 @@ public final class PostScriptType1FontFile: NSObject {
 
     deinit {
         if isActivated {
-            fatalError("\(type(of: self)).\(#function)() This font is currently activated (isActive == true); you must call deactivate() before allowing it to be deallocated!")
+            fatalError("\(type(of: self)).\(#function) This font is currently activated (isActive == true); you must call deactivate() before allowing it to be deallocated!")
         }
     }
 
@@ -179,7 +179,7 @@ public final class PostScriptType1FontFile: NSObject {
             }
         }
         if done.wait(timeout: naptime) == .timedOut {
-            NSLog("\(type).\(#function)() *** ERROR: CTFontManagerRegisterFontDescriptors() timed out")
+            NSLog("\(type).\(#function) *** ERROR: CTFontManagerRegisterFontDescriptors() timed out")
         }
         font = .init(descriptor: descriptor, size: 48)
         guard let font else {
@@ -218,7 +218,7 @@ public final class PostScriptType1FontFile: NSObject {
             }
         }
         if done.wait(timeout: naptime) == .timedOut {
-            NSLog("\(type).\(#function)() *** ERROR: CTFontManagerUnregisterFontDescriptors() timed out")
+            NSLog("\(type).\(#function) *** ERROR: CTFontManagerUnregisterFontDescriptors() timed out")
         }
         font = nil
     }

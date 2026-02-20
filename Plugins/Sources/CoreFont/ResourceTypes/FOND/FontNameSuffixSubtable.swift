@@ -58,18 +58,18 @@ extension FOND {
             /// we already have the base font name, so go with `stringCount - 1`
             for _ in 0..<stringCount - 1 {
                 if NSMaxRange(knownRange) == reader.bytesRead {
-                    NSLog("\(type(of: self)).\(#function)() *** NOTICE: appear to have hit end of data; breaking")
+                    NSLog("\(type(of: self)).\(#function) *** NOTICE: appear to have hit end of data; breaking")
                     break
                 }
                 var length: UInt8 = 0
                 do {
                     length = try reader.peek()
                 } catch {
-                    NSLog("\(type(of: self)).\(#function)() *** WARNING: hit end of data; breaking...")
+                    NSLog("\(type(of: self)).\(#function) *** WARNING: hit end of data; breaking...")
                     break
                 }
                 if length == 0 {
-                    NSLog("\(type(of: self)).\(#function)() *** NOTICE: next length is 0; breaking...")
+                    NSLog("\(type(of: self)).\(#function) *** NOTICE: next length is 0; breaking...")
                     break
                 }
                 let data = try reader.readData(length: Int(length + 1))
@@ -79,7 +79,7 @@ extension FOND {
 
             if _actualStringCount != stringCount {
                 // I've encountered weird values here, hence the logging...
-                NSLog("\(type(of: self)).\(#function)() *** WARNING: string count of \(stringCount) (byte-swapped: \(stringCount.byteSwapped)) appears to be wrong; actual string count: \(_actualStringCount)")
+                NSLog("\(type(of: self)).\(#function) *** WARNING: string count of \(stringCount) (byte-swapped: \(stringCount.byteSwapped)) appears to be wrong; actual string count: \(_actualStringCount)")
                 stringCount = _actualStringCount
             }
 
@@ -115,7 +115,7 @@ extension FOND {
                 }
                 entryIndexesToPostScriptNames[UInt8(i) + 2] = fullName
             }
-            // NSLog("\(type(of: self)).\(#function)() entryIndexesToPostScriptNames == \(entryIndexesToPostScriptNames)")
+            // NSLog("\(type(of: self)).\(#function) entryIndexesToPostScriptNames == \(entryIndexesToPostScriptNames)")
         }
 
         public func write(to dataHandle: DataHandle) throws {
@@ -126,7 +126,7 @@ extension FOND {
 
         public func postScriptNameForFontEntry(at oneBasedIndex: UInt8) -> String? {
             if oneBasedIndex > _actualStringCount {
-                NSLog("\(type(of: self)).\(#function)() *** WARNING: fontEntryIndex of \(oneBasedIndex) is beyond total string count (\(_actualStringCount))")
+                NSLog("\(type(of: self)).\(#function) *** WARNING: fontEntryIndex of \(oneBasedIndex) is beyond total string count (\(_actualStringCount))")
                 return nil
             }
             return entryIndexesToPostScriptNames[oneBasedIndex]

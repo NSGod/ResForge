@@ -51,7 +51,7 @@ public struct POST {
                     mString.append(postString)
                     lastType = .ascii
                 } else {
-                    NSLog("\(type(of: self)).\(#function)() ERROR: failed to create string with .macOSRoman encoding! skipping...")
+                    NSLog("\(type(of: self)).\(#function) ERROR: failed to create string with .macOSRoman encoding! skipping...")
                     if lastType == .binary { mString += "\n" }
                     continue
                 }

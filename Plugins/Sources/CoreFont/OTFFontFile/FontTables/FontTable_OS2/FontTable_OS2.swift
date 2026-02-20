@@ -167,7 +167,7 @@ final public class FontTable_OS2: FontTable {
                 }
             }
         } catch {
-            NSLog("\(type(of: self)).\(#function)() *** WARNING: Failed to read all expected fields for FontTable_OS2.version\(version.rawValue), falling back to .version\(targetVersion); byte count: \(tableData.count)")
+            NSLog("\(type(of: self)).\(#function) *** WARNING: Failed to read all expected fields for FontTable_OS2.version\(version.rawValue), falling back to .version\(targetVersion); byte count: \(tableData.count)")
             version = targetVersion
         }
     }

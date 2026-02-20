@@ -74,7 +74,7 @@ feature kern {\n
             if let firstGlyphName, let secondGlyphName {
                 mKernPairStrings.append("\tpos \(firstGlyphName) \(secondGlyphName) \(value);")
             } else {
-                NSLog("\(type(of: self)).\(#function)() *** ERROR failed to get glyphNames for charCodes: \(kernPair.kernFirst), \(kernPair.kernSecond)")
+                NSLog("\(type(of: self)).\(#function) *** ERROR failed to get glyphNames for charCodes: \(kernPair.kernFirst), \(kernPair.kernSecond)")
             }
         }
         mKernPairStrings.sort(by: { $0.localizedStandardCompare($1) == .orderedAscending })
@@ -105,7 +105,7 @@ feature kern {\n
             }
             writer.stream.close()
         } catch {
-             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+             NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
         }
         if let data = stream.property(forKey: .dataWrittenToMemoryStreamKey) as? Data {
             return String(data: data, encoding: .utf8)

@@ -52,7 +52,7 @@ public class POSTExporter: AbstractEditor, ResourceEditor, ExportProvider, TypeI
             pfaFile = try PostScriptType1FontFile(data: pfaData, options: .full)
             _windowTitle = "POST 501 – \(501 + resources.count): \(String(describing: pfaFile.postScriptName))"
         } catch {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
             return nil
         }
     }
@@ -75,7 +75,7 @@ public class POSTExporter: AbstractEditor, ResourceEditor, ExportProvider, TypeI
         do {
             try pfaFile.deactivate()
         } catch {
-             NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+             NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
         }
     }
 

@@ -91,7 +91,7 @@ public final class NFNT: NSObject {
         do {
             try buildImageAndGlyphsIfNeeded()
         } catch {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
         }
         return _glyphs
     }()
@@ -102,7 +102,7 @@ public final class NFNT: NSObject {
         do {
             try buildImageAndGlyphsIfNeeded()
         } catch {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
         }
         return _glyphEntries
     }()
@@ -113,7 +113,7 @@ public final class NFNT: NSObject {
         do {
             try buildImageAndGlyphsIfNeeded()
         } catch {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
         }
         return _bitmapImage
     }()
@@ -123,7 +123,7 @@ public final class NFNT: NSObject {
         do {
             try buildImageAndGlyphsIfNeeded()
         } catch {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
         }
         return _bitmapImageData
     }()
@@ -263,9 +263,9 @@ public final class NFNT: NSObject {
         defer { reader.popPosition() }
         if rowWords == 0 {
             /// this contains no bitmap data
-            NSLog("\(type(of: self)).\(#function)() **** NOTICE: rowWords == 0 && this NFNT contains no bitmap data. Resource length: \(resource.data.count)")
+            NSLog("\(type(of: self)).\(#function) **** NOTICE: rowWords == 0 && this NFNT contains no bitmap data. Resource length: \(resource.data.count)")
             if reader.bytesRemaining > 0 {
-                NSLog("\(type(of: self)).\(#function)() **** yet NFNT contains more data!")
+                NSLog("\(type(of: self)).\(#function) **** yet NFNT contains more data!")
             }
             haveBuiltGlyphs = true
             return
@@ -294,13 +294,13 @@ public final class NFNT: NSObject {
                                                     bytesPerRow: Int(rowWords) * 2,
                                                     bitsPerPixel: Int(fontBitDepth)) else {
             // FIXME: throw better error
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: bitmapImageRep == nil")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: bitmapImageRep == nil")
             throw CocoaError(.fileReadCorruptFile)
         }
         // FIXME: add better support for higher font bit depths? Though I've never encountered them in the wild...
         // Since black colorspaces are deprecated, we'll use white but need to flip the bits
         guard let bitmapData: UnsafeMutablePointer<UInt8> = bitmapImageRep.bitmapData else {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: bitmapImageRep.bitmapData == nil")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: bitmapImageRep.bitmapData == nil")
             // FIXME: throw proper error
             throw CocoaError(.fileReadCorruptFile)
         }
@@ -323,12 +323,12 @@ public final class NFNT: NSObject {
                                       space: sRGBRef,
                                       bitmapInfo: CGBitmapInfo(alpha: .noneSkipLast))
         guard let imageRef = bitmapImageRep.cgImage else {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: failed to get CGImage from bitmapImageRep == \(bitmapImageRep)")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: failed to get CGImage from bitmapImageRep == \(bitmapImageRep)")
             throw CocoaError(.fileReadCorruptFile)
         }
         bitmapContext?.draw(imageRef, in: CGRectMake(0.0, 0.0, CGFloat(rowWords * 16), CGFloat(fRectHeight)))
         guard let rgbImageRef = bitmapContext?.makeImage() else {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: failed to make image from bitmapContext == \(String(describing: bitmapContext))")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: failed to make image from bitmapContext == \(String(describing: bitmapContext))")
             throw CocoaError(.fileReadCorruptFile)
         }
         let rgbImageRep = NSBitmapImageRep(cgImage: rgbImageRef)

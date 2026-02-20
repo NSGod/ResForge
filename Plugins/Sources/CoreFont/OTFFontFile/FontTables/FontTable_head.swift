@@ -91,7 +91,7 @@ final public class FontTable_head: FontTable {
             tableLongs.forEach { calcChecksum &+= $0 }
             return calcChecksum
         } catch {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
         }
         return 0
     }

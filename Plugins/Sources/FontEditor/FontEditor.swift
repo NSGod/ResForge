@@ -49,7 +49,7 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
             originalData = resource.data
             fontFile = try OTFFontFile(resource.data)
         } catch {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
             return nil
         }
         super.init(window: nil)
@@ -88,7 +88,7 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
             }
             window?.makeFirstResponder(tableView)
         } catch {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
         }
     }
 
@@ -102,7 +102,7 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
             reloadFont()
             window?.isDocumentEdited = false
         } catch {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
             self.presentError(error)
         }
     }

@@ -59,7 +59,7 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
             objcFontType = nfnt.fontType.rawValue
             objcBitDepth = objcFontType & ~0xFFF3
         } catch  {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
             return nil
         }
         super.init(window: nil)
@@ -76,12 +76,12 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
     }
 
     public override func awakeFromNib() {
-        NSLog("\(type(of: self)).\(#function)")
+//        NSLog("\(type(of: self)).\(#function)")
         loadResource()
     }
 
     public override func windowDidLoad() {
-        NSLog("\(type(of: self)).\(#function)")
+//        NSLog("\(type(of: self)).\(#function)")
         super.windowDidLoad()
         let bounds = box.bounds
         let prevView = BitmapFontPreviewView(frame: bounds)
@@ -140,12 +140,12 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
     }
 
     public func saveResource(_ sender: Any) {
-        NSLog("\(type(of: self)).\(#function)()")
+        NSLog("\(type(of: self)).\(#function)")
         nfnt.fontType = NFNT.FontType(rawValue: objcFontType)
         do {
             resource.data = try nfnt.data()
         } catch {
-            NSLog("\(type(of: self)).\(#function)() *** ERROR: \(error)")
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
         }
         setDocumentEdited(false)
     }
