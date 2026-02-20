@@ -81,6 +81,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.advanceWidthMax" id="dFz-g7-IZs"/>
+                        <outlet property="delegate" destination="-2" id="Mhc-AN-8dy"/>
                         <outlet property="formatter" destination="9FW-tv-86i" id="a5h-l3-aR5"/>
                         <outlet property="nextKeyView" destination="Tdw-jf-akW" id="RqY-yS-1OH"/>
                     </connections>
@@ -95,6 +96,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.reserved0" id="6ZF-wz-jld"/>
+                        <outlet property="delegate" destination="-2" id="8e2-RF-qO8"/>
                         <outlet property="formatter" destination="NLI-91-0gB" id="ksS-Ab-UO8"/>
                         <outlet property="nextKeyView" destination="SUB-0x-Fad" id="DKx-VZ-uah"/>
                     </connections>
@@ -109,6 +111,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.reserved1" id="bT6-3V-YGG"/>
+                        <outlet property="delegate" destination="-2" id="4gj-ke-Bta"/>
                         <outlet property="formatter" destination="NLI-91-0gB" id="ghO-SE-DbB"/>
                         <outlet property="nextKeyView" destination="is1-R6-nXX" id="vNv-Hx-b7z"/>
                     </connections>
@@ -123,6 +126,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.reserved2" id="WrK-ri-Ttq"/>
+                        <outlet property="delegate" destination="-2" id="IHu-RT-xlT"/>
                         <outlet property="formatter" destination="NLI-91-0gB" id="kzt-VU-gAU"/>
                         <outlet property="nextKeyView" destination="MKC-bc-bgA" id="Z8k-aD-jiI"/>
                     </connections>
@@ -137,6 +141,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.numberOfHMetrics" id="Ikw-36-dxj"/>
+                        <outlet property="delegate" destination="-2" id="VIX-AJ-Zaf"/>
                         <outlet property="formatter" destination="9FW-tv-86i" id="Qm8-7N-Tla"/>
                         <outlet property="nextKeyView" destination="yxZ-N7-xJq" id="qsZ-9a-n7C"/>
                     </connections>
@@ -151,6 +156,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.metricDataFormat" id="api-Vo-4jn"/>
+                        <outlet property="delegate" destination="-2" id="VE9-6x-r6x"/>
                         <outlet property="formatter" destination="NLI-91-0gB" id="tyv-zZ-hdg"/>
                         <outlet property="nextKeyView" destination="Of3-eg-uLn" id="CAY-d8-bef"/>
                     </connections>
@@ -174,6 +180,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.version" id="wZW-lu-gKT"/>
+                        <outlet property="delegate" destination="-2" id="YmG-vg-pJl"/>
                         <outlet property="formatter" destination="p6G-Mb-FM3" id="th5-b3-xaw"/>
                         <outlet property="nextKeyView" destination="YCb-ex-a04" id="JKf-3d-jGv"/>
                     </connections>
@@ -215,6 +222,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.ascender" id="1Y6-ek-WED"/>
+                        <outlet property="delegate" destination="-2" id="Gqf-FI-fiX"/>
                         <outlet property="formatter" destination="NLI-91-0gB" id="j4n-nU-2Zb"/>
                         <outlet property="nextKeyView" destination="Mjr-6l-BLd" id="m6u-Id-cxw"/>
                     </connections>
@@ -229,6 +237,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.descender" id="ftS-TJ-Pkc"/>
+                        <outlet property="delegate" destination="-2" id="VeV-Aw-nei"/>
                         <outlet property="formatter" destination="NLI-91-0gB" id="dfJ-BE-UCU"/>
                         <outlet property="nextKeyView" destination="RqI-dX-8nv" id="3WS-F7-OGt"/>
                     </connections>
@@ -243,6 +252,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.lineGap" id="HCK-GA-TVh"/>
+                        <outlet property="delegate" destination="-2" id="QhG-Uh-u9V"/>
                         <outlet property="formatter" destination="NLI-91-0gB" id="oNu-bi-V8h"/>
                         <outlet property="nextKeyView" destination="LSh-x2-4ek" id="7bW-vU-xZc"/>
                     </connections>
@@ -284,6 +294,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.minLeftSideBearing" id="Q1t-BE-lHa"/>
+                        <outlet property="delegate" destination="-2" id="SJi-y6-Hyq"/>
                         <outlet property="formatter" destination="NLI-91-0gB" id="95G-CK-Q3g"/>
                         <outlet property="nextKeyView" destination="msp-4G-sCR" id="JMr-Em-nsU"/>
                     </connections>
@@ -298,6 +309,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.minRightSideBearing" id="att-ju-0q6"/>
+                        <outlet property="delegate" destination="-2" id="CrI-SG-U0X"/>
                         <outlet property="formatter" destination="NLI-91-0gB" id="wcm-Oy-ZM9"/>
                         <outlet property="nextKeyView" destination="Kb2-ZP-Mkl" id="0Nd-HM-vGF"/>
                     </connections>
@@ -312,6 +324,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.xMaxExtent" id="Udo-BE-8qx"/>
+                        <outlet property="delegate" destination="-2" id="Nu0-nK-sLx"/>
                         <outlet property="formatter" destination="9FW-tv-86i" id="rSX-CE-EgX"/>
                         <outlet property="nextKeyView" destination="DPF-yo-YEx" id="NGf-qO-8xT"/>
                     </connections>
@@ -335,6 +348,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.reserved3" id="nys-oe-3fW"/>
+                        <outlet property="delegate" destination="-2" id="jKf-Y9-ZFl"/>
                         <outlet property="formatter" destination="NLI-91-0gB" id="Bov-Ox-AY0"/>
                         <outlet property="nextKeyView" destination="Md4-5K-8Z0" id="33f-LE-Eld"/>
                     </connections>
@@ -376,6 +390,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.caretSlopeRise" id="nqt-nX-sk9"/>
+                        <outlet property="delegate" destination="-2" id="eLx-uz-BEQ"/>
                         <outlet property="formatter" destination="NLI-91-0gB" id="LKp-Rr-Ip2"/>
                         <outlet property="nextKeyView" destination="F02-s1-j70" id="yU5-de-fhV"/>
                     </connections>
@@ -390,6 +405,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.caretSlopeRun" id="gdL-rF-OT5"/>
+                        <outlet property="delegate" destination="-2" id="VSV-xG-P2s"/>
                         <outlet property="formatter" destination="NLI-91-0gB" id="VvY-MZ-M5d"/>
                         <outlet property="nextKeyView" destination="q50-WM-FUa" id="WrD-vy-4pG"/>
                     </connections>
@@ -404,6 +420,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.caretOffset" id="u37-1r-xZt"/>
+                        <outlet property="delegate" destination="-2" id="EOl-21-cxp"/>
                         <outlet property="formatter" destination="NLI-91-0gB" id="iKO-Ua-PGB"/>
                         <outlet property="nextKeyView" destination="uMI-kK-58G" id="MJU-h2-zXR"/>
                     </connections>

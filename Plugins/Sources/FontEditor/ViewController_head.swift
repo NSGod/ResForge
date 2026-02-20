@@ -8,7 +8,7 @@
 import Cocoa
 import CoreFont
 
-final class ViewController_head: FontTableViewController {
+final class ViewController_head: FontTableViewController, NSControlTextEditingDelegate {
     @IBOutlet weak var flagsControl:        BitfieldControl!
     @IBOutlet weak var macStyleControl:     BitfieldControl!
 
@@ -69,6 +69,13 @@ final class ViewController_head: FontTableViewController {
         table.unitsPerEm = UnitsPerEm(rawValue: objcUnitsPerEm)
     }
 
+    // MARK: - <NSControlTextEditingDelegate>
+    public func control(_ control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
+        if fieldEditor.string.isEmpty { return false }
+        return true
+    }
+
+    // MARK: -
     @IBAction func changeFlags(_ sender: Any) {
         let sender = sender as! NSButton
         if sender.state == .on {

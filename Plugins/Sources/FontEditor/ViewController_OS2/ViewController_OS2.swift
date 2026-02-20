@@ -9,7 +9,7 @@ import Cocoa
 import CoreFont
 import RFSupport
 
-final class ViewController_OS2: FontTableViewController {
+final class ViewController_OS2: FontTableViewController, NSControlTextEditingDelegate {
 
     @IBOutlet weak var unicodeRangesTableView:  NSTableView!
     @IBOutlet weak var codeRangesTableView:     NSTableView!
@@ -154,6 +154,13 @@ final class ViewController_OS2: FontTableViewController {
         codeRangesTableView.reloadData()
     }
 
+    // MARK: - <NSControlTextEditingDelegate>
+    public func control(_ control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
+        if fieldEditor.string.isEmpty { return false }
+        return true
+    }
+
+    // MARK: -
     @IBAction func showUnicodeRangePopover(_ sender: Any) {
         unicodeRangePopover.show(relativeTo: unicodeRangeButton.bounds, of: unicodeRangeButton, preferredEdge: .maxX)
     }

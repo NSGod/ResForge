@@ -8,7 +8,7 @@
 import Cocoa
 import CoreFont
 
-final class ViewController_maxp: FontTableViewController {
+final class ViewController_maxp: FontTableViewController, NSControlTextEditingDelegate {
 	@IBOutlet weak var version1View:    NSView!
 
 	var table:                          FontTable_maxp
@@ -49,6 +49,13 @@ final class ViewController_maxp: FontTableViewController {
         NSLog("\(type(of: self)).\(#function)")
     }
 
+    // MARK: - <NSControlTextEditingDelegate>
+    public func control(_ control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
+        if fieldEditor.string.isEmpty { return false }
+        return true
+    }
+
+    // MARK: -
     override func updateUI() {
         // allow us to be called before nib is loaded
         guard let version1View else { return }

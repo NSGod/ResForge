@@ -8,7 +8,7 @@
 import Cocoa
 import CoreFont
 
-final class ViewController_gasp: FontTableViewController, NSTableViewDelegate {
+final class ViewController_gasp: FontTableViewController, NSTableViewDelegate, NSControlTextEditingDelegate {
     @IBOutlet weak var tableView:           NSTableView!
     @IBOutlet var rangesController:         NSArrayController!
 
@@ -37,6 +37,13 @@ final class ViewController_gasp: FontTableViewController, NSTableViewDelegate {
         NSLog("\(type(of: self)).\(#function)")
     }
 
+    // MARK: - <NSControlTextEditingDelegate>
+    public func control(_ control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
+        if fieldEditor.string.isEmpty { return false }
+        return true
+    }
+
+    // MARK: -
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         guard let tableColumn else { return nil }
         let identifier = tableColumn.identifier

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24506" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24506"/>
         <capability name="System colors introduced in macOS 10.14" minToolsVersion="10.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -59,7 +60,7 @@
                                                 <rect key="frame" x="8" y="0.0" width="178" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gMD-EX-ALX">
+                                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gMD-EX-ALX">
                                                         <rect key="frame" x="0.0" y="3" width="178" height="16"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                         <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" title="OS/2" id="nF5-CC-t8V">
@@ -182,7 +183,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </tableHeaderView>
                 </scrollView>
-                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="b9b-tQ-Lkk">
+                <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="b9b-tQ-Lkk">
                     <rect key="frame" x="106" y="377" width="80" height="19"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="qrj-bn-sjY">
@@ -192,10 +193,11 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.version" id="TRN-hW-TxJ"/>
+                        <outlet property="delegate" destination="-2" id="DOz-zj-V1f"/>
                         <outlet property="formatter" destination="2aS-ss-FOf" id="O84-BC-z1p"/>
                     </connections>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ryS-ZF-OMi">
+                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ryS-ZF-OMi">
                     <rect key="frame" x="18" y="379" width="82" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="version:" id="1Hk-am-YlR">
@@ -222,7 +224,7 @@
                         <binding destination="-2" name="selectedTag" keyPath="representedObject.version" id="9Fh-NM-hYC"/>
                     </connections>
                 </popUpButton>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tbG-JL-Oo5">
+                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tbG-JL-Oo5">
                     <rect key="frame" x="412" y="379" width="147" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="gasp ranges" id="a8d-hh-KGk">

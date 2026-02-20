@@ -182,6 +182,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.version" id="wc9-VU-7TI"/>
+                        <outlet property="delegate" destination="-2" id="py5-xj-SAv"/>
                         <outlet property="formatter" destination="kru-CD-XrG" id="N0k-PC-aMF"/>
                     </connections>
                 </textField>
@@ -195,6 +196,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.fontRevision" id="d88-DC-a8m"/>
+                        <outlet property="delegate" destination="-2" id="ywo-5r-vIb"/>
                         <outlet property="formatter" destination="Kld-Rl-Mgm" id="YWb-aZ-Lui"/>
                     </connections>
                 </textField>
@@ -208,6 +210,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="objcFlags" id="Djy-c3-XfO"/>
+                        <outlet property="delegate" destination="-2" id="e04-ov-5b4"/>
                         <outlet property="formatter" destination="WVS-OL-jHf" id="KiS-33-hz3"/>
                     </connections>
                 </textField>
@@ -225,6 +228,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="objcUnitsPerEm" id="7kc-mK-QL4"/>
+                        <outlet property="delegate" destination="-2" id="k3x-va-Kc7"/>
                     </connections>
                 </textField>
                 <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5PO-Nd-nrv">
@@ -237,6 +241,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.created" id="QsR-fh-Gdg"/>
+                        <outlet property="delegate" destination="-2" id="Spo-4u-cJd"/>
                         <outlet property="formatter" destination="hmn-uK-Br5" id="W7a-ei-vtM"/>
                     </connections>
                 </textField>
@@ -250,6 +255,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.modified" id="lxh-td-iD1"/>
+                        <outlet property="delegate" destination="-2" id="mjh-3X-9xl"/>
                         <outlet property="formatter" destination="hmn-uK-Br5" id="tJY-us-5we"/>
                     </connections>
                 </textField>
@@ -263,6 +269,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.xMin" id="yfs-Jv-hcJ"/>
+                        <outlet property="delegate" destination="-2" id="KDw-9W-uSO"/>
                         <outlet property="formatter" destination="9Cc-2i-F7L" id="0RM-A2-qxV"/>
                     </connections>
                 </textField>
@@ -276,6 +283,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.yMin" id="Utv-RB-CMq"/>
+                        <outlet property="delegate" destination="-2" id="G5P-ob-2fI"/>
                         <outlet property="formatter" destination="9Cc-2i-F7L" id="378-3x-S2V"/>
                     </connections>
                 </textField>
@@ -289,6 +297,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.xMax" id="d1s-gQ-Rbx"/>
+                        <outlet property="delegate" destination="-2" id="HzP-bl-qgg"/>
                         <outlet property="formatter" destination="9Cc-2i-F7L" id="1X6-Dr-fRd"/>
                     </connections>
                 </textField>
@@ -302,6 +311,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.yMax" id="Qcc-kk-FK0"/>
+                        <outlet property="delegate" destination="-2" id="xuk-vr-odw"/>
                         <outlet property="formatter" destination="9Cc-2i-F7L" id="Nzw-y1-c55"/>
                     </connections>
                 </textField>
@@ -319,6 +329,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="objcMacStyle" id="sUG-jF-GPX"/>
+                        <outlet property="delegate" destination="-2" id="4xD-Q0-d9T"/>
                     </connections>
                 </textField>
                 <textField toolTip="Smallest readable size in pixels" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wqi-pf-eQ4">
@@ -331,6 +342,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.lowestRecPPEM" id="UDo-PD-CRm"/>
+                        <outlet property="delegate" destination="-2" id="HiD-KI-zn7"/>
                         <outlet property="formatter" destination="WVS-OL-jHf" id="Prj-m4-tpo"/>
                     </connections>
                 </textField>
@@ -348,6 +360,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.fontDirectionHint" id="SyI-3b-TOp"/>
+                        <outlet property="delegate" destination="-2" id="KUu-Ja-BLc"/>
                     </connections>
                 </textField>
                 <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c7A-QG-cYO">
@@ -364,6 +377,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.indexToLocFormat" id="hgL-73-L9j"/>
+                        <outlet property="delegate" destination="-2" id="yC8-ya-PbU"/>
                     </connections>
                 </textField>
                 <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EhT-6m-65b">
@@ -376,6 +390,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.checkSumAdjustment" id="owh-ju-zqI"/>
+                        <outlet property="delegate" destination="-2" id="OYZ-81-TzA"/>
                         <outlet property="formatter" destination="Yvg-cq-Ryo" id="Eer-m0-c3e"/>
                     </connections>
                 </textField>
@@ -389,6 +404,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.magicNumber" id="UBd-0F-CBj"/>
+                        <outlet property="delegate" destination="-2" id="Vo6-Ch-40X"/>
                         <outlet property="formatter" destination="kru-CD-XrG" id="C9k-fT-7Kp"/>
                     </connections>
                 </textField>
@@ -402,6 +418,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.glyphDataFormat" id="39N-DY-uRy"/>
+                        <outlet property="delegate" destination="-2" id="1Hu-Yk-rhE"/>
                         <outlet property="formatter" destination="9Cc-2i-F7L" id="CJ6-em-J0j"/>
                     </connections>
                 </textField>
@@ -410,8 +427,8 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <datePickerCell key="cell" controlSize="small" borderStyle="bezel" alignment="left" useCurrentDate="YES" id="oIT-jX-Dp6">
                         <font key="font" metaFont="smallSystem"/>
-                        <date key="date" timeIntervalSinceReferenceDate="792211342.89654696">
-                            <!--2026-02-08 02:42:22 +0000-->
+                        <date key="date" timeIntervalSinceReferenceDate="793304372.63173902">
+                            <!--2026-02-20 18:19:32 +0000-->
                         </date>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -430,8 +447,8 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <datePickerCell key="cell" controlSize="small" borderStyle="bezel" alignment="left" useCurrentDate="YES" id="gII-fu-7Tf">
                         <font key="font" metaFont="smallSystem"/>
-                        <date key="date" timeIntervalSinceReferenceDate="792211342.89905202">
-                            <!--2026-02-08 02:42:22 +0000-->
+                        <date key="date" timeIntervalSinceReferenceDate="793304372.63409305">
+                            <!--2026-02-20 18:19:32 +0000-->
                         </date>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -757,6 +774,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.fontRevision" id="bX7-Oy-nxV"/>
+                        <outlet property="delegate" destination="-2" id="9em-HV-q7F"/>
                         <outlet property="formatter" destination="kru-CD-XrG" id="rBI-oZ-r0g"/>
                     </connections>
                 </textField>

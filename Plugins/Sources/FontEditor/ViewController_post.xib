@@ -64,6 +64,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.version" id="yMI-U6-fse"/>
+                        <outlet property="delegate" destination="-2" id="fG1-ku-9If"/>
                         <outlet property="formatter" destination="08w-DF-dqE" id="vJk-bl-Glo"/>
                     </connections>
                 </textField>
@@ -77,6 +78,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.underlinePosition" id="UJ9-Bq-Nfm"/>
+                        <outlet property="delegate" destination="-2" id="nhK-r0-OhW"/>
                         <outlet property="formatter" destination="GxC-et-6RY" id="oHm-qn-4dR"/>
                     </connections>
                 </textField>
@@ -99,6 +101,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.italicAngle" id="39r-je-hyd"/>
+                        <outlet property="delegate" destination="-2" id="Hps-ip-pU4"/>
                         <outlet property="formatter" destination="jX5-x7-9yo" id="XTC-PL-17K"/>
                     </connections>
                 </textField>
@@ -112,6 +115,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.underlineThickness" id="E2F-tQ-j4W"/>
+                        <outlet property="delegate" destination="-2" id="7oe-zE-ScV"/>
                         <outlet property="formatter" destination="GxC-et-6RY" id="Xbu-ZS-znn"/>
                     </connections>
                 </textField>
@@ -125,6 +129,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.isFixedPitch" id="vdA-0c-TLI"/>
+                        <outlet property="delegate" destination="-2" id="MQj-V2-cyB"/>
                         <outlet property="formatter" destination="9cd-gi-Kxu" id="yhc-1z-og9"/>
                     </connections>
                 </textField>
@@ -147,6 +152,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.minMemType42" id="uCA-WK-dBN"/>
+                        <outlet property="delegate" destination="-2" id="LeH-ph-nAm"/>
                         <outlet property="formatter" destination="9cd-gi-Kxu" id="B7V-ab-WZM"/>
                     </connections>
                 </textField>
@@ -169,6 +175,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.maxMemType42" id="RPb-y5-a9D"/>
+                        <outlet property="delegate" destination="-2" id="J9k-Pj-9cI"/>
                         <outlet property="formatter" destination="9cd-gi-Kxu" id="bLW-Tq-Y0c"/>
                     </connections>
                 </textField>
@@ -191,6 +198,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.minMemType1" id="81q-S9-tYo"/>
+                        <outlet property="delegate" destination="-2" id="H1E-4w-XLg"/>
                         <outlet property="formatter" destination="9cd-gi-Kxu" id="ayg-Qx-qbZ"/>
                     </connections>
                 </textField>
@@ -213,6 +221,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.maxMemType1" id="x5T-ak-N0f"/>
+                        <outlet property="delegate" destination="-2" id="Ysv-9m-xwK"/>
                         <outlet property="formatter" destination="9cd-gi-Kxu" id="oVy-BK-Lfw"/>
                     </connections>
                 </textField>

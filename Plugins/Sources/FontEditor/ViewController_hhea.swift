@@ -8,7 +8,7 @@
 import Cocoa
 import CoreFont
 
-final class ViewController_hhea: FontTableViewController {
+final class ViewController_hhea: FontTableViewController, NSControlTextEditingDelegate {
     var table:      FontTable_hhea
 
     private static var tableContext = 1
@@ -41,6 +41,13 @@ final class ViewController_hhea: FontTableViewController {
         }
     }
 
+    // MARK: - <NSControlTextEditingDelegate>
+    public func control(_ control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
+        if fieldEditor.string.isEmpty { return false }
+        return true
+    }
+
+    // MARK: -
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard let keyPath else {
             return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)

@@ -46,6 +46,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.version" id="kYD-Sd-yOn"/>
+                        <outlet property="delegate" destination="-2" id="dpQ-Q1-aT7"/>
                         <outlet property="formatter" destination="hcs-eh-6xk" id="CB9-xd-qi6"/>
                     </connections>
                 </textField>
@@ -59,6 +60,7 @@
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="representedObject.numGlyphs" id="tRP-Rj-8I3"/>
+                        <outlet property="delegate" destination="-2" id="JjU-pa-gXW"/>
                         <outlet property="formatter" destination="YPG-a0-vAy" id="wuu-Pl-gaH"/>
                     </connections>
                 </textField>
@@ -76,6 +78,7 @@
                             </textFieldCell>
                             <connections>
                                 <binding destination="-2" name="value" keyPath="representedObject.maxComponentDepth" id="5Cu-WF-fP5"/>
+                                <outlet property="delegate" destination="-2" id="jPy-Ez-wht"/>
                                 <outlet property="formatter" destination="YPG-a0-vAy" id="TaJ-RL-RkS"/>
                             </connections>
                         </textField>
@@ -107,6 +110,7 @@
                             </textFieldCell>
                             <connections>
                                 <binding destination="-2" name="value" keyPath="representedObject.maxSizeOfInstructions" id="bPc-tZ-on0"/>
+                                <outlet property="delegate" destination="-2" id="Fk3-OS-0pf"/>
                                 <outlet property="formatter" destination="YPG-a0-vAy" id="6hr-vD-JPD"/>
                             </connections>
                         </textField>
@@ -138,6 +142,7 @@
                             </textFieldCell>
                             <connections>
                                 <binding destination="-2" name="value" keyPath="representedObject.maxTwilightPoints" id="ziO-eV-AKm"/>
+                                <outlet property="delegate" destination="-2" id="Mn2-fg-1Ji"/>
                                 <outlet property="formatter" destination="YPG-a0-vAy" id="xFB-cS-aqc"/>
                             </connections>
                         </textField>
@@ -151,6 +156,7 @@
                             </textFieldCell>
                             <connections>
                                 <binding destination="-2" name="value" keyPath="representedObject.maxCompositePoints" id="Cja-M6-tDd"/>
+                                <outlet property="delegate" destination="-2" id="Zwa-Yr-qlh"/>
                                 <outlet property="formatter" destination="YPG-a0-vAy" id="Kbh-Qi-yyr"/>
                             </connections>
                         </textField>
@@ -173,6 +179,7 @@
                             </textFieldCell>
                             <connections>
                                 <binding destination="-2" name="value" keyPath="representedObject.maxFunctionDefs" id="guP-l5-QBC"/>
+                                <outlet property="delegate" destination="-2" id="N0j-YI-t3O"/>
                                 <outlet property="formatter" destination="YPG-a0-vAy" id="wu0-zs-jtg"/>
                             </connections>
                         </textField>
@@ -186,6 +193,7 @@
                             </textFieldCell>
                             <connections>
                                 <binding destination="-2" name="value" keyPath="representedObject.maxContours" id="FDs-Jk-7ma"/>
+                                <outlet property="delegate" destination="-2" id="UjD-SM-gPH"/>
                                 <outlet property="formatter" destination="YPG-a0-vAy" id="ra6-zr-79E"/>
                             </connections>
                         </textField>
@@ -199,6 +207,7 @@
                             </textFieldCell>
                             <connections>
                                 <binding destination="-2" name="value" keyPath="representedObject.maxStorage" id="a93-IZ-GDA"/>
+                                <outlet property="delegate" destination="-2" id="JCq-qn-lZS"/>
                                 <outlet property="formatter" destination="YPG-a0-vAy" id="pZX-5a-LKk"/>
                             </connections>
                         </textField>
@@ -248,6 +257,7 @@
                             </textFieldCell>
                             <connections>
                                 <binding destination="-2" name="value" keyPath="representedObject.maxZones" id="XPV-a8-sTu"/>
+                                <outlet property="delegate" destination="-2" id="jTe-F2-j42"/>
                                 <outlet property="formatter" destination="YPG-a0-vAy" id="ikX-qK-CNx"/>
                             </connections>
                         </textField>
@@ -279,6 +289,7 @@
                             </textFieldCell>
                             <connections>
                                 <binding destination="-2" name="value" keyPath="representedObject.maxCompositeContours" id="SNL-Wq-zR9"/>
+                                <outlet property="delegate" destination="-2" id="cG8-NT-kqp"/>
                                 <outlet property="formatter" destination="YPG-a0-vAy" id="Qi1-HT-Izk"/>
                             </connections>
                         </textField>
@@ -292,6 +303,7 @@
                             </textFieldCell>
                             <connections>
                                 <binding destination="-2" name="value" keyPath="representedObject.maxInstructionDefs" id="qJ3-jL-a9U"/>
+                                <outlet property="delegate" destination="-2" id="c2b-l9-97y"/>
                                 <outlet property="formatter" destination="YPG-a0-vAy" id="SXg-bC-nvR"/>
                             </connections>
                         </textField>
@@ -314,6 +326,7 @@
                             </textFieldCell>
                             <connections>
                                 <binding destination="-2" name="value" keyPath="representedObject.maxStackElements" id="eNf-w3-G0x"/>
+                                <outlet property="delegate" destination="-2" id="1nX-bz-uVz"/>
                                 <outlet property="formatter" destination="YPG-a0-vAy" id="r7G-FK-WDE"/>
                             </connections>
                         </textField>
@@ -327,6 +340,7 @@
                             </textFieldCell>
                             <connections>
                                 <binding destination="-2" name="value" keyPath="representedObject.maxComponentElements" id="xuI-JD-gML"/>
+                                <outlet property="delegate" destination="-2" id="Kuy-84-3w7"/>
                                 <outlet property="formatter" destination="YPG-a0-vAy" id="63v-pJ-wtt"/>
                             </connections>
                         </textField>
@@ -349,6 +363,7 @@
                             </textFieldCell>
                             <connections>
                                 <binding destination="-2" name="value" keyPath="representedObject.maxPoints" id="uB8-vb-T2Z"/>
+                                <outlet property="delegate" destination="-2" id="ycD-nD-fRs"/>
                                 <outlet property="formatter" destination="YPG-a0-vAy" id="P4d-Nh-YS0"/>
                             </connections>
                         </textField>

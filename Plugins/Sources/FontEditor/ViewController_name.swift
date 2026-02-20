@@ -8,7 +8,7 @@
 import Cocoa
 import CoreFont
 
-final class ViewController_name: FontTableViewController {
+final class ViewController_name: FontTableViewController, NSControlTextEditingDelegate {
     var table:    FontTable_name
 
     required init?(with fontTable: FontTable) {
