@@ -19,9 +19,14 @@ extension FOND {
             return MemoryLayout<Int16>.size + entries.count * Entry.nodeLength
         }
 
-        public init(_ reader: BinaryDataReader) throws {
-            numberOfEntries = try reader.read()
-            entries = try (0...numberOfEntries).map { _ in try Entry(reader) }
+        public init(_ reader: BinaryDataReader?) throws {
+            if let reader, !reader.data.isEmpty {
+                numberOfEntries = try reader.read()
+                entries = try (0...numberOfEntries).map { _ in try Entry(reader) }
+            } else {
+                numberOfEntries = 0
+                entries = [try Entry(nil)]
+            }
             super.init()
         }
 
@@ -67,10 +72,16 @@ extension FOND.FontAssociationTable {
             return MemoryLayout<Int16>.size * 2 + MemoryLayout<MacFontStyle.RawValue>.size // 6
         }
 
-        public init(_ reader: BinaryDataReader) throws {
-            fontPointSize = try reader.read()
-            fontStyle = try reader.read()
-            fontID = try reader.read()
+        public init(_ reader: BinaryDataReader?) throws {
+            if let reader, !reader.data.isEmpty {
+                fontPointSize = try reader.read()
+                fontStyle = try reader.read()
+                fontID = try reader.read()
+            } else {
+                fontPointSize = 0
+                fontStyle = .plain
+                fontID = 1024
+            }
             objcFontStyle = fontStyle.rawValue
             super.init()
         }

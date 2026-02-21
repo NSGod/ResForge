@@ -25,11 +25,11 @@ final public class FOND: NSObject {
     @objc dynamic public var widMax:        Fixed4Dot12     /// maximum width for 1pt font;   Fixed 4.12
 
     @objc dynamic public var wTabOff:       Int32           /* offset to family glyph-width table from beginning of font family
-                                                              resource to beginning of table, in bytes */
+                                                               resource to beginning of table, in bytes */
     @objc dynamic public var kernOff:       Int32           /* offset to kerning table from beginning of font family resource to
-                                                              beginning of table, in bytes */
+                                                               beginning of table, in bytes */
     @objc dynamic public var styleOff:      Int32           /* offset to style mapping table from beginning of font family
-                                                             resource to beginning of table, in bytes */
+                                                               resource to beginning of table, in bytes */
 
                                                             /// style property info; extra widths for different styles
     @objc dynamic public var ewSPlain:      Fixed4Dot12     /// should be 0
@@ -163,29 +163,55 @@ final public class FOND: NSObject {
         // FIXME: deal with FOND w/ no name error
         reader = BinaryDataReader(resource.data)
         self.resource = resource
-        ffFlags         = try reader.read()
-        famID           = try reader.read()
-        firstChar       = try reader.read()
-        lastChar        = try reader.read()
-        ascent          = try reader.read()
-        descent         = try reader.read()
-        leading         = try reader.read()
-        widMax          = try reader.read()
-        wTabOff         = try reader.read()
-        kernOff         = try reader.read()
-        styleOff        = try reader.read()
-        ewSPlain        = try reader.read()
-        ewSBold         = try reader.read()
-        ewSItalic       = try reader.read()
-        ewSUnderline    = try reader.read()
-        ewSOutline      = try reader.read()
-        ewSShadow       = try reader.read()
-        ewSCondensed    = try reader.read()
-        ewSExtended     = try reader.read()
-        ewSUnused       = try reader.read()
-        intl0           = try reader.read()
-        intl1           = try reader.read()
-        ffVersion       = try reader.read()
+        if !reader.data.isEmpty {
+            ffFlags         = try reader.read()
+            famID           = try reader.read()
+            firstChar       = try reader.read()
+            lastChar        = try reader.read()
+            ascent          = try reader.read()
+            descent         = try reader.read()
+            leading         = try reader.read()
+            widMax          = try reader.read()
+            wTabOff         = try reader.read()
+            kernOff         = try reader.read()
+            styleOff        = try reader.read()
+            ewSPlain        = try reader.read()
+            ewSBold         = try reader.read()
+            ewSItalic       = try reader.read()
+            ewSUnderline    = try reader.read()
+            ewSOutline      = try reader.read()
+            ewSShadow       = try reader.read()
+            ewSCondensed    = try reader.read()
+            ewSExtended     = try reader.read()
+            ewSUnused       = try reader.read()
+            intl0           = try reader.read()
+            intl1           = try reader.read()
+            ffVersion       = try reader.read()
+        } else {
+            ffFlags         = [.dontUseFractWidthTable, .ignoreFractEnable]
+            famID           = ResID(resource.id)
+            firstChar       = 0
+            lastChar        = 255
+            ascent          = DoubleToFixed4Dot12(0.75)
+            descent         = DoubleToFixed4Dot12(-0.25)
+            leading         = DoubleToFixed4Dot12(0.1)
+            widMax          = DoubleToFixed4Dot12(1.0)
+            wTabOff         = 0
+            kernOff         = 0
+            styleOff        = 0
+            ewSPlain        = 0
+            ewSBold         = 0
+            ewSItalic       = 0
+            ewSUnderline    = 0
+            ewSOutline      = 0
+            ewSShadow       = 0
+            ewSCondensed    = 0
+            ewSExtended     = 0
+            ewSUnused       = 0
+            intl0           = 0
+            intl1           = 0
+            ffVersion       = .version1
+        }
 
         // FIXME: make sure famID == this FOND's resource ID, otherwise repair it
         if self.resource.id != famID {
@@ -197,9 +223,13 @@ final public class FOND: NSObject {
         }
         // FIXME: add validation/error-checking here
         fontAssociationTable = try FontAssociationTable(reader)
-        reader.pushSavedPosition()
-        remainingTableData = try reader.readData(length: reader.bytesRemaining)
-        reader.popPosition()
+        if !reader.data.isEmpty {
+            reader.pushSavedPosition()
+            remainingTableData = try reader.readData(length: reader.bytesRemaining)
+            reader.popPosition()
+        } else {
+            remainingTableData = Data()
+        }
         super.init()
     }
 
