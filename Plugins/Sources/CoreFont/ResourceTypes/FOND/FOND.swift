@@ -47,7 +47,7 @@ final public class FOND: NSObject {
 
     @objc dynamic public var ffVersion:     Version         /// version number
 
-    @objc public var fontAssociationTable:  FontAssociationTable
+    @objc dynamic public var fontAssociationTable:  FontAssociationTable
 
     @objc public var offsetTable:           OffsetTable?
 
