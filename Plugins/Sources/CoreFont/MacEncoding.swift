@@ -97,7 +97,7 @@ public final class MacEncoding: Copyable, CustomStringConvertible {
     }
 
     // FIXME: this should be replacing, not adding? YES
-    public func custom(byReplacing glyphNameEntries: [GlyphNameEntry]) -> MacEncoding {
+    public func customEncoding(byReplacing glyphNameEntries: [GlyphNameEntry]) -> MacEncoding {
         NSLog("\(type(of: self)).\(#function)")
         let custom = self.copy()
         add(custom: glyphNameEntries)
