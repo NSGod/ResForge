@@ -135,7 +135,7 @@ final public class FOND: NSObject {
         var encoding = MacEncoding.encodingFor(scriptID: scriptID, postScriptFontName: basePostScriptName)
         if let customGlyphs = self.styleMappingTable?.glyphNameEncodingSubtable {
             // FIXME: or should this be replacing existing? YES
-            encoding = encoding.customEncoding(byReplacing: GlyphNameEntry.glyphNameEntries(with: customGlyphs.charCodesToGlyphNames))
+            encoding = encoding.customEncoding(byReplacing: MacEncoding.GlyphNameEntry.entries(with: customGlyphs.charCodesToGlyphNames))
         }
         return encoding
     }()

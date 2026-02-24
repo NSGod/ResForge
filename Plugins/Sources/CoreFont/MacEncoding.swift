@@ -12,7 +12,7 @@ public final class MacEncoding: Copyable, CustomStringConvertible {
     public private(set) var isCustomEncoding:      Bool = false
     public var logsInvalidCharCodes:               Bool = false
 
-    public private(set) lazy var glyphNameEntries: [GlyphNameEntry] = GlyphNameEntry.glyphNameEntries(with: self)
+    public private(set) lazy var glyphNameEntries: [GlyphNameEntry] = GlyphNameEntry.entries(with: self)
 
     public private(set) var coveredCharCodes:      IndexSet
 

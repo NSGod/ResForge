@@ -44,8 +44,8 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDe
     @objc var kernPairs:                    [KernTreeNode] = []
     @objc var glyphWidths:                  [WidthTreeNode] = []
 
-    @objc var glyphNameEntries:             [GlyphNameEntry] = []
-    @objc var effectiveGlyphNameEntries:    [GlyphNameEntry] = []
+    @objc var glyphNameEntries:             [MacEncoding.GlyphNameEntry] = []
+    @objc var effectiveGlyphNameEntries:    [MacEncoding.GlyphNameEntry] = []
 
     @objc dynamic var objcFFFlags:          UInt16 = 0
     @objc dynamic var objcFontClass:        UInt16 = 0
@@ -133,7 +133,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDe
             mutableArrayValue(forKey: "glyphWidths").setArray(glyphWidths)
         }
         if let charCodesToGlyphNames = fond.styleMappingTable?.glyphNameEncodingSubtable?.charCodesToGlyphNames, charCodesToGlyphNames.count > 0 {
-            let entries = GlyphNameEntry.glyphNameEntries(with: charCodesToGlyphNames)
+            let entries = MacEncoding.GlyphNameEntry.entries(with: charCodesToGlyphNames)
             mutableArrayValue(forKey: "glyphNameEntries").setArray(entries)
         }
         // FIXME: should this be replacing rather than appending? YES

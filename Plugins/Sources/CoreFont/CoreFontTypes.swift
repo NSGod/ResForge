@@ -9,6 +9,7 @@ import Foundation
 import RFSupport
 
 extension ResourceType {
+    public static let font = ResourceType("FONT")
     public static let nfnt = ResourceType("NFNT")
     public static let sfnt = ResourceType("sfnt")
     public static let fond = ResourceType("FOND")
@@ -19,6 +20,7 @@ public typealias ResID         = Int16
 
 public typealias CharCode      = UInt8
 public typealias CharCode16    = UInt16
+public typealias CharCode32    = UInt32
 
 public extension CharCode {
     static let space: CharCode = 0x20
