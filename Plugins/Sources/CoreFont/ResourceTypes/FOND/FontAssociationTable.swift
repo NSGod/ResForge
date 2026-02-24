@@ -12,8 +12,8 @@ import RFSupport
 extension FOND {
 
     final public class FontAssociationTable: ResourceNode {
-        public var numberOfEntries:    Int16                           // number of entries - 1
-        @objc public var entries:      [Entry]
+        public var numberOfEntries:         Int16           // number of entries - 1
+        @objc dynamic public var entries:   [Entry]
 
         @objc public override var totalNodeLength:    Int {
             return MemoryLayout<Int16>.size + entries.count * Entry.nodeLength
@@ -28,6 +28,10 @@ extension FOND {
                 entries = [try Entry(nil)]
             }
             super.init()
+        }
+
+        public func sortEntries() {
+            entries.sort(by: <)
         }
 
         public override func write(to dataHandle: DataHandle) throws {
@@ -59,13 +63,15 @@ extension FOND {
 extension FOND.FontAssociationTable {
 
     final public class Entry: ResourceNode, Comparable {
-        @objc public var fontPointSize:    Int16
-        public var fontStyle:              MacFontStyle
-        @objc public var fontID:           ResID
+        @objc dynamic public var fontPointSize:     Int16
+        public var fontStyle:                       MacFontStyle
+        @objc dynamic public var fontID:            ResID
 
         /// needed for display:
-        @objc public var objcFontStyle:    MacFontStyle.RawValue {
-            didSet { fontStyle = .init(rawValue: objcFontStyle) }
+        @objc dynamic public var objcFontStyle:     MacFontStyle.RawValue {
+            didSet {
+                fontStyle = .init(rawValue: objcFontStyle)
+            }
         }
 
         public override class var nodeLength: Int {
@@ -79,7 +85,7 @@ extension FOND.FontAssociationTable {
                 fontID = try reader.read()
             } else {
                 fontPointSize = 0
-                fontStyle = .plain
+                fontStyle = .regular
                 fontID = 1024
             }
             objcFontStyle = fontStyle.rawValue

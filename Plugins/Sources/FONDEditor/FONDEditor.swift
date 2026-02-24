@@ -9,7 +9,7 @@ import Cocoa
 import RFSupport
 import CoreFont
 
-public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDelegate {
+public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDelegate, NSTextFieldDelegate {
     public static var bundle: Bundle { .module }
     public static let supportedTypes = [
         "FOND",
@@ -55,6 +55,8 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDe
         "wTabOff", "kernOff", "styleOff", "ewSPlain", "ewSBold", "ewSItalic", "ewSUnderline", "ewSOutline",
         "ewSShadow", "ewSCondensed", "ewSExtended", "ewSUnused", "intl0", "intl1", "ffVersion"])
     private static let keyPaths = Set(["objcFFFlags", "objcFontClass"])
+    private static let fontAsscKeyPaths = Set(["objcFontStyle", "fontPointSize", "fontID"])
+    private static var fontAsscContext = 2
 
     public override var windowNibName: NSNib.Name {
         "FONDEditor"
@@ -86,6 +88,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDe
         fontClassBitfieldControl.unbind(NSBindingName("objectValue"))
         Self.fondKeyPaths.forEach { fond.removeObserver(self, forKeyPath: $0) }
         Self.keyPaths.forEach { removeObserver(self, forKeyPath: $0) }
+		Self.fontAsscKeyPaths.forEach { (fond.fontAssociationTable.entries as NSArray).removeObserver(self, fromObjectsAt: IndexSet(0..<(fond.fontAssociationTable.entries.count)), forKeyPath: $0, context: &Self.fontAsscContext) }
     }
 
     public override func windowDidLoad() {
@@ -97,6 +100,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDe
         loadFOND()
         Self.fondKeyPaths.forEach { fond.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.fondContext) }
         Self.keyPaths.forEach { addObserver(self, forKeyPath: $0, options: [.new, .old], context: nil) }
+		Self.fontAsscKeyPaths.forEach { (fond.fontAssociationTable.entries as NSArray).addObserver(self, toObjectsAt: IndexSet(0..<fond.fontAssociationTable.entries.count),  forKeyPath: $0, options: [.new, .old], context: &Self.fontAsscContext) }
     }
 
     public func windowWillClose(_ notification: Notification) {
@@ -204,6 +208,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDe
 
     // MARK: - <NSControlTextEditingDelegate>
     public func control(_ control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
+//        NSLog("\(type(of: self)).\(#function) control == \(control), fieldEditor == \(fieldEditor)")
         if fieldEditor.string.isEmpty { return false }
         return true
     }
@@ -296,17 +301,25 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDe
     }
 
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        guard let keyPath else {
+        guard let keyPath, let object else {
             return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
-        NSLog("\(type(of: self)).\(#function) keyPath : \(keyPath)")
-        if !Self.fondKeyPaths.contains(keyPath) && !Self.keyPaths.contains(keyPath) {
+//        NSLog("\(type(of: self)).\(#function) keyPath: \(keyPath), object: \(String(describing: object)), change: \(String(describing: change))")
+        if !Self.fondKeyPaths.contains(keyPath) && !Self.keyPaths.contains(keyPath) && !Self.fontAsscKeyPaths.contains(keyPath) {
             return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
         if context == &Self.fondContext {
             undoManager?.registerUndo(withTarget: self, handler: {
                 $0.fond.setValue(change![.oldKey], forKeyPath: keyPath)
             })
+        } else if context == &Self.fontAsscContext {
+            undoManager?.registerUndo(withTarget: self, handler: { _ in
+                (object as? NSObject)?.setValue(change![.oldKey], forKey: keyPath)
+                self.fond.fontAssociationTable.sortEntries()
+                self.tableView.reloadData()
+            })
+            fond.fontAssociationTable.sortEntries()
+            tableView.reloadData()
         } else {
             undoManager?.registerUndo(withTarget: self, handler: {
                 $0.setValue(change![.oldKey], forKey: keyPath)
@@ -361,6 +374,12 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDe
             undoManager?.setActionName(NSLocalizedString("Change Version", comment: ""))
         } else if keyPath == "objcFontClass" {
             undoManager?.setActionName(NSLocalizedString("Change Font Class", comment: ""))
+        } else if keyPath == "objcFontStyle" {
+            undoManager?.setActionName(NSLocalizedString("Change Font Style", comment: ""))
+        } else if keyPath == "fontPointSize" {
+            undoManager?.setActionName(NSLocalizedString("Change Point Size", comment: ""))
+        } else if keyPath == "fontID" {
+            undoManager?.setActionName(NSLocalizedString("Change Font Resource ID", comment: ""))
         }
     }
 }
@@ -381,7 +400,10 @@ extension FONDEditor: NSTableViewDelegate, NSOutlineViewDelegate {
             }
         } else if tableView == self.tableView {
             let view: NSTableCellView = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
-            if let id = tableColumn?.identifier, id.rawValue != "fontName" { return view }
+			if let id = tableColumn?.identifier, id.rawValue != "fontName" {
+				view.textField?.delegate = self
+				return view
+			}
             if let entries = fontAssocTableEntriesController.arrangedObjects as? [FOND.FontAssociationTable.Entry] {
                 let entry = entries[row]
                 if let fontName = fond.postScriptNameForFont(with: entry.fontStyle) {
