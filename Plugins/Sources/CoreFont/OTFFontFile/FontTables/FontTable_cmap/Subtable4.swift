@@ -55,7 +55,7 @@ extension FontTable_cmap {
                     let idDelta = idDeltas[i]
                     var idRangeOffset = idRangeOffsets[i]
                     let idRangeBytes = (numSegments - UInt16(i)) * 2
-                    for code in UInt32(startCode)..<UInt32(endCode) {
+                    for code in UInt32(startCode)...UInt32(endCode) {
                         if idRangeOffset == 0xFFFF { /// Fontographer BUG
                             idRangeOffset = 0
                         }
@@ -68,8 +68,8 @@ extension FontTable_cmap {
                         if code != 0xffff && glyphID != 0 {
                             if idRangeOffset != 0 {
                                 glyphID = GlyphID(Int(glyphID) + Int(idDelta) & 0x0FFFF)
-                                charCodesToGlyphIDs[CharCode32(code)] = Glyph32ID(glyphID)
                             }
+                            charCodesToGlyphIDs[CharCode32(code)] = Glyph32ID(glyphID)
                         }
                     }
                 }

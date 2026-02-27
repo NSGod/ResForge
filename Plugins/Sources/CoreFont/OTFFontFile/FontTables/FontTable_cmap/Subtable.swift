@@ -32,26 +32,26 @@ extension FontTable_cmap {
         public var charCodesToGlyphIDs: [CharCode32: Glyph32ID]?
 
         @objc dynamic public lazy var glyphMappings: [GlyphMapping] = {
-            glyphMappings = []
+            if _hasLoadedGlyphMappings { return _glyphMappings }
             guard let sortedKeys = charCodesToGlyphIDs?.keys.sorted() else {
-                return glyphMappings
+                _hasLoadedGlyphMappings = true
+                return _glyphMappings
             }
             do {
                 for charCode in sortedKeys {
                     if let mapping = try GlyphMapping(charValue: charCode, glyphID: charCodesToGlyphIDs![charCode]!, subtable: self, table: table) {
-                        glyphMappings.append(mapping)
+                        _glyphMappings.append(mapping)
                     }
                 }
             } catch {
                 NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
             }
-
             _hasLoadedGlyphMappings = true
-
-            return glyphMappings
+            return _glyphMappings
         }()
 
-        var _hasLoadedGlyphMappings: Bool = false
+        private var _glyphMappings: [GlyphMapping] = []
+        private var _hasLoadedGlyphMappings: Bool = false
 
         public required init(_ reader: BinaryDataReader?, offset: Int? = nil, encoding: Encoding, table: FontTable) throws {
             self.encoding = encoding
