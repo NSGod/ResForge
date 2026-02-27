@@ -19,14 +19,14 @@ final public class FontTable_name: FontTable {
     }
 
 	// MARK: -
-    @objc public var format:                Format = .format0
+    @objc dynamic public var format:                Format = .format0
 
-    public var count:                       UInt16 = 0      // number of name records
-    public var stringOffset:                UInt16 = 0      // offset (from start of table) to string storage
-    @objc public var nameRecords:           [NameRecord] = []
+    public var count:                               UInt16 = 0      // number of name records
+    public var stringOffset:                        UInt16 = 0      // offset (from start of table) to string storage
+    @objc dynamic public var nameRecords:           [NameRecord] = []
 
-    public var langTagCount:                UInt16 = 0      // format 1 only
-    @objc public var languageTagRecords:    [LanguageTagRecord]?
+    public var langTagCount:                        UInt16 = 0      // format 1 only
+    @objc dynamic public var languageTagRecords:    [LanguageTagRecord]?
 
 	// MARK: -
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {

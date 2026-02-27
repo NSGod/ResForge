@@ -182,6 +182,9 @@ final public class OTFFontFile: NSObject {
     public var cvtTable: FontTable_cvt? {
         return table(for: .cvt_ ) as? FontTable_cvt
     }
+    public var cmapTable: FontTable_cmap? {
+        return table(for: .cmap) as? FontTable_cmap
+    }
     public func table(for tableTag: TableTag) -> FontTable? {
         return tableTagsToTables[tableTag]
     }

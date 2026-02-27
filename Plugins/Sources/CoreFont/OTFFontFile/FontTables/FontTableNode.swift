@@ -30,7 +30,7 @@ open class FontTableNode: NSObject, NSCopying, DataHandleWriting {
         fatalError("subclasses must override")
     }
 
-    public init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable) throws {
+    public init(_ reader: BinaryDataReader?, offset: Int? = nil, table: FontTable) throws {
         self.table = table
         super.init()
     }

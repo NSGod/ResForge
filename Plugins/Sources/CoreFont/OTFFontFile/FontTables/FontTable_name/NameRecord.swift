@@ -71,7 +71,7 @@ public extension FontTable_name {
         }
 
         @available(*, unavailable, message: "use initializer that takes stringOffset instead")
-        public override init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable) throws {
+        public override init(_ reader: BinaryDataReader?, offset: Int? = nil, table: FontTable) throws {
             fatalError("use initializer that takes stringOffset instead")
         }
 

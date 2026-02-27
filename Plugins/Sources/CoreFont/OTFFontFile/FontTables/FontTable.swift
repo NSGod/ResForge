@@ -108,7 +108,8 @@ open class FontTable: OTFFontFileNode {
     public var os2Table:  FontTable_OS2?  { table(for: .OS_2) as? FontTable_OS2 }
     public var gaspTable: FontTable_gasp? { table(for: .gasp) as? FontTable_gasp }
     public var cvtTable:  FontTable_cvt?  { table(for: .cvt_) as? FontTable_cvt  }
-
+    public var cmapTable: FontTable_cmap? { table(for: .cmap) as? FontTable_cmap }
+    
     public var fontNumGlyphs: Int {
         return fontFile.numGlyphs
     }

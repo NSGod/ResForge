@@ -75,7 +75,8 @@ public extension FontTable_gasp {
             UInt32(MemoryLayout<UInt16>.size * 2)       // 4
         }
         
-        public override init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable) throws {
+        public override init(_ reader: BinaryDataReader?, offset: Int? = nil, table: FontTable) throws {
+            guard let reader else { throw FontTableError.parseError("No reader") }
             try super.init(reader, offset: offset, table: table)
             maxPPEM = try reader.read()
             behavior = Behavior(rawValue: try reader.read())

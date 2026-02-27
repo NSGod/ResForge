@@ -81,6 +81,7 @@ final public class OTFsfntDirectoryEntry: OTFFontFileNode, DataHandleWriting, Co
         .name: 4,
         .hhea: 5,
         .hmtx: 6,
-        .gasp: 7,
+		.cmap: 7,
+        .gasp: 8,
     ]
 }

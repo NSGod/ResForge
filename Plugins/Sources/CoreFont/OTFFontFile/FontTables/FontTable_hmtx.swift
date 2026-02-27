@@ -97,7 +97,7 @@ final public class HorizontalMetric: FontTableNode {
     }
 
     @available(*, unavailable, message: "use init(_:glyphID:table:)")
-    public override init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable) throws {
+    public override init(_ reader: BinaryDataReader?, offset: Int? = nil, table: FontTable) throws {
         fatalError("init(_:offset:table:) not implemented")
     }
 

@@ -52,10 +52,10 @@ public struct OTFsfntFormat: RawRepresentable, Equatable {
         self.rawValue = rawValue
     }
 
-    public static let `true`:  OTFsfntFormat = .init(rawValue: UInt32(fourCharString: "true"))
-    public static let OTTO:    OTFsfntFormat = .init(rawValue: UInt32(fourCharString: "OTTO"))
+    public static let `true`:  OTFsfntFormat = .init(rawValue: UInt32(fourCharString: "true"))  // for TT; Apple; prefer .V1_0
+    public static let OTTO:    OTFsfntFormat = .init(rawValue: UInt32(fourCharString: "OTTO"))  // for 'CFF '/'CFF2' outline data
     public static let typ1:    OTFsfntFormat = .init(rawValue: UInt32(fourCharString: "typ1"))
-    public static let V1_0:    OTFsfntFormat = .init(rawValue: 0x00010000)
+    public static let V1_0:    OTFsfntFormat = .init(rawValue: 0x00010000)                      // standard TT outline/bitmap
     public static let ttcf:    OTFsfntFormat = .init(rawValue: UInt32(fourCharString: "ttcf"))
     public static let _kbd:    OTFsfntFormat = .init(rawValue: 0xA56B6264) // '•kbd'    .Keyboard
     public static let _lst:    OTFsfntFormat = .init(rawValue: 0xA56C7374) // '•lst'    .LastResort
@@ -370,7 +370,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
             case .unicode:      return "Uni"
             case .mac:          return "Mac"
             case .iso:          return "ISO"
-            case .microsoft:    return "Mic"
+            case .microsoft:    return "MS™"
             case .custom:       return "Cus"
             case .any:          return "Any"
         }
@@ -412,7 +412,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
     }
 }
 
-// MacScriptID & MacLanguageID are in CoreFontTypes.swift
+/// ``MacScriptID`` & ``MacLanguageID`` are in CoreFontTypes.swift
 
 @objc public enum MicrosoftEncodingID : UInt16, Comparable, CustomStringConvertible, CustomDebugStringConvertible {
     case symbol                 = 0
@@ -449,7 +449,9 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
     }
 }
 
+/// Only meaningfully used in `FontTable_name.NameRecord`, not in `cmap` entries
 @objc public enum MicrosoftLanguageID: UInt16, Comparable, CustomStringConvertible, CustomDebugStringConvertible {
+	case none                       = 0		/// not-applicable (for `cmap`s
     case arabicSaudiArabia          = 1025	// 0x0401
     case bulgarian                  = 1026	// 0x0402
     case catalan                    = 1027	// 0x0403
@@ -530,6 +532,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
 
     public var description: String {
         switch self {
+			case .none: return NSLocalizedString("--", comment: "")
             case .arabicSaudiArabia: return NSLocalizedString("Arabic (Saudi Arabia)", comment: "")
             case .bulgarian: return NSLocalizedString("Bulgarian", comment: "")
             case .catalan: return NSLocalizedString("Catalan", comment: "")
@@ -608,6 +611,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
     }
 }
 
+
 public enum EncodingID: Comparable, CustomStringConvertible, CustomDebugStringConvertible {
 	case unicode(UnicodeEncodingID)
 	case mac(MacScriptID)
@@ -625,6 +629,16 @@ public enum EncodingID: Comparable, CustomStringConvertible, CustomDebugStringCo
             case .any:
                 return 0
         }
+    }
+
+    public func macScriptID() -> MacScriptID? {
+        guard case .mac(let encID) = self else { return nil }
+        return encID
+    }
+
+    public func microsoftEncodingID() -> MicrosoftEncodingID? {
+        guard case .microsoft(let encID) = self else { return nil }
+        return encID
     }
 
     public static func encodingIDWith(platformID: PlatformID, encodingID: UInt16) throws -> EncodingID {
@@ -684,6 +698,7 @@ public enum EncodingID: Comparable, CustomStringConvertible, CustomDebugStringCo
     }
 }
 
+
 public enum LanguageID: Comparable, CustomStringConvertible, CustomDebugStringConvertible {
     case unicode
     case mac(MacLanguageID)
@@ -700,7 +715,21 @@ public enum LanguageID: Comparable, CustomStringConvertible, CustomDebugStringCo
                 return 0
         }
     }
-    
+
+    public var extendedRawValue: UInt32 {
+        return UInt32(rawValue)
+    }
+
+    public func macLanguageID() -> MacLanguageID? {
+        guard case .mac(let langID) = self else { return nil }
+        return langID
+    }
+
+    public func microsoftLanguageID() -> MicrosoftLanguageID? {
+        guard case .microsoft(let langID) = self else { return nil }
+        return langID
+    }
+
     public static func languageIDWith(platformID: PlatformID, languageID: UInt16) throws -> LanguageID {
         switch platformID {
             case .unicode:
@@ -720,12 +749,17 @@ public enum LanguageID: Comparable, CustomStringConvertible, CustomDebugStringCo
         }
     }
 
-    public static func < (lhs: LanguageID, rhs: LanguageID) -> Bool {
-        return lhs.rawValue < rhs.rawValue
+    public static func languageIDWith(platformID: PlatformID, extendedLanguageID: UInt32) throws -> LanguageID {
+        return try languageIDWith(platformID: platformID, languageID: UInt16(extendedLanguageID))
     }
 
-    public static func == (lhs: LanguageID, rhs: LanguageID) -> Bool {
-        return lhs.rawValue == rhs.rawValue
+    /// In 'cmap's, `MacLanguageID` values are 1-based. If a 'cmap' encoding subtable has `languageID` == 0,
+    /// that means that that encoding is not language-dependent. Otherwise, subtract 1 from the value
+    /// to get the real `languageID`
+    public func macStandardized() -> LanguageID {
+        guard case .mac(let langID) = self else { return self }
+        if langID.rawValue == 0 { return self }
+        return .mac(MacLanguageID(rawValue: langID.rawValue - 1)!)
     }
 
     public var description: String {

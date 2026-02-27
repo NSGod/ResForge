@@ -1,0 +1,48 @@
+//
+//  Subtable6.swift
+//  CoreFont
+//
+//  Created by Mark Douma on 2/23/2026.
+//
+
+import Foundation
+import RFSupport
+
+extension FontTable_cmap {
+
+    public final class Subtable6: Subtable {
+        // public var format:           Format
+        public var length:              UInt16 = 0
+        // public var languageID:       LanguageID      // one-based for Mac; should be 0 for all other platforms
+
+        public var firstCode:           UInt16 = 0
+        public var entryCount:          UInt16 = 0
+        public var glyphIDs:            [GlyphID] = []  // [entryCount]
+
+        public override var nodeLength: UInt32 {
+            Self.nodeLengthFor(glyphCount: UInt16(glyphIDs.count))
+        }
+
+        public required init(_ reader: BinaryDataReader?, offset: Int? = nil, encoding: FontTable_cmap.Encoding, table: FontTable) throws {
+            try super.init(reader, offset: offset, encoding: encoding, table: table)
+            if let reader {
+                length = try reader.read()
+                languageID = try LanguageID.languageIDWith(platformID: encoding.platformID, languageID: try reader.read())
+                firstCode = try reader.read()
+                entryCount = try reader.read()
+                glyphIDs = try (0...entryCount).map { _ in try reader.read() }
+                var charCodesToGlyphIDs: [CharCode32: Glyph32ID] = [:]
+                for (i, glyphID) in glyphIDs.enumerated() {
+                    charCodesToGlyphIDs[CharCode32(firstCode + UInt16(i))] = Glyph32ID(glyphID)
+                }
+                self.charCodesToGlyphIDs = charCodesToGlyphIDs
+            }
+        }
+
+        public static func nodeLengthFor(glyphCount: UInt16) -> UInt32 {
+            var nodeLength = MemoryLayout<UInt16>.size * 5
+            nodeLength += MemoryLayout<GlyphID>.size * Int(glyphCount)
+            return UInt32(nodeLength)
+        }
+    }
+}
