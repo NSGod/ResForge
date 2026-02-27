@@ -744,16 +744,17 @@ public enum LanguageID: Comparable, CustomStringConvertible, CustomDebugStringCo
     public var debugDescription: String {
         switch self {
             case .unicode:
-                return "--"
+                return NSLocalizedString("--", comment: "")
             case .mac(let langID):
                 return langID.debugDescription
             case .microsoft(let langID):
                 return langID.debugDescription
             case .any:
-                return "any"
+                return NSLocalizedString("Any", comment: "")
         }
     }
 }
+
 
 public extension FontTable_name {
     enum FontNameID: Hashable, CustomStringConvertible, CustomDebugStringConvertible {

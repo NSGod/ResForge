@@ -36,6 +36,12 @@ public extension UVBMP {
     static let undefined: UVBMP = 0xFFFF
 }
 
+public typealias UV             = UInt32
+
+public extension UV {
+    static let undefined: UV = 0xFFFF_FFFF
+}
+
 public typealias Fixed4Dot12   = Int16
 
 fileprivate let fixed4: UInt16 = 1 << 12
@@ -300,7 +306,7 @@ extension MacScriptID: CustomStringConvertible, CustomDebugStringConvertible {
 }
 
 // See CoreServices/CarbonCore/Script.h
-// Language codes are zero based everywhere but within a 'cmap' table
+// Language codes are zero-based everywhere but within a 'cmap' table
 @objc public enum MacLanguageID: UInt16, Comparable {
     case english            = 0     // .roman script
     case french             = 1     // .roman script

@@ -11,7 +11,6 @@ import Foundation
 extension MacEncoding {
 
     final public class GlyphNameEntry: NSObject, NSCopying, Comparable {
-
         @objc public let charCode:       CharCode
         @objc public let uv:             UVBMP
         @objc public let character:      String      // glyph

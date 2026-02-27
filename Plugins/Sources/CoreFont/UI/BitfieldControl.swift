@@ -82,7 +82,7 @@ final public class BitfieldControl: NSControl {
         super.awakeFromNib()
     }
 
-    @objc dynamic override public var objectValue: Any? {
+    @objc dynamic public override var objectValue: Any? {
         get { return super.objectValue }
         set {
             super.objectValue = newValue
