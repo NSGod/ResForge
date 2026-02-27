@@ -154,7 +154,8 @@ public extension FontTable_OS2 {
         @objc dynamic public var bMidline:          UInt8 = 0
         @objc dynamic public var bXHeight:          UInt8 = 0
 
-        public override init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable) throws {
+        public override init(_ reader: BinaryDataReader?, offset: Int? = nil, table: FontTable) throws {
+            guard let reader else { throw FontTableError.parseError("No reader") }
             try super.init(reader, offset: offset, table: table)
             bFamilyType = try reader.read()
             bSerifStyle = try reader.read()
