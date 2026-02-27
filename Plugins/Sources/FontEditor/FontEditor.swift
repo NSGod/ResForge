@@ -114,7 +114,16 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
     }
 
     static let emptyView: NSView = NSView(frame: NSMakeRect(0, 0, 400, 600))
-    static let supportedTableTags: Set<TableTag> = Set([.head, .maxp, .name, .post, .hhea, .hmtx, .OS_2, .gasp, .cmap])
+    static var supportedTableTags: Set<TableTag> = {
+        var mSupportedTableTags: Set<TableTag> = []
+        for tableTag in TableTag.allCases {
+            let className = NSStringFromClass(FontTableViewController.class(for: tableTag).self)
+            if className != NSStringFromClass(FontTableDataViewController.self) {
+                mSupportedTableTags.insert(tableTag)
+            }
+        }
+        return mSupportedTableTags
+    }()
 }
 
 // MARK: -

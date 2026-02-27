@@ -338,6 +338,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
 
 }
 
+// MARK: -
 @objc public enum PlatformID: UInt16, Comparable, CustomStringConvertible, CustomDebugStringConvertible {
     case unicode    = 0
     case mac        = 1
@@ -377,6 +378,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
     }
 }
 
+// MARK: -
 @objc public enum UnicodeEncodingID: UInt16, Comparable, CustomStringConvertible, CustomDebugStringConvertible {
     case unicode1_0             = 0  // Unicode 1.0 semantics.
     case unicode1_1             = 1  // Unicode 1.1 semantics.
@@ -414,6 +416,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
 
 /// ``MacScriptID`` & ``MacLanguageID`` are in CoreFontTypes.swift
 
+// MARK: -
 @objc public enum MicrosoftEncodingID : UInt16, Comparable, CustomStringConvertible, CustomDebugStringConvertible {
     case symbol                 = 0
     case unicodeBMP             = 1 // UTF-16
@@ -611,7 +614,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
     }
 }
 
-
+// MARK: -
 public enum EncodingID: Comparable, CustomStringConvertible, CustomDebugStringConvertible {
 	case unicode(UnicodeEncodingID)
 	case mac(MacScriptID)
