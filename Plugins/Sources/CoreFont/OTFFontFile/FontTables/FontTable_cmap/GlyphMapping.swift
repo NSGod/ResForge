@@ -42,6 +42,7 @@ extension FontTable_cmap {
 
         public init?(charValue: CharCode32, glyphID: Glyph32ID, subtable: Subtable, table: FontTable) throws {
             try super.init(nil, table: table)
+            if charValue > 0 && glyphID == 0 { return nil }
             self.charValue = charValue
             self.glyphID = glyphID
             self.subtable = subtable

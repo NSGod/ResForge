@@ -15,29 +15,29 @@ extension FontTable_cmap {
         public var encodingID:      EncodingID  = .any  /// base-0; aka `platformSpecificID/scriptID`
         public var offset:          UInt32 = 0          /// byte offset from beginning of table to subtable
 
-        public var subtable:        Subtable!
+        @objc dynamic public var subtable:  Subtable!
 
         public override class var nodeLength: UInt32 {
             return UInt32(MemoryLayout<UInt16>.size * 2 + MemoryLayout<UInt32>.size) // 8
         }
 
         // MARK: for display:
-        @objc lazy public var platformScriptName:   String = {
+        @objc dynamic public lazy var platformScriptName:   String = {
             loadDisplayNamesIfNeeded()
             return _platformScriptName
         }()
 
-        @objc public lazy var platformName:         String = {
+        @objc dynamic public lazy var platformName:         String = {
             loadDisplayNamesIfNeeded()
             return _platformName
         }()
 
-        @objc public lazy var scriptName:           String = {
+        @objc dynamic public lazy var scriptName:           String = {
             loadDisplayNamesIfNeeded()
             return _scriptName
         }()
 
-        @objc public lazy var languageName:         String? = {
+        @objc dynamic public lazy var languageName:         String? = {
             loadDisplayNamesIfNeeded()
             return _languageName
         }()
@@ -72,24 +72,24 @@ extension FontTable_cmap {
             if _displayNamesLoaded { return }
             _platformName = NSLocalizedString("[\(platformID.rawValue)] \(platformID.description)", comment: "")
             if platformID == .unicode {
-                scriptName = NSLocalizedString("[\(encodingID.rawValue)] \(encodingID.description)", comment: "")
-                languageName = NSLocalizedString("--", comment: "")
+                _scriptName = NSLocalizedString("[\(encodingID.rawValue)] \(encodingID.description)", comment: "")
+                _languageName = NSLocalizedString("--", comment: "")
             } else if platformID == .mac {
-                scriptName = NSLocalizedString("[\(encodingID.rawValue)] \(encodingID.description)", comment: "")
+                _scriptName = NSLocalizedString("[\(encodingID.rawValue)] \(encodingID.description)", comment: "")
                 /// if languageID == 0, that means it's not language-dependent
                 /// otherwise, subtract 1 from the value to get the real languageID
                 let languageID = subtable.languageID.macStandardized()
                 if languageID.rawValue == 0 {
-                    languageName = NSLocalizedString("--", comment: "")
+                    _languageName = NSLocalizedString("--", comment: "")
                 } else {
-                    languageName = NSLocalizedString("[\(languageID.rawValue)] \(languageID.description)", comment: "")
+                    _languageName = NSLocalizedString("[\(languageID.rawValue)] \(languageID.description)", comment: "")
                 }
             } else if platformID == .microsoft {
-                scriptName = NSLocalizedString("[\(encodingID.rawValue)] \(encodingID.description)", comment: "")
+                _scriptName = NSLocalizedString("[\(encodingID.rawValue)] \(encodingID.description)", comment: "")
                 // FIXME: is this right:?
-                languageName = NSLocalizedString("--", comment: "")
+                _languageName = NSLocalizedString("--", comment: "")
             }
-            platformScriptName = platformName + " \(scriptName)"
+            _platformScriptName = _platformName + " \(_scriptName)"
             _displayNamesLoaded = true
         }
 

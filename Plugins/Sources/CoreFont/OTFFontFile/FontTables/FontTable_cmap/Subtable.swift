@@ -31,19 +31,19 @@ extension FontTable_cmap {
         public weak var encoding:       Encoding!                   // weak
         public var charCodesToGlyphIDs: [CharCode32: Glyph32ID]?
 
-        @objc public lazy var glyphMappings: [GlyphMapping] = {
+        @objc dynamic public lazy var glyphMappings: [GlyphMapping] = {
             glyphMappings = []
             guard let sortedKeys = charCodesToGlyphIDs?.keys.sorted() else {
                 return glyphMappings
             }
             do {
                 for charCode in sortedKeys {
-                    let mapping = try GlyphMapping(charValue: charCode, glyphID: charCodesToGlyphIDs![charCode]!, subtable: self, table: table)
-
+                    if let mapping = try GlyphMapping(charValue: charCode, glyphID: charCodesToGlyphIDs![charCode]!, subtable: self, table: table) {
+                        glyphMappings.append(mapping)
+                    }
                 }
             } catch {
                 NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
-
             }
 
             _hasLoadedGlyphMappings = true
