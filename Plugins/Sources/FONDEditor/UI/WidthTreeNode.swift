@@ -18,9 +18,8 @@ final class WidthTreeNode: NSTreeNode, Comparable {
                 let treeNode = WidthTreeNode(representedObject: node)
                 mTreeNodes.append(treeNode)
             }
-            let treeNodes = mTreeNodes.sorted(by: <)
             super.init(representedObject: entry)
-            mutableChildren.addObjects(from: treeNodes)
+            mutableChildren.addObjects(from: mTreeNodes)
         } else {
             super.init(representedObject: modelObject)
         }

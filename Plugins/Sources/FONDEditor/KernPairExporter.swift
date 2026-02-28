@@ -100,8 +100,10 @@ feature kern {\n
                    I'd normally parse that Mac PostScript font file and check to make sure its encoding agrees
                    with the glyph names the FOND's encoding assigned, but, that's a bit outside the scope
                    of this editor. */
-                let value: Int16 = config.scaleToUnitsPerEm ? Int16(lround(Fixed4Dot12ToDouble(kernPair.kernWidth) * Double(unitsPerEm.rawValue))) : kernPair.kernWidth
-                try writer.write(row: [firstGlyphName, secondGlyphName, String(value)])
+                let valueString = config.scaleToUnitsPerEm ?
+                String(Int16(lround(Fixed4Dot12ToDouble(kernPair.kernWidth) * Double(unitsPerEm.rawValue)))) :
+                String(Fixed4Dot12ToDouble(kernPair.kernWidth))
+                try writer.write(row: [firstGlyphName, secondGlyphName, valueString])
             }
             writer.stream.close()
         } catch {

@@ -15,7 +15,7 @@ final class FeatTreeNode: NSTreeNode {
 
     init(with featureName: FontTable_feat.FeatureName) {
         super.init(representedObject: featureName)
-        var mChildNodes: [FeatTreeNode] = featureName.settings.map { FeatTreeNode(representedObject: $0) }
+		let mChildNodes: [FeatTreeNode] = featureName.settings.map { FeatTreeNode(representedObject: $0) }
         mutableChildren.addObjects(from: mChildNodes)
     }
 
