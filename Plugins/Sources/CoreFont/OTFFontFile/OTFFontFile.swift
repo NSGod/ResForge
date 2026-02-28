@@ -190,6 +190,7 @@ final public class OTFFontFile: NSObject {
     }
 
     private var glyphLookupType: GlyphNameLookupType = .undetermined
+
     private func initGlyphNameLookup() {
         if glyphLookupType != .undetermined { return }
         if tableTagsToTables[.CFF_] != nil {

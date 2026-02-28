@@ -32,7 +32,19 @@ final public class FontTable_post: FontTable {
     @objc dynamic public var minMemType1:           UInt32 = 0
     @objc dynamic public var maxMemType1:           UInt32 = 0
 
-    @objc dynamic public var format:                Format? // nil for .version3_0
+    /// make lazy because `Format4_0` requires `.fontNumGlyphs` which can't be
+    /// calculated until after `post` has been created.
+    @objc dynamic lazy public var format:           Format? = { /// nil for `.version3_0`:
+        guard let tableClass: Format.Type = Format.class(for: version).self else {
+            return nil
+        }
+        do {
+            format = try tableClass.init(reader, table: self)
+        } catch {
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+        }
+        return format
+    }()
 
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
@@ -49,10 +61,6 @@ final public class FontTable_post: FontTable {
         maxMemType42 = try reader.read()
         minMemType1 = try reader.read()
         maxMemType1 = try reader.read()
-        guard let tableClass: Format.Type = Format.class(for: version).self else {
-            return
-        }
-        format = try tableClass.init(reader, table: self)
     }
 
     public func glyphName(for glyphID: Glyph32ID) -> String? {
