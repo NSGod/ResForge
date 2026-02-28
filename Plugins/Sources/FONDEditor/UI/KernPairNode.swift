@@ -15,8 +15,8 @@ final class KernPairNode: NSObject, Comparable {
     @objc let kernWidth:              Fixed4Dot12
 
     init(with kernPair: FOND.KernTable.KernPair, fond: FOND) {
-        kernFirstGlyphName = fond.glyphName(for: kernPair.kernFirst) ?? "???"
-        kernSecondGlyphName = fond.glyphName(for: kernPair.kernSecond) ?? "???"
+        kernFirstGlyphName = fond.glyphName(for: kernPair.kernFirst) ?? "<\(kernPair.kernFirst)>"
+        kernSecondGlyphName = fond.glyphName(for: kernPair.kernSecond) ?? "<\(kernPair.kernSecond)>"
         kernWidth = kernPair.kernWidth
         super.init()
     }

@@ -397,8 +397,8 @@ public final class NFNT: NSObject {
                 widths.append(-1)
                 offsets.append(-1)
             } else {
-                let widthEntry: Int8 = Int8(widthOffset & 0x00ff)   // low-order byte
-                let offsetEntry: Int8 = Int8(widthOffset >> 8)      // high-order byte
+                let widthEntry: Int8 = Int8(bitPattern: UInt8(widthOffset & 0x00ff))   // low-order byte
+				let offsetEntry: Int8 = Int8(bitPattern: UInt8(widthOffset >> 8))      // high-order byte
                 widths.append(widthEntry)
                 offsets.append(offsetEntry)
             }
