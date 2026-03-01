@@ -17,7 +17,9 @@ extension FontTable_cmap {
         @objc dynamic public lazy var charName: String? = {     // UNICODE NAME
             var uv: UV = 0
             if subtable.encoding.platformID == .mac {
-                let encoding = MacEncoding.encodingFor(scriptID: subtable.encoding.encodingID.macScriptID()!, languageID: subtable.languageID.macLanguageID()!)
+                guard let encoding = MacEncoding.encodingFor(scriptID: subtable.encoding.encodingID.macScriptID()!, languageID: subtable.languageID.macLanguageID()!) else {
+                    return "<\(charValue)> (Unsupported Mac encoding)"
+                }
                 uv = UV(encoding.uv(for: CharCode(charValue)))
             } else {
                 uv = charValue

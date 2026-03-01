@@ -64,7 +64,7 @@ extension FontTable_cmap {
             guard let subtableClass: Subtable.Type = Subtable.class(for: fmt) else {
                 throw FontTableError.parseError("Unsupported 'cmap' Encoding Subtable format: \(fmt)")
             }
-            subtable = try subtableClass.init(reader, offset: nil, encoding: self, table: table)
+            subtable = try subtableClass.init(reader, encoding: self, table: table)
             reader.popPosition()
         }
 

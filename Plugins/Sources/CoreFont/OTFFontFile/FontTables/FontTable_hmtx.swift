@@ -90,7 +90,7 @@ final public class HorizontalMetric: FontTableNode {
     }()
 
     public init(_ reader: BinaryDataReader, glyphID: GlyphID, table: FontTable) throws {
-        try super.init(reader, offset: nil, table: table)
+        try super.init(reader, table: table)
         advanceWidth = try reader.read()
         leftSideBearing = try reader.read()
         self.glyphID = glyphID

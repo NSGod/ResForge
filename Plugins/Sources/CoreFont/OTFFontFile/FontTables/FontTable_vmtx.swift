@@ -90,7 +90,7 @@ final public class VerticalMetric: FontTableNode {
     }()
 
     public init(_ reader: BinaryDataReader, glyphID: GlyphID, table: FontTable) throws {
-        try super.init(reader, offset: nil, table: table)
+        try super.init(reader, table: table)
         advanceHeight = try reader.read()
         topSideBearing = try reader.read()
         self.glyphID = glyphID

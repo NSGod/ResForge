@@ -118,12 +118,16 @@ public final class MacEncoding: Copyable, CustomStringConvertible {
         isCustomEncoding = true
     }
 
-    public static func encodingFor(scriptID: MacScriptID, languageID macLanguageIDPlus1: MacLanguageID = .none, postScriptFontName: String? = nil) -> MacEncoding {
+    fileprivate static let unsupported: Set<MacScriptID> = Set([.japanese, .tradChinese, .korean, .simpChinese, .vietnamese])
+
+    public static func encodingFor(scriptID: MacScriptID, languageID macLanguageIDPlus1: MacLanguageID = .none, postScriptFontName: String? = nil) -> MacEncoding? {
         var langID = macLanguageIDPlus1
         if (macLanguageIDPlus1 != .none && macLanguageIDPlus1 != .english) {
             // FIXME: is this safe?
             langID = MacLanguageID(rawValue: macLanguageIDPlus1.rawValue - 1)!
         }
+        /// We don't support the 2-byte encodings of Asian languages at this time so return nil in those cases
+        guard !Self.unsupported.contains(scriptID) else { return nil }
         // FIXME: this needs more work
         if scriptID == .roman && langID == .turkish {
             return .macTurkish

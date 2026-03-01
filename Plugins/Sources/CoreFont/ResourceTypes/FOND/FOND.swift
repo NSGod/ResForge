@@ -132,7 +132,10 @@ final public class FOND: NSObject {
         // FIXME: improve non-MacRoman encodings
         let scriptID = MacEncoding.scriptID(for: ResID(resource.id))
         NSLog("\(type(of: self)).\(#function) resID: \(resource.id), scriptID: \(scriptID)")
-        var encoding = MacEncoding.encodingFor(scriptID: scriptID, postScriptFontName: basePostScriptName)
+        guard var encoding = MacEncoding.encodingFor(scriptID: scriptID, postScriptFontName: basePostScriptName) else {
+            // unsupported encoding; default to .macRoman?
+            return .macRoman
+        }
         if let customGlyphs = self.styleMappingTable?.glyphNameEncodingSubtable {
             // FIXME: or should this be replacing existing? YES
             encoding = encoding.customEncoding(byReplacing: MacEncoding.GlyphNameEntry.entries(with: customGlyphs.charCodesToGlyphNames))
