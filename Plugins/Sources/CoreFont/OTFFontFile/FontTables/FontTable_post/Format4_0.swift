@@ -15,7 +15,9 @@ public extension FontTable_post {
 
         public required init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable) throws {
             try super.init(reader, offset: offset, table: table)
-            let numGlyphs = table.fontNumGlyphs
+            var numGlyphs = table.fontNumGlyphs
+            /// have run into a some fonts with 2 bytes fewer than it should have
+            numGlyphs = min(numGlyphs, reader.bytesRemaining/MemoryLayout<UInt16>.size)
             var code: UInt16 = 0
             for _ in 0..<numGlyphs {
                 code = try reader.read()

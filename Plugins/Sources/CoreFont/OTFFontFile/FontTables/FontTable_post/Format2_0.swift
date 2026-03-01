@@ -27,7 +27,9 @@ public extension FontTable_post {
             for i: GlyphID in 0..<numberOfGlyphs {
                 let index: UInt16 = glyphNameIndexes[Int(i)]
                 let entry: GlyphEntry
-                // FIXME: is this right? or shouldn't it be UInt16.max?
+                /// - Note: the correct value to use here is indeed `Int16.max` and not `UInt16.max`,
+                /// since the standard states that "Index numbers 32768 through 65535 are reserved for future use.":
+                /// https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6post.html
                 if index > 32767 {
                     NSLog("\(type(of: self)).\(#function) *** WARNING: glyphNameIndex[\(i)] contains an invalid name index (\(index))")
                     entry = GlyphEntry(glyphID: i, glyphName: appleStdGlyphNames[0])
