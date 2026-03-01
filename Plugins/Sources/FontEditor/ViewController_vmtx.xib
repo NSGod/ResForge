@@ -31,7 +31,7 @@
                         <rect key="frame" x="1" y="1" width="689" height="701"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" emptySelection="NO" autosaveName="hmtxTableView" rowHeight="20" headerView="d9s-xp-pco" viewBased="YES" id="tL6-Ny-U1P" userLabel="tableView">
+                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" autosaveName="vmtxTableView" rowHeight="20" headerView="d9s-xp-pco" viewBased="YES" id="tL6-Ny-U1P" userLabel="tableView">
                                 <rect key="frame" x="0.0" y="-6" width="691" height="673"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <size key="intercellSpacing" width="17" height="0.0"/>
