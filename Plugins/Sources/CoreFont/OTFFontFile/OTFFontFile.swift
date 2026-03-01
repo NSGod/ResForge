@@ -185,6 +185,12 @@ final public class OTFFontFile: NSObject {
     public var cmapTable: FontTable_cmap? {
         return table(for: .cmap) as? FontTable_cmap
     }
+    public var vheaTable: FontTable_vhea? {
+        return table(for: .vhea) as? FontTable_vhea
+    }
+    public var vmtxTable: FontTable_vmtx? {
+        return table(for: .vmtx) as? FontTable_vmtx
+    }
     public func table(for tableTag: TableTag) -> FontTable? {
         return tableTagsToTables[tableTag]
     }
