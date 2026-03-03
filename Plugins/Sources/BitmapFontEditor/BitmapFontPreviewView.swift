@@ -10,24 +10,24 @@ import RFSupport
 
 public class BitmapFontPreviewView: NSView {
 
-	@IBInspectable public var backgroundColor:	NSColor? {
-		didSet {
-			self.needsDisplay = true
-		}
-	}
-	
-	@IBInspectable public var borderColor:		NSColor? {
-		didSet {
-			self.needsDisplay = true
-		}
-	}
-	
-	@IBInspectable public var borderThickness:  CGFloat = 0 {
-		didSet {
-			self.needsDisplay = true
-		}
-	}
-	
+    @IBInspectable public var backgroundColor:  NSColor? {
+        didSet {
+            self.needsDisplay = true
+        }
+    }
+
+    @IBInspectable public var borderColor:      NSColor? {
+        didSet {
+            self.needsDisplay = true
+        }
+    }
+
+    @IBInspectable public var borderThickness:  CGFloat = 0 {
+        didSet {
+            self.needsDisplay = true
+        }
+    }
+
     @IBInspectable public var stringValue:      String {
         set {
             textStorage.string = newValue
@@ -126,15 +126,15 @@ public class BitmapFontPreviewView: NSView {
     }
 
     public override func draw(_ dirtyRect: NSRect) {
-		if let backgroundColor {
-			backgroundColor.set()
-			NSBezierPath(rect: self.bounds).fill()
-		}
+        if let backgroundColor {
+            backgroundColor.set()
+            NSBezierPath(rect: self.bounds).fill()
+        }
         NSBezierPath.defaultLineWidth = borderThickness
-		if borderThickness > 0, let borderColor {
-			borderColor.setStroke()
-			NSBezierPath(rect: self.bounds).stroke()
-		}
+        if borderThickness > 0, let borderColor {
+            borderColor.setStroke()
+            NSBezierPath(rect: self.bounds).stroke()
+        }
         /// allow us to exist w/o an nfnt
         if textStorage.nfnt != nil {
             textStorage.layoutManager.drawGlyphs(at: NSMakePoint(padding, padding))

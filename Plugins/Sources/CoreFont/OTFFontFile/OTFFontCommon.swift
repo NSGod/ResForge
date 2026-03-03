@@ -454,14 +454,14 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
 
 /// Only meaningfully used in `FontTable_name.NameRecord`, not in `cmap` entries
 @objc public enum MicrosoftLanguageID: UInt16, Comparable, CustomStringConvertible, CustomDebugStringConvertible {
-	case none                       = 0		/// not-applicable (for `cmap`s
-    case arabicSaudiArabia          = 1025	// 0x0401
-    case bulgarian                  = 1026	// 0x0402
-    case catalan                    = 1027	// 0x0403
-    case chineseTaiwan              = 1028	// 0x0404
-    case czech                      = 1029	// 0x0405
-    case danish                     = 1030	// 0x0406
-    case german                     = 1031	// 0x0407
+    case none                       = 0     /// not-applicable (for `cmap`s)
+    case arabicSaudiArabia          = 1025  // 0x0401
+    case bulgarian                  = 1026  // 0x0402
+    case catalan                    = 1027  // 0x0403
+    case chineseTaiwan              = 1028  // 0x0404
+    case czech                      = 1029  // 0x0405
+    case danish                     = 1030  // 0x0406
+    case german                     = 1031  // 0x0407
     case greek                      = 1032  // 0x0408
     case englishAmerican            = 1033  // 0x0409
     case spanishTraditional         = 1034  // 0x040a
@@ -535,7 +535,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
 
     public var description: String {
         switch self {
-			case .none: return NSLocalizedString("--", comment: "")
+            case .none: return NSLocalizedString("--", comment: "")
             case .arabicSaudiArabia: return NSLocalizedString("Arabic (Saudi Arabia)", comment: "")
             case .bulgarian: return NSLocalizedString("Bulgarian", comment: "")
             case .catalan: return NSLocalizedString("Catalan", comment: "")
@@ -616,9 +616,9 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
 
 // MARK: -
 public enum EncodingID: Comparable, CustomStringConvertible, CustomDebugStringConvertible {
-	case unicode(UnicodeEncodingID)
-	case mac(MacScriptID)
-	case microsoft(MicrosoftEncodingID)
+    case unicode(UnicodeEncodingID)
+    case mac(MacScriptID)
+    case microsoft(MicrosoftEncodingID)
     case any
 
     public var rawValue: UInt16 {

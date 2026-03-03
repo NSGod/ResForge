@@ -133,12 +133,13 @@ final public class FOND: NSObject {
         let scriptID = MacEncoding.scriptID(for: ResID(resource.id))
         NSLog("\(type(of: self)).\(#function) resID: \(resource.id), scriptID: \(scriptID)")
         guard var encoding = MacEncoding.encodingFor(scriptID: scriptID, postScriptFontName: basePostScriptName) else {
+            NSLog("\(type(of: self)).\(#function) *** WARNING: unsupported scriptID: \(scriptID), \(scriptID.description); falling back to .macRoman")
             // unsupported encoding; default to .macRoman?
             return .macRoman
         }
-        if let customGlyphs = self.styleMappingTable?.glyphNameEncodingSubtable {
+        if let customCCsToGlyphNames = self.styleMappingTable?.glyphNameEncodingSubtable?.charCodesToGlyphNames {
             // FIXME: or should this be replacing existing? YES
-            encoding = encoding.customEncoding(byReplacing: MacEncoding.GlyphNameEntry.entries(with: customGlyphs.charCodesToGlyphNames))
+            encoding = encoding.customEncoding(byReplacing: MacEncoding.GlyphNameEntry.entries(with: customCCsToGlyphNames))
         }
         return encoding
     }()

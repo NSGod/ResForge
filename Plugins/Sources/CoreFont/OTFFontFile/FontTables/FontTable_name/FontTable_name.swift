@@ -18,7 +18,7 @@ final public class FontTable_name: FontTable {
         case format1    = 1     // not supported by Apple
     }
 
-	// MARK: -
+    // MARK: -
     @objc dynamic public var format:                Format = .format0
 
     public var count:                               UInt16 = 0      // number of name records
@@ -28,7 +28,7 @@ final public class FontTable_name: FontTable {
     public var langTagCount:                        UInt16 = 0      // format 1 only
     @objc dynamic public var languageTagRecords:    [LanguageTagRecord]?
 
-	// MARK: -
+    // MARK: -
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
         let format: UInt16 = try reader.read()

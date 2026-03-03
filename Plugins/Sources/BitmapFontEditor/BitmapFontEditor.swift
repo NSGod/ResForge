@@ -86,9 +86,9 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
         let bounds = box.bounds
         let prevView = BitmapFontPreviewView(frame: bounds)
         prevView.autoresizingMask = [.width, .height]
-		prevView.padding = 10
-		prevView.borderThickness = 2
-		prevView.borderColor = .lightGray
+        prevView.padding = 10
+        prevView.borderThickness = 2
+        prevView.borderColor = .lightGray
         prevView.nfnt = nfnt
         previewView = prevView
         box.contentView = prevView
@@ -249,33 +249,33 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
 
 // MARK: - <PreviewProvider>
 extension BitmapFontEditor: PreviewProvider {
-	static let previewView: BitmapFontPreviewView = BitmapFontPreviewView(frame: NSMakeRect(0, 0, 64, 64))
-	static var isSetup = false
-	
-	public static func image(for resource: Resource) -> NSImage? {
-		let image: NSImage = NSImage()
-		DispatchQueue.main.async {
-			do {
-				if !isSetup {
-					previewView.backgroundColor = .white
-					previewView.borderThickness = 1
-					previewView.borderColor = .secondaryLabelColor
-					previewView.alignment = .center
-					previewView.stringValue = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcde12345"
-					isSetup = true
-				}
-				let nfnt: NFNT = try NFNT(with: resource)
-				previewView.nfnt = nfnt
-				if let bitmapRep = previewView.bitmapImageRepForCachingDisplay(in: previewView.bounds) {
-					previewView.cacheDisplay(in: previewView.bounds, to: bitmapRep)
-					image.addRepresentation(bitmapRep)
-				}
-			} catch { }
-		}
-		return image
-	}
-	
-	public static func maxThumbnailSize(for resourceType: String) -> Int? {
-		return 64
-	}
+    static let previewView: BitmapFontPreviewView = BitmapFontPreviewView(frame: NSMakeRect(0, 0, 64, 64))
+    static var isSetup = false
+
+    public static func image(for resource: Resource) -> NSImage? {
+        let image: NSImage = NSImage()
+        DispatchQueue.main.async {
+            do {
+                if !isSetup {
+                    previewView.backgroundColor = .white
+                    previewView.borderThickness = 1
+                    previewView.borderColor = .secondaryLabelColor
+                    previewView.alignment = .center
+                    previewView.stringValue = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcde12345"
+                    isSetup = true
+                }
+                let nfnt: NFNT = try NFNT(with: resource)
+                previewView.nfnt = nfnt
+                if let bitmapRep = previewView.bitmapImageRepForCachingDisplay(in: previewView.bounds) {
+                    previewView.cacheDisplay(in: previewView.bounds, to: bitmapRep)
+                    image.addRepresentation(bitmapRep)
+                }
+            } catch { }
+        }
+        return image
+    }
+
+    public static func maxThumbnailSize(for resourceType: String) -> Int? {
+        return 64
+    }
 }

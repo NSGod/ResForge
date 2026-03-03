@@ -22,8 +22,8 @@ public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
     @IBOutlet weak var tableTagField:   NSTextField!
     @IBOutlet weak var box:             NSBox!
 
-    public var resource: 		    Resource        /// `'sfnt'`
-    let manager: 		            RFEditorManager
+    public var resource:            Resource        /// `'sfnt'`
+    let manager:                    RFEditorManager
     @objc dynamic var fontFile:     OTFFontFile
 
     private var tableTagsToViewControllers: [TableTag: FontTableViewController] = [:]

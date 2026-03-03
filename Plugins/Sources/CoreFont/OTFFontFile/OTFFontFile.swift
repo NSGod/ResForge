@@ -84,7 +84,7 @@ final public class OTFFontFile: NSObject {
         }
     }
 
-	public func data(with options: FontWritingOptions = .none) throws -> Data {
+    public func data(with options: FontWritingOptions = .none) throws -> Data {
         let dataHandle = DataHandle()
         // entries must be sorted by table tag
         directory.sortEntries()

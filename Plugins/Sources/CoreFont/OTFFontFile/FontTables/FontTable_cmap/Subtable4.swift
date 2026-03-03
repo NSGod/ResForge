@@ -33,7 +33,7 @@ extension FontTable_cmap {
             try super.init(reader, offset: offset, encoding: encoding, table: table)
             if let reader {
                 length = try reader.read()
-				let langID: UInt16 = try reader.read()
+                let langID: UInt16 = try reader.read()
                 languageID = try LanguageID.languageIDWith(platformID: encoding.platformID, languageID: langID)
                 segCountX2 = try reader.read()
                 searchRange = try reader.read()

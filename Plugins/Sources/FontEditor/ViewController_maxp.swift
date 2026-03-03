@@ -19,20 +19,20 @@ final class ViewController_maxp: FontTableViewController, NSControlTextEditingDe
         "maxStorage", "maxFunctionDefs", "maxInstructionDefs", "maxStackElements", "maxSizeOfInstructions",
         "maxComponentElements", "maxComponentDepth"])
 
-	required init?(with fontTable: FontTable) {
-		self.table = fontTable as! FontTable_maxp
-		super.init(with: fontTable)
-	}
+    required init?(with fontTable: FontTable) {
+        self.table = fontTable as! FontTable_maxp
+        super.init(with: fontTable)
+    }
 
     @MainActor required init?(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
+        fatalError("init(coder:) has not been implemented")
+    }
 
     deinit {
         Self.tableKeyPaths.forEach { table.removeObserver(self, forKeyPath: $0, context: &Self.tableContext) }
     }
 
-	override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         Self.tableKeyPaths.forEach { table.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.tableContext) }
         updateUI()

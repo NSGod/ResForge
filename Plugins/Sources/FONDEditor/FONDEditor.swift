@@ -88,7 +88,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDe
         fontClassBitfieldControl.unbind(NSBindingName("objectValue"))
         Self.fondKeyPaths.forEach { fond.removeObserver(self, forKeyPath: $0) }
         Self.keyPaths.forEach { removeObserver(self, forKeyPath: $0) }
-		Self.fontAsscKeyPaths.forEach { (fond.fontAssociationTable.entries as NSArray).removeObserver(self, fromObjectsAt: IndexSet(0..<(fond.fontAssociationTable.entries.count)), forKeyPath: $0, context: &Self.fontAsscContext) }
+        Self.fontAsscKeyPaths.forEach { (fond.fontAssociationTable.entries as NSArray).removeObserver(self, fromObjectsAt: IndexSet(0..<(fond.fontAssociationTable.entries.count)), forKeyPath: $0, context: &Self.fontAsscContext) }
     }
 
     public override func windowDidLoad() {
@@ -100,7 +100,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDe
         loadFOND()
         Self.fondKeyPaths.forEach { fond.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.fondContext) }
         Self.keyPaths.forEach { addObserver(self, forKeyPath: $0, options: [.new, .old], context: nil) }
-		Self.fontAsscKeyPaths.forEach { (fond.fontAssociationTable.entries as NSArray).addObserver(self, toObjectsAt: IndexSet(0..<fond.fontAssociationTable.entries.count),  forKeyPath: $0, options: [.new, .old], context: &Self.fontAsscContext) }
+        Self.fontAsscKeyPaths.forEach { (fond.fontAssociationTable.entries as NSArray).addObserver(self, toObjectsAt: IndexSet(0..<fond.fontAssociationTable.entries.count),  forKeyPath: $0, options: [.new, .old], context: &Self.fontAsscContext) }
     }
 
     public func windowWillClose(_ notification: Notification) {
@@ -223,12 +223,12 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDe
             panel = NSSavePanel()
             panel.allowedFileTypes = [KernPairExporter.GPOSFeatureUTType,
                                       KernPairExporter.CSVUTType]
-			let entry = entries[0]
-			if let name = fond.postScriptNameForFont(with: entry.style) {
-				if let filename = (name as NSString).appendingPathExtension("txt") {
-					panel.nameFieldStringValue = filename
-				}
-			}
+            let entry = entries[0]
+            if let name = fond.postScriptNameForFont(with: entry.style) {
+                if let filename = (name as NSString).appendingPathExtension("txt") {
+                    panel.nameFieldStringValue = filename
+                }
+            }
         } else {
             // if more than one entry, we need to export multiple files
             let oPanel = NSOpenPanel()
@@ -248,7 +248,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDe
                 viewController.saveOptions()
                 let config = viewController.config
                 if entries.count == 1 {
-					guard let rep: String = KernPairExporter.representation(of: entries.first!, using: config, manager: manager) else { return }
+                    guard let rep: String = KernPairExporter.representation(of: entries.first!, using: config, manager: manager) else { return }
                     do {
                         try rep.write(to: panel.url!, atomically: true, encoding: .utf8)
                     } catch {
@@ -258,7 +258,7 @@ public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDe
                     guard let parentDirURL = panel.url else { return }
                     for entry in entries {
                         if let name = fond.postScriptNameForFont(with: entry.style) {
-							guard let rep = KernPairExporter.representation(of: entry, using: config, manager: manager) else { continue }
+                            guard let rep = KernPairExporter.representation(of: entry, using: config, manager: manager) else { continue }
                             let url = parentDirURL.appendingPathComponent(name).appendingPathExtension(config.pathExtension).assuringUniqueFilename()
                             do {
                                 try rep.write(to: url, atomically: true, encoding: .utf8)
@@ -400,10 +400,10 @@ extension FONDEditor: NSTableViewDelegate, NSOutlineViewDelegate {
             }
         } else if tableView == self.tableView {
             let view: NSTableCellView = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
-			if let id = tableColumn?.identifier, id.rawValue != "fontName" {
-				view.textField?.delegate = self
-				return view
-			}
+            if let id = tableColumn?.identifier, id.rawValue != "fontName" {
+                view.textField?.delegate = self
+                return view
+            }
             if let entries = fontAssocTableEntriesController.arrangedObjects as? [FOND.FontAssociationTable.Entry] {
                 let entry = entries[row]
                 if let fontName = fond.postScriptNameForFont(with: entry.fontStyle) {
