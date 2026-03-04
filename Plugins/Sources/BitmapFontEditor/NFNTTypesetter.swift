@@ -51,20 +51,18 @@ class NFNTTypesetter {
                 }
                 if !isBeginningOfLine {
                     // FIXME: figure out what to do for a space if font doesn't have one
-                    if let spaceGlyph = nfnt.glyphEntries[" "] {
-                        if !spaceGlyph.isMissing {
-                            currentLineFragment.add(spaceGlyph)
-                            drawPoint.x += CGFloat(nfnt.kernMax + Int16(spaceGlyph.offset)) + CGFloat(spaceGlyph.width)
-                        }
+                    let spaceGlyph = nfnt.glyph(for: Character(" "))
+                    if !spaceGlyph.isMissing {
+                        currentLineFragment.add(spaceGlyph)
+                        drawPoint.x += CGFloat(nfnt.kernMax + Int16(spaceGlyph.offset)) + CGFloat(spaceGlyph.width)
                     }
                 }
                 for char: Character in word {
-                    if let glyph = nfnt.glyphEntries["\(char)"] {
-                        if glyph.isMissing { continue }
-                        drawPoint.x += CGFloat(nfnt.kernMax + Int16(glyph.offset) + Int16(glyph.width))
-                        currentLineFragment.add(glyph)
-                        if isBeginningOfLine { isBeginningOfLine = false }
-                    }
+                    let glyph = nfnt.glyph(for: char)
+                    if glyph.isMissing { continue }
+                    drawPoint.x += CGFloat(nfnt.kernMax + Int16(glyph.offset) + Int16(glyph.width))
+                    currentLineFragment.add(glyph)
+                    if isBeginningOfLine { isBeginningOfLine = false }
                 }
             } else {
                 /// we'll have to do char-wrapping
@@ -91,12 +89,11 @@ class NFNTTypesetter {
                         mLineFragments.append(currentLineFragment)
                         isBeginningOfLine = true
                     }
-                    if let glyph = nfnt.glyphEntries["\(char)"] {
-                        if glyph.isMissing { continue }
-                        drawPoint.x += CGFloat(nfnt.kernMax + Int16(glyph.offset) + Int16(glyph.width))
-                        currentLineFragment.add(glyph)
-                        if isBeginningOfLine { isBeginningOfLine = false }
-                    }
+                    let glyph = nfnt.glyph(for: char)
+                    if glyph.isMissing { continue }
+                    drawPoint.x += CGFloat(nfnt.kernMax + Int16(glyph.offset) + Int16(glyph.width))
+                    currentLineFragment.add(glyph)
+                    if isBeginningOfLine { isBeginningOfLine = false }
                 }
             }
         }
@@ -107,10 +104,9 @@ class NFNTTypesetter {
         let nfnt: NFNT = layoutManager.textStorage.nfnt
         var widths: [CGFloat] = []
         for char: Character in string {
-            if let glyph = nfnt.glyphEntries["\(char)"] {
-                if !glyph.isMissing {
-                    widths.append(CGFloat(nfnt.kernMax + Int16(glyph.offset) + Int16(glyph.width)))
-                }
+            let glyph = nfnt.glyph(for: char)
+            if !glyph.isMissing {
+                widths.append(CGFloat(nfnt.kernMax + Int16(glyph.offset) + Int16(glyph.width)))
             }
         }
         return widths

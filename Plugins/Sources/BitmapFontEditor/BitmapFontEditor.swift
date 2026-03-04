@@ -114,6 +114,8 @@ public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvid
                 }
             }
         }
+        // add one last final missing character to trigger .notdef glyph
+        string += "\u{FFFF}"
         overviewPreviewView.alignment = .center
         overviewPreviewView.stringValue = string
         overviewPreviewView.nfnt = nfnt
