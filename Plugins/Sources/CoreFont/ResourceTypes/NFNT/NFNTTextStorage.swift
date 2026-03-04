@@ -1,6 +1,6 @@
 //
 //  NFNTTextStorage.swift
-//  BitmapFontEditor
+//  CoreFont
 //
 //  Created by Mark Douma on 1/14/2026.
 //
@@ -24,35 +24,35 @@ import Cocoa
 ///                      |
 ///                `[NFNT.Glyph]`
 
-final class NFNTTextStorage {
-    var string:         String! {
+public final class NFNTTextStorage {
+    public var string:         String! {
         didSet {
             guard let layoutManager else { return }
             layoutManager.stringDidChange()
         }
     }
 
-    var alignment:      NSTextAlignment = .left {
+    public var alignment:      NSTextAlignment = .left {
         didSet {
             guard let layoutManager else { return }
             layoutManager.alignmentDidChange()
         }
     }
 
-    var nfnt:           NFNT! {
+    public var nfnt:           NFNT! {
         didSet {
             guard let layoutManager else { return }
             layoutManager.fontDidChange()
         }
     }
 
-    var layoutManager:  NFNTLayoutManager! {
+    public var layoutManager:  NFNTLayoutManager! {
         didSet {
             layoutManager.textStorage = self
         }
     }
 
-    init() {
+    public init() {
         alignment = .left
     }
 }

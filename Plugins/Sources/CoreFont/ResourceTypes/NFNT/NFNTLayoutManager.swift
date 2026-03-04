@@ -1,29 +1,28 @@
 //
 //  NFNTLayoutManager.swift
-//  BitmapFontEditor
+//  CoreFont
 //
 //  Created by Mark Douma on 1/14/2026.
 //
 
 import Cocoa
-import CoreFont
 
-final class NFNTLayoutManager {
-    weak var textStorage:       NFNTTextStorage!
+public final class NFNTLayoutManager {
+    public weak var textStorage:       NFNTTextStorage!
 
-    var textContainer:          NFNTTextContainer! {
+    public var textContainer:          NFNTTextContainer! {
         didSet {
             textContainer.layoutManager = self
             typesetter.currentTextContainer = textContainer
         }
     }
 
-    var typesetter:             NFNTTypesetter
+    public var typesetter:             NFNTTypesetter
 
     private var layoutIsValid:  Bool = false
     private var lineFragments:  [NFNTLineFragment] = []
 
-    init() {
+    public init() {
         typesetter = NFNTTypesetter()
         typesetter.layoutManager = self
     }
@@ -47,13 +46,13 @@ final class NFNTLayoutManager {
         self.invalidateLayout()
     }
 
-    func invalidateLayout() {
+    public func invalidateLayout() {
         layoutIsValid = false
         lineFragments.removeAll()
     }
 
     /// Do the actual drawing:
-    func drawGlyphs(at point: NSPoint) {
+    public func drawGlyphs(at point: NSPoint) {
         if !layoutIsValid { generateGlyphs() }
         var drawRect: NSRect = .zero
         drawRect.origin = point

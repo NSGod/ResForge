@@ -1,20 +1,20 @@
 //
 //  NFNTTypesetter.swift
-//  BitmapFontEditor
+//  CoreFont
 //
 //  Created by Mark Douma on 1/14/2026.
 //
 
 import Cocoa
 
-final class NFNTTypesetter {
-    weak var layoutManager:         NFNTLayoutManager!  // weak
-    weak var currentTextContainer:  NFNTTextContainer!  // weak
+public final class NFNTTypesetter {
+    public weak var layoutManager:         NFNTLayoutManager!  // weak
+    public weak var currentTextContainer:  NFNTTextContainer!  // weak
 
     private var maxLineWidth:       CGFloat = 0
     private var spaceWidth:         CGFloat = 0
 
-    func generatedLineFragments(for string: String, at point: NSPoint, maxNumberOfLineFragments: Int) -> [NFNTLineFragment] {
+    public func generatedLineFragments(for string: String, at point: NSPoint, maxNumberOfLineFragments: Int) -> [NFNTLineFragment] {
         maxLineWidth = currentTextContainer.size.width
         spaceWidth = self.width(of: " ")
         var mLineFragments = [NFNTLineFragment]()

@@ -7,6 +7,7 @@
 
 import Cocoa
 import RFSupport
+import CoreFont
 
 public final class BitmapFontPreviewView: NSView {
 

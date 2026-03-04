@@ -1,16 +1,16 @@
 //
 //  NFNTLineFragment.swift
-//  BitmapFontEditor
+//  CoreFont
 //
 //  Created by Mark Douma on 1/14/2026.
 //
 
 import Cocoa
 
-final class NFNTLineFragment {
-    var frame:              NSRect
+public final class NFNTLineFragment {
+    public var frame:              NSRect
 
-    var alignedFrame:       NSRect {
+    public var alignedFrame:       NSRect {
         var _alignedFrame = frame
         if alignment == .center {
             _alignedFrame.origin.x = floor((NSWidth(frame) - widthOfGlyphs) / 2)
@@ -20,17 +20,17 @@ final class NFNTLineFragment {
         return _alignedFrame
     }
 
-    var generatedGlyphs:    [NFNT.Glyph] = []
-    var alignment:          NSTextAlignment
+    public var generatedGlyphs:    [NFNT.Glyph] = []
+    public var alignment:          NSTextAlignment
 
     private var widthOfGlyphs: CGFloat = 0
 
-    init(frame: NSRect, alignment: NSTextAlignment) {
+    public init(frame: NSRect, alignment: NSTextAlignment) {
         self.frame = frame
         self.alignment = alignment
     }
 
-    func add(_ glyph: NFNT.Glyph) {
+    public func add(_ glyph: NFNT.Glyph) {
         generatedGlyphs.append(glyph)
         widthOfGlyphs += CGFloat(((glyph.nfnt.kernMax + Int16(glyph.offset)) + Int16(glyph.width)))
     }

@@ -1,13 +1,12 @@
 //
 //  NFNT.swift
-//  BitmapFontEditor
+//  CoreFont
 //
 //  Created by Mark Douma on 1/13/2026.
 //
 
 import Cocoa
 import RFSupport
-import CoreFont
 
 extension NFNT {
     
@@ -69,20 +68,20 @@ public final class NFNT: NSObject {
         static let length = 26
     }
 
-    public var fontType:            FontType    /// UInt16
-    @objc dynamic var firstChar:    Int16       /// ASCII code of first character
-    @objc dynamic var lastChar:     Int16       /// ASCII code of last character
-    @objc dynamic var widMax:       Int16       /// maximum character width
-    @objc dynamic var kernMax:      Int16       /// negative of maximum character kern
-    @objc dynamic var nDescent:     Int16       /// neg of `descent`, or if >0, high word of `owTLoc`
-    @objc dynamic var fRectWidth:   Int16       /// width of font rectangle
-    @objc dynamic var fRectHeight:  Int16       /// height of font rectangle
-    @objc dynamic var owTLoc:       UInt16      /// offset to offset/width table
-    @objc dynamic var ascent:       Int16       /// ascent
-    @objc dynamic var descent:      Int16       /// descent
-    @objc dynamic var leading:      Int16       /// leading
-    @objc dynamic var rowWords:     Int16       /// row width of bit image / 2
-                                                /// `rowWords` × 16 = width of image in px.
+    public var fontType:                    FontType    /// UInt16
+    @objc dynamic public var firstChar:     Int16       /// ASCII code of first character
+    @objc dynamic public var lastChar:      Int16       /// ASCII code of last character
+    @objc dynamic public var widMax:        Int16       /// maximum character width
+    @objc dynamic public var kernMax:       Int16       /// negative of maximum character kern
+    @objc dynamic public var nDescent:      Int16       /// neg of `descent`, or if >0, high word of `owTLoc`
+    @objc dynamic public var fRectWidth:    Int16       /// width of font rectangle
+    @objc dynamic public var fRectHeight:   Int16       /// height of font rectangle
+    @objc dynamic public var owTLoc:        UInt16      /// offset to offset/width table
+    @objc dynamic public var ascent:        Int16       /// ascent
+    @objc dynamic public var descent:       Int16       /// descent
+    @objc dynamic public var leading:       Int16       /// leading
+    @objc dynamic public var rowWords:      Int16       /// row width of bit image / 2
+                                                        /// `rowWords` × 16 = width of image in px.
 
     public var lineHeight:             CGFloat { CGFloat(fRectHeight + leading) }
 
@@ -450,6 +449,4 @@ public final class NFNT: NSObject {
             imageHeights = try (Int(firstChar)...Int(lastChar) + 2).map { _ in try reader.read() }
         }
     }
-
-    public static let notDef = ".notdef"
 }

@@ -1,23 +1,23 @@
 //
 //  NFNTTextContainer.swift
-//  BitmapFontEditor
+//  CoreFont
 //
 //  Created by Mark Douma on 1/14/2026.
 //
 
 import Foundation
 
-final class NFNTTextContainer {
-    var size:                   NSSize {
+public final class NFNTTextContainer {
+    public var size:                   NSSize {
         didSet {
             guard let layoutManager else { return }
             layoutManager.textContainerChangedGeometry(self)
         }
     }
 
-    weak var layoutManager:  NFNTLayoutManager!
+    public weak var layoutManager:  NFNTLayoutManager!
 
-    init(size: NSSize) {
+    public init(size: NSSize) {
         self.size = size
     }
 }
