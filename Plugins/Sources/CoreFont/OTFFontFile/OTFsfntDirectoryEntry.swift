@@ -8,7 +8,7 @@
 import Foundation
 import RFSupport
 
-final public class OTFsfntDirectoryEntry: OTFFontFileNode, DataHandleWriting, Comparable {
+public final class OTFsfntDirectoryEntry: OTFFontFileNode, DataHandleWriting, Comparable {
     public var tableTag:               TableTag
     @objc public var checksum:         UInt32
     @objc public var offset:           UInt32         // offset from beginning of sfnt

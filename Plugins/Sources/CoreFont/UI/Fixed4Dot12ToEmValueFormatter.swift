@@ -7,7 +7,7 @@
 
 import Foundation
 
-final public class Fixed4Dot12ToEmValueFormatter: NumberFormatter, @unchecked Sendable {
+public final class Fixed4Dot12ToEmValueFormatter: NumberFormatter, @unchecked Sendable {
 
     public var unitsPerEm: UnitsPerEm  = .custom(0)
 

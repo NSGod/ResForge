@@ -27,7 +27,7 @@ import RFSupport
 
 extension FOND {
 
-    final public class GlyphNameEncodingSubtable: ResourceNode {
+    public final class GlyphNameEncodingSubtable: ResourceNode {
         public var numberOfEntries:        Int16               /// `actual` number of entries
         public var charCodesToGlyphNames:  [CharCode: String] = [:]
 

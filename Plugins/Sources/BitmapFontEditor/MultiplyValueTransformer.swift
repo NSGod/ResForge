@@ -7,7 +7,7 @@
 
 import Cocoa
 
-class MultiplyValueTransformer: ValueTransformer {
+final class MultiplyValueTransformer: ValueTransformer {
 
     @IBInspectable var multiplier: Int = 16
 

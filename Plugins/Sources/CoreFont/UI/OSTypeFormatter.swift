@@ -8,7 +8,7 @@
 import Cocoa
 import RFSupport
 
-final public class OSTypeFormatter: Formatter {
+public final class OSTypeFormatter: Formatter {
 
     static let attrs = [NSAttributedString.Key.font: NSFont.monospacedDigitSystemFont(ofSize: NSFont.smallSystemFontSize, weight: .regular)]
 

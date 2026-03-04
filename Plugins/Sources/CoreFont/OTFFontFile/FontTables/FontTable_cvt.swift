@@ -14,7 +14,7 @@ import RFSupport
  close to the table value.
  */
 
-final public class FontTable_cvt: FontTable {
+public final class FontTable_cvt: FontTable {
     @objc public var controlValues:     [Int16]
 
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {

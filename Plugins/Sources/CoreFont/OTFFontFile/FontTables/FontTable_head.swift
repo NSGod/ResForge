@@ -12,7 +12,7 @@ import RFSupport
 /// `DEPENDS ON`:
 /// `DISPLAY DEPENDS ON`:
 
-final public class FontTable_head: FontTable {
+public final class FontTable_head: FontTable {
 
     @objc public enum Version: Fixed {
         case default1_0 = 0x00010000

@@ -12,7 +12,7 @@ import RFSupport
 /// `DEPENDS ON`:
 /// `DISPLAY DEPENDS ON`: `post`
 
-final public class FontTable_hmtx: FontTable {
+public final class FontTable_hmtx: FontTable {
     // abbreviated/optimized format as stored in data
     public var horizontalMetrics:       [HorizontalMetric] = []
     public var leftSideBearings:        [Int16] = []
@@ -79,7 +79,7 @@ final public class FontTable_hmtx: FontTable {
 }
 
 
-final public class HorizontalMetric: FontTableNode {
+public final class HorizontalMetric: FontTableNode {
     @objc public var advanceWidth:      UInt16 = 0
     @objc public var leftSideBearing:   Int16 = 0
 

@@ -25,7 +25,7 @@ import RFSupport
  xMax, and yMax, fields in the 'head' represent the actual extrema for the glyphs in the font.
 
  */
-final public class FontTable_hhea: FontTable {
+public final class FontTable_hhea: FontTable {
     @objc public enum Version: Fixed {
         case default1_0 = 0x00010000
     }

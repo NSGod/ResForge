@@ -7,7 +7,7 @@
 
 import Foundation
 
-final public class FixedNumberFormatter: NumberFormatter, @unchecked Sendable {
+public final class FixedNumberFormatter: NumberFormatter, @unchecked Sendable {
 
     public override func string(for obj: Any?) -> String? {
         guard let obj = (obj as? NSNumber)?.int32Value else { return nil }

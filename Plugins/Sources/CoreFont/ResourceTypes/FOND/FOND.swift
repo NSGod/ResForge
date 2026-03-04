@@ -9,7 +9,7 @@
 import Foundation
 import RFSupport
 
-final public class FOND: NSObject {
+public final class FOND: NSObject {
     private struct FontFamilyRecord {
         static let length = 52
     }

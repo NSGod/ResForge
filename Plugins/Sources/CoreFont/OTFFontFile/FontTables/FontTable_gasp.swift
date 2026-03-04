@@ -10,7 +10,7 @@ import RFSupport
 
 /// - Note: PPEM = Pixels Per Em
 
-final public class FontTable_gasp: FontTable {
+public final class FontTable_gasp: FontTable {
     @objc public enum Version: UInt16 {
         case version0 = 0
         case version1 = 1

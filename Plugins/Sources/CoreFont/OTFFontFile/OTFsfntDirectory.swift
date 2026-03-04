@@ -8,7 +8,7 @@
 import Foundation
 import RFSupport
 
-final public class OTFsfntDirectory: OTFFontFileNode, DataHandleWriting {
+public final class OTFsfntDirectory: OTFFontFileNode, DataHandleWriting {
     public var format:                      OTFsfntFormat            // 0x00010000, 'OTTO', 'true', etc.
     @objc public var numberOfTables:        UInt16                   // number of tables
     @objc public var searchRange:           UInt16                   // (max power of 2 <= numberOfTables) x 16

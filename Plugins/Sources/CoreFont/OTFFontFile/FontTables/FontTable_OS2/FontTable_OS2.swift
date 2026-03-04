@@ -12,7 +12,7 @@ import RFSupport
 /// `DEPENDS ON`:
 /// `DISPLAY DEPENDS ON`:
 
-final public class FontTable_OS2: FontTable {
+public final class FontTable_OS2: FontTable {
 
     @objc public enum Version: UInt16, Comparable {
         case version0           = 0

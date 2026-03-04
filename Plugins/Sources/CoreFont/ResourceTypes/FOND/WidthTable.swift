@@ -11,7 +11,7 @@ import RFSupport
 
 extension FOND {
 
-    final public class WidthTable: FONDResourceNode {
+    public final class WidthTable: FONDResourceNode {
         public var numberOfEntries:    Int16               // number of entries - 1
         public var entries:            [Entry]
 
@@ -35,7 +35,7 @@ extension FOND {
 
 extension FOND.WidthTable {
 
-    final public class Entry: FONDResourceNode {
+    public final class Entry: FONDResourceNode {
         public var style:              MacFontStyle        // style entry applies to
         @objc public var widths:       [Fixed4Dot12]
 

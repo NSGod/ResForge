@@ -8,7 +8,7 @@
 import Cocoa
 import RFSupport
 
-public class BitmapFontPreviewView: NSView {
+public final class BitmapFontPreviewView: NSView {
 
     @IBInspectable public var backgroundColor:  NSColor? {
         didSet {

@@ -6,10 +6,9 @@
 //
 
 import Cocoa
-import RFSupport
 import CoreFont
 
-class NFNTLayoutManager {
+final class NFNTLayoutManager {
     weak var textStorage:       NFNTTextStorage!
 
     var textContainer:          NFNTTextContainer! {

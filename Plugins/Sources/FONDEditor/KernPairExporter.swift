@@ -10,7 +10,7 @@ import RFSupport
 import CoreFont
 import CSV
 
-public class KernPairExporter {
+public final class KernPairExporter {
     public static let GPOSFeatureFileType: String = NSLocalizedString("'GPOS' Feature File", comment: "")
     public static let GPOSFeatureUTType:   String = kUTTypePlainText as String
     public static let CSVFileType:         String = NSLocalizedString("Comma-Separated Variables (CSV)", comment: "")

@@ -12,7 +12,7 @@ import RFSupport
 /// `DEPENDS ON`:
 /// `DISPLAY DEPENDS ON`: `post`
 
-final public class FontTable_vmtx: FontTable {
+public final class FontTable_vmtx: FontTable {
     // abbreviated/optimized format as stored in data
     public var verticalMetrics:         [VerticalMetric] = []
     public var topSideBearings:         [Int16] = []
@@ -79,7 +79,7 @@ final public class FontTable_vmtx: FontTable {
 }
 
 
-final public class VerticalMetric: FontTableNode {
+public final class VerticalMetric: FontTableNode {
     @objc public var advanceHeight:     UInt16 = 0
     @objc public var topSideBearing:    Int16 = 0
 

@@ -12,7 +12,7 @@ import RFSupport
 /// `DEPENDS ON`:
 /// `DISPLAY DEPENDS ON`:
 
-final public class FontTable_name: FontTable {
+public final class FontTable_name: FontTable {
     @objc public enum Format: UInt16 {
         case format0    = 0
         case format1    = 1     // not supported by Apple

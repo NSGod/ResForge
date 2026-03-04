@@ -9,7 +9,7 @@ import Cocoa
 import RFSupport
 import CoreFont
 
-public class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
+public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
     public static var bundle: Bundle { .module }
     public static let supportedTypes = [
         "sfnt",

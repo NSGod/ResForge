@@ -6,9 +6,8 @@
 //
 
 import Cocoa
-import RFSupport
 
-class NFNTTypesetter {
+final class NFNTTypesetter {
     weak var layoutManager:         NFNTLayoutManager!  // weak
     weak var currentTextContainer:  NFNTTextContainer!  // weak
 

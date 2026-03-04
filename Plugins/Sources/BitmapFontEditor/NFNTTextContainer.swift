@@ -6,9 +6,8 @@
 //
 
 import Foundation
-import RFSupport
 
-class NFNTTextContainer {
+final class NFNTTextContainer {
     var size:                   NSSize {
         didSet {
             guard let layoutManager else { return }

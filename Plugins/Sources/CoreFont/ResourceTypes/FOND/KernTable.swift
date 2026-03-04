@@ -11,7 +11,7 @@ import RFSupport
 
 extension FOND {
 
-    final public class KernTable: FONDResourceNode {
+    public final class KernTable: FONDResourceNode {
         public var numberOfEntries:             Int16              // number of entries - 1
         public var entries:                     [Entry]
 
@@ -50,7 +50,7 @@ extension FOND {
 // MARK: -
 extension FOND.KernTable {
 
-    final public class Entry: FONDResourceNode {
+    public final class Entry: FONDResourceNode {
         public var style:              MacFontStyle            // style this entry applies to
 
         /// NOTE: While `numKerns` is defined as a `SInt16`, it makes no sense to have negative kern pairs,

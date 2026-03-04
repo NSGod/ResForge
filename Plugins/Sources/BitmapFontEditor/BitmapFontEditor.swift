@@ -10,7 +10,7 @@ import RFSupport
 import CoreFont
 import OrderedCollections
 
-public class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvider, ExportProvider, NSTableViewDelegate {
+public final class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvider, ExportProvider, NSTableViewDelegate {
     public static var bundle: Bundle { .module }
     public static let supportedTypes = [
         "NFNT",

@@ -9,7 +9,7 @@ import Cocoa
 import RFSupport
 import CoreFont
 
-public class POSTExporter: AbstractEditor, ResourceEditor, ExportProvider, TypeIconProvider {
+public final class POSTExporter: AbstractEditor, ResourceEditor, ExportProvider, TypeIconProvider {
     @IBOutlet weak var sampleTextField:     NSTextField!
 
     public static var bundle: Bundle { .module }

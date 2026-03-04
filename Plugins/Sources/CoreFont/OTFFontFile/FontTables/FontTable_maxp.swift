@@ -12,7 +12,7 @@ import RFSupport
 /// `DEPENDS ON`:
 /// `DISPLAY DEPENDS ON`: 
 
-final public class FontTable_maxp: FontTable {
+public final class FontTable_maxp: FontTable {
     @objc public enum Version: Fixed {
         case version0_5     = 0x00005000 // 20480   // for PS/CFF fonts
         case version1_0     = 0x00010000 // 65536   // for TT outlines

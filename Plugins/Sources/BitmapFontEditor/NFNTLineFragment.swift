@@ -6,9 +6,8 @@
 //
 
 import Cocoa
-import RFSupport
 
-class NFNTLineFragment {
+final class NFNTLineFragment {
     var frame:              NSRect
 
     var alignedFrame:       NSRect {

@@ -11,7 +11,7 @@ import RFSupport
 
 extension FOND {
 
-    final public class BoundingBoxTable: ResourceNode {
+    public final class BoundingBoxTable: ResourceNode {
         public var numberOfEntries:                 Int16           // number of entries - 1
         @objc public var entries:                   [Entry]
 
@@ -35,7 +35,7 @@ extension FOND {
 
 extension FOND.BoundingBoxTable {
 
-    final public class Entry: ResourceNode {
+    public final class Entry: ResourceNode {
         public var style:              MacFontStyle
         @objc public var left:         Fixed4Dot12
         @objc public var bottom:       Fixed4Dot12

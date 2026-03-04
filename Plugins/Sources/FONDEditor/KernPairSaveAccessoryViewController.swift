@@ -9,7 +9,7 @@ import Cocoa
 import CoreFont
 import RFSupport
 
-class KernPairSaveAccessoryViewController: NSViewController {
+final class KernPairSaveAccessoryViewController: NSViewController {
     weak var panel:                     NSSavePanel! // or NSOpenPanel
     @IBOutlet weak var scaleCheckbox:   NSButton!
     @IBOutlet weak var resolveCheckbox: NSButton!

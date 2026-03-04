@@ -28,7 +28,7 @@ public struct FontWritingOptions: OptionSet {
     public static let none: FontWritingOptions = []
 }
 
-final public class OTFFontFile: NSObject {
+public final class OTFFontFile: NSObject {
     @objc public var directory:     OTFsfntDirectory!
 
     public var tables:              OrderedSet<FontTable>

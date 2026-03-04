@@ -11,7 +11,7 @@ import RFSupport
 
 extension FOND {
 
-    final public class FontAssociationTable: ResourceNode {
+    public final class FontAssociationTable: ResourceNode {
         public var numberOfEntries:         Int16           // number of entries - 1
         @objc dynamic public var entries:   [Entry]
 
@@ -62,7 +62,7 @@ extension FOND {
 
 extension FOND.FontAssociationTable {
 
-    final public class Entry: ResourceNode, Comparable {
+    public final class Entry: ResourceNode, Comparable {
         @objc dynamic public var fontPointSize:     Int16
         public var fontStyle:                       MacFontStyle
         @objc dynamic public var fontID:            ResID

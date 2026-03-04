@@ -33,7 +33,7 @@ import Cocoa
 /// Then, if you change `flag` elsewhere, (through a direct textfield, for example)
 /// the changes will automatically propogate to the checkboxes.
 
-final public class BitfieldControl: NSControl {
+public final class BitfieldControl: NSControl {
     @IBInspectable public var backgroundColor:   NSColor? = nil {
         didSet {
             self.needsDisplay = true

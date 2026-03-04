@@ -10,7 +10,7 @@ import Foundation
 // for display
 extension MacEncoding {
 
-    final public class GlyphNameEntry: NSObject, NSCopying, Comparable {
+    public final class GlyphNameEntry: NSObject, NSCopying, Comparable {
         @objc public let charCode:       CharCode
         @objc public let uv:             UVBMP
         @objc public let character:      String      // glyph

@@ -6,7 +6,6 @@
 //
 
 import Cocoa
-import RFSupport
 
 /// This typesetting architecture is loosely modeled after Cocoa's older
 /// style. At the top is `NFNTTextStorage`, which is a model for the string,
@@ -25,7 +24,7 @@ import RFSupport
 ///                      |
 ///                `[NFNT.Glyph]`
 
-class NFNTTextStorage {
+final class NFNTTextStorage {
     var string:         String! {
         didSet {
             guard let layoutManager else { return }

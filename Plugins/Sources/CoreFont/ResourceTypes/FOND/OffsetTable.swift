@@ -11,7 +11,7 @@ import RFSupport
 
 extension FOND {
 
-    final public class OffsetTable: ResourceNode {
+    public final class OffsetTable: ResourceNode {
         public var numberOfEntries:        Int16               // number of entries - 1
         @objc public var entries:          [Entry]
 
@@ -50,7 +50,7 @@ extension FOND {
 
 extension FOND.OffsetTable {
 
-    final public class Entry: ResourceNode {
+    public final class Entry: ResourceNode {
         @objc public var offsetOfTable: Int32    // number of bytes from START OF THE OFFSET TABLE to the start of the table
 
         public override init() {

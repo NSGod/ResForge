@@ -9,7 +9,7 @@ import Cocoa
 import RFSupport
 import CoreFont
 
-public class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDelegate, NSTextFieldDelegate {
+public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDelegate, NSTextFieldDelegate {
     public static var bundle: Bundle { .module }
     public static let supportedTypes = [
         "FOND",
