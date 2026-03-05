@@ -9,7 +9,15 @@ import Foundation
 import RFSupport
 
 public extension FontTable_OS2 {
-    
+    /// 1-1000 is the valid range. Generally, `.thin` is defined as
+    /// `100`, `.extraLight` is `200`, but see the following reasoning behind
+    /// the altered values used below:
+    /// https://adobe-type-tools.github.io/afdko/WinWeights.html
+    ///
+    /// Also, I believe earlier versions of the `OS/2` used a range of 1-9 similar to `Width` below,
+    /// (see https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6OS2.html),
+    /// so that adjustment logic is thrown in here as well.
+
     enum Weight: Comparable {
         public typealias RawValue = UInt16
 
@@ -30,8 +38,8 @@ public extension FontTable_OS2 {
             switch self {
                 case .custom(let v): return v
                 case .none:         return 0
-                case .thin:         return 100
-                case .extraLight:   return 200
+                case .thin:         return 250
+                case .extraLight:   return 275
                 case .light:        return 300
                 case .normal:       return 400
                 case .medium:       return 500
@@ -46,8 +54,19 @@ public extension FontTable_OS2 {
         public init(rawValue: UInt16) {
             switch rawValue {
                 case 0:     self = .none
+                case 1:     self = .thin
+                case 2:     self = .extraLight
+                case 3:     self = .light
+                case 4:     self = .normal
+                case 5:     self = .medium
+                case 6:     self = .semibold
+                case 7:     self = .bold
+                case 8:     self = .extraBold
+                case 9:     self = .black
                 case 100:   self = .thin
                 case 200:   self = .extraLight
+                case 250:   self = .thin
+                case 275:   self = .extraLight
                 case 300:   self = .light
                 case 400:   self = .normal
                 case 500:   self = .medium

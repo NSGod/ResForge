@@ -89,6 +89,7 @@ public final class PostScriptType1FontFile: NSObject {
         return true
     }
 
+    
     /// A set of options that control what additional information is parsed from a PostScript Type 1 font file.
     public struct ParseOptions: OptionSet {
         public let rawValue: Int
