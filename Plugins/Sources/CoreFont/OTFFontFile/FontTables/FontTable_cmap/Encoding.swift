@@ -93,9 +93,8 @@ extension FontTable_cmap {
             _displayNamesLoaded = true
         }
 
-        public func glyphID(for charCode: CharCode32) -> Glyph32ID {
-//            return subtable.glyph
-            return 0
+        public func glyphID(for charCode: CharCode32) -> GlyphID32 {
+            return subtable.glyphID(for: charCode)
         }
 
          /// "The encoding record entries in the 'cmap' header must be sorted first by platform ID, then

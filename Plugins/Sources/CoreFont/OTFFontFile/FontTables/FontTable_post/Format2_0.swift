@@ -45,7 +45,7 @@ public extension FontTable_post {
                     entry = GlyphEntry(glyphID: i, glyphName: appleStdGlyphNames[Int(index)])
                 }
                 glyphEntries.append(entry)
-                glyphIDsToEntries[Glyph32ID(i)] = entry
+                glyphIDsToEntries[GlyphID32(i)] = entry
             }
         }
 

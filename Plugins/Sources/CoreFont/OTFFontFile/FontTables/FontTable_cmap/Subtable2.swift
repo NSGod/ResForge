@@ -46,7 +46,7 @@ extension FontTable_cmap {
                 }
                 /// construct the single byte mappings in a separate loop, since
                 /// they take a slightly different logic than the double-byte mappings
-                var charCodesToGlyphIDs: [CharCode32: Glyph32ID] = [:]
+                var charCodesToGlyphIDs: [CharCode32: GlyphID32] = [:]
                 var seen: [Bool] = Array(repeating: true, count: 256)
                 for i: UInt16 in 0..<256 {
                     let key = segmentKeys[Int(i)] / 8
@@ -59,7 +59,7 @@ extension FontTable_cmap {
                             if glyphID != 0 {
                                 // glyphID = glyphID + UInt16(segment.idDelta) & 0x10000
                                 glyphID = glyphID + UInt16(segment.idDelta)
-                                charCodesToGlyphIDs[CharCode32(code)] = Glyph32ID(glyphID)
+                                charCodesToGlyphIDs[CharCode32(code)] = GlyphID32(glyphID)
                             }
                         }
                         seen[Int(i)] = true
@@ -78,7 +78,7 @@ extension FontTable_cmap {
                             let code = hi << 8 | (lo > 255 ? 0 : lo)
                             if glyphID != 0 {
                                 glyphID = (glyphID + UInt16(segment.idDelta)) & 0x0ffff
-                                charCodesToGlyphIDs[CharCode32(code)] = Glyph32ID(glyphID)
+                                charCodesToGlyphIDs[CharCode32(code)] = GlyphID32(glyphID)
                             }
                         }
                     }

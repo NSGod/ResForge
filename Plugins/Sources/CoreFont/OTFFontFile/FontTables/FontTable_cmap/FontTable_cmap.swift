@@ -46,9 +46,8 @@ public final class FontTable_cmap: FontTable {
         return 0
     }
 
-    public func glyphID(for charCode: CharCode32) -> Glyph32ID {
-
-        return 0
+    public func glyphID(for charCode: CharCode32) -> GlyphID32 {
+        return preferredEncoding.glyphID(for: charCode)
     }
 
     public func encodingsFor(platformID: PlatformID, encodingID: EncodingID) -> [Encoding]? {

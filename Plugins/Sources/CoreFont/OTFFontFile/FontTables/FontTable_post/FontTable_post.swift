@@ -63,7 +63,7 @@ public final class FontTable_post: FontTable {
         maxMemType1 = try reader.read()
     }
 
-    public func glyphName(for glyphID: Glyph32ID) -> String? {
+    public func glyphName(for glyphID: GlyphID32) -> String? {
         return format?.glyphName(for: glyphID)
     }
 

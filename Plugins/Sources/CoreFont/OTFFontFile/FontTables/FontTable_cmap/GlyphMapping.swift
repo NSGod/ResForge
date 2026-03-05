@@ -13,7 +13,7 @@ extension FontTable_cmap {
     public final class GlyphMapping: FontTableNode {
         // FIXME: should this be UV, or??
         @objc dynamic public var charValue:     CharCode32 = 0
-        @objc dynamic public var glyphID:       Glyph32ID = 0
+        @objc dynamic public var glyphID:       GlyphID32 = 0
         @objc dynamic public lazy var charName: String? = {     // UNICODE NAME
             var uv: UV = 0
             if subtable.encoding.platformID == .mac {
@@ -42,7 +42,7 @@ extension FontTable_cmap {
         public private(set) var isUVS:              Bool = false
         public weak var subtable:                   Subtable!       // weak
 
-        public init?(charValue: CharCode32, glyphID: Glyph32ID, subtable: Subtable, table: FontTable) throws {
+        public init?(charValue: CharCode32, glyphID: GlyphID32, subtable: Subtable, table: FontTable) throws {
             try super.init(nil, table: table)
             if charValue > 0 && glyphID == 0 { return nil }
             self.charValue = charValue

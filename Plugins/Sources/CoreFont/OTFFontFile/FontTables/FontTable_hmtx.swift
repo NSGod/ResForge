@@ -86,7 +86,7 @@ public final class HorizontalMetric: FontTableNode {
     // MARK: for display
     @objc public var glyphID:           GlyphID = 0
     @objc lazy public var glyphName:    String? = {
-        return table.fontGlyphName(for: Glyph32ID(glyphID))
+        return table.fontGlyphName(for: GlyphID32(glyphID))
     }()
 
     public init(_ reader: BinaryDataReader, glyphID: GlyphID, table: FontTable) throws {

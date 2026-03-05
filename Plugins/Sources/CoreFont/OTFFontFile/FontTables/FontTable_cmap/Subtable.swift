@@ -29,7 +29,7 @@ extension FontTable_cmap {
 
         // MARK: - AUX:
         public weak var encoding:       Encoding!                   // weak
-        public var charCodesToGlyphIDs: [CharCode32: Glyph32ID]?
+        public var charCodesToGlyphIDs: [CharCode32: GlyphID32]?
 
         @objc dynamic public lazy var glyphMappings: [GlyphMapping] = {
             if _hasLoadedGlyphMappings { return _glyphMappings }
@@ -61,7 +61,7 @@ extension FontTable_cmap {
             }
         }
 
-        public func glyphID(for charCode: CharCode32) -> Glyph32ID {
+        public func glyphID(for charCode: CharCode32) -> GlyphID32 {
             // NOTE: charCodesToGlyphIDs is created in concrete subclasses' init methods (except for UVSes).
             if charCodesToGlyphIDs == nil { return .undefined }
             guard let charCodesToGlyphIDs else { return .undefined }

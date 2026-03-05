@@ -16,7 +16,7 @@ public extension FontTable_post {
             try super.init(reader, offset: offset, table: table)
             glyphEntries.append(contentsOf: GlyphEntry.standardAppleGlyphEntries)
             for entry in glyphEntries {
-                glyphIDsToEntries[Glyph32ID(entry.glyphID)] = entry
+                glyphIDsToEntries[GlyphID32(entry.glyphID)] = entry
                 if let glyphName = entry.glyphName {
                     glyphNames.append(glyphName)
                 }

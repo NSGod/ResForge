@@ -26,7 +26,7 @@ public extension FontTable_post {
             for i in 0..<numGlyphs {
                 let entry: GlyphEntry = GlyphEntry(glyphID: UInt16(i), code: codes[i] as NSNumber)
                 glyphEntries.append(entry)
-                glyphIDsToEntries[Glyph32ID(i)] = entry
+                glyphIDsToEntries[GlyphID32(i)] = entry
             }
         }
 

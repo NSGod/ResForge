@@ -26,9 +26,9 @@ extension FontTable_cmap {
                 languageID = try LanguageID.languageIDWith(platformID: encoding.platformID, extendedLanguageID: try reader.read())
                 numGroups = try reader.read()
                 groups = try (0..<numGroups).map { _ in try Group(reader, table: table) }
-                var charCodesToGlyphIDs: [CharCode32: Glyph32ID] = [:]
+                var charCodesToGlyphIDs: [CharCode32: GlyphID32] = [:]
                 for group in groups {
-                    var glyphID: Glyph32ID = 0
+                    var glyphID: GlyphID32 = 0
                     for charCode in group.startCharCode...group.endCharCode {
                         if charCode != 0xffff && glyphID != 0 {
                             charCodesToGlyphIDs[charCode] = glyphID

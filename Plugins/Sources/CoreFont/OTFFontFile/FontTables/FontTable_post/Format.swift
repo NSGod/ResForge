@@ -13,7 +13,7 @@ public extension FontTable_post {
     // abstract superclass
     class Format: FontTableNode {
         public var glyphNames:         [String] = []
-        public var glyphIDsToEntries:  [Glyph32ID: GlyphEntry] = [:]
+        public var glyphIDsToEntries:  [GlyphID32: GlyphEntry] = [:]
 
         // FIXME: move this up to ViewController_post level?
         // for display?
@@ -23,7 +23,7 @@ public extension FontTable_post {
             try super.init(reader, offset: offset, table: table)
         }
 
-        public func glyphName(for glyphID: Glyph32ID) -> String? {
+        public func glyphName(for glyphID: GlyphID32) -> String? {
             return glyphIDsToEntries[glyphID]?.glyphName
         }
 

@@ -26,7 +26,7 @@ public extension FontTable_post {
                 } else {
                     let entry = GlyphEntry(glyphID: GlyphID(i), glyphName: appleStdGlyphNames[index])
                     glyphEntries.append(entry)
-                    glyphIDsToEntries[Glyph32ID(i)] = entry
+                    glyphIDsToEntries[GlyphID32(i)] = entry
                 }
             }
         }

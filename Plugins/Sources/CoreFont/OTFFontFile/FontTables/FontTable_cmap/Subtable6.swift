@@ -31,9 +31,9 @@ extension FontTable_cmap {
                 firstCode = try reader.read()
                 entryCount = try reader.read()
                 glyphIDs = try (0..<entryCount).map { _ in try reader.read() }
-                var charCodesToGlyphIDs: [CharCode32: Glyph32ID] = [:]
+                var charCodesToGlyphIDs: [CharCode32: GlyphID32] = [:]
                 for (i, glyphID) in glyphIDs.enumerated() {
-                    charCodesToGlyphIDs[CharCode32(firstCode + UInt16(i))] = Glyph32ID(glyphID)
+                    charCodesToGlyphIDs[CharCode32(firstCode + UInt16(i))] = GlyphID32(glyphID)
                 }
                 self.charCodesToGlyphIDs = charCodesToGlyphIDs
             }

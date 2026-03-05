@@ -48,7 +48,7 @@ extension FontTable_cmap {
                 let glyphsLength = UInt32(length) - Self.nodeLengthFor(segmentCount: numSegments, glyphCount: 0)
                 let numGlyphs = glyphsLength / UInt32(MemoryLayout<GlyphID>.size)
                 glyphIDs = try (0..<numGlyphs).map { _ in try reader.read() }
-                var charCodesToGlyphIDs: [CharCode32: Glyph32ID] = [:]
+                var charCodesToGlyphIDs: [CharCode32: GlyphID32] = [:]
                 for i in 0..<Int(numSegments) {
                     let endCode = endCodes[i]
                     let startCode = startCodes[i]
@@ -69,7 +69,7 @@ extension FontTable_cmap {
                             if idRangeOffset != 0 {
                                 glyphID = GlyphID(Int(glyphID) + Int(idDelta) & 0x0FFFF)
                             }
-                            charCodesToGlyphIDs[CharCode32(code)] = Glyph32ID(glyphID)
+                            charCodesToGlyphIDs[CharCode32(code)] = GlyphID32(glyphID)
                         }
                     }
                 }

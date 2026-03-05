@@ -13,7 +13,7 @@ extension FontTable_cmap.Subtable12 {
     public final class Group: FontTableNode {
         public var startCharCode:       CharCode32 = 0
         public var endCharCode:         CharCode32 = 0
-        public var startGlyphID:        Glyph32ID = 0
+        public var startGlyphID:        GlyphID32 = 0
 
         public override class var nodeLength: UInt32 { 12 }
 

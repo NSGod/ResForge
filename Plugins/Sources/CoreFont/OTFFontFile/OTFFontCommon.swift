@@ -9,7 +9,7 @@ import Foundation
 import RFSupport
 
 public typealias GlyphID   = UInt16
-public typealias Glyph32ID = UInt32
+public typealias GlyphID32 = UInt32
 
 public extension GlyphID {
     static let notDef:      GlyphID = 0x0000       // GID of .notdef glyph

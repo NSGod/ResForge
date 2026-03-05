@@ -13,5 +13,4 @@ extension FontTable_cmap {
     class Subtable13: Subtable {
 
     }
-    
 }
