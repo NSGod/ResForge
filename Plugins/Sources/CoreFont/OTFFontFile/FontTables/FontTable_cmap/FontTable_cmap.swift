@@ -28,6 +28,7 @@ public final class FontTable_cmap: FontTable {
     @objc dynamic public var encodings:         [Encoding] = []
 
     // MARK: AUX
+    // FIXME: !! figure out preferredEncoding
     @objc dynamic public var preferredEncoding: Encoding!
 
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
@@ -58,12 +59,7 @@ public final class FontTable_cmap: FontTable {
         try encodings.forEach { try $0.write(to: dataHandle) }
     }
 
-    public func glyphID<T>(forCharCode: T) -> T? where T: BinaryInteger {
-
-        return 0
-    }
-
-    public func glyphID(for charCode: CharCode32) -> GlyphID32 {
+    public func glyphID<T: FixedWidthInteger>(for charCode: T) -> T {
         return preferredEncoding.glyphID(for: charCode)
     }
 

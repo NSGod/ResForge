@@ -101,14 +101,14 @@ extension FontTable_cmap {
             _displayNamesLoaded = true
         }
 
-        public func glyphID(for charCode: CharCode32) -> GlyphID32 {
+        public func glyphID<T: FixedWidthInteger>(for charCode: T) -> T {
             return subtable.glyphID(for: charCode)
         }
 
-         /// "The encoding record entries in the 'cmap' header must be sorted first by platform ID, then
-         /// by platform-specific encoding ID, and then by the language field in the corresponding subtable.
-         /// Each platform ID, platform-specific encoding ID, and subtable language combination may appear
-         /// only once in the 'cmap' table."
+        /// "The encoding record entries in the 'cmap' header must be sorted first by platform ID, then
+        /// by platform-specific encoding ID, and then by the language field in the corresponding subtable.
+        /// Each platform ID, platform-specific encoding ID, and subtable language combination may appear
+        /// only once in the 'cmap' table."
         public static func < (lhs: Encoding, rhs: Encoding) -> Bool {
             if lhs.platformID != rhs.platformID { return lhs.platformID.rawValue < rhs.platformID.rawValue }
             if lhs.encodingID != rhs.encodingID { return lhs.encodingID.rawValue < rhs.encodingID.rawValue }

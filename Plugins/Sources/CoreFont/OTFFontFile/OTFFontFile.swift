@@ -139,7 +139,7 @@ public final class OTFFontFile: NSObject {
         return Int(maxpTable?.numGlyphs ?? 0)
     }
 
-    public func glyphName(for glyphID: GlyphID32) -> String {
+    public func glyphName<T: FixedWidthInteger>(for glyphID: T) -> String {
         // FIXME: !! deal with other methods of getting glyph names
         if glyphLookupType == .undetermined { initGlyphNameLookup() }
         var glyphName = ""

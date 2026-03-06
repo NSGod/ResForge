@@ -127,7 +127,7 @@ open class FontTable: OTFFontFileNode {
         return fontFile.numGlyphs
     }
 
-    public func fontGlyphName(for glyphID: GlyphID32) -> String? {
+    public func fontGlyphName<T: FixedWidthInteger>(for glyphID: T) -> String? {
         return fontFile.glyphName(for: glyphID)
     }
 }

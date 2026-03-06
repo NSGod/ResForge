@@ -71,11 +71,11 @@ extension FontTable_cmap {
             handle.write(format)
         }
 
-        public func glyphID(for charCode: CharCode32) -> GlyphID32 {
+        public func glyphID<T: FixedWidthInteger>(for charCode: T) -> T {
             // NOTE: charCodesToGlyphIDs is created in concrete subclasses' init methods (except for UVSes).
-            if charCodesToGlyphIDs == nil { return .undefined }
-            guard let charCodesToGlyphIDs else { return .undefined }
-            return charCodesToGlyphIDs[charCode] ?? .undefined
+            guard let charCodesToGlyphIDs else { return T.undefined }
+            let glyphID: T = T(charCodesToGlyphIDs[CharCode32(charCode)] ?? .undefined)
+            return glyphID
         }
 
         public static func `class`(for format: Format) -> Subtable.Type? {

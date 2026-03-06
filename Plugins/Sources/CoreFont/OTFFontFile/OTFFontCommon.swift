@@ -12,8 +12,11 @@ public typealias GlyphID   = UInt16
 public typealias GlyphID32 = UInt32
 
 public extension GlyphID {
-    static let notDef:      GlyphID = 0x0000       // GID of .notdef glyph
-//    static let undefined:   GlyphID = 0xFFFF    // GID of undefined glyph
+    static let notDef:      GlyphID = 0x0000        /// GID of `.notdef` glyph
+}
+
+public extension GlyphID32 {
+    static let notDef:      GlyphID32 = 0x00000000  /// GID of `.notdef` glyph
 }
 
 // Fixed: 16-bit signed integer plus 16-bit fraction

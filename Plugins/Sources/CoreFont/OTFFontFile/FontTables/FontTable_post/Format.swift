@@ -23,8 +23,8 @@ public extension FontTable_post {
             try super.init(reader, offset: offset, table: table)
         }
 
-        public func glyphName(for glyphID: GlyphID32) -> String? {
-            return glyphIDsToEntries[glyphID]?.glyphName
+        public func glyphName<T: FixedWidthInteger>(for glyphID: T) -> String? {
+            return glyphIDsToEntries[GlyphID32(glyphID)]?.glyphName
         }
 
         public static func `class`(for version: Version) -> Format.Type? {
