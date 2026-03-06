@@ -15,6 +15,9 @@ extension FontTable_feat {
         case exclusive  = 0x8000 /// if set, feature settings are mutually exclusive
     }
 
+    /// https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6feat.html
+    /// https://developer.apple.com/fonts/TrueType-Reference-Manual/RM09/AppendixF.html
+
     public final class FeatureName: FontTableNode {
         @objc public var feature:           FeatureType = .none
         @objc public var nSettings:         UInt16 = 0
@@ -29,6 +32,8 @@ extension FontTable_feat {
             return table.nameTable?.nameFor(nameID: nameID) ?? "<unknown>"
         }()
 
+        public override class var nodeLength: UInt32 { UInt32(MemoryLayout<UInt16>.size) * 4 + UInt32(MemoryLayout<UInt32>.size) } // 12
+
         public override init(_ reader: BinaryDataReader?, offset: Int? = nil, table: FontTable) throws {
             try super.init(reader, offset: offset, table: table)
             if let reader {
@@ -42,6 +47,16 @@ extension FontTable_feat {
                     settings.append(setting)
                 }
             }
+        }
+
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
+            nSettings = UInt16(settings.count)
+            handle.write(feature)
+            handle.write(nSettings)
+            handle.write(settingOffset)
+            handle.write(flags)
+            try settings.forEach { try $0.write(to: handle, offset: Int(settingOffset)) }
         }
     }
 }

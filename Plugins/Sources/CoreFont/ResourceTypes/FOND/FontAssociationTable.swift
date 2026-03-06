@@ -34,10 +34,11 @@ extension FOND {
             entries.sort(by: <)
         }
 
-        public override func write(to dataHandle: DataHandle) throws {
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
             numberOfEntries = Int16(entries.count - 1)
-            dataHandle.write(numberOfEntries)
-            try entries.forEach { try $0.write(to: dataHandle) }
+            handle.write(numberOfEntries)
+            try entries.forEach { try $0.write(to: handle) }
         }
 
         public func add(_ entry: Entry) throws {
@@ -92,10 +93,11 @@ extension FOND.FontAssociationTable {
             super.init()
         }
 
-        public override func write(to dataHandle: DataHandle) throws {
-            dataHandle.write(fontPointSize)
-            dataHandle.write(fontStyle)
-            dataHandle.write(fontID)
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
+            handle.write(fontPointSize)
+            handle.write(fontStyle)
+            handle.write(fontID)
         }
 
         public static func < (lhs: Entry, rhs: Entry) -> Bool {

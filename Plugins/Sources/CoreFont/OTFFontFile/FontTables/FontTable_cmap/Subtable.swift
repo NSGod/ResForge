@@ -23,9 +23,13 @@ extension FontTable_cmap {
             case format13 = 13  /// basically similar to 12; different interp. of `startGlyphID/glyphID` fields
             case format14 = 14
         }
+
         // MARK: -
         @objc public var format:        Format = .format0
-        public var languageID:          LanguageID = .any           // one-based for Mac; should be 0 for all other platforms
+        public var languageID:          LanguageID = .any   /// one-based for Mac; should be 0 for all other platforms
+                                                            /// that is to say, in `cmap`s, the `languageID` is only used on
+                                                            /// the `.mac` platform and is ignored everywhere else
+                                                            /// can be either `UInt16` or `UInt32` depending on the `.format`
 
         // MARK: - AUX:
         public weak var encoding:       Encoding!                   // weak
@@ -61,9 +65,10 @@ extension FontTable_cmap {
             }
         }
 
-        public override func write(to dataHandle: DataHandle, offset: Int? = nil) throws {
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset != nil)
             /// our concrete subclasses take care of seeking to `offset`
-            dataHandle.write(format)
+            handle.write(format)
         }
 
         public func glyphID(for charCode: CharCode32) -> GlyphID32 {

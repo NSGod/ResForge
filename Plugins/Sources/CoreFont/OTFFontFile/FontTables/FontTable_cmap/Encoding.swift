@@ -68,11 +68,12 @@ extension FontTable_cmap {
             reader.popPosition()
         }
 
-        public override func write(to dataHandle: DataHandle) throws {
-            dataHandle.write(platformID)
-            dataHandle.write(encodingID.rawValue)
-            dataHandle.write(offset)
-            try subtable.write(to: dataHandle, offset: Int(offset))
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
+            handle.write(platformID)
+            handle.write(encodingID.rawValue)
+            handle.write(self.offset)
+            try subtable.write(to: handle, offset: Int(self.offset))
         }
 
         private func loadDisplayNamesIfNeeded() {

@@ -49,10 +49,11 @@ public extension FontTable_post {
             }
         }
 
-        public override func write(to dataHandle: DataHandle) throws {
-            dataHandle.write(numberOfGlyphs)
-            glyphNameIndexes.forEach { dataHandle.write($0) }
-            try glyphNames.forEach { try dataHandle.writePString($0) }
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
+            handle.write(numberOfGlyphs)
+            glyphNameIndexes.forEach { handle.write($0) }
+            try glyphNames.forEach { try handle.writePString($0) }
         }
     }
 }

@@ -36,10 +36,11 @@ extension FOND {
             super.init()
         }
 
-        public override func write(to dataHandle: DataHandle) throws {
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
             numberOfEntries = Int16(entries.count - 1)
-            dataHandle.write(numberOfEntries)
-            try entries.forEach { try $0.write(to: dataHandle) }
+            handle.write(numberOfEntries)
+            try entries.forEach { try $0.write(to: handle) }
         }
 
         public static func == (lhs: OffsetTable, rhs: OffsetTable) -> Bool {
@@ -67,8 +68,9 @@ extension FOND.OffsetTable {
             return MemoryLayout<Int32>.size     // 4
         }
 
-        public override func write(to dataHandle: DataHandle) throws {
-            dataHandle.write(offsetOfTable)
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
+            handle.write(offsetOfTable)
         }
 
         public static func == (lhs: Entry, rhs: Entry) -> Bool {

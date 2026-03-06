@@ -26,7 +26,7 @@ public class ResourceNode: NSObject, DataHandleWriting {
         fatalError("\(type(of: self)) subclasses must override")
     }
 
-    public func write(to dataHandle: DataHandle) throws {
+    public func write(to handle: DataHandle, offset: Int? = nil) throws {
         fatalError("\(type(of: self)) subclasses must override")
     }
 }

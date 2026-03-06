@@ -12,6 +12,7 @@ public enum FontTableError: LocalizedError {
     case unknownVersion(String?)
     case unknownFormat(String?)
     case parseError(String?)
+    case writeError(String?)
 }
 
 /// abstract superclass
@@ -55,25 +56,34 @@ open class FontTable: OTFFontFileNode {
 
     }
 
-    /// write to our `dataHandle`
+    /// write those updated data structures to our `dataHandle`
     func write() throws {
         dataHandle.data = tableData
     }
 
-    /// Write `tableData` to provided external `extDataHandle`, and update the specified `OTFsfntDirectoryEntry`.
-    /// This calls `prepareToWrite()` and then `write()` to allow subclasses to update `tableData`.
-    /// It then writes `tableData` to the specified `extDataHandle`.
-    public func write(to extDataHandle: DataHandle, updating entry: OTFsfntDirectoryEntry) throws {
+    /// Write our `tableData` to the provided external data handle `handle`, and update
+    /// the specified `OTFsfntDirectoryEntry`. To allow subclasses a chance to update their data
+    /// before writing, this method first calls the following 2 methods:
+    ///
+    /// `prepareToWrite()` - allows subclasses to update any internal data structures
+    /// `write()` - allows subclasses to write that updated data back into their own `tableData`
+    ///
+    /// This method then handles writing that updated `tableData` to the provided external
+    /// data handle `handle`.
+    /// Subclasses should override `prepareToWrite()` and `write()` rather than override this method.
+    /// The only exception is the `head` table which must do so to leave the
+    /// checksumAdjustment field blank.
+    func write(to handle: DataHandle, updating entry: OTFsfntDirectoryEntry) throws {
         dataHandle = DataHandle()
         try prepareToWrite()
         try write()
         tableData = dataHandle.data
         dataHandle = nil
-        let before: UInt32 = UInt32(extDataHandle.currentOffset)
-        extDataHandle.writeData(tableData)
-        let after: UInt32 = UInt32(extDataHandle.currentOffset)
+        let before: UInt32 = UInt32(handle.currentOffset)
+        handle.writeData(tableData)
+        let after: UInt32 = UInt32(handle.currentOffset)
         let padBytesLength = (~(after & 0x3) &+ 1) & 0x3
-        if padBytesLength > 0 { extDataHandle.writeData(Data(count: Int(padBytesLength))) }
+        if padBytesLength > 0 { handle.writeData(Data(count: Int(padBytesLength))) }
         entry.tableTag = tableTag
         entry.table = self
         entry.offset = before
@@ -87,8 +97,8 @@ open class FontTable: OTFFontFileNode {
 //        if tableTag == .CFF_ { return FontTable_CFF.self }
         if let theClass: FontTable.Type = NSClassFromString("CoreFont.FontTable_\(tableTag.fourCharString)") as? FontTable.Type {
             return theClass
-            /// if class is Nil, try byte-swapping the table tag to see if it's wrong in the font (i.e. 'SOPG' instead of 'GPOS')
-            /// (Yes, I've seen this happen).
+            /// if class is `Nil`, try byte-swapping the table tag to see if it's wrong in the font
+            /// (i.e. `SOPG` instead of `GPOS`; Yes, I've seen this happen).
         } else if let theClass: FontTable.Type = NSClassFromString("CoreFont.FontTable_\(tableTag.byteSwapped.fourCharString)") as? FontTable.Type {
             return theClass
         }

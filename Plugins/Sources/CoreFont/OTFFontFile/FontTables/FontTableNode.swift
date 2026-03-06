@@ -42,11 +42,7 @@ open class FontTableNode: NSObject, NSCopying, DataHandleWriting {
     }
 
     /// subclasses must override
-    public func write(to dataHandle: DataHandle, offset: Int? = nil) throws {
-        fatalError("subclasses must override")
-    }
-
-    public func write(to dataHandle: DataHandle) throws {
+    public func write(to handle: DataHandle, offset: Int? = nil) throws {
         fatalError("subclasses must override")
     }
 }

@@ -188,17 +188,18 @@ public extension FontTable_OS2 {
             bXHeight = try reader.read()
         }
 
-        public override func write(to dataHandle: DataHandle) throws {
-            dataHandle.write(bFamilyType)
-            dataHandle.write(bSerifStyle)
-            dataHandle.write(bWeight)
-            dataHandle.write(bProportion)
-            dataHandle.write(bContrast)
-            dataHandle.write(bStrokeVariation)
-            dataHandle.write(bArmStyle)
-            dataHandle.write(bLetterform)
-            dataHandle.write(bMidline)
-            dataHandle.write(bXHeight)
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
+            handle.write(bFamilyType)
+            handle.write(bSerifStyle)
+            handle.write(bWeight)
+            handle.write(bProportion)
+            handle.write(bContrast)
+            handle.write(bStrokeVariation)
+            handle.write(bArmStyle)
+            handle.write(bLetterform)
+            handle.write(bMidline)
+            handle.write(bXHeight)
         }
     }
 }

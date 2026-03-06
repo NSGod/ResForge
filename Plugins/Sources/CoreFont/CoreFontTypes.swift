@@ -214,7 +214,8 @@ public protocol FontMetrics {
     var isFixedPitch:       Bool        { get }
 }
 
-// See CoreServices/CarbonCore/Script.h
+/// See CoreServices/CarbonCore/Script.h
+/// used in both `FontTable_name.NameRecord`s and in `cmap` entries
 @objc public enum MacScriptID: UInt16, Comparable {
     case roman                  = 0
     case japanese               = 1
@@ -305,8 +306,9 @@ extension MacScriptID: CustomStringConvertible, CustomDebugStringConvertible {
     }
 }
 
-// See CoreServices/CarbonCore/Script.h
-// Language codes are zero-based everywhere but within a 'cmap' table
+/// See CoreServices/CarbonCore/Script.h
+/// Language codes are zero-based everywhere but within a 'cmap' table
+/// used in both `FontTable_name.NameRecord`s and in `cmap` entries
 @objc public enum MacLanguageID: UInt16, Comparable {
     case english            = 0     // .roman script
     case french             = 1     // .roman script

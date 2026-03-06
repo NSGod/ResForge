@@ -49,14 +49,15 @@ extension FOND {
             totalNodeLength = reader.bytesRead - before
         }
 
-        public override func write(to dataHandle: DataHandle) throws {
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
             numberOfEntries = Int16(charCodesToGlyphNames.count)
-            dataHandle.write(numberOfEntries)
+            handle.write(numberOfEntries)
             let charCodes = charCodesToGlyphNames.keys.sorted(by: <)
             for charCode in charCodes {
                 let glyphName = charCodesToGlyphNames[charCode]!
-                dataHandle.write(charCode)
-                try dataHandle.writePString(glyphName)
+                handle.write(charCode)
+                try handle.writePString(glyphName)
             }
         }
 

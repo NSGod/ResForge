@@ -84,24 +84,25 @@ extension FontTable_cmap {
             return UInt32(nodeLength)
         }
 
-        public override func write(to dataHandle: DataHandle, offset: Int? = nil) throws {
-            guard let offset else { throw FontTableError.parseError("No offset") }
-            dataHandle.pushSavedOffset()
-            dataHandle.seek(to: offset)
-            try super.write(to: dataHandle, offset: offset)
-            dataHandle.write(length)
-            dataHandle.write(languageID.rawValue)
-            dataHandle.write(segCountX2)
-            dataHandle.write(searchRange)
-            dataHandle.write(entrySelector)
-            dataHandle.write(rangeShift)
-            endCodes.forEach { dataHandle.write($0) }
-            dataHandle.write(reservedPadding)
-            startCodes.forEach { dataHandle.write($0) }
-            idDeltas.forEach { dataHandle.write($0) }
-            idRangeOffsets.forEach { dataHandle.write($0) }
-            glyphIDs.forEach { dataHandle.write($0) }
-            dataHandle.popAndSeekToSavedOffset()
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset != nil)
+            guard let offset else { throw FontTableError.writeError("No offset") }
+            handle.pushSavedOffset()
+            handle.seek(to: offset)
+            try super.write(to: handle, offset: offset)
+            handle.write(length)
+            handle.write(languageID.rawValue)   // UInt16
+            handle.write(segCountX2)
+            handle.write(searchRange)
+            handle.write(entrySelector)
+            handle.write(rangeShift)
+            endCodes.forEach { handle.write($0) }
+            handle.write(reservedPadding)
+            startCodes.forEach { handle.write($0) }
+            idDeltas.forEach { handle.write($0) }
+            idRangeOffsets.forEach { handle.write($0) }
+            glyphIDs.forEach { handle.write($0) }
+            handle.popAndSeekToSavedOffset()
         }
     }
 }

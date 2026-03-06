@@ -25,10 +25,11 @@ extension FOND {
             super.init(fond:fond)
         }
 
-        public override func write(to dataHandle: DataHandle) throws {
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
             numberOfEntries = Int16(entries.count - 1)
-            dataHandle.write(numberOfEntries)
-            try entries.forEach { try $0.write(to: dataHandle) }
+            handle.write(numberOfEntries)
+            try entries.forEach { try $0.write(to: handle) }
         }
     }
 }
@@ -68,9 +69,10 @@ extension FOND.WidthTable {
             super.init(fond: fond)
         }
 
-        public override func write(to dataHandle: DataHandle) throws {
-            dataHandle.write(style)
-            widths.forEach { dataHandle.write($0) }
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
+            handle.write(style)
+            widths.forEach { handle.write($0) }
         }
     }
 }

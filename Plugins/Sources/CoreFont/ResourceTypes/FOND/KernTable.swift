@@ -35,10 +35,11 @@ extension FOND {
             super.init(fond:fond)
         }
 
-        public override func write(to dataHandle: DataHandle) throws {
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
             numberOfEntries = Int16(entries.count - 1)
-            dataHandle.write(numberOfEntries)
-            try entries.forEach { try $0.write(to: dataHandle) }
+            handle.write(numberOfEntries)
+            try entries.forEach { try $0.write(to: handle) }
         }
 
         public func entry(for fontStyle: MacFontStyle) -> Entry? {
@@ -86,11 +87,12 @@ extension FOND.KernTable {
             super.init(fond: fond)
         }
 
-        public override func write(to dataHandle: DataHandle) throws {
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
             numKerns = UInt16(kernPairs.count)
-            dataHandle.write(style)
-            dataHandle.write(numKerns)
-            try kernPairs.forEach { try $0.write(to: dataHandle) }
+            handle.write(style)
+            handle.write(numKerns)
+            try kernPairs.forEach { try $0.write(to: handle) }
         }
     }
 }
@@ -112,10 +114,11 @@ extension FOND.KernTable {
             kernWidth = try reader.read()
         }
 
-        public func write(to dataHandle: DataHandle) throws {
-            dataHandle.write(kernFirst)
-            dataHandle.write(kernSecond)
-            dataHandle.write(kernWidth)
+        public func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
+            handle.write(kernFirst)
+            handle.write(kernSecond)
+            handle.write(kernWidth)
         }
 
         public var hasOutOfRangeCharCodes: Bool {

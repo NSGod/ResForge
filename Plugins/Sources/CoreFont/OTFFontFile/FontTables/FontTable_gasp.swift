@@ -83,10 +83,10 @@ public extension FontTable_gasp {
             objcBehavior = behavior.rawValue
         }
 
-        public override func write(to dataHandle: DataHandle) throws {
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
             assert(behavior.rawValue == objcBehavior)
-            dataHandle.write(maxPPEM)
-            dataHandle.write(behavior)
+            handle.write(maxPPEM)
+            handle.write(behavior)
         }
 
         public static func < (lhs: Range, rhs: Range) -> Bool {

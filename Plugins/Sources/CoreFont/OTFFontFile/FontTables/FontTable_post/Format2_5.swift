@@ -31,9 +31,10 @@ public extension FontTable_post {
             }
         }
 
-        public override func write(to dataHandle: DataHandle) throws {
-            dataHandle.write(numberOfGlyphs)
-            offsets.forEach { dataHandle.write($0) }
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
+            handle.write(numberOfGlyphs)
+            offsets.forEach { handle.write($0) }
         }
     }
 }

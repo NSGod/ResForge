@@ -93,12 +93,7 @@ public extension FontTable_name {
         }
 
         @available(*, unavailable, message: "use write method that takes stringOffset instead")
-        public override func write(to dataHandle: DataHandle, offset: Int? = nil) throws {
-            fatalError("use write method that takes stringOffset instead")
-        }
-
-        @available(*, unavailable, message: "use write method that takes stringOffset instead")
-        public override func write(to dataHandle: DataHandle) throws {
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
             fatalError("use write method that takes stringOffset instead")
         }
 

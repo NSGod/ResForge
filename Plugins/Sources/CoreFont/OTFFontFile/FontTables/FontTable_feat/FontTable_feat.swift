@@ -8,7 +8,12 @@
 import Foundation
 import RFSupport
 
+/// `REQUIRES`:
+/// `DEPENDS ON`:
+/// `DISPLAY DEPENDS ON`: `name`
+
 /// https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6feat.html
+/// https://developer.apple.com/fonts/TrueType-Reference-Manual/RM09/AppendixF.html
 
 public final class FontTable_feat: FontTable {
     @objc public enum Version: Fixed {
@@ -30,10 +35,30 @@ public final class FontTable_feat: FontTable {
         setOffset = try reader.read()
         featureNames = try (0..<numNames).map { _ in try FeatureName(reader, table: self) }
     }
+
+    override func prepareToWrite() throws {
+        numNames = UInt16(featureNames.count)
+        numSets = 0
+        setOffset = 0
+        var offset: UInt32 = 8 + 4 + UInt32(numNames) * FeatureName.nodeLength
+        featureNames.forEach {
+            $0.settingOffset = offset
+            offset += UInt32($0.settings.count) * SettingName.nodeLength
+        }
+    }
+
+    override func write() throws {
+        dataHandle.write(version)
+        dataHandle.write(numNames)
+        dataHandle.write(numSets)
+        dataHandle.write(setOffset)
+        try featureNames.forEach { try $0.write(to: dataHandle) }
+    }
 }
 
 // See the following:
 //import CoreText.SFNTLayoutTypes
+/// https://developer.apple.com/fonts/TrueType-Reference-Manual/RM09/AppendixF.html
 
 extension FontTable_feat {
 

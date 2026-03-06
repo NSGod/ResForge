@@ -30,8 +30,9 @@ public extension FontTable_post {
             }
         }
 
-        public override func write(to dataHandle: DataHandle) throws {
-            codes.forEach { dataHandle.write($0) }
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
+            codes.forEach { handle.write($0) }
         }
     }
 }

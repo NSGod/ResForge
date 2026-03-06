@@ -57,17 +57,18 @@ extension FOND {
             }
         }
 
-        public override func write(to dataHandle: DataHandle) throws {
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
             if glyphNameEncodingSubtable != nil {
-                offset = Int32(Self.nodeLength + fontNameSuffixSubtable.totalNodeLength)
+                self.offset = Int32(Self.nodeLength + fontNameSuffixSubtable.totalNodeLength)
             }
-            dataHandle.write(fontClass)
-            dataHandle.write(offset)
-            dataHandle.write(reserved)
-            indexes.forEach { dataHandle.write($0) }
-            try fontNameSuffixSubtable.write(to: dataHandle)
+            handle.write(fontClass)
+            handle.write(self.offset)
+            handle.write(reserved)
+            indexes.forEach { handle.write($0) }
+            try fontNameSuffixSubtable.write(to: handle)
             if let glyphNameEncodingSubtable {
-                try glyphNameEncodingSubtable.write(to: dataHandle)
+                try glyphNameEncodingSubtable.write(to: handle)
             }
         }
 

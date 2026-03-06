@@ -118,10 +118,11 @@ extension FOND {
             // NSLog("\(type(of: self)).\(#function) entryIndexesToPostScriptNames == \(entryIndexesToPostScriptNames)")
         }
 
-        public func write(to dataHandle: DataHandle) throws {
-            dataHandle.write(stringCount)
-            try dataHandle.writePString(baseFontName)
-            stringDatas.forEach { dataHandle.writeData($0) }
+        public func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
+            handle.write(stringCount)
+            try handle.writePString(baseFontName)
+            stringDatas.forEach { handle.writeData($0) }
         }
 
         public func postScriptNameForFontEntry(at oneBasedIndex: UInt8) -> String? {

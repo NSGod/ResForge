@@ -719,6 +719,7 @@ public enum LanguageID: Comparable, CustomStringConvertible, CustomDebugStringCo
         }
     }
 
+    /// for `cmap` Subtable formats 12, 13+
     public var extendedRawValue: UInt32 {
         return UInt32(rawValue)
     }

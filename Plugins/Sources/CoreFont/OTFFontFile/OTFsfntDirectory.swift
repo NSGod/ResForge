@@ -43,19 +43,20 @@ public final class OTFsfntDirectory: OTFFontFileNode, DataHandleWriting {
         try super.init(fontFile: fontFile)
     }
 
-    public func write(to dataHandle: DataHandle) throws {
+    public func write(to handle: DataHandle, offset: Int? = nil) throws {
+        assert(offset == nil)
         /// font calls sortEntries()
         calculateSearchParams()
         if format == .true {
             // change to .V1_0, which is more cross-platform/compatible
             format = .V1_0
         }
-        dataHandle.write(format)
-        dataHandle.write(numberOfTables)
-        dataHandle.write(searchRange)
-        dataHandle.write(entrySelector)
-        dataHandle.write(rangeShift)
-        try entries.forEach { try $0.write(to: dataHandle) }
+        handle.write(format)
+        handle.write(numberOfTables)
+        handle.write(searchRange)
+        handle.write(entrySelector)
+        handle.write(rangeShift)
+        try entries.forEach { try $0.write(to: handle) }
     }
 
     public func entry(for tableTag: TableTag) -> OTFsfntDirectoryEntry? {

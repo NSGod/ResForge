@@ -40,17 +40,18 @@ extension FontTable_cmap {
             }
         }
 
-        public override func write(to dataHandle: DataHandle, offset: Int? = nil) throws {
-            guard let offset else { throw FontTableError.parseError("No offset") }
-            dataHandle.pushSavedOffset()
-            dataHandle.seek(to: offset)
-            try super.write(to: dataHandle, offset: offset)
-            dataHandle.write(reserved)
-            dataHandle.write(length)
-            dataHandle.write(languageID.extendedRawValue)
-            dataHandle.write(numGroups)
-            try groups.forEach { try $0.write(to: dataHandle) }
-            dataHandle.popAndSeekToSavedOffset()
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset != nil)
+            guard let offset else { throw FontTableError.writeError("No offset") }
+            handle.pushSavedOffset()
+            handle.seek(to: offset)
+            try super.write(to: handle, offset: offset)
+            handle.write(reserved)
+            handle.write(length)
+            handle.write(languageID.extendedRawValue)   // UInt32
+            handle.write(numGroups)
+            try groups.forEach { try $0.write(to: handle) }
+            handle.popAndSeekToSavedOffset()
         }
     }
 }

@@ -40,11 +40,12 @@ public final class OTFsfntDirectoryEntry: OTFFontFileNode, DataHandleWriting, Co
         try super.init(fontFile: fontFile)
     }
 
-    public func write(to dataHandle: DataHandle) throws {
-        dataHandle.write(tableTag)
-        dataHandle.write(checksum)
-        dataHandle.write(offset)
-        dataHandle.write(length)
+    public func write(to handle: DataHandle, offset: Int? = nil) throws {
+        assert(offset == nil)
+        handle.write(tableTag)
+        handle.write(checksum)
+        handle.write(self.offset)
+        handle.write(length)
     }
 
     public static func sortForParsing(lhs: OTFsfntDirectoryEntry, rhs: OTFsfntDirectoryEntry) -> Bool {

@@ -8,7 +8,7 @@
 import Foundation
 import RFSupport
 
-/// `REQUIRES`: `'maxp'`
+/// `REQUIRES`: `maxp`
 /// `DEPENDS ON`:
 /// `DISPLAY DEPENDS ON`:
 

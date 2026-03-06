@@ -25,10 +25,11 @@ extension FOND {
             super.init()
         }
 
-        public override func write(to dataHandle: DataHandle) throws {
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
             numberOfEntries = Int16(entries.count - 1)
-            dataHandle.write(numberOfEntries)
-            try entries.forEach { try $0.write(to: dataHandle) }
+            handle.write(numberOfEntries)
+            try entries.forEach { try $0.write(to: handle) }
         }
     }
 }
@@ -61,12 +62,13 @@ extension FOND.BoundingBoxTable {
             super.init()
         }
 
-        public override func write(to dataHandle: DataHandle) throws {
-            dataHandle.write(style)
-            dataHandle.write(left)
-            dataHandle.write(bottom)
-            dataHandle.write(right)
-            dataHandle.write(top)
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
+            handle.write(style)
+            handle.write(left)
+            handle.write(bottom)
+            handle.write(right)
+            handle.write(top)
         }
     }
 }

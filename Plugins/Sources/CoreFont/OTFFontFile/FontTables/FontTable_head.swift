@@ -125,7 +125,7 @@ public final class FontTable_head: FontTable {
         magicNumber = Self.magicNumber
     }
 
-    public override func write(to extDataHandle: DataHandle, updating entry: OTFsfntDirectoryEntry?) throws {
+    override func write(to extDataHandle: DataHandle, updating entry: OTFsfntDirectoryEntry?) throws {
         let before: UInt32 = UInt32(extDataHandle.currentOffset)
         extDataHandle.write(version)
         extDataHandle.write(fontRevision)

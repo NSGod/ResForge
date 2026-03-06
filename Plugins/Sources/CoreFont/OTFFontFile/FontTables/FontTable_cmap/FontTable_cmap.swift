@@ -10,7 +10,7 @@ import RFSupport
 
 /// `REQUIRES`:
 /// `DEPENDS ON`:
-/// `DISPLAY DEPENDS ON`: 'post'
+/// `DISPLAY DEPENDS ON`: `post`
 
 /* "The encoding record entries in the 'cmap' header must be sorted first by platform ID, then
  by platform-specific encoding ID, and then by the language field in the corresponding subtable.
@@ -67,9 +67,14 @@ public final class FontTable_cmap: FontTable {
         return preferredEncoding.glyphID(for: charCode)
     }
 
-    public func encodingsFor(platformID: PlatformID, encodingID: EncodingID) -> [Encoding]? {
-
-        return nil
+    /// O(n)
+    public func encodingsFor(platformID: PlatformID, encodingID: EncodingID = .any, languageID: LanguageID = .any) -> [Encoding]? {
+        let encodings = encodings.filter {
+            $0.platformID == platformID &&
+            ($0.encodingID == encodingID || encodingID == .any) &&
+            ($0.subtable.languageID.rawValue == languageID.rawValue || languageID == .any)
+        }
+        return encodings
     }
 }
 

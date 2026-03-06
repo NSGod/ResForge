@@ -39,7 +39,8 @@ public extension FontTable_post {
             }
         }
 
-        public override func write(to dataHandle: DataHandle) throws {
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
             // no op; prevent exception for Format1_0 which does no writing
         }
     }

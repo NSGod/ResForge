@@ -28,11 +28,12 @@ extension FontTable_cmap.Subtable2 {
             }
         }
 
-        public override func write(to dataHandle: DataHandle) throws {
-            dataHandle.write(firstCode)
-            dataHandle.write(entryCount)
-            dataHandle.write(idDelta)
-            dataHandle.write(idRangeOffset)
+        public override func write(to handle: DataHandle, offset: Int? = nil) throws {
+            assert(offset == nil)
+            handle.write(firstCode)
+            handle.write(entryCount)
+            handle.write(idDelta)
+            handle.write(idRangeOffset)
         }
     }
 }
