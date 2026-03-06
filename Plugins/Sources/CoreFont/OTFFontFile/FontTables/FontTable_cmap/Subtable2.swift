@@ -93,5 +93,19 @@ extension FontTable_cmap {
             nodeLength += UInt32(glyphCount) * 2
             return nodeLength
         }
+
+        public override func write(to dataHandle: DataHandle, offset: Int? = nil) throws {
+            if let offset {
+                dataHandle.pushSavedOffset()
+                dataHandle.seek(to: offset)
+                try super.write(to: dataHandle, offset: offset)
+                dataHandle.write(length)
+                dataHandle.write(languageID.rawValue)
+                segmentKeys.forEach { dataHandle.write($0) }
+                try segments.forEach { try $0.write(to: dataHandle) }
+                glyphIDs.forEach { dataHandle.write($0) }
+                dataHandle.popAndSeekToSavedOffset()
+            }
+        }
     }
 }

@@ -39,5 +39,19 @@ extension FontTable_cmap {
                 self.charCodesToGlyphIDs = charCodesToGlyphIDs
             }
         }
+
+        public override func write(to dataHandle: DataHandle, offset: Int? = nil) throws {
+            if let offset {
+                dataHandle.pushSavedOffset()
+                dataHandle.seek(to: offset)
+                try super.write(to: dataHandle, offset: offset)
+                dataHandle.write(reserved)
+                dataHandle.write(length)
+                dataHandle.write(languageID.extendedRawValue)
+                dataHandle.write(numGroups)
+                try groups.forEach { try $0.write(to: dataHandle) }
+                dataHandle.popAndSeekToSavedOffset()
+            }
+        }
     }
 }

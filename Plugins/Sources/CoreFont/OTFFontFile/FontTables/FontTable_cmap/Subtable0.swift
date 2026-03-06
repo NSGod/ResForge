@@ -30,6 +30,18 @@ extension FontTable_cmap {
             }
         }
 
+        public override func write(to dataHandle: DataHandle, offset: Int? = nil) throws {
+            if let offset {
+                dataHandle.pushSavedOffset()
+                dataHandle.seek(to: offset)
+                try super.write(to: dataHandle, offset: offset)
+                dataHandle.write(length)
+                dataHandle.write(languageID.rawValue)
+                glyphIDs.forEach { dataHandle.write($0) }
+                dataHandle.popAndSeekToSavedOffset()
+            }
+        }
+
         public override var nodeLength: UInt32 {
             return 262
         }

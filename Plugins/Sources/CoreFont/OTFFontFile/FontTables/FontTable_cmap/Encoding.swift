@@ -68,6 +68,13 @@ extension FontTable_cmap {
             reader.popPosition()
         }
 
+        public override func write(to dataHandle: DataHandle) throws {
+            dataHandle.write(platformID)
+            dataHandle.write(encodingID.rawValue)
+            dataHandle.write(offset)
+            try subtable.write(to: dataHandle, offset: Int(offset))
+        }
+
         private func loadDisplayNamesIfNeeded() {
             if _displayNamesLoaded { return }
             _platformName = NSLocalizedString("[\(platformID.rawValue)] \(platformID.description)", comment: "")
@@ -108,7 +115,16 @@ extension FontTable_cmap {
         }
 
         public static func compareForPreferred(lhs: Encoding, rhs: Encoding) -> Bool {
-
+            if lhs.platformID != rhs.platformID {
+                if lhs.platformID == .unicode { return false }
+                if rhs.platformID == .unicode { return true }
+                if lhs.platformID == .microsoft { return false }
+                if rhs.platformID == .microsoft { return true }
+                return lhs.platformID < rhs.platformID
+            }
+            if lhs.encodingID != rhs.encodingID {
+                
+            }
             return false
         }
     }

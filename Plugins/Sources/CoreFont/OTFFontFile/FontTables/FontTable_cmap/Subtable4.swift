@@ -76,12 +76,33 @@ extension FontTable_cmap {
                 self.charCodesToGlyphIDs = charCodesToGlyphIDs
             }
         }
-
+        
         public static func nodeLengthFor(segmentCount: UInt16, glyphCount: UInt16) -> UInt32 {
             var nodeLength = MemoryLayout<UInt16>.size * 8
             nodeLength += MemoryLayout<UInt16>.size * 4 * Int(segmentCount)
             nodeLength += MemoryLayout<GlyphID>.size * Int(glyphCount)
             return UInt32(nodeLength)
+        }
+
+        public override func write(to dataHandle: DataHandle, offset: Int? = nil) throws {
+            if let offset {
+                dataHandle.pushSavedOffset()
+                dataHandle.seek(to: offset)
+                try super.write(to: dataHandle, offset: offset)
+                dataHandle.write(length)
+                dataHandle.write(languageID.rawValue)
+                dataHandle.write(segCountX2)
+                dataHandle.write(searchRange)
+                dataHandle.write(entrySelector)
+                dataHandle.write(rangeShift)
+                endCodes.forEach { dataHandle.write($0) }
+                dataHandle.write(reservedPadding)
+                startCodes.forEach { dataHandle.write($0) }
+                idDeltas.forEach { dataHandle.write($0) }
+                idRangeOffsets.forEach { dataHandle.write($0) }
+                glyphIDs.forEach { dataHandle.write($0) }
+                dataHandle.popAndSeekToSavedOffset()
+            }
         }
     }
 }

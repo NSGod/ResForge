@@ -61,6 +61,11 @@ extension FontTable_cmap {
             }
         }
 
+        public override func write(to dataHandle: DataHandle, offset: Int? = nil) throws {
+            /// our concrete subclasses take care of seeking to `offset`
+            dataHandle.write(format)
+        }
+
         public func glyphID(for charCode: CharCode32) -> GlyphID32 {
             // NOTE: charCodesToGlyphIDs is created in concrete subclasses' init methods (except for UVSes).
             if charCodesToGlyphIDs == nil { return .undefined }

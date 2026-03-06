@@ -27,5 +27,12 @@ extension FontTable_cmap.Subtable2 {
                 idRangeOffset = try reader.read()
             }
         }
+
+        public override func write(to dataHandle: DataHandle) throws {
+            dataHandle.write(firstCode)
+            dataHandle.write(entryCount)
+            dataHandle.write(idDelta)
+            dataHandle.write(idRangeOffset)
+        }
     }
 }

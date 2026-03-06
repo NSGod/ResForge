@@ -41,6 +41,23 @@ public final class FontTable_cmap: FontTable {
         encodings = try (0..<nEncodings).map { _ in try Encoding(reader, table: self) }
     }
 
+    override func prepareToWrite() throws {
+        version = .default0
+        nEncodings = UInt16(encodings.count)
+        encodings.sort(by: <)
+        var offset: UInt32 = UInt32(MemoryLayout<UInt16>.size) * 2 + UInt32(nEncodings) * Encoding.nodeLength
+        encodings.forEach {
+            $0.offset = offset
+            offset += $0.subtable.nodeLength
+        }
+    }
+
+    override func write() throws {
+        dataHandle.write(version)
+        dataHandle.write(nEncodings)
+        try encodings.forEach { try $0.write(to: dataHandle) }
+    }
+
     public func glyphID<T>(forCharCode: T) -> T? where T: BinaryInteger {
 
         return 0
@@ -54,6 +71,5 @@ public final class FontTable_cmap: FontTable {
 
         return nil
     }
-
 }
 
