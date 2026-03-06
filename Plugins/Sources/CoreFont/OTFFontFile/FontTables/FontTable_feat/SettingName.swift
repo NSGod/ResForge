@@ -18,7 +18,7 @@ extension FontTable_feat {
 
         // MARK: AUX:
         @objc dynamic lazy public var name:      String = {
-            return table.nameTable?.nameFor(name: self.nameID) ?? "<unknown>"
+            return table.nameTable?.nameFor(nameID: self.nameID) ?? "<unknown>"
         }()
 
         public override class var nodeLength: UInt32 { 4 }

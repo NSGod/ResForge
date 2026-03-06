@@ -86,17 +86,17 @@ public final class FontTable_name: FontTable {
     }
 
     // FIXME: something better to allow preference of English?
-    public func nameFor(name: FontNameID, platform: PlatformID = .any, encoding: EncodingID = .any, language: LanguageID = .any) -> String? {
-        return recordFor(name: name, platform: platform, encoding: encoding, language: language)?.value
+    public func nameFor(nameID: FontNameID, platformID: PlatformID = .any, encodingID: EncodingID = .any, languageID: LanguageID = .any) -> String? {
+        return recordFor(nameID: nameID, platformID: platformID, encodingID: encodingID, languageID: languageID)?.value
     }
 
     /// O(n)
-    public func recordFor(name: FontNameID, platform: PlatformID = .any, encoding: EncodingID = .any, language: LanguageID = .any) -> NameRecord? {
+    public func recordFor(nameID: FontNameID, platformID: PlatformID = .any, encodingID: EncodingID = .any, languageID: LanguageID = .any) -> NameRecord? {
         let record = nameRecords.first(where: {
-            $0.nameID == name &&
-            ($0.platformID == platform || platform == .any) &&
-            ($0.encodingID == encoding || encoding == .any) &&
-            ($0.languageID == language || language == .any)
+            $0.nameID == nameID &&
+            ($0.platformID == platformID || platformID == .any) &&
+            ($0.encodingID == encodingID || encodingID == .any) &&
+            ($0.languageID == languageID || languageID == .any)
         })
         return record
     }

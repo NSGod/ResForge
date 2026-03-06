@@ -26,7 +26,7 @@ extension FontTable_feat {
 
         // MARK: AUX:
         @objc dynamic lazy public var name: String = {
-            return table.nameTable?.nameFor(name: nameID) ?? "<unknown>"
+            return table.nameTable?.nameFor(nameID: nameID) ?? "<unknown>"
         }()
 
         public override init(_ reader: BinaryDataReader?, offset: Int? = nil, table: FontTable) throws {

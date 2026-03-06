@@ -111,6 +111,7 @@ open class FontTable: OTFFontFileNode {
     public var cmapTable: FontTable_cmap? { table(for: .cmap) as? FontTable_cmap }
     public var vheaTable: FontTable_vhea? { table(for: .vhea) as? FontTable_vhea }
     public var vmtxTable: FontTable_vmtx? { table(for: .vmtx) as? FontTable_vmtx }
+    public var featTable: FontTable_feat? { table(for: .feat) as? FontTable_feat }
     
     public var fontNumGlyphs: Int {
         return fontFile.numGlyphs

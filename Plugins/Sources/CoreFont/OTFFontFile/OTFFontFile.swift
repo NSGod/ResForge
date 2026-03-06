@@ -191,6 +191,9 @@ public final class OTFFontFile: NSObject {
     public var vmtxTable: FontTable_vmtx? {
         return table(for: .vmtx) as? FontTable_vmtx
     }
+    public var featTable: FontTable_feat? {
+        return table(for: .feat) as? FontTable_feat
+    }
     public func table(for tableTag: TableTag) -> FontTable? {
         return tableTagsToTables[tableTag]
     }
