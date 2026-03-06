@@ -85,24 +85,23 @@ extension FontTable_cmap {
         }
 
         public override func write(to dataHandle: DataHandle, offset: Int? = nil) throws {
-            if let offset {
-                dataHandle.pushSavedOffset()
-                dataHandle.seek(to: offset)
-                try super.write(to: dataHandle, offset: offset)
-                dataHandle.write(length)
-                dataHandle.write(languageID.rawValue)
-                dataHandle.write(segCountX2)
-                dataHandle.write(searchRange)
-                dataHandle.write(entrySelector)
-                dataHandle.write(rangeShift)
-                endCodes.forEach { dataHandle.write($0) }
-                dataHandle.write(reservedPadding)
-                startCodes.forEach { dataHandle.write($0) }
-                idDeltas.forEach { dataHandle.write($0) }
-                idRangeOffsets.forEach { dataHandle.write($0) }
-                glyphIDs.forEach { dataHandle.write($0) }
-                dataHandle.popAndSeekToSavedOffset()
-            }
+            guard let offset else { throw FontTableError.parseError("No offset") }
+            dataHandle.pushSavedOffset()
+            dataHandle.seek(to: offset)
+            try super.write(to: dataHandle, offset: offset)
+            dataHandle.write(length)
+            dataHandle.write(languageID.rawValue)
+            dataHandle.write(segCountX2)
+            dataHandle.write(searchRange)
+            dataHandle.write(entrySelector)
+            dataHandle.write(rangeShift)
+            endCodes.forEach { dataHandle.write($0) }
+            dataHandle.write(reservedPadding)
+            startCodes.forEach { dataHandle.write($0) }
+            idDeltas.forEach { dataHandle.write($0) }
+            idRangeOffsets.forEach { dataHandle.write($0) }
+            glyphIDs.forEach { dataHandle.write($0) }
+            dataHandle.popAndSeekToSavedOffset()
         }
     }
 }

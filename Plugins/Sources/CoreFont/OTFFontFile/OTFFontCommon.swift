@@ -794,6 +794,7 @@ public enum LanguageID: Comparable, CustomStringConvertible, CustomDebugStringCo
 
 
 public extension FontTable_name {
+
     enum FontNameID: Hashable, CustomStringConvertible, CustomDebugStringConvertible {
         case copyright                 // = 0
         case family                    // = 1
@@ -866,6 +867,7 @@ public extension FontTable_name {
                 case .any:                      return 0xffff
             }
         }
+
         public static func < (lhs: FontNameID, rhs: FontNameID) -> Bool {
             return lhs.rawValue < rhs.rawValue
         }

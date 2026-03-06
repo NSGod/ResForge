@@ -8,6 +8,8 @@
 import Foundation
 import RFSupport
 
+/// https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6feat.html
+
 public final class FontTable_feat: FontTable {
     @objc public enum Version: Fixed {
         case versionDefault1_0 = 0x00010000
@@ -39,7 +41,7 @@ extension FontTable_feat {
         case all                        = 0
         case ligatures                  = 1
         case cursiveConnection          = 2
-        case letterCase                 = 3 /// deprecated; use .lowerCase or .upperCase
+        case letterCase                 = 3 /// deprecated; use `.lowerCase` or `.upperCase`
         case verticalSubstitution       = 4
         case linguisticRearrangement    = 5
         case numberSpacing              = 6
