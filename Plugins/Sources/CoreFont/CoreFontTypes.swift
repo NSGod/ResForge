@@ -30,19 +30,16 @@ public extension CharCode16 {
     static let space: CharCode16 = 0x20
 }
 
-public typealias UVBMP         = UInt16
+public typealias UVBMP      = UInt16
 
-public extension UVBMP {
-    static let undefined: UVBMP = 0xFFFF
+public typealias UV         = UInt32
+
+public extension FixedWidthInteger {
+    static var undefined: Self { .max }
 }
 
-public typealias UV             = UInt32
-
-public extension UV {
-    static let undefined: UV = 0xFFFF_FFFF
-}
-
-public typealias Fixed4Dot12   = Int16
+public typealias Fixed4Dot12    = Int16
+public typealias Fixed8Dot8     = Int16
 
 fileprivate let fixed4: UInt16 = 1 << 12
 
@@ -54,7 +51,6 @@ public func DoubleToFixed4Dot12(_ x: Double) -> Fixed4Dot12 {
     Fixed4Dot12(x * Double(fixed4) + (x < 0 ? -0.5 : 0.5))
 }
 
-public typealias Fixed8Dot8   = Int16
 
 public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible {
     public let rawValue: UInt16

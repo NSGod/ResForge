@@ -350,7 +350,7 @@ final class ViewController_OS2: FontTableViewController, NSControlTextEditingDel
         } else if keyPath == "fsType" {
             undoManager?.setActionName(NSLocalizedString("Change Font Type", comment: ""))
         } else if keyPath == "fsSelection" {
-            undoManager?.setActionName("Change Font Selection")
+            undoManager?.setActionName(NSLocalizedString("Change Font Selection", comment: ""))
         }
     }
 }
