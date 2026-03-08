@@ -41,8 +41,8 @@ extension FOND {
         public var baseFontName:                    String          // Index 1 shown above
                                                                     // This is documented as always being a 256 byte long Pascal string,
                                                                     // but that's not the case.
-        private var entryIndexesToPostScriptNames:  [UInt8: String]
-        private var stringDatas:                    [Data]
+        public private(set) var entryIndexesToPostScriptNames:  [UInt8: String]
+        public private(set) var stringDatas:                    [Data]
         private var _actualStringCount:             Int16           // actual actual string count
 
         public var totalNodeLength: Int {
@@ -107,7 +107,7 @@ extension FOND {
                         done = true
                         break
                     }
-                    let suffix = try stringFromPString(with: stringDatas[Int(nameIndex)])
+                    let suffix = try Self.stringFromPString(with: stringDatas[Int(nameIndex)])
                     fullName += suffix
                 }
                 if done {
@@ -120,6 +120,7 @@ extension FOND {
 
         public func write(to handle: DataHandle, offset: Int? = nil) throws {
             assert(offset == nil)
+            /// `stringCount` is corrected in reading in `init` above, if necessary
             handle.write(stringCount)
             try handle.writePString(baseFontName)
             stringDatas.forEach { handle.writeData($0) }
@@ -133,7 +134,7 @@ extension FOND {
             return entryIndexesToPostScriptNames[oneBasedIndex]
         }
 
-        private func stringFromPString(with data: Data) throws -> String {
+        public static func stringFromPString(with data: Data) throws -> String {
             let length = data.withUnsafeBytes {
                 $0.loadUnaligned(as: UInt8.self)
             }

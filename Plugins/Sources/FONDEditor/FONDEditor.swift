@@ -25,11 +25,13 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     @IBOutlet weak var fontClassBitfieldControl:        BitfieldControl!
     @IBOutlet weak var fontClassField:                  NSTextField!
     @IBOutlet weak var tableView:                       NSTableView! // font assoc. table entries
-
+    @IBOutlet weak var fontNameSuffixTableView:         NSTableView!
+    
     @IBOutlet var fontAssocTableEntriesController:      NSArrayController!
     @IBOutlet var bBoxEntriesController:                NSArrayController!
     @IBOutlet var kernPairsTreeController:              NSTreeController!
-
+    @IBOutlet var fontNameSuffixEntriesController:      NSArrayController!
+    
     @IBOutlet weak var tabView:                         NSTabView!
 
     @IBOutlet var popover:                              NSPopover!
@@ -47,6 +49,8 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     @objc var glyphNameEntries:             [MacEncoding.GlyphNameEntry] = []
     @objc var effectiveGlyphNameEntries:    [MacEncoding.GlyphNameEntry] = []
 
+    @objc dynamic var fontNameSuffixEntries: [FontNameSuffixEntry] = []
+    
     @objc dynamic var objcFFFlags:          UInt16 = 0
     @objc dynamic var objcFontClass:        UInt16 = 0
 
@@ -122,6 +126,9 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
         if fond.styleMappingTable?.glyphNameEncodingSubtable != nil {
             tabView.tabViewItems[3].label = NSLocalizedString("✅ Glyph Name-Encoding Subtable", comment: "")
         }
+        if fond.styleMappingTable?.fontNameSuffixSubtable != nil {
+            tabView.tabViewItems[4].label = NSLocalizedString("✅ Style-Mapping Table", comment: "")
+        }
         objcFFFlags = fond.ffFlags.rawValue
         objcFontClass = fond.styleMappingTable?.fontClass.rawValue ?? 0
         if let kernEntries = fond.kernTable?.entries {
@@ -136,8 +143,13 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
             let entries = MacEncoding.GlyphNameEntry.entries(with: charCodesToGlyphNames)
             mutableArrayValue(forKey: "glyphNameEntries").setArray(entries)
         }
-        // FIXME: should this be replacing rather than appending? YES
-        mutableArrayValue(forKey: "effectiveGlyphNameEntries").setArray( fond.encoding.glyphNameEntries)
+        // FIXME: !! should this be replacing rather than appending? YES
+        mutableArrayValue(forKey: "effectiveGlyphNameEntries").setArray(fond.encoding.glyphNameEntries)
+        
+        if let fontNameSuffixSubtable = fond.styleMappingTable?.fontNameSuffixSubtable {
+            let entries = FontNameSuffixEntry.entries(from: fontNameSuffixSubtable)
+            mutableArrayValue(forKey: "fontNameSuffixEntries").setArray(entries)
+        }
     }
 
     @IBAction func showPopover(_ sender: Any) {
@@ -206,9 +218,12 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
         }
     }
 
+    @IBAction func openReferencedFont(_ sender: Any) {
+        NSLog("\(type(of: self)).\(#function) sender == \(sender)")
+    }
+    
     // MARK: - <NSControlTextEditingDelegate>
     public func control(_ control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
-//        NSLog("\(type(of: self)).\(#function) control == \(control), fieldEditor == \(fieldEditor)")
         if fieldEditor.string.isEmpty { return false }
         return true
     }
@@ -413,6 +428,9 @@ extension FONDEditor: NSTableViewDelegate, NSOutlineViewDelegate {
                     view.textField?.stringValue = "--"
                 }
             }
+            return view
+        } else if tableView == fontNameSuffixTableView {
+            let view: NSTableCellView = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
             return view
         }
         return nil

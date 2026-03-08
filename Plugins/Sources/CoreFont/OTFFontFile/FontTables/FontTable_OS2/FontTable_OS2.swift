@@ -146,7 +146,8 @@ public final class FontTable_OS2: FontTable {
         usWinDescent = try reader.read()
         /// Try to handle insufficient data for specified version gracefully.
         /// If there's not enough data, see if we can knock back the version
-        /// number to match the amount of data found
+        /// number to match the amount of data found, rather than aborting
+        /// the whole parse operation.
         var targetVersion = Version.version0
         do {
             if version >= .version1 {
