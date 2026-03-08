@@ -103,7 +103,6 @@
                                                         </textFieldCell>
                                                         <connections>
                                                             <binding destination="iCG-Ja-hMa" name="value" keyPath="objectValue.glyphName" id="kw4-m5-T6E"/>
-                                                            <outlet property="delegate" destination="-2" id="P5v-Na-tM7"/>
                                                         </connections>
                                                     </textField>
                                                 </subviews>
@@ -143,7 +142,6 @@
                                                         </textFieldCell>
                                                         <connections>
                                                             <binding destination="9a7-fB-viM" name="value" keyPath="objectValue.advanceHeight" id="VHG-uF-K6y"/>
-                                                            <outlet property="delegate" destination="-2" id="csT-Ww-KUV"/>
                                                         </connections>
                                                     </textField>
                                                 </subviews>
@@ -183,7 +181,6 @@
                                                         </textFieldCell>
                                                         <connections>
                                                             <binding destination="bHZ-nU-5A3" name="value" keyPath="objectValue.topSideBearing" id="bBr-ub-2ui"/>
-                                                            <outlet property="delegate" destination="-2" id="R8h-AH-BhA"/>
                                                         </connections>
                                                     </textField>
                                                 </subviews>
