@@ -34,27 +34,29 @@ public final class POSTExporter: AbstractEditor, ResourceEditor, ExportProvider,
     private let manager:        RFEditorManager
     private var _windowTitle:   String = ""
 
-    @objc public var pfaFile:   PostScriptType1FontFile!
+    @objc public var pfaFile:   PostScriptType1FontFile
 
     required public init?(resource: Resource, manager: any RFEditorManager) {
         self.resource = resource
         self.manager = manager
-        super.init(window: nil)
         var resources: [Resource] = manager.allResources(ofType: ResourceType("POST"), currentDocumentOnly: true)
         // MARK: make sure to sort the 'POST' resources by ID in case they're out of order (by indexes) in the font file
         resources.sort { $0.id < $1.id }
         do {
             let postResources: [POST] = try POST.postResources(from: resources)
-            guard let pfaData = try POST.data(from: postResources) else {
-                // FIXME: present error
-                return nil
-            }
+            let pfaData = try POST.data(from: postResources)
             pfaFile = try PostScriptType1FontFile(data: pfaData, options: .full)
-            _windowTitle = "POST 501 – \(501 + resources.count): \(String(describing: pfaFile.postScriptName))"
+            if let postScriptName = pfaFile.postScriptName {
+                _windowTitle = NSLocalizedString("POST 501 – \(501 + resources.count): \(postScriptName)", comment: "")
+            } else {
+                _windowTitle = NSLocalizedString("POST 501 – \(501 + resources.count)", comment: "")
+            }
         } catch {
+            // FIXME: present error
             NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
             return nil
         }
+        super.init(window: nil)
     }
 
     required init?(coder: NSCoder) {
@@ -86,15 +88,18 @@ public final class POSTExporter: AbstractEditor, ResourceEditor, ExportProvider,
 
     @IBAction func exportFont(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
-        guard let pfaFile else { return }
         let panel = NSSavePanel()
         panel.allowedFileTypes = ["pfa"]
-        panel.nameFieldStringValue = pfaFile.postScriptName
+        if let psName = pfaFile.postScriptName {
+            panel.nameFieldStringValue = psName
+        } else {
+            panel.nameFieldStringValue = "UntitledFont"
+        }
         panel.beginSheetModal(for: self.window!) { (result) in
             if result == .OK {
                 if let url = panel.url {
                     do {
-                        try pfaFile.write(to: url)
+                        try self.pfaFile.write(to: url)
                     } catch {
                         NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
                     }

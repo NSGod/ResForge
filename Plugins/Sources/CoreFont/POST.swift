@@ -36,7 +36,7 @@ public struct POST {
     }
 
     // MARK: only .ascii output format is currently supported
-    public static func data(from postResources: [POST], outputFormat: PostScriptType1FontFile.Format = .ascii) throws -> Data? {
+    public static func data(from postResources: [POST], outputFormat: PostScriptType1FontFile.Format = .ascii) throws -> Data {
         if outputFormat == .binary {
             fatalError("Binary PostScript output format not supported")
         }
@@ -73,6 +73,9 @@ public struct POST {
         }
         // FIXME: or should this be .macOSRoman?
         // FIXME: this still needs to have octal escape sequences resolved (for example, '\251' -> '©')
-        return mString.data(using: .utf8)
+        guard let data = mString.data(using: .utf8) else {
+            throw PostScriptError.encodingFailed("could not encode in PFA as .utf8 String")
+        }
+        return data
     }
 }

@@ -10,6 +10,7 @@ import RFSupport
 import Dispatch
 
 public enum PostScriptError : LocalizedError {
+    case encodingFailed(String?)
     case invalidFontData(String?)
     case activationFailed(String?)
     case deactivationFailed(String?)

@@ -20,7 +20,7 @@ public extension DataHandleWriting {
 //    }
 }
 
-public class DataHandle {
+public final class DataHandle {
     public var data:                    Data
     public var bigEndian:               Bool
 

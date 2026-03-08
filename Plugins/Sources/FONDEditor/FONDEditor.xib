@@ -1944,7 +1944,7 @@
                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Tg-K1-kuF">
                                             <rect key="frame" x="511" y="353" width="228" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" selectable="YES" alignment="right" title="13 font name suffix subtable entries" id="udT-nN-djd">
+                                            <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" selectable="YES" alignment="right" id="udT-nN-djd">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -2579,7 +2579,7 @@
             <real key="minimum" value="-7"/>
             <real key="maximum" value="7"/>
         </numberFormatter>
-        <numberFormatter formatterBehavior="custom10_4" numberStyle="decimal" usesGroupingSeparator="NO" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" id="xr1-bH-K56" userLabel="SInt16Formatter">
+        <numberFormatter formatterBehavior="custom10_4" numberStyle="decimal" usesGroupingSeparator="NO" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" id="xr1-bH-K56" userLabel="int16Formatter">
             <real key="minimum" value="-32768"/>
             <real key="maximum" value="32767"/>
         </numberFormatter>
