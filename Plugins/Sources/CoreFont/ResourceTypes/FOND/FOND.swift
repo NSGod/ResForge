@@ -190,7 +190,13 @@ public final class FOND: NSObject {
             ewSUnused       = try reader.read()
             intl0           = try reader.read()
             intl1           = try reader.read()
-            ffVersion       = try reader.read()
+            let vers: UInt16 = try reader.read()
+            if let version = Version(rawValue: vers) {
+                ffVersion = version
+            } else {
+                ffVersion = .version1
+                NSLog("\(type(of: self)).\(#function) *** NOTICE: unknown version: \(vers); defaulting to .version1")
+            }
         } else {
             ffFlags         = [.dontUseFractWidthTable, .ignoreFractEnable]
             famID           = ResID(resource.id)
@@ -505,11 +511,13 @@ extension FOND {
    ///   0x0001    Original format as designed by the font developer. This font family record probably has the width tables and most of the fields are filled.
    ///   0x0002    This record may contain the offset and bounding-box tables.
    ///   0x0003    This record definitely contains the offset and bounding-box tables.
+   ///   0x0004    Mine (MD): Seen in some Apple Japanese fonts (平成角ゴシック / Heisei Kaku Gothic)
    @objc public enum Version : UInt16 {
        case version0   = 0
        case version1   = 1
        case version2   = 2
        case version3   = 3
+       case version4   = 4
    }
 }
 

@@ -33,18 +33,20 @@ public final class FontNameSuffixEntry: NSObject, Comparable {
             }
             entries.append(entry)
         }
-        var lastKey: UInt8 = orderedKeys.last! + 1
-        for data in suffixSubtable.stringDatas[Int(lastKey - 2)...Int(suffixSubtable.stringCount - 2)] {
-            let entry = FontNameSuffixEntry()
-            entry.index = Int(lastKey)
-            do {
-                try entry.encodedStringRepresentation = "\\p" + FOND.FontNameSuffixSubtable.stringFromPString(with: data)
-                try entry.postScriptName = FOND.FontNameSuffixSubtable.stringFromPString(with: data)
-            } catch {
-                NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+        if suffixSubtable.stringCount >= 2 {
+            var lastKey: UInt8 = orderedKeys.last! + 1
+            for data in suffixSubtable.stringDatas[Int(lastKey - 2)...Int(suffixSubtable.stringCount - 2)] {
+                let entry = FontNameSuffixEntry()
+                entry.index = Int(lastKey)
+                do {
+                    try entry.encodedStringRepresentation = "\\p" + FOND.FontNameSuffixSubtable.stringFromPString(with: data)
+                    try entry.postScriptName = FOND.FontNameSuffixSubtable.stringFromPString(with: data)
+                } catch {
+                    NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+                }
+                entries.append(entry)
+                lastKey &+= 1
             }
-            entries.append(entry)
-            lastKey &+= 1
         }
         return entries
     }

@@ -266,6 +266,7 @@ public final class NFNT: NSObject {
             if reader.bytesRemaining > 0 {
                 NSLog("\(type(of: self)).\(#function) **** yet NFNT contains more data!")
             }
+            _charsToGlyphs = [:]
             _notDef = .nullGlyph
             haveBuiltGlyphs = true
             return
