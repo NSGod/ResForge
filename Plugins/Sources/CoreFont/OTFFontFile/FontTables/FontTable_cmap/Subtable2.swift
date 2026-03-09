@@ -48,37 +48,39 @@ extension FontTable_cmap {
                 /// they take a slightly different logic than the double-byte mappings
                 var charCodesToGlyphIDs: [CharCode32: GlyphID32] = [:]
                 var seen: [Bool] = Array(repeating: true, count: 256)
-                for i: UInt16 in 0..<256 {
-                    let key = segmentKeys[Int(i)] / 8
-                    if key == 0 { /* it's a single-byte char code */
+                for i in 0..<256 {
+                    let key = segmentKeys[i] / 8
+                    if key == 0 { /// it's a single-byte char code
                         let segment = segments[Int(key)]
                         if i >= segment.firstCode && i <= (segment.firstCode + segment.entryCount) {
                             let segDelta: UInt16 = (segment.idRangeOffset - ((_nSegments - key - 1) * UInt16(Segment.nodeLength) + 2)) / 2
-                            var glyphID = glyphIDs[Int(segDelta + i - segment.firstCode)]
+                            var glyphID = glyphIDs[Int(segDelta) + i - Int(segment.firstCode)]
                             let code = i
                             if glyphID != 0 {
-                                // glyphID = glyphID + UInt16(segment.idDelta) & 0x10000
-                                glyphID = glyphID + UInt16(segment.idDelta)
+                                // glyphID = GlyphID(Int(glyphID) + Int(segment.idDelta) & 0x10000)
+                                glyphID = GlyphID(Int(glyphID) + Int(segment.idDelta))
                                 charCodesToGlyphIDs[CharCode32(code)] = GlyphID32(glyphID)
                             }
                         }
-                        seen[Int(i)] = true
+                        seen[i] = true
                     } else {
-                        seen[Int(i)] = false
+                        seen[i] = false
                     }
                 }
-                for hi: UInt16 in 1..<256 {
-                    if !seen[Int(hi)] {
-                        let key = segmentKeys[Int(hi)] / 8
-                        let segment = segments[Int(key)]
-                        for i in 0..<segment.entryCount {
-                            let segDelta = (segment.idRangeOffset - ((_nSegments - key - 1) * UInt16(Segment.nodeLength) + 2)) / 2
-                            var glyphID = glyphIDs[Int(segDelta + i)]
-                            let lo = segment.firstCode + UInt16(i)
-                            let code = hi << 8 | (lo > 255 ? 0 : lo)
+                for hi in 1..<256 {
+                    if !seen[hi] {
+                        let key: Int = Int(segmentKeys[hi]) / 8
+                        let segment: Segment = segments[key]
+                        for i in 0..<Int(segment.entryCount) {
+                            let segDelta: UInt16 = (segment.idRangeOffset - ((_nSegments - UInt16(key) - 1) * UInt16(Segment.nodeLength) + 2)) / 2
+                            var glyphID: GlyphID = glyphIDs[Int(segDelta) + i]
+                            let lo: UInt16 = segment.firstCode + UInt16(i)
+                            let code: UInt16 = UInt16(hi) << 8 | (lo > 255 ? 0 : lo)
                             if glyphID != 0 {
-                                glyphID = (glyphID + UInt16(segment.idDelta)) & 0x0ffff
-                                charCodesToGlyphIDs[CharCode32(code)] = GlyphID32(glyphID)
+                                glyphID = GlyphID(truncatingIfNeeded: Int(glyphID) + Int(segment.idDelta))
+                                if glyphID != 0 {
+                                    charCodesToGlyphIDs[CharCode32(code)] = GlyphID32(glyphID)
+                                }
                             }
                         }
                     }

@@ -133,7 +133,7 @@ public final class FOND: NSObject {
         let scriptID = MacEncoding.scriptID(for: ResID(resource.id))
         NSLog("\(type(of: self)).\(#function) resID: \(resource.id), scriptID: \(scriptID)")
         guard var encoding = MacEncoding.encodingFor(scriptID: scriptID, postScriptFontName: basePostScriptName) else {
-            NSLog("\(type(of: self)).\(#function) *** WARNING: unsupported scriptID: \(scriptID), \(scriptID.description); falling back to .macRoman")
+            NSLog("\(type(of: self)).\(#function) *** WARNING: unsupported scriptID: [\(scriptID.rawValue)] \(scriptID.description); falling back to .macRoman")
             // unsupported encoding; default to .macRoman?
             return .macRoman
         }

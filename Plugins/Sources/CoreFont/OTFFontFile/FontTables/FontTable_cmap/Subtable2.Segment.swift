@@ -9,10 +9,11 @@ import Foundation
 import RFSupport
 
 extension FontTable_cmap.Subtable2 {
-
+    
+    /// aka `SubHeader` record
     public class Segment: FontTableNode {
-        public var firstCode:       UInt16 = 0
-        public var entryCount:      UInt16 = 0
+        public var firstCode:       UInt16 = 0  /// first valid low byte for this segment
+        public var entryCount:      UInt16 = 0  /// Number of valid low bytes
         public var idDelta:         Int16 = 0
         public var idRangeOffset:   UInt16 = 0
 
