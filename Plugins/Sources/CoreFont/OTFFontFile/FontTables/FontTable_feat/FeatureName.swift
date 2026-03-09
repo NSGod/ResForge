@@ -38,7 +38,12 @@ extension FontTable_feat {
             assert(offset == nil)
             try super.init(reader, offset: offset, table: table)
             if let reader {
-                feature = try reader.read()
+                let feat: UInt16 = try reader.read()
+                if let featureType = FeatureType(rawValue: feat) {
+                    feature = featureType
+                } else {
+                    NSLog("\(type(of: self)).\(#function) *** ERROR: unknown feature: \(feat)")
+                }
                 nSettings = try reader.read()
                 settingOffset = try reader.read()
                 flags = try reader.read()

@@ -64,6 +64,7 @@ public final class OTFFontFile: NSObject {
                 tableTagsToTables[entry.tableTag] = table
             } catch {
                 // FIXME: allow lower errors to come through rather than making everything an invalid range error
+                NSLog("\(type(of: self)).\(#function) error == \(error)")
                 throw FontFileError.invalidRange(entry.tableTag)
             }
         }

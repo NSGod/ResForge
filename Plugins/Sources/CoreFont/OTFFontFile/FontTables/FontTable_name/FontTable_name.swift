@@ -16,6 +16,19 @@ public final class FontTable_name: FontTable {
     @objc public enum Format: UInt16 {
         case format0    = 0
         case format1    = 1     // not supported by Apple
+        
+        /// I've encountered some weird values here (UInt16.max), but
+        /// `.format0` is pretty much the only value used so
+        /// default back to that.
+        public init?(rawValue: UInt16) {
+            switch rawValue {
+                case 0: self = .format0
+                case 1: self = .format1
+                default:
+                    NSLog("\(type(of: self)).\(#function) *** WARNING: unknown 'name' table format \(rawValue); using .format0")
+                    self = .format0
+            }
+        }
     }
 
     // MARK: -
@@ -31,11 +44,7 @@ public final class FontTable_name: FontTable {
     // MARK: -
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
-        let format: UInt16 = try reader.read()
-        guard let format = Format(rawValue: format) else {
-            throw FontTableError.unknownFormat("Unknown 'name' table format (\(format))")
-        }
-        self.format = format
+        format = try reader.read()
         count = try reader.read()
         stringOffset = try reader.read()
         nameRecords = try (0..<count).map { _ in try NameRecord(reader, stringOffset: stringOffset, table: self) }

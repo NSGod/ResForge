@@ -102,6 +102,8 @@ extension FontTable_feat {
         case upperCase                  = 38
         case languageTag                = 39
         case cjkRomanSpacing            = 103
+        case unknown16000               = 16000
+        case unknown16001               = 16001
         case none                       = 0xffff
     }
 }
