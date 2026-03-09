@@ -76,6 +76,7 @@ public extension FontTable_gasp {
         }
         
         public override init(_ reader: BinaryDataReader?, offset: Int? = nil, table: FontTable) throws {
+            assert(offset == nil)
             guard let reader else { throw FontTableError.parseError("No reader") }
             try super.init(reader, offset: offset, table: table)
             maxPPEM = try reader.read()

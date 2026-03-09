@@ -27,6 +27,7 @@ extension FontTable_feat {
         public override class var nodeLength: UInt32 { 4 }
 
         public override init(_ reader: BinaryDataReader?, offset: Int? = nil, table: FontTable) throws {
+            assert(offset != nil)
             try super.init(reader, offset: offset, table: table)
             guard let reader, let offset else { throw FontTableError.parseError("No reader or offset") }
             reader.pushSavedPosition()

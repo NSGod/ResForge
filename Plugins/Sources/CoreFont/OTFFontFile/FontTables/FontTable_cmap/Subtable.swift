@@ -28,8 +28,8 @@ extension FontTable_cmap {
         @objc public var format:        Format = .format0
         public var languageID:          LanguageID = .any   /// one-based for Mac; should be 0 for all other platforms
                                                             /// that is to say, in `cmap`s, the `languageID` is only used on
-                                                            /// the `.mac` platform and is ignored everywhere else
-                                                            /// can be either `UInt16` or `UInt32` depending on the `.format`
+                                                            /// the `.mac` platform and is ignored everywhere else.
+                                                            /// Can be either `UInt16` or `UInt32` depending on the `.format`
 
         // MARK: - AUX:
         public weak var encoding:       Encoding!                   // weak
@@ -58,6 +58,8 @@ extension FontTable_cmap {
         private var _hasLoadedGlyphMappings: Bool = false
 
         public required init(_ reader: BinaryDataReader?, offset: Int? = nil, encoding: Encoding, table: FontTable) throws {
+            /// `Encoding` takes care of setting offset before we do our reading
+            assert(offset == nil)
             self.encoding = encoding
             try super.init(reader, offset: offset, table: table)
             if let reader {

@@ -49,6 +49,7 @@ extension FontTable_cmap {
         private var _displayNamesLoaded = false
 
         public override init(_ reader: BinaryDataReader?, offset: Int? = nil, table: FontTable) throws {
+            assert(offset == nil)
             guard let reader else { throw FontTableError.parseError("No reader") }
             try super.init(reader, offset: offset, table: table)
             guard let platID = PlatformID(rawValue: try reader.read()) else {

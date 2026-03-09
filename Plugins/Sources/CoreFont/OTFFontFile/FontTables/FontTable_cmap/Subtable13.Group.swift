@@ -18,6 +18,7 @@ extension FontTable_cmap.Subtable13 {
         public override class var nodeLength: UInt32 { 12 }
 
         public required override init(_ reader: BinaryDataReader?, offset: Int? = nil, table: FontTable) throws {
+            assert(offset == nil)
             try super.init(reader, offset: offset, table: table)
             if let reader {
                 startCharCode = try reader.read()

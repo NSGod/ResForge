@@ -35,6 +35,7 @@ extension FontTable_feat {
         public override class var nodeLength: UInt32 { UInt32(MemoryLayout<UInt16>.size) * 4 + UInt32(MemoryLayout<UInt32>.size) } // 12
 
         public override init(_ reader: BinaryDataReader?, offset: Int? = nil, table: FontTable) throws {
+            assert(offset == nil)
             try super.init(reader, offset: offset, table: table)
             if let reader {
                 feature = try reader.read()
