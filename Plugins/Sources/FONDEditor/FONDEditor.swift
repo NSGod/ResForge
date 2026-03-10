@@ -9,6 +9,7 @@ import Cocoa
 import RFSupport
 import CoreFont
 
+// FIXME: this class is starting to get a bit unwieldy
 public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDelegate, NSTextFieldDelegate {
     public static var bundle: Bundle { .module }
     public static let supportedTypes = [
@@ -47,7 +48,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     @objc var glyphWidths:                  [WidthTreeNode] = []
 
     @objc var glyphNameEntries:             [MacEncoding.GlyphNameEntry] = []
-    @objc var effectiveGlyphNameEntries:    [MacEncoding.GlyphNameEntry] = []
+    // @objc var effectiveGlyphNameEntries:    [MacEncoding.GlyphNameEntry] = []
 
     @objc dynamic var fontNameSuffixEntries: [FontNameSuffixEntry] = []
     
@@ -144,8 +145,8 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
             mutableArrayValue(forKey: "glyphNameEntries").setArray(entries)
         }
         // FIXME: !! should this be replacing rather than appending? YES
-        mutableArrayValue(forKey: "effectiveGlyphNameEntries").setArray(fond.encoding.glyphNameEntries)
         
+        // mutableArrayValue(forKey: "effectiveGlyphNameEntries").setArray(fond.encoding.glyphNameEntries)
         if let fontNameSuffixSubtable = fond.styleMappingTable?.fontNameSuffixSubtable {
             let entries = FontNameSuffixEntry.entries(from: fontNameSuffixSubtable)
             mutableArrayValue(forKey: "fontNameSuffixEntries").setArray(entries)
@@ -224,67 +225,15 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     
     // MARK: - <NSControlTextEditingDelegate>
     public func control(_ control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
-        if fieldEditor.string.isEmpty { return false }
-        return true
+        return !fieldEditor.string.isEmpty
     }
 
     // MARK: -
     @IBAction func exportKernPairs(_ sender: Any) {
-        NSLog("\(type(of: self)).\(#function)")
         let entries = selectedKernTableEntries()
         if entries.isEmpty { return }
-        var panel: NSSavePanel!
-        if entries.count == 1 {
-            panel = NSSavePanel()
-            panel.allowedFileTypes = [KernPairExporter.GPOSFeatureUTType,
-                                      KernPairExporter.CSVUTType]
-            let entry = entries[0]
-            if let name = fond.postScriptNameForFont(with: entry.style) {
-                if let filename = (name as NSString).appendingPathExtension("txt") {
-                    panel.nameFieldStringValue = filename
-                }
-            }
-        } else {
-            // if more than one entry, we need to export multiple files
-            let oPanel = NSOpenPanel()
-            oPanel.allowsMultipleSelection = false
-            oPanel.canChooseFiles = false
-            oPanel.canChooseDirectories = true
-            oPanel.prompt = NSLocalizedString("Choose", comment: "")
-            oPanel.message = NSLocalizedString("Choose the folder to export the kern pair files to", comment: "")
-            panel = oPanel
-        }
-        panel.isExtensionHidden = false
-        let viewController = KernPairSaveAccessoryViewController(with: panel)
-        panel.accessoryView = viewController.view
-        (panel as? NSOpenPanel)?.isAccessoryViewDisclosed = true
-        panel.beginSheetModal(for: self.window!) { [self] (result) in
-            if result == .OK {
-                viewController.saveOptions()
-                let config = viewController.config
-                if entries.count == 1 {
-                    guard let rep: String = KernPairExporter.representation(of: entries.first!, using: config, manager: manager) else { return }
-                    do {
-                        try rep.write(to: panel.url!, atomically: true, encoding: .utf8)
-                    } catch {
-                        NSLog("\(type(of: self)).\(#function) *** ERROR == \(error)")
-                    }
-                } else {
-                    guard let parentDirURL = panel.url else { return }
-                    for entry in entries {
-                        if let name = fond.postScriptNameForFont(with: entry.style) {
-                            guard let rep = KernPairExporter.representation(of: entry, using: config, manager: manager) else { continue }
-                            let url = parentDirURL.appendingPathComponent(name).appendingPathExtension(config.pathExtension).assuringUniqueFilename()
-                            do {
-                                try rep.write(to: url, atomically: true, encoding: .utf8)
-                            } catch {
-                                 NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        let exportController: KernPairExporterController = KernPairExporterController(entries: entries, editor: self, manager: manager)
+        exportController.export()
     }
 
     private func selectedKernTableEntries() -> [FOND.KernTable.Entry] {
