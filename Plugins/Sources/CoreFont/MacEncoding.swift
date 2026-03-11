@@ -120,6 +120,7 @@ public final class MacEncoding: Copyable, CustomStringConvertible {
 
     fileprivate static let unsupported: Set<MacScriptID> = Set([.japanese, .tradChinese, .korean, .simpChinese, .vietnamese])
 
+    // Can return nil if encoding is a 2-byte we don't support
     public static func encodingFor(scriptID: MacScriptID, languageID macLanguageIDPlus1: MacLanguageID = .none, postScriptFontName: String? = nil) -> MacEncoding? {
         var langID = macLanguageIDPlus1
         if (macLanguageIDPlus1 != .none && macLanguageIDPlus1 != .english) {

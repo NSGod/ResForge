@@ -312,9 +312,9 @@ public final class FOND: NSObject {
     }
 
     public func unitsPerEm(for fontStyle: MacFontStyle, manager: RFEditorManager? = nil) -> UnitsPerEm {
-        /* Here we'll assume that if there's a mix of entries for both TrueType
+        /* Here we'll assume that if there's a mix of font association table entries for both TrueType
          (fontPointSize of 0) and Bitmap fonts, that the bitmap fonts are merely for
-         screen display and don't reference possible PostScript outline fonts. So
+         screen display and don't necessarily reference possible PostScript outline fonts 'LWFN'. So
          we first check for any TT fonts w/ the specified style, then resort to looking
          at the bitmap entries if that finds nothing.
 

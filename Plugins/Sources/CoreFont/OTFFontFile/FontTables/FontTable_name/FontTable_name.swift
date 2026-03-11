@@ -94,6 +94,10 @@ public final class FontTable_name: FontTable {
         // FIXME: add support for format 1?
     }
 
+    public var postScriptName: String {
+        return nameFor(nameID: .postscript) ?? NSLocalizedString("<Unknown>", comment: "")
+    }
+    
     // FIXME: something better to allow preference of English?
     public func nameFor(nameID: FontNameID, platformID: PlatformID = .any, encodingID: EncodingID = .any, languageID: LanguageID = .any) -> String? {
         return recordFor(nameID: nameID, platformID: platformID, encodingID: encodingID, languageID: languageID)?.value

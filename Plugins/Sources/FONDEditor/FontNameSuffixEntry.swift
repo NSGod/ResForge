@@ -7,7 +7,7 @@
 
 import Cocoa
 import CoreFont
-import OrderedCollections
+import RFSupport
 
 public final class FontNameSuffixEntry: NSObject, Comparable {
     @objc dynamic public var index:                         Int = 0
@@ -17,7 +17,19 @@ public final class FontNameSuffixEntry: NSObject, Comparable {
     @objc dynamic public var lwfnURL:                       URL?
     public var sfntResID:                                   ResID?
     
-    public static func entries(from suffixSubtable: FOND.FontNameSuffixSubtable) -> [FontNameSuffixEntry] {
+    public static func entries(from suffixSubtable: FOND.FontNameSuffixSubtable, manager: RFEditorManager) -> [FontNameSuffixEntry] {
+        var postScriptNamesToSfntResIDs: [String: Int] = [:]
+        /// first look for an 'sfnt' with this PostScript name
+        let sfntResources = manager.allResources(ofType: .sfnt, currentDocumentOnly: true)
+        do {
+            try sfntResources.forEach { resource in
+                let fontFile = try OTFFontFile(resource.data)
+                postScriptNamesToSfntResIDs[fontFile.postScriptName] = resource.id
+            }
+        } catch {
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+        }
+        let docDirURL: URL? = manager.document?.fileURL?.deletingLastPathComponent()
         var entries: [FontNameSuffixEntry] = []
         let entryIndexCount = suffixSubtable.entryIndexesToPostScriptNames.count
         let orderedKeys: [UInt8] = suffixSubtable.entryIndexesToPostScriptNames.keys.sorted()
@@ -30,6 +42,14 @@ public final class FontNameSuffixEntry: NSObject, Comparable {
                 entry.encodedStringRepresentation = "\\p\(suffixSubtable.entryIndexesToPostScriptNames[key]!)"
             } else {
                 entry.encodedStringRepresentation = suffixSubtable.stringDatas[Int(key - 2)].map { String(format: "%d", $0) }.joined(separator: " ")
+            }
+            if let sfntResID = postScriptNamesToSfntResIDs[entry.postScriptName] {
+                entry.sfntResID = ResID(sfntResID)
+            } else {
+                /// Try to locate the 'LWFN' font file in the same directory as the font suitcase
+                let fontFileName = MD533Filename(forPostScriptFontName: entry.postScriptName)
+                entry.lwfnFilename = fontFileName
+                entry.lwfnURL = docDirURL?.appendingPathComponent(fontFileName)
             }
             entries.append(entry)
         }

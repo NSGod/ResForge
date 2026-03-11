@@ -62,6 +62,10 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     private static let keyPaths = Set(["objcFFFlags", "objcFontClass"])
     private static let fontAsscKeyPaths = Set(["objcFontStyle", "fontPointSize", "fontID"])
     private static var fontAsscContext = 2
+    
+    private static var postScriptARedIcon: NSImage = {
+        return NSImage(contentsOf: FONDEditor.bundle.url(forResource: "postScriptARed", withExtension: "pdf")!)!
+    }()
 
     public override var windowNibName: NSNib.Name {
         "FONDEditor"
@@ -101,7 +105,8 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
         flagsBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFFFlags")
         fontClassBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFontClass")
         tabView.selectTabViewItem(at: UserDefaults.standard.integer(forKey: "FONDEditor.selectedTabIndex"))
-        tableView.doubleAction = #selector(doubleClickOpenFont(_:))
+        tableView.doubleAction = #selector(doubleClickOpenReferencedFont(_:))
+        fontNameSuffixTableView.doubleAction = #selector(doubleClickOpenReferencedFont(_:))
         loadFOND()
         Self.fondKeyPaths.forEach { fond.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.fondContext) }
         Self.keyPaths.forEach { addObserver(self, forKeyPath: $0, options: [.new, .old], context: nil) }
@@ -145,10 +150,9 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
             mutableArrayValue(forKey: "glyphNameEntries").setArray(entries)
         }
         // FIXME: !! should this be replacing rather than appending? YES
-        
         // mutableArrayValue(forKey: "effectiveGlyphNameEntries").setArray(fond.encoding.glyphNameEntries)
         if let fontNameSuffixSubtable = fond.styleMappingTable?.fontNameSuffixSubtable {
-            let entries = FontNameSuffixEntry.entries(from: fontNameSuffixSubtable)
+            let entries = FontNameSuffixEntry.entries(from: fontNameSuffixSubtable, manager: manager)
             mutableArrayValue(forKey: "fontNameSuffixEntries").setArray(entries)
         }
     }
@@ -197,34 +201,66 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
         self.setDocumentEdited(false)
     }
 
-    @IBAction func openFont(_ sender: Any) {
-        // try to get the row of the button we clicked.
-        guard let loc = NSApp.currentEvent?.locationInWindow else { return }
-        let revLoc = tableView.convert(loc, from: nil)
-        let row = tableView.row(at: revLoc)
-        if row < 0 { return }
-        openFont(at: row)
+    private enum SenderTag: Int {
+        case fontAssociationTableView = 1
+        case fontNameSuffixTableView = 2
     }
 
-    @IBAction func doubleClickOpenFont(_ sender: Any) {
-        // Ignore double-clicks in table header
-        guard tableView.clickedRow != -1 else { return }
-        openFont(at: tableView.clickedRow)
-    }
-
-    private func openFont(at rowIndex: Int) {
-        let entry = (fontAssocTableEntriesController.arrangedObjects as! [FOND.FontAssociationTable.Entry])[rowIndex]
-        if let font: Resource = manager.findResource(type: entry.fontPointSize == 0 ? .sfnt : .nfnt , id: Int(entry.fontID), currentDocumentOnly: true) {
-            manager.open(resource: font)
+    // MARK: - open font association table fonts
+    private func openFonts(at indexes: IndexSet) {
+        let entries = ((fontAssocTableEntriesController.arrangedObjects as! [FOND.FontAssociationTable.Entry]) as NSArray).objects(at: indexes) as! [FOND.FontAssociationTable.Entry]
+        entries.forEach {
+            if let font = manager.findResource(type: $0.fontPointSize == 0 ? .sfnt : .nfnt, id: Int($0.fontID), currentDocumentOnly: true) {
+                manager.open(resource: font)
+            }
         }
     }
 
-    @IBAction func openReferencedFont(_ sender: Any) {
-        NSLog("\(type(of: self)).\(#function) sender == \(sender)")
+    // MARK: - open referenced fonts
+    private func openReferencedFonts(at indexes: IndexSet) {
+        let entries = ((fontNameSuffixEntriesController.arrangedObjects as! [FontNameSuffixEntry]) as NSArray).objects(at: indexes) as! [FontNameSuffixEntry]
+        entries.forEach {
+            if let sfntResID = $0.sfntResID, let sfnt = manager.findResource(type: .sfnt, id: Int(sfntResID), currentDocumentOnly: true) {
+                manager.open(resource: sfnt)
+            } else if let lwfnURL = $0.lwfnURL {
+                NSWorkspace.shared.activateFileViewerSelecting([lwfnURL])
+            }
+        }
     }
-    
+
+    /// `sender` can be an `->` `NSButton` or an `NSMenuItem`
+    @IBAction func openReferencedFonts(_ sender: Any) {
+        NSLog("\(type(of: self)).\(#function) sender == \(sender)")
+        guard let senderTag = SenderTag(rawValue: (sender as AnyObject).tag) else { return }
+        if sender is NSMenuItem {
+            if senderTag == .fontAssociationTableView {
+                openFonts(at: fontAssocTableEntriesController.selectionIndexes)
+            } else {
+                openReferencedFonts(at: fontNameSuffixEntriesController.selectionIndexes)
+            }
+        } else if sender is NSButton {
+            // try to get the row of the button we clicked
+            guard let loc = NSApp.currentEvent?.locationInWindow else { return }
+            if senderTag == .fontAssociationTableView {
+                openFonts(at: IndexSet(integer: tableView.row(at: tableView.convert(loc, from: nil))))
+            } else {
+                openReferencedFonts(at: IndexSet.init(integer: fontNameSuffixTableView.row(at: fontNameSuffixTableView.convert(loc, from: nil))))
+            }
+        }
+    }
+
+    @IBAction func doubleClickOpenReferencedFont(_ sender: Any) {
+        // Ignore double-clicks in table header:
+        if (sender as! NSTableView).clickedRow < 0 { return }
+        if tableView == sender as? NSTableView {
+            openFonts(at: IndexSet(integer: tableView.clickedRow))
+        } else {
+            openReferencedFonts(at: IndexSet(integer: fontNameSuffixTableView.clickedRow))
+        }
+    }
+
     // MARK: - <NSControlTextEditingDelegate>
-    public func control(_ control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
+    @objc public func control(_ control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
         return !fieldEditor.string.isEmpty
     }
 
@@ -260,8 +296,38 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
                 menuItem.title = NSLocalizedString("Export \(entries.count) Kern Pair Entries…", comment: "")
             }
             return true
+        } else if action == #selector(openReferencedFonts(_:)) {
+            guard let tag = SenderTag(rawValue: menuItem.tag) else { return false }
+            if tag == .fontAssociationTableView {
+                let items = fontAssocTableEntriesController.selectedObjects as! [FOND.FontAssociationTable.Entry]
+                if items.isEmpty {
+                    menuItem.title = NSLocalizedString("Open Fonts", comment: "")
+                } else if items.count == 1 {
+                    menuItem.title = NSLocalizedString("Open “\(name(for: items.first!))”", comment: "")
+                } else {
+                    menuItem.title = NSLocalizedString("Open \(items.count) Fonts", comment: "")
+                }
+                return items.count > 0
+            } else {
+                let items = fontNameSuffixEntriesController.selectedObjects as! [FontNameSuffixEntry]
+                if items.isEmpty {
+                    menuItem.title = NSLocalizedString("Open Fonts", comment: "")
+                } else if items.count == 1 {
+                    menuItem.title = NSLocalizedString("Open “\(items.first!.postScriptName)”", comment: "")
+                } else {
+                    menuItem.title = NSLocalizedString("Open \(items.count) Fonts", comment: "")
+                }
+                return items.count > 0
+            }
         }
         return super.validateMenuItem(menuItem)
+    }
+
+    public func name(for entry: FOND.FontAssociationTable.Entry) -> String {
+        if let fontName = fond.postScriptNameForFont(with: entry.fontStyle) {
+            return (entry.fontPointSize == 0 ? fontName : "\(fontName) \(entry.fontPointSize)")
+        }
+        return NSLocalizedString("--", comment: "")
     }
 
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -354,7 +420,7 @@ extension FONDEditor: NSTableViewDelegate, NSOutlineViewDelegate {
         if tableView == bBoxTableView {
             let view: NSTableCellView = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
             if let id = tableColumn?.identifier, id.rawValue == "style" { return view }
-            /// need to set the unitsPerEm of the Fixed4Dot12ToEmValueFormatter
+            /// need to set the unitsPerEm of the `Fixed4Dot12ToEmValueFormatter`
             if let bboxEntries = bBoxEntriesController.arrangedObjects as? [FOND.BoundingBoxTable.Entry] {
                 if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
                     let entry = bboxEntries[row]
@@ -368,18 +434,28 @@ extension FONDEditor: NSTableViewDelegate, NSOutlineViewDelegate {
                 view.textField?.delegate = self
                 return view
             }
-            if let entries = fontAssocTableEntriesController.arrangedObjects as? [FOND.FontAssociationTable.Entry] {
-                let entry = entries[row]
-                if let fontName = fond.postScriptNameForFont(with: entry.fontStyle) {
-                    let name = (entry.fontPointSize == 0 ? fontName : "\(fontName) \(entry.fontPointSize)")
-                    view.textField?.stringValue = name
-                } else {
-                    view.textField?.stringValue = "--"
-                }
-            }
+            view.textField?.stringValue = name(for: (fontAssocTableEntriesController.arrangedObjects as! [FOND.FontAssociationTable.Entry])[row])
             return view
         } else if tableView == fontNameSuffixTableView {
             let view: NSTableCellView = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
+            if tableColumn?.identifier.rawValue != "referencedFont" { return view }
+            let bCellView = view as! ButtonTableCellView
+            let entry = (fontNameSuffixEntriesController.arrangedObjects as! [FontNameSuffixEntry])[row]
+            if entry.sfntResID != nil {
+                let image = NSImage(systemSymbolName: "f.cursive", accessibilityDescription: nil)
+                bCellView.imageView?.image = image
+                bCellView.textField?.stringValue = entry.postScriptName
+                bCellView.button?.isHidden = false
+            } else if entry.lwfnURL != nil {
+                bCellView.imageView?.image = Self.postScriptARedIcon
+                bCellView.textField?.stringValue = entry.lwfnFilename
+                bCellView.button?.isHidden = false
+            } else {
+                bCellView.imageView?.image = nil
+                bCellView.textField?.stringValue = ""
+                bCellView.button?.isHidden = true
+            }
+            bCellView.button.tag = SenderTag.fontNameSuffixTableView.rawValue
             return view
         }
         return nil

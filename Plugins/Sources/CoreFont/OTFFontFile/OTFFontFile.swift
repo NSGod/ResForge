@@ -125,6 +125,10 @@ public final class OTFFontFile: NSObject {
         tables.sort(by: FontTable.OTFWritingOrderSort)
     }
 
+    public var postScriptName: String {
+        return nameTable?.postScriptName ?? NSLocalizedString("<Unknown>", comment: "")
+    }
+    
     public var numGlyphs: Int {
         if glyphLookupType == .undetermined { initGlyphNameLookup() }
         // FIXME: !! allow for other methods to get glyph count (see /afdko/c/spot/source/global.c for more info)

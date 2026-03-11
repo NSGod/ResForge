@@ -58,7 +58,7 @@ extension NFNT {
         // 10 - 11; reserved, should be 0
         public static let reserved12               = FontType(rawValue: 1 << 12) // reserved, should be 1
         public static let isFixedWidthFont         = FontType(rawValue: 1 << 13)
-        public static let expandFontHeight         = FontType(rawValue: 1 << 14) // reserved, should be 0
+        public static let expandFontHeight         = FontType(rawValue: 1 << 14)
         // 15 reserved, should be 0
     }
 }
