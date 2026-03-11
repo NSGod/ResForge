@@ -10,13 +10,38 @@ import CoreFont
 import RFSupport
 
 public final class FontNameSuffixEntry: NSObject, Comparable {
-    @objc dynamic public var index:                         Int = 0
-    @objc dynamic public var encodedStringRepresentation:   String = ""
-    @objc dynamic public var postScriptName:                String = ""
-    @objc dynamic public var lwfnFilename:                  String = ""
-    @objc dynamic public var lwfnURL:                       URL?
-    public var sfntResID:                                   ResID?
-    
+    @objc public enum FontType: Int {
+        case sfnt
+        case postScript
+        case missingPostScript
+        case none
+    }
+
+    private static var pascalLengthString: NSAttributedString {
+        let psString = "\\p"
+        let attrs: [NSAttributedString.Key: Any] = [.font: NSFont.systemFont(ofSize: NSFont.smallSystemFontSize),
+                                                    .foregroundColor: NSColor.tertiaryLabelColor]
+        return NSAttributedString(string: psString, attributes: attrs)
+    }
+    private static var attrs: [NSAttributedString.Key: Any] = [.font: NSFont.systemFont(ofSize: NSFont.smallSystemFontSize),
+                                                               .foregroundColor: NSColor.labelColor]
+
+    @objc dynamic public var index:                             Int = 0
+    @objc dynamic public var encodedAttrStringRepresentation:   NSAttributedString!
+    @objc dynamic public var postScriptName:                    String = ""
+    @objc dynamic public var lwfnFilename:                      String = ""
+    @objc dynamic public var lwfnURL:                           URL?
+    public var sfntResID:                                       ResID?
+    @objc dynamic public var fontType:                          FontType {
+        if sfntResID != nil {
+            return .sfnt
+        } else if let lwfnURL {
+            return FileManager.default.fileExists(atPath: lwfnURL.path) ? .postScript : .missingPostScript
+        } else {
+            return .none
+        }
+    }
+
     public static func entries(from suffixSubtable: FOND.FontNameSuffixSubtable, manager: RFEditorManager) -> [FontNameSuffixEntry] {
         var postScriptNamesToSfntResIDs: [String: Int] = [:]
         /// first look for an 'sfnt' with this PostScript name
@@ -39,9 +64,13 @@ public final class FontNameSuffixEntry: NSObject, Comparable {
             entry.index = Int(key)
             entry.postScriptName = suffixSubtable.entryIndexesToPostScriptNames[key]!
             if key == 1 {
-                entry.encodedStringRepresentation = "\\p\(suffixSubtable.entryIndexesToPostScriptNames[key]!)"
+                let mString = Self.pascalLengthString.mutableCopy() as! NSMutableAttributedString
+                mString.append(NSAttributedString(string: "\(suffixSubtable.entryIndexesToPostScriptNames[key]!)", attributes: Self.attrs))
+                entry.encodedAttrStringRepresentation = mString
             } else {
-                entry.encodedStringRepresentation = suffixSubtable.stringDatas[Int(key - 2)].map { String(format: "%d", $0) }.joined(separator: " ")
+                let mString = Self.pascalLengthString.mutableCopy() as! NSMutableAttributedString
+                mString.append(NSAttributedString(string: suffixSubtable.stringDatas[Int(key - 2)].dropFirst().map { String(format: "%d", $0) }.joined(separator: " "), attributes: Self.attrs))
+                entry.encodedAttrStringRepresentation = mString
             }
             if let sfntResID = postScriptNamesToSfntResIDs[entry.postScriptName] {
                 entry.sfntResID = ResID(sfntResID)
@@ -59,7 +88,9 @@ public final class FontNameSuffixEntry: NSObject, Comparable {
                 let entry = FontNameSuffixEntry()
                 entry.index = Int(lastKey)
                 do {
-                    try entry.encodedStringRepresentation = "\\p" + FOND.FontNameSuffixSubtable.stringFromPString(with: data)
+                    let mString = Self.pascalLengthString.mutableCopy() as! NSMutableAttributedString
+                    mString.append(NSAttributedString(string: try FOND.FontNameSuffixSubtable.stringFromPString(with: data), attributes: Self.attrs))
+                    entry.encodedAttrStringRepresentation = mString
                     try entry.postScriptName = FOND.FontNameSuffixSubtable.stringFromPString(with: data)
                 } catch {
                     NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")

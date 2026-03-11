@@ -159,8 +159,8 @@ extension FontEditor: NSTableViewDelegate, NSTableViewDataSource {
         } else {
             let calcChecksum = entry.table.calculatedChecksum
             let isGood = entry.checksum == calcChecksum
-            // FIXME: make this compatible with dark mode or not hard-coded
-            view.textField?.textColor = isGood ? NSColor.labelColor : NSColor(srgbRed: 183.0/255.0, green: 130.0/255.0, blue: 0, alpha: 1.0)
+            // FIXME: make this more compatible with dark mode?
+            view.textField?.textColor = isGood ? .labelColor : .systemOrange.shadow(withLevel: 0.2)
             view.textField?.toolTip = isGood ? "" : String(format: NSLocalizedString("The calculated checksum is 0x%08X", comment: ""), calcChecksum)
             view.textField?.font = .monospacedSystemFont(ofSize: NSFont.smallSystemFontSize, weight: .regular)
         }

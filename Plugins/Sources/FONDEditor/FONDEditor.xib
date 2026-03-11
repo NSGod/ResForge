@@ -1819,9 +1819,6 @@
                                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                 </textFieldCell>
-                                                                                <connections>
-                                                                                    <binding destination="I4R-t6-IBT" name="value" keyPath="objectValue.encodedStringRepresentation" id="A3R-vd-JsG"/>
-                                                                                </connections>
                                                                             </textField>
                                                                         </subviews>
                                                                         <connections>

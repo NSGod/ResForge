@@ -66,6 +66,9 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     private static var postScriptARedIcon: NSImage = {
         return NSImage(contentsOf: FONDEditor.bundle.url(forResource: "postScriptARed", withExtension: "pdf")!)!
     }()
+    private static var trueTypeIcon: NSImage = {
+        return NSImage(contentsOf: FONDEditor.bundle.url(forResource: "trueType", withExtension: "pdf")!)!
+    }()
 
     public override var windowNibName: NSNib.Name {
         "FONDEditor"
@@ -219,13 +222,15 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     // MARK: - open referenced fonts
     private func openReferencedFonts(at indexes: IndexSet) {
         let entries = ((fontNameSuffixEntriesController.arrangedObjects as! [FontNameSuffixEntry]) as NSArray).objects(at: indexes) as! [FontNameSuffixEntry]
+        var urls: [URL] = []
         entries.forEach {
             if let sfntResID = $0.sfntResID, let sfnt = manager.findResource(type: .sfnt, id: Int(sfntResID), currentDocumentOnly: true) {
                 manager.open(resource: sfnt)
             } else if let lwfnURL = $0.lwfnURL {
-                NSWorkspace.shared.activateFileViewerSelecting([lwfnURL])
+                if FileManager.default.fileExists(atPath: lwfnURL.path) { urls.append(lwfnURL) }
             }
         }
+        if urls.count > 0 { NSWorkspace.shared.activateFileViewerSelecting(urls) }
     }
 
     /// `sender` can be an `->` `NSButton` or an `NSMenuItem`
@@ -310,14 +315,19 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
                 return items.count > 0
             } else {
                 let items = fontNameSuffixEntriesController.selectedObjects as! [FontNameSuffixEntry]
-                if items.isEmpty {
+                let validItems = items.filter { $0.fontType == .sfnt || $0.fontType == .postScript }
+                if validItems.isEmpty {
                     menuItem.title = NSLocalizedString("Open Fonts", comment: "")
-                } else if items.count == 1 {
-                    menuItem.title = NSLocalizedString("Open “\(items.first!.postScriptName)”", comment: "")
+                } else if validItems.count == 1 {
+                    if validItems.first!.fontType == .sfnt {
+                        menuItem.title = NSLocalizedString("Open “\(validItems.first!.postScriptName)”", comment: "")
+                    } else {
+                        menuItem.title = NSLocalizedString("Open “\(validItems.first!.lwfnFilename)”", comment: "")
+                    }
                 } else {
-                    menuItem.title = NSLocalizedString("Open \(items.count) Fonts", comment: "")
+                    menuItem.title = NSLocalizedString("Open \(validItems.count) Fonts", comment: "")
                 }
-                return items.count > 0
+                return validItems.count > 0
             }
         }
         return super.validateMenuItem(menuItem)
@@ -437,23 +447,26 @@ extension FONDEditor: NSTableViewDelegate, NSOutlineViewDelegate {
             view.textField?.stringValue = name(for: (fontAssocTableEntriesController.arrangedObjects as! [FOND.FontAssociationTable.Entry])[row])
             return view
         } else if tableView == fontNameSuffixTableView {
-            let view: NSTableCellView = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
-            if tableColumn?.identifier.rawValue != "referencedFont" { return view }
-            let bCellView = view as! ButtonTableCellView
             let entry = (fontNameSuffixEntriesController.arrangedObjects as! [FontNameSuffixEntry])[row]
-            if entry.sfntResID != nil {
-                let image = NSImage(systemSymbolName: "f.cursive", accessibilityDescription: nil)
-                bCellView.imageView?.image = image
+            if entry.fontType == .none && tableColumn?.identifier.rawValue == "referencedFont" { return nil }
+            let view: NSTableCellView = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
+            if tableColumn?.identifier.rawValue != "referencedFont" && tableColumn?.identifier.rawValue != "encodedStringRep" {
+                return view
+            }
+            if tableColumn?.identifier.rawValue == "encodedStringRep" {
+                view.textField?.attributedStringValue = entry.encodedAttrStringRepresentation
+                return view
+            }
+            let bCellView = view as! ButtonTableCellView
+            if entry.fontType == .sfnt {
+                // bCellView.imageView?.image = NSImage(systemSymbolName: "f.cursive", accessibilityDescription: nil)
+                bCellView.imageView?.image = Self.trueTypeIcon
                 bCellView.textField?.stringValue = entry.postScriptName
-                bCellView.button?.isHidden = false
-            } else if entry.lwfnURL != nil {
+            } else if entry.fontType == .postScript || entry.fontType == .missingPostScript {
                 bCellView.imageView?.image = Self.postScriptARedIcon
                 bCellView.textField?.stringValue = entry.lwfnFilename
-                bCellView.button?.isHidden = false
-            } else {
-                bCellView.imageView?.image = nil
-                bCellView.textField?.stringValue = ""
-                bCellView.button?.isHidden = true
+                bCellView.textField?.textColor = entry.fontType == .missingPostScript ? .systemRed : .labelColor
+                if entry.fontType == .missingPostScript { bCellView.textField?.toolTip = NSLocalizedString("\(entry.lwfnURL?.path ?? "Unknown") (missing)", comment: "") }
             }
             bCellView.button.tag = SenderTag.fontNameSuffixTableView.rawValue
             return view
