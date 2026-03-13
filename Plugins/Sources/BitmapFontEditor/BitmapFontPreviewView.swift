@@ -6,7 +6,6 @@
 //
 
 import Cocoa
-import RFSupport
 import CoreFont
 
 public final class BitmapFontPreviewView: NSView {
@@ -95,7 +94,6 @@ public final class BitmapFontPreviewView: NSView {
 
     /// actually, this won't be called unless we're in the nib, which we might not be
     public override func awakeFromNib() {
-//        NSLog("\(type(of: self)).\(#function)")
         syncSize()
         if !_setupViewFrameChanges {
             NotificationCenter.default.addObserver(self, selector: #selector(viewFrameChanged), name: Self.frameDidChangeNotification, object: self)
@@ -106,7 +104,6 @@ public final class BitmapFontPreviewView: NSView {
 
     /// this should be called for our programmatic creation
     public override func viewDidMoveToWindow() {
-//        NSLog("\(type(of: self)).\(#function)")
         syncSize()
         if !_setupViewFrameChanges {
             NotificationCenter.default.addObserver(self, selector: #selector(viewFrameChanged), name: Self.frameDidChangeNotification, object: self)
@@ -119,7 +116,6 @@ public final class BitmapFontPreviewView: NSView {
 
     @objc private func viewFrameChanged(_ notification: Notification) {
         syncSize()
-        // self.needsDisplay = true // ??
     }
 
     private func syncSize() {
@@ -133,8 +129,13 @@ public final class BitmapFontPreviewView: NSView {
         }
         NSBezierPath.defaultLineWidth = borderThickness
         if borderThickness > 0, let borderColor {
+            /// allow an odd border thickness to be drawn cleanly by insetting 0.5
+            var rect = self.bounds
+            if borderThickness.truncatingRemainder(dividingBy: 2) != 0 {
+                rect = rect.insetBy(dx: 0.5, dy: 0.5)
+            }
             borderColor.setStroke()
-            NSBezierPath(rect: self.bounds).stroke()
+            NSBezierPath(rect: rect).stroke()
         }
         /// allow us to exist w/o an nfnt
         if textStorage.nfnt != nil {
