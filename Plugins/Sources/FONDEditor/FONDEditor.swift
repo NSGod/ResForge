@@ -149,7 +149,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
             mutableArrayValue(forKey: "glyphWidths").setArray(glyphWidths)
         }
         if let charCodesToGlyphNames = fond.styleMappingTable?.glyphNameEncodingSubtable?.charCodesToGlyphNames, charCodesToGlyphNames.count > 0 {
-            let entries = MacEncoding.GlyphNameEntry.entries(with: charCodesToGlyphNames)
+            let entries = MacEncoding.GlyphNameEntry.entries(with: charCodesToGlyphNames).sorted(by: <)
             mutableArrayValue(forKey: "glyphNameEntries").setArray(entries)
         }
         // FIXME: !! should this be replacing rather than appending? YES

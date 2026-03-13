@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24506" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24764" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24764"/>
         <capability name="System colors introduced in macOS 10.14" minToolsVersion="10.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -1553,6 +1553,9 @@
         <numberFormatter formatterBehavior="default10_4" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="HNs-oS-O58" userLabel="uInt32HexFormatter" customClass="HexNumberFormatter" customModule="CoreFont">
             <real key="minimum" value="0.0"/>
             <real key="maximum" value="4294967295"/>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="boolean" keyPath="leadingZeroes" value="YES"/>
+            </userDefinedRuntimeAttributes>
         </numberFormatter>
         <numberFormatter formatterBehavior="custom10_4" allowsFloats="NO" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="1D2-ib-T7b" userLabel="uInt16NumberFormatter">
             <real key="minimum" value="0.0"/>
@@ -1579,7 +1582,7 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <clipView key="contentView" id="Nxg-oG-5Gh">
                         <rect key="frame" x="1" y="1" width="312" height="598"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="18" headerView="7fj-5K-Cen" viewBased="YES" id="o04-1g-Fnd" userLabel="unicodeRangesTableView">
                                 <rect key="frame" x="0.0" y="0.0" width="312" height="570"/>
@@ -1601,7 +1604,7 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView identifier="unicodeRangeTableCellView" id="ylf-wb-dVr" userLabel="unicodeRangeTableCellView" customClass="CheckboxTableCellView" customModule="FontEditor">
-                                                <rect key="frame" x="8" y="0.0" width="295" height="18"/>
+                                                <rect key="frame" x="18" y="0.0" width="295" height="18"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0it-0W-mIT">
@@ -1672,7 +1675,7 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <clipView key="contentView" id="0S2-gs-eje">
                         <rect key="frame" x="1" y="1" width="312" height="572"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="18" headerView="BbT-Nn-2E6" viewBased="YES" id="YQg-8o-9DX" userLabel="codePageRangesTableView">
                                 <rect key="frame" x="0.0" y="0.0" width="313" height="544"/>
@@ -1694,7 +1697,7 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView identifier="codePageRangeTableCellView" id="16s-rY-2u2" userLabel="unicodeRangeTableCellView" customClass="CheckboxTableCellView" customModule="FontEditor">
-                                                <rect key="frame" x="8" y="0.0" width="296" height="18"/>
+                                                <rect key="frame" x="18" y="0.0" width="296" height="18"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1Fy-z5-WVD">
