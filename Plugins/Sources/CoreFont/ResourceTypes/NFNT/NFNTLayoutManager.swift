@@ -54,6 +54,7 @@ public final class NFNTLayoutManager {
     /// Do the actual drawing:
     public func drawGlyphs(at point: NSPoint) {
         if !layoutIsValid { generateGlyphs() }
+        let nfnt = textStorage.nfnt!
         var drawRect: NSRect = .zero
         drawRect.origin = point
         for lineFragment in lineFragments {
@@ -62,7 +63,7 @@ public final class NFNTLayoutManager {
             drawRect.origin.x += point.x
             drawRect.origin.y += point.y
             for glyph in lineFragment.generatedGlyphs {
-                drawRect.origin.x += CGFloat(glyph.nfnt.kernMax + Int16(glyph.offset))
+                drawRect.origin.x += CGFloat(nfnt.kernMax + Int16(glyph.offset))
                 drawRect.size.height = NSHeight(glyph.glyphRect)
                 if glyph.charCode == CharCode16.space {
                     drawRect.size.width = CGFloat(glyph.width)
@@ -70,7 +71,7 @@ public final class NFNTLayoutManager {
                     NSBezierPath(rect: drawRect).fill()
                 } else {
                     drawRect.size.width = glyph.glyphRect.size.width
-                    glyph.nfnt.bitmapImage?.draw(in: drawRect, from: glyph.glyphRect, operation: .plusDarker, fraction: 1.0, respectFlipped: true, hints: nil)
+                    nfnt.bitmapImage?.draw(in: drawRect, from: glyph.glyphRect, operation: .plusDarker, fraction: 1.0, respectFlipped: true, hints: nil)
                 }
                 drawRect.origin.x += CGFloat(glyph.width)
             }

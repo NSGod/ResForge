@@ -32,6 +32,6 @@ public final class NFNTLineFragment {
 
     public func add(_ glyph: NFNT.Glyph) {
         generatedGlyphs.append(glyph)
-        widthOfGlyphs += CGFloat(((glyph.nfnt.kernMax + Int16(glyph.offset)) + Int16(glyph.width)))
+        widthOfGlyphs += CGFloat((glyph.nfnt?.kernMax ?? 0) + Int16(glyph.offset) + Int16(glyph.width))
     }
 }
