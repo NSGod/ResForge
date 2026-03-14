@@ -34,6 +34,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     @IBOutlet var fontNameSuffixEntriesController:      NSArrayController!
     
     @IBOutlet weak var tabView:                         NSTabView!
+    @IBOutlet weak var encodingTabView:                 NSTabView!
 
     @IBOutlet var popover:                              NSPopover!
     @IBOutlet weak var popoverButton:                   NSButton!
@@ -44,16 +45,16 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     private let manager:                    RFEditorManager
     @objc dynamic var fond:                 FOND
 
-    @objc var kernPairs:                    [KernTreeNode] = []
-    @objc var glyphWidths:                  [WidthTreeNode] = []
+    @objc dynamic var kernPairs:                    [KernTreeNode] = []
+    @objc dynamic var glyphWidths:                  [WidthTreeNode] = []
 
-    @objc var glyphNameEntries:             [MacEncoding.GlyphNameEntry] = []
-    // @objc var effectiveGlyphNameEntries:    [MacEncoding.GlyphNameEntry] = []
+    @objc dynamic var glyphNameEntries:             [MacEncoding.GlyphNameEntry] = []
+    @objc dynamic var effectiveGlyphNameEntries:    [MacEncoding.GlyphNameEntry] = []
 
-    @objc dynamic var fontNameSuffixEntries: [FontNameSuffixEntry] = []
-    
-    @objc dynamic var objcFFFlags:          UInt16 = 0
-    @objc dynamic var objcFontClass:        UInt16 = 0
+    @objc dynamic var fontNameSuffixEntries:        [FontNameSuffixEntry] = []
+
+    @objc dynamic var objcFFFlags:                  UInt16 = 0
+    @objc dynamic var objcFontClass:                UInt16 = 0
 
     private static var fondContext = 1
     private static let fondKeyPaths = Set(["famID", "firstChar", "lastChar", "ascent", "descent", "leading", "widMax",
@@ -79,7 +80,8 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     }
 
     public required init?(resource: Resource, manager: RFEditorManager) {
-        UserDefaults.standard.register(defaults: ["FONDEditor.selectedTabIndex": 0])
+        UserDefaults.standard.register(defaults: ["FONDEditor.selectedTabIndex": 0,
+                                                  "FONDEditor.selectedEncodingTabIndex": 1])
         self.resource = resource
         self.manager = manager
         do {
@@ -108,6 +110,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
         flagsBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFFFlags")
         fontClassBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFontClass")
         tabView.selectTabViewItem(at: UserDefaults.standard.integer(forKey: "FONDEditor.selectedTabIndex"))
+        encodingTabView.selectTabViewItem(at: UserDefaults.standard.integer(forKey: "FONDEditor.selectedEncodingTabIndex"))
         tableView.doubleAction = #selector(doubleClickOpenReferencedFont(_:))
         fontNameSuffixTableView.doubleAction = #selector(doubleClickOpenReferencedFont(_:))
         loadFOND()
@@ -118,6 +121,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
 
     public func windowWillClose(_ notification: Notification) {
         UserDefaults.standard.set(tabView.indexOfTabViewItem(tabView.selectedTabViewItem!), forKey: "FONDEditor.selectedTabIndex")
+        UserDefaults.standard.set(encodingTabView.indexOfTabViewItem(encodingTabView.selectedTabViewItem!), forKey: "FONDEditor.selectedEncodingTabIndex")
     }
 
     private func loadFOND() {
@@ -133,7 +137,8 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
             tabView.tabViewItems[2].label = NSLocalizedString("✅ Glyph Width Table", comment: "")
         }
         if fond.styleMappingTable?.glyphNameEncodingSubtable != nil {
-            tabView.tabViewItems[3].label = NSLocalizedString("✅ Glyph Name-Encoding Subtable", comment: "")
+            tabView.tabViewItems[3].label = NSLocalizedString("✅ Encoding", comment: "")
+            encodingTabView.tabViewItems[1].label = NSLocalizedString("✅ Glyph Name-Encoding Subtable", comment: "")
         }
         if fond.styleMappingTable?.fontNameSuffixSubtable != nil {
             tabView.tabViewItems[4].label = NSLocalizedString("✅ Style-Mapping Table", comment: "")
@@ -153,7 +158,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
             mutableArrayValue(forKey: "glyphNameEntries").setArray(entries)
         }
         // FIXME: !! should this be replacing rather than appending? YES
-        // mutableArrayValue(forKey: "effectiveGlyphNameEntries").setArray(fond.encoding.glyphNameEntries)
+        mutableArrayValue(forKey: "effectiveGlyphNameEntries").setArray(fond.encoding.glyphNameEntries)
         if let fontNameSuffixSubtable = fond.styleMappingTable?.fontNameSuffixSubtable {
             let entries = FontNameSuffixEntry.entries(from: fontNameSuffixSubtable, manager: manager)
             mutableArrayValue(forKey: "fontNameSuffixEntries").setArray(entries)

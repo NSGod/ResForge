@@ -17,10 +17,11 @@ extension MacEncoding {
         @objc public let charName:       String      // UNICODE NAME
         @objc public let glyphName:      String      // Adobe Glyph List glyph name
 
+        // for custom encoding
         public init(charCode: CharCode, glyphName: String) {
             self.charCode = charCode
             self.glyphName = glyphName
-            self.uv = UVBMP(charCode)
+            self.uv = UVBMP(charCode) // FIXME: is this right? I don't think so
             character = ""
             charName = ""
             super.init()
@@ -61,29 +62,19 @@ extension MacEncoding {
             return entries
         }
 
-        @objc public func compare(_ other: GlyphNameEntry) -> ComparisonResult {
-            let oUV = other.uv
-            if charCode == other.charCode {
-                if uv != 0 && oUV != 0 {
-                    if uv == oUV {
-                        return glyphName.localizedStandardCompare(other.glyphName)
-                    } else {
-                        return (uv as NSNumber).compare(oUV as NSNumber)
-                    }
-                } else {
-                    return glyphName.localizedStandardCompare(other.glyphName)
-                }
-            } else {
-                return (charCode as NSNumber).compare(other.charCode as NSNumber)
-            }
-        }
-
         public static func < (lhs: GlyphNameEntry, rhs: GlyphNameEntry) -> Bool {
-            return lhs.compare(rhs) == .orderedAscending
+            if lhs.charCode != rhs.charCode { return lhs.charCode < rhs.charCode }
+            if lhs.uv != rhs.uv { return lhs.uv < rhs.uv }
+            return lhs.glyphName.localizedStandardCompare(rhs.glyphName) == .orderedAscending
         }
 
+        // FIXME: do we want all of these?
         public static func == (lhs: GlyphNameEntry, rhs: GlyphNameEntry) -> Bool {
-            return lhs.compare(rhs) == .orderedSame
+            return lhs.charCode == rhs.charCode &&
+            lhs.uv == rhs.uv &&
+            lhs.glyphName == rhs.glyphName &&
+            lhs.charName == rhs.charName &&
+            lhs.character == rhs.character
         }
     }
 }
