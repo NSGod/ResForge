@@ -22,18 +22,14 @@ public final class BitmapFontEditor: AbstractEditor, ResourceEditor, Placeholder
 
     @IBOutlet weak var fontTypeBitfieldControl:     BitfieldControl!
     @IBOutlet weak var bitDepthPopUpButton:         NSPopUpButton!
-    /// Not sure why, but creating a custom BitmapFontPreviewView in the nib file was
-    /// not working without crashing. So create it programatically and set the box's `contentView`
-    @IBOutlet weak var box:                         NSBox!
     @IBOutlet weak var previewView:                 BitmapFontPreviewView!
-    @IBOutlet weak var overviewPreviewView:         BitmapFontPreviewView!
-    
+
     @IBOutlet var popover:                          NSPopover!
     @IBOutlet weak var popoverButton:               NSButton!
 
     public let resource:                    Resource
     private let manager:                    RFEditorManager
-    @objc var nfnt:                         NFNT
+    @objc dynamic var nfnt:                 NFNT
 
     @objc dynamic var objcFontType:         UInt16
     @objc dynamic var objcBitDepth:         UInt16
@@ -76,30 +72,13 @@ public final class BitmapFontEditor: AbstractEditor, ResourceEditor, Placeholder
     }
 
     public override func awakeFromNib() {
-//        NSLog("\(type(of: self)).\(#function)")
+        // NSLog("\(type(of: self)).\(#function)")
         loadResource()
     }
 
     public override func windowDidLoad() {
-//        NSLog("\(type(of: self)).\(#function)")
+        // NSLog("\(type(of: self)).\(#function)")
         super.windowDidLoad()
-        let bounds = box.bounds
-        let prevView = BitmapFontPreviewView(frame: bounds)
-        prevView.autoresizingMask = [.width, .height]
-        prevView.padding = 10
-        prevView.borderThickness = 2
-        prevView.borderColor = .lightGray
-        prevView.nfnt = nfnt
-        previewView = prevView
-        box.contentView = prevView
-        previewView.alignment = .center
-        self.previewView.stringValue = """
-            ABCDEFGHIJKLM
-            NOPQRSTUVWXYZ
-            abcdefghijklm
-            nopqrstuvwxyz
-            0123456789
-            """
         fontTypeBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFontType")
         Self.nfntKeyPaths.forEach { nfnt.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.nfntContext) }
         Self.keyPaths.forEach { addObserver(self, forKeyPath: $0, options: [.new, .old], context: nil) }
@@ -116,9 +95,9 @@ public final class BitmapFontEditor: AbstractEditor, ResourceEditor, Placeholder
         }
         // add one last final missing character to trigger .notdef glyph
         string += "\u{FFFF}"
-        overviewPreviewView.alignment = .center
-        overviewPreviewView.stringValue = string
-        overviewPreviewView.nfnt = nfnt
+        previewView.alignment = .center
+        previewView.stringValue = string
+        previewView.nfnt = nfnt
     }
 
     @IBAction func showPopover(_ sender: Any) {
@@ -165,7 +144,6 @@ public final class BitmapFontEditor: AbstractEditor, ResourceEditor, Placeholder
         undoManager?.removeAllActions()
         setDocumentEdited(false)
         undoManager?.enableUndoRegistration()
-        previewView.nfnt = nfnt
         loadResource()
     }
 
@@ -173,7 +151,7 @@ public final class BitmapFontEditor: AbstractEditor, ResourceEditor, Placeholder
         guard let keyPath else {
             return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
-//        NSLog("\(type(of: self)).\(#function) keyPath == \(keyPath)")
+        // NSLog("\(type(of: self)).\(#function) keyPath == \(keyPath)")
         if !Self.nfntKeyPaths.contains(keyPath) && !Self.keyPaths.contains(keyPath) {
             return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
@@ -263,7 +241,7 @@ extension BitmapFontEditor: PreviewProvider {
                     previewView.borderThickness = 1
                     previewView.borderColor = .secondaryLabelColor
                     previewView.alignment = .center
-                    previewView.stringValue = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcde12345"
+                    previewView.stringValue = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
                     isSetup = true
                 }
                 let nfnt: NFNT = try NFNT(with: resource)

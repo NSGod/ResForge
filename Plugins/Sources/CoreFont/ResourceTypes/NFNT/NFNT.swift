@@ -9,39 +9,6 @@ import Cocoa
 import RFSupport
 
 extension NFNT {
-    
-    public struct Glyph {
-        public let charCode:       CharCode16
-        public let uv:             UVBMP
-        public let glyphRect:      NSRect
-        public let offset:         Int8
-        public let width:          Int8
-
-        public var pixelOffset:    Int16 {
-            return Int16(glyphRect.origin.x)
-        }
-
-        public var isMissing: Bool {
-            self.offset == -1 && self.width == -1 && self.glyphRect == .zero
-        }
-
-        public weak var nfnt:      NFNT!
-
-        public static let nullGlyph: Glyph = .init(glyphRect: .zero, offset: -1, width: -1, charCode: CharCode16.max, uv: .undefined, nfnt:nil)
-
-        public init(glyphRect: NSRect, offset: Int8, width: Int8, charCode: CharCode16, uv: UVBMP, nfnt: NFNT?) {
-            self.offset = offset
-            self.width = width
-            if self.offset == -1 && self.width == -1 {
-                self.glyphRect = .zero
-            } else {
-                self.glyphRect = glyphRect
-            }
-            self.charCode = charCode
-            self.uv = uv
-            self.nfnt = nfnt
-        }
-    }
 
     public struct FontType: OptionSet {
         public let rawValue: UInt16
@@ -85,7 +52,7 @@ public final class NFNT: NSObject {
 
     public var lineHeight:             CGFloat { CGFloat(fRectHeight + leading) }
 
-    public lazy var glyphs:            [Glyph] = {
+    @objc dynamic public lazy var glyphs:            [Glyph] = {
         do {
             try buildImageAndGlyphsIfNeeded()
         } catch {
@@ -430,7 +397,12 @@ public final class NFNT: NSObject {
                 let pixelOffsetEntryPlusOne = pixelOffsets[i - Int(firstChar) + 1]
                 let offsetEntry = offsets[i - Int(firstChar)]
                 let widthEntry = widths[i - Int(firstChar)]
-                let glyphRect = NSMakeRect(CGFloat(pixelOffsetEntry), 0.0, CGFloat(pixelOffsetEntryPlusOne - pixelOffsetEntry), CGFloat(fRectHeight))
+                let glyphRect: NSRect
+                if offsetEntry == -1, widthEntry == -1 {
+                    glyphRect = .zero
+                } else {
+                    glyphRect = NSMakeRect(CGFloat(pixelOffsetEntry), 0.0, CGFloat(pixelOffsetEntryPlusOne - pixelOffsetEntry), CGFloat(fRectHeight))
+                }
                 let glyph = Glyph(glyphRect: glyphRect, offset: offsetEntry, width: widthEntry, charCode: charCode, uv: uv, nfnt: self)
                 if let char {
                     _charsToGlyphs[char] = glyph

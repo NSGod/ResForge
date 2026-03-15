@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24506" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24764" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24764"/>
         <capability name="Image references" minToolsVersion="12.0"/>
+        <capability name="System colors introduced in macOS 10.14" minToolsVersion="10.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="BitmapFontEditor" customModule="BitmapFontEditor">
             <connections>
                 <outlet property="bitDepthPopUpButton" destination="hd4-0v-R7c" id="sia-XS-MIA"/>
-                <outlet property="box" destination="gbN-Oc-2O2" id="xEc-Dx-otj"/>
                 <outlet property="fontTypeBitfieldControl" destination="5aj-GY-zA2" id="5Na-aW-uHY"/>
-                <outlet property="overviewPreviewView" destination="CE1-bc-1ez" id="zYi-wg-BLB"/>
                 <outlet property="popover" destination="XSO-mT-6GH" id="FcX-hM-DiG"/>
                 <outlet property="popoverButton" destination="2jR-1S-GSs" id="UC9-Yl-VhR"/>
+                <outlet property="previewView" destination="CE1-bc-1ez" id="zYi-wg-BLB"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -26,15 +26,15 @@
         </numberFormatter>
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5" userLabel="window">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-            <rect key="contentRect" x="196" y="240" width="716" height="644"/>
+            <rect key="contentRect" x="196" y="240" width="922" height="646"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1169"/>
-            <value key="minSize" type="size" width="716" height="644"/>
+            <value key="minSize" type="size" width="795" height="646"/>
             <view key="contentView" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="0.0" width="716" height="644"/>
+                <rect key="frame" x="0.0" y="0.0" width="922" height="646"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fBR-67-WOU">
-                        <rect key="frame" x="18" y="622" width="60" height="14"/>
+                        <rect key="frame" x="18" y="624" width="60" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" title="Font Type:" id="TPF-p1-okp">
                             <font key="font" metaFont="smallSystem"/>
@@ -43,7 +43,7 @@
                         </textFieldCell>
                     </textField>
                     <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5aj-GY-zA2" customClass="BitfieldControl" customModule="CoreFont">
-                        <rect key="frame" x="20" y="346" width="236" height="269"/>
+                        <rect key="frame" x="20" y="348" width="236" height="269"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <subviews>
                             <button tag="2" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cE1-CA-nZS">
@@ -238,7 +238,7 @@
                         </userDefinedRuntimeAttributes>
                     </customView>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X28-KM-xaU">
-                        <rect key="frame" x="70" y="325" width="121" height="14"/>
+                        <rect key="frame" x="70" y="327" width="121" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Font Type:" id="d6w-gg-kQj">
                             <font key="font" metaFont="smallSystem"/>
@@ -247,7 +247,7 @@
                         </textFieldCell>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wLP-hA-sxH">
-                        <rect key="frame" x="195" y="322" width="60" height="19"/>
+                        <rect key="frame" x="195" y="324" width="60" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="border" alignment="right" drawsBackground="YES" id="ueW-qb-AeB">
                             <numberFormatter key="formatter" formatterBehavior="custom10_4" numberStyle="decimal" usesGroupingSeparator="NO" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" id="5oR-5P-Eg5">
@@ -264,7 +264,7 @@
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tln-Yk-aa6">
-                        <rect key="frame" x="35" y="285" width="157" height="14"/>
+                        <rect key="frame" x="35" y="287" width="157" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="ASCII code of first character:" id="0uI-kA-NU0">
                             <font key="font" metaFont="smallSystem"/>
@@ -273,7 +273,7 @@
                         </textFieldCell>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fhY-ug-EOo">
-                        <rect key="frame" x="27" y="263" width="165" height="14"/>
+                        <rect key="frame" x="27" y="265" width="165" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="ASCII code of last character:" id="CID-UZ-XBC">
                             <font key="font" metaFont="smallSystem"/>
@@ -282,7 +282,7 @@
                         </textFieldCell>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2FQ-HI-fJL">
-                        <rect key="frame" x="195" y="260" width="60" height="19"/>
+                        <rect key="frame" x="195" y="262" width="60" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="border" alignment="right" drawsBackground="YES" id="cgC-Tx-SYj">
                             <font key="font" metaFont="smallSystem"/>
@@ -296,7 +296,7 @@
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hSH-q8-K7V">
-                        <rect key="frame" x="74" y="241" width="118" height="14"/>
+                        <rect key="frame" x="74" y="243" width="118" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Max glyph width (px):" id="vjE-mK-CAs">
                             <font key="font" metaFont="smallSystem"/>
@@ -305,7 +305,7 @@
                         </textFieldCell>
                     </textField>
                     <textField toolTip="An integer value that specifies the maximum width of the widest glyph in the font, in pixels." focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5AZ-rs-DUH">
-                        <rect key="frame" x="195" y="238" width="60" height="19"/>
+                        <rect key="frame" x="195" y="240" width="60" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="border" alignment="right" drawsBackground="YES" id="j5l-I7-7mq">
                             <font key="font" metaFont="smallSystem"/>
@@ -319,7 +319,7 @@
                         </connections>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0QR-Ro-MbD">
-                        <rect key="frame" x="195" y="282" width="60" height="19"/>
+                        <rect key="frame" x="195" y="284" width="60" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="border" alignment="right" drawsBackground="YES" id="NEX-Hf-WcP">
                             <font key="font" metaFont="smallSystem"/>
@@ -333,7 +333,7 @@
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1Ob-Ag-NRr">
-                        <rect key="frame" x="35" y="219" width="157" height="14"/>
+                        <rect key="frame" x="35" y="221" width="157" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Negative of max kern (px):" id="Egc-D9-R3Q">
                             <font key="font" metaFont="smallSystem"/>
@@ -342,7 +342,7 @@
                         </textFieldCell>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oEp-zR-KTk">
-                        <rect key="frame" x="195" y="216" width="60" height="19"/>
+                        <rect key="frame" x="195" y="218" width="60" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <string key="toolTip">An integer value that specifies the distance from the font rectangle’s glyph origin to the left edge of the font rectangle, in pixels. If a glyph in the font kerns to the left, the amount is represented as a negative number. If the glyph origin lies on the left edge of the font rectangle, the value of the kernMax field is 0.</string>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="border" alignment="right" drawsBackground="YES" id="iIJ-kG-elS">
@@ -357,7 +357,7 @@
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9E2-VE-hXN">
-                        <rect key="frame" x="35" y="197" width="157" height="14"/>
+                        <rect key="frame" x="35" y="199" width="157" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Negative of descent (px):" id="9tV-Zj-bpB">
                             <font key="font" metaFont="smallSystem"/>
@@ -366,7 +366,7 @@
                         </textFieldCell>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zcc-Un-TM1">
-                        <rect key="frame" x="195" y="194" width="60" height="19"/>
+                        <rect key="frame" x="195" y="196" width="60" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="border" alignment="right" drawsBackground="YES" id="Cu1-oZ-cgm">
                             <font key="font" metaFont="smallSystem"/>
@@ -380,7 +380,7 @@
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wAj-vP-AFU">
-                        <rect key="frame" x="35" y="153" width="157" height="14"/>
+                        <rect key="frame" x="35" y="155" width="157" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Font rectangle height (px):" id="Ioz-NV-RRi">
                             <font key="font" metaFont="smallSystem"/>
@@ -389,7 +389,7 @@
                         </textFieldCell>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F8P-8v-MdM">
-                        <rect key="frame" x="195" y="150" width="60" height="19"/>
+                        <rect key="frame" x="195" y="152" width="60" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <string key="toolTip">An integer value that specifies the height, in pixels, of the image created if all the glyphs in the font were superimposed at their glyph origins. This value equals the sum of the maximum ascent and maximum descent measurements for the font.</string>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="border" alignment="right" drawsBackground="YES" id="TJw-IS-VMd">
@@ -404,11 +404,11 @@
                         </connections>
                     </textField>
                     <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="qgh-vb-RXp">
-                        <rect key="frame" x="31" y="308" width="230" height="5"/>
+                        <rect key="frame" x="31" y="310" width="230" height="5"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     </box>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6c4-GB-7iY">
-                        <rect key="frame" x="35" y="175" width="157" height="14"/>
+                        <rect key="frame" x="35" y="177" width="157" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Font rectangle width (px):" id="wuG-qQ-pUO">
                             <font key="font" metaFont="smallSystem"/>
@@ -417,7 +417,7 @@
                         </textFieldCell>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zHK-lr-S3L">
-                        <rect key="frame" x="195" y="172" width="60" height="19"/>
+                        <rect key="frame" x="195" y="174" width="60" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <string key="toolTip">An integer value that specifies the width, in pixels, of the image created if all the glyphs in the font were superimposed at their glyph origins.</string>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="border" alignment="right" drawsBackground="YES" id="e0L-9V-Q6i">
@@ -432,7 +432,7 @@
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BRf-JY-1Xt">
-                        <rect key="frame" x="10" y="131" width="182" height="14"/>
+                        <rect key="frame" x="10" y="133" width="182" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Offset to offset/width table (wds):" id="2no-LH-l9t">
                             <font key="font" metaFont="smallSystem"/>
@@ -441,7 +441,7 @@
                         </textFieldCell>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wiP-kd-DLV">
-                        <rect key="frame" x="195" y="128" width="60" height="19"/>
+                        <rect key="frame" x="195" y="130" width="60" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <string key="toolTip">An integer value that specifies the offset to the offset/width table from this point in the font record, in words. If this font has very large tables, this value is only the low word of the offset and the negated descent value is the high word.</string>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="border" alignment="right" drawsBackground="YES" id="T3Q-X4-jGO">
@@ -459,7 +459,7 @@
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EAt-fs-hIB">
-                        <rect key="frame" x="81" y="109" width="111" height="14"/>
+                        <rect key="frame" x="81" y="111" width="111" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Max ascent (px):" id="S60-B6-5cX">
                             <font key="font" metaFont="smallSystem"/>
@@ -468,7 +468,7 @@
                         </textFieldCell>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bWW-qv-XyM">
-                        <rect key="frame" x="195" y="106" width="60" height="19"/>
+                        <rect key="frame" x="195" y="108" width="60" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <string key="toolTip">An integer value that specifies the maximum ascent measurement for the entire font, in pixels. The ascent is the distance from the glyph origin to the top of the font rectangle.</string>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="border" alignment="right" drawsBackground="YES" id="nel-ar-L3i">
@@ -483,7 +483,7 @@
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kgr-5b-b39">
-                        <rect key="frame" x="81" y="87" width="111" height="14"/>
+                        <rect key="frame" x="81" y="89" width="111" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Max descent (px):" id="7hA-9D-fpb">
                             <font key="font" metaFont="smallSystem"/>
@@ -492,7 +492,7 @@
                         </textFieldCell>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xks-Jh-bnR">
-                        <rect key="frame" x="195" y="84" width="60" height="19"/>
+                        <rect key="frame" x="195" y="86" width="60" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <string key="toolTip">An integer value that specifies the maximum descent measurement for the entire font, in pixels. The descent is the distance from the glyph origin to the bottom of the font rectangle.</string>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="border" alignment="right" drawsBackground="YES" id="MHO-lw-aZL">
@@ -507,7 +507,7 @@
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Saa-pX-N0R">
-                        <rect key="frame" x="39" y="65" width="153" height="14"/>
+                        <rect key="frame" x="39" y="67" width="153" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Leading (px):" id="gHz-4m-vCH">
                             <font key="font" metaFont="smallSystem"/>
@@ -516,7 +516,7 @@
                         </textFieldCell>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pgj-oT-8a3">
-                        <rect key="frame" x="195" y="62" width="60" height="19"/>
+                        <rect key="frame" x="195" y="64" width="60" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <string key="toolTip">An integer value that specifies the leading measurement for the entire font, in pixels. Leading is the distance from the descent line of one line of single-spaced text to the ascent line of the next line of text.</string>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="border" alignment="right" drawsBackground="YES" id="xte-FF-OcI">
@@ -531,7 +531,7 @@
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CUY-C6-r8H">
-                        <rect key="frame" x="38" y="43" width="154" height="14"/>
+                        <rect key="frame" x="38" y="45" width="154" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Bit image row width (words):" id="eI4-Sz-u3N">
                             <font key="font" metaFont="smallSystem"/>
@@ -540,7 +540,7 @@
                         </textFieldCell>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MYf-RA-wmh">
-                        <rect key="frame" x="195" y="40" width="60" height="19"/>
+                        <rect key="frame" x="195" y="42" width="60" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="border" alignment="right" drawsBackground="YES" id="GFC-wc-4pA">
                             <font key="font" metaFont="smallSystem"/>
@@ -553,16 +553,8 @@
                             <outlet property="formatter" destination="KzF-GY-0HX" id="VSi-MQ-BQY"/>
                         </connections>
                     </textField>
-                    <box fixedFrame="YES" boxType="custom" borderType="line" cornerRadius="4" translatesAutoresizingMaskIntoConstraints="NO" id="gbN-Oc-2O2">
-                        <rect key="frame" x="275" y="326" width="421" height="289"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <view key="contentView" id="dFe-6A-TlH">
-                            <rect key="frame" x="1" y="1" width="419" height="287"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        </view>
-                    </box>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2jR-1S-GSs">
-                        <rect key="frame" x="257" y="194" width="15" height="20"/>
+                        <rect key="frame" x="257" y="196" width="15" height="20"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="center" controlSize="small" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" id="J3w-af-Hkl">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -580,7 +572,7 @@
                         </connections>
                     </button>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h2n-R1-2gI">
-                        <rect key="frame" x="163" y="21" width="29" height="14"/>
+                        <rect key="frame" x="163" y="23" width="29" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="x 16:" id="ful-ik-JFo">
                             <font key="font" metaFont="smallSystem"/>
@@ -589,7 +581,7 @@
                         </textFieldCell>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Br-MQ-LNW">
-                        <rect key="frame" x="195" y="18" width="60" height="19"/>
+                        <rect key="frame" x="195" y="20" width="60" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="border" alignment="right" drawsBackground="YES" id="PEf-XT-sKL">
                             <font key="font" metaFont="smallSystem"/>
@@ -606,7 +598,7 @@
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CvY-Jh-Il7">
-                        <rect key="frame" x="256" y="21" width="17" height="14"/>
+                        <rect key="frame" x="256" y="23" width="17" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="px" id="kkV-7L-YVr">
                             <font key="font" metaFont="smallSystem"/>
@@ -615,28 +607,335 @@
                         </textFieldCell>
                     </textField>
                     <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CE1-bc-1ez" customClass="BitmapFontPreviewView" customModule="BitmapFontEditor">
-                        <rect key="frame" x="275" y="47" width="421" height="267"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                        <rect key="frame" x="280" y="359" width="622" height="267"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                <color key="value" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="value" name="quaternaryLabelColor" catalog="System" colorSpace="catalog"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="number" keyPath="borderThickness">
-                                <real key="value" value="2"/>
+                                <real key="value" value="1"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="string" keyPath="stringValue" value="ABC"/>
                             <userDefinedRuntimeAttribute type="number" keyPath="padding">
-                                <real key="value" value="10"/>
+                                <real key="value" value="20"/>
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </customView>
+                    <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rA4-sH-MeB">
+                        <rect key="frame" x="280" y="23" width="622" height="328"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <clipView key="contentView" id="GGi-zA-SES">
+                            <rect key="frame" x="1" y="1" width="620" height="326"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" autosaveName="glyphsTableView" rowHeight="20" headerView="shp-p7-phf" viewBased="YES" id="EcZ-3V-gHT" userLabel="tableView">
+                                    <rect key="frame" x="0.0" y="0.0" width="620" height="298"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <size key="intercellSpacing" width="8" height="0.0"/>
+                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="gridColor" name="separatorColor" catalog="System" colorSpace="catalog"/>
+                                    <tableColumns>
+                                        <tableColumn identifier="charCodeASCIIDec" editable="NO" width="77" minWidth="10" maxWidth="3.4028234663852886e+38" id="I0u-tr-pZh">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="ASCII (Dec)">
+                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </tableHeaderCell>
+                                            <textFieldCell key="dataCell" controlSize="small" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="bQA-QO-fbY">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="charCode"/>
+                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                            <prototypeCellViews>
+                                                <tableCellView identifier="charCodeASCIIDec" id="bcC-Wf-nnB">
+                                                    <rect key="frame" x="4" y="0.0" width="79" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <subviews>
+                                                        <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pYx-MF-TY2">
+                                                            <rect key="frame" x="0.0" y="3" width="79" height="14"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                            <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" title="Table View Cell" id="rvX-zb-RmN">
+                                                                <numberFormatter key="formatter" formatterBehavior="default10_4" usesGroupingSeparator="NO" groupingSize="0" minimumIntegerDigits="0" maximumIntegerDigits="42" id="gC2-vC-7Tv">
+                                                                    <real key="minimum" value="0.0"/>
+                                                                </numberFormatter>
+                                                                <font key="font" metaFont="smallSystem"/>
+                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                            </textFieldCell>
+                                                            <connections>
+                                                                <binding destination="bcC-Wf-nnB" name="value" keyPath="objectValue.charCode" id="kWb-iK-9oo"/>
+                                                            </connections>
+                                                        </textField>
+                                                    </subviews>
+                                                    <connections>
+                                                        <outlet property="textField" destination="pYx-MF-TY2" id="CXd-Im-ldr"/>
+                                                    </connections>
+                                                </tableCellView>
+                                            </prototypeCellViews>
+                                        </tableColumn>
+                                        <tableColumn identifier="charCodeASCIIHex" editable="NO" width="77" minWidth="40" maxWidth="1000" id="cse-Pa-Eim">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="ASCII (Hex)">
+                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                            </tableHeaderCell>
+                                            <textFieldCell key="dataCell" controlSize="small" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="Edz-Op-UHQ">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="charCode"/>
+                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                            <prototypeCellViews>
+                                                <tableCellView identifier="charCodeASCIIHex" id="5Hl-xL-KcH">
+                                                    <rect key="frame" x="91" y="0.0" width="77" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <subviews>
+                                                        <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7TL-Jh-gvj">
+                                                            <rect key="frame" x="0.0" y="3" width="77" height="14"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                            <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" id="3A6-dc-szb">
+                                                                <numberFormatter key="formatter" formatterBehavior="default10_4" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="pIw-Ca-Og2" customClass="HexNumberFormatter" customModule="CoreFont">
+                                                                    <real key="maximum" value="65535"/>
+                                                                    <userDefinedRuntimeAttributes>
+                                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="leadingZeroes" value="NO"/>
+                                                                    </userDefinedRuntimeAttributes>
+                                                                </numberFormatter>
+                                                                <font key="font" metaFont="smallSystem"/>
+                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                            </textFieldCell>
+                                                            <connections>
+                                                                <binding destination="5Hl-xL-KcH" name="value" keyPath="objectValue.charCode" id="a9Z-Hx-fdC"/>
+                                                            </connections>
+                                                        </textField>
+                                                    </subviews>
+                                                    <connections>
+                                                        <outlet property="textField" destination="7TL-Jh-gvj" id="tmn-Gh-FWK"/>
+                                                    </connections>
+                                                </tableCellView>
+                                            </prototypeCellViews>
+                                        </tableColumn>
+                                        <tableColumn identifier="character" width="70" minWidth="10" maxWidth="3.4028234663852886e+38" id="aHd-pL-7km">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Character">
+                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </tableHeaderCell>
+                                            <textFieldCell key="dataCell" controlSize="small" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="wa4-R1-iGC">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                            <prototypeCellViews>
+                                                <tableCellView identifier="character" id="GHG-AM-qDO">
+                                                    <rect key="frame" x="176" y="0.0" width="70" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <subviews>
+                                                        <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z86-r8-7Ak">
+                                                            <rect key="frame" x="0.0" y="3" width="69" height="14"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                            <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" title="Table View Cell" id="530-Q1-PvF">
+                                                                <font key="font" metaFont="smallSystem"/>
+                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                            </textFieldCell>
+                                                            <connections>
+                                                                <binding destination="GHG-AM-qDO" name="value" keyPath="objectValue.character" id="1RJ-Dn-rRj"/>
+                                                            </connections>
+                                                        </textField>
+                                                    </subviews>
+                                                    <connections>
+                                                        <outlet property="textField" destination="z86-r8-7Ak" id="m5p-7i-7Cz"/>
+                                                    </connections>
+                                                </tableCellView>
+                                            </prototypeCellViews>
+                                        </tableColumn>
+                                        <tableColumn identifier="glyphName" editable="NO" width="78" minWidth="40" maxWidth="1000" id="xjx-iV-Gaq">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Glyph Name">
+                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                            </tableHeaderCell>
+                                            <textFieldCell key="dataCell" controlSize="small" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="hb4-Va-icC">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <sortDescriptor key="sortDescriptorPrototype" selector="localizedStandardCompare:" sortKey="glyphName"/>
+                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                            <prototypeCellViews>
+                                                <tableCellView identifier="glyphName" id="aue-ar-saF">
+                                                    <rect key="frame" x="254" y="0.0" width="78" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <subviews>
+                                                        <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GgZ-1g-qgg">
+                                                            <rect key="frame" x="0.0" y="3" width="78" height="14"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                            <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="hR3-oQ-ezr">
+                                                                <font key="font" metaFont="smallSystem"/>
+                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                            </textFieldCell>
+                                                            <connections>
+                                                                <binding destination="aue-ar-saF" name="value" keyPath="objectValue.glyphName" id="qa0-fu-zF9"/>
+                                                            </connections>
+                                                        </textField>
+                                                    </subviews>
+                                                    <connections>
+                                                        <outlet property="textField" destination="GgZ-1g-qgg" id="uai-J0-kHv"/>
+                                                    </connections>
+                                                </tableCellView>
+                                            </prototypeCellViews>
+                                        </tableColumn>
+                                        <tableColumn identifier="width" editable="NO" width="74" minWidth="10" maxWidth="3.4028234663852886e+38" id="Dn8-h4-VOx">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="center" title="Width (px)">
+                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </tableHeaderCell>
+                                            <textFieldCell key="dataCell" controlSize="small" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="syB-PR-Sni">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="width"/>
+                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                            <prototypeCellViews>
+                                                <tableCellView identifier="width" id="4yq-jj-Wb6">
+                                                    <rect key="frame" x="340" y="0.0" width="74" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <subviews>
+                                                        <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CIt-Qn-6jD">
+                                                            <rect key="frame" x="0.0" y="3" width="74" height="14"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                            <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Table View Cell" id="cVa-Hn-608">
+                                                                <numberFormatter key="formatter" formatterBehavior="custom10_4" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" id="SAy-aR-CDY">
+                                                                    <real key="minimum" value="-16384"/>
+                                                                    <real key="maximum" value="16384"/>
+                                                                </numberFormatter>
+                                                                <font key="font" metaFont="smallSystem"/>
+                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                            </textFieldCell>
+                                                            <connections>
+                                                                <binding destination="4yq-jj-Wb6" name="value" keyPath="objectValue.width" id="olx-qI-Ulf"/>
+                                                            </connections>
+                                                        </textField>
+                                                    </subviews>
+                                                    <connections>
+                                                        <outlet property="textField" destination="CIt-Qn-6jD" id="nBd-n8-eme"/>
+                                                    </connections>
+                                                </tableCellView>
+                                            </prototypeCellViews>
+                                        </tableColumn>
+                                        <tableColumn identifier="offset" editable="NO" width="78" minWidth="10" maxWidth="3.4028234663852886e+38" id="1QS-vO-Rc4">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="center" title="Offset (px)">
+                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </tableHeaderCell>
+                                            <textFieldCell key="dataCell" controlSize="small" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="sFL-Y2-IIg">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="offset"/>
+                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                            <prototypeCellViews>
+                                                <tableCellView identifier="offset" id="VuJ-ck-ABt">
+                                                    <rect key="frame" x="422" y="0.0" width="78" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <subviews>
+                                                        <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ioT-lN-Xzb">
+                                                            <rect key="frame" x="0.0" y="3" width="78" height="14"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                            <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Table View Cell" id="GBa-WE-aqx">
+                                                                <numberFormatter key="formatter" formatterBehavior="custom10_4" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" id="rbt-5A-fkz">
+                                                                    <real key="minimum" value="-16384"/>
+                                                                    <real key="maximum" value="16384"/>
+                                                                </numberFormatter>
+                                                                <font key="font" metaFont="smallSystem"/>
+                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                            </textFieldCell>
+                                                            <connections>
+                                                                <binding destination="VuJ-ck-ABt" name="value" keyPath="objectValue.offset" id="fK8-c7-52s"/>
+                                                            </connections>
+                                                        </textField>
+                                                    </subviews>
+                                                    <connections>
+                                                        <outlet property="textField" destination="ioT-lN-Xzb" id="CUO-n8-Npq"/>
+                                                    </connections>
+                                                </tableCellView>
+                                            </prototypeCellViews>
+                                        </tableColumn>
+                                        <tableColumn identifier="pixelOffset" editable="NO" width="105" minWidth="10" maxWidth="3.4028234663852886e+38" id="lYa-WE-b1h">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="center" title="Pixel Offset (px)">
+                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </tableHeaderCell>
+                                            <textFieldCell key="dataCell" controlSize="small" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="cB4-gg-4Ai">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="pixelOffset"/>
+                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                            <prototypeCellViews>
+                                                <tableCellView identifier="pixelOffset" id="sH0-TL-NXj">
+                                                    <rect key="frame" x="508" y="0.0" width="107" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <subviews>
+                                                        <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tKF-rX-cO6">
+                                                            <rect key="frame" x="0.0" y="3" width="107" height="14"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                            <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Table View Cell" id="oRW-KI-acC">
+                                                                <numberFormatter key="formatter" formatterBehavior="custom10_4" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" id="Fhr-zN-g18">
+                                                                    <real key="minimum" value="-16384"/>
+                                                                    <real key="maximum" value="16384"/>
+                                                                </numberFormatter>
+                                                                <font key="font" metaFont="smallSystem"/>
+                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                            </textFieldCell>
+                                                            <connections>
+                                                                <binding destination="sH0-TL-NXj" name="value" keyPath="objectValue.pixelOffset" id="abO-gT-Hwz"/>
+                                                            </connections>
+                                                        </textField>
+                                                    </subviews>
+                                                    <connections>
+                                                        <outlet property="textField" destination="tKF-rX-cO6" id="ZB3-S6-4Dc"/>
+                                                    </connections>
+                                                </tableCellView>
+                                            </prototypeCellViews>
+                                        </tableColumn>
+                                    </tableColumns>
+                                    <connections>
+                                        <binding destination="27M-1e-ZBH" name="content" keyPath="arrangedObjects" id="Nev-z5-oJ4"/>
+                                        <binding destination="27M-1e-ZBH" name="selectionIndexes" keyPath="selectionIndexes" previousBinding="Nev-z5-oJ4" id="bJ7-9w-pgJ"/>
+                                    </connections>
+                                </tableView>
+                            </subviews>
+                        </clipView>
+                        <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="MP6-Xo-AyV">
+                            <rect key="frame" x="1" y="297" width="596" height="17"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="yso-Eo-6wR">
+                            <rect key="frame" x="573" y="23" width="15" height="593"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <tableHeaderView key="headerView" wantsLayer="YES" id="shp-p7-phf">
+                            <rect key="frame" x="0.0" y="0.0" width="620" height="28"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </tableHeaderView>
+                    </scrollView>
                 </subviews>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
                 <outlet property="initialFirstResponder" destination="0QR-Ro-MbD" id="nN3-rk-aW6"/>
             </connections>
-            <point key="canvasLocation" x="131" y="-84"/>
+            <point key="canvasLocation" x="234" y="-83"/>
         </window>
         <viewController id="TX3-FV-B6h" userLabel="popoverViewController">
             <connections>
@@ -664,6 +963,18 @@
             </subviews>
             <point key="canvasLocation" x="665.5" y="-137"/>
         </customView>
+        <arrayController objectClassName="CoreFont.NFNT.Glyph" automaticallyPreparesContent="YES" selectsInsertedObjects="NO" avoidsEmptySelection="NO" id="27M-1e-ZBH" userLabel="glyphsController">
+            <declaredKeys>
+                <string>charCode</string>
+                <string>offset</string>
+                <string>width</string>
+                <string>pixelOffset</string>
+            </declaredKeys>
+            <classReference key="objectClass" className="NFNT.Glyph" moduleName="CoreFont"/>
+            <connections>
+                <binding destination="-2" name="contentArray" keyPath="nfnt.glyphs" id="S2l-uE-3Xl"/>
+            </connections>
+        </arrayController>
     </objects>
     <resources>
         <image name="questionmark.circle.fill" catalog="system" width="15" height="15"/>
