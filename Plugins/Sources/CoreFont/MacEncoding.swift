@@ -100,7 +100,7 @@ public final class MacEncoding: Copyable, CustomStringConvertible {
     public func customEncoding(byReplacing glyphNameEntries: [GlyphNameEntry]) -> MacEncoding {
         NSLog("\(type(of: self)).\(#function)")
         let custom = self.copy()
-        add(custom: glyphNameEntries)
+        custom.add(custom: glyphNameEntries)
         return custom
     }
 
@@ -118,9 +118,9 @@ public final class MacEncoding: Copyable, CustomStringConvertible {
         isCustomEncoding = true
     }
 
-    fileprivate static let unsupported: Set<MacScriptID> = Set([.japanese, .tradChinese, .korean, .simpChinese, .vietnamese])
+    fileprivate static let unsupportedScriptIDs: Set<MacScriptID> = Set([.japanese, .tradChinese, .korean, .simpChinese, .vietnamese])
 
-    // Can return nil if encoding is a 2-byte we don't support
+    // Can return nil if encoding is a 2-byte one we don't (yet?) support
     public static func encodingFor(scriptID: MacScriptID, languageID macLanguageIDPlus1: MacLanguageID = .none, postScriptFontName: String? = nil) -> MacEncoding? {
         var langID = macLanguageIDPlus1
         if (macLanguageIDPlus1 != .none && macLanguageIDPlus1 != .english) {
@@ -128,8 +128,8 @@ public final class MacEncoding: Copyable, CustomStringConvertible {
             langID = MacLanguageID(rawValue: macLanguageIDPlus1.rawValue - 1)!
         }
         /// We don't support the 2-byte encodings of Asian languages at this time so return nil in those cases
-        guard !Self.unsupported.contains(scriptID) else { return nil }
-        // FIXME: this needs more work
+        guard !Self.unsupportedScriptIDs.contains(scriptID) else { return nil }
+        // FIXME: this needs more work?
         if scriptID == .roman && langID == .turkish {
             return .macTurkish
         } else if scriptID == .roman && langID == .icelandic {

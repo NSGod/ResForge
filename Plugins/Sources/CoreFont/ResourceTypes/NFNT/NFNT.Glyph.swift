@@ -37,7 +37,7 @@ extension NFNT {
         }()
 
         public var isMissing: Bool {
-            self.offset == -1 && self.width == -1 && self.glyphRect == .zero
+            offset == -1 && width == -1 && glyphRect == .zero
         }
 
         public weak var nfnt:       NFNT?    /// nil for `.nullGlyph`
