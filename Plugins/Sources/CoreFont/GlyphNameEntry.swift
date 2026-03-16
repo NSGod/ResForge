@@ -13,25 +13,40 @@ extension MacEncoding {
     public final class GlyphNameEntry: NSObject, NSCopying, Comparable {
         @objc public let charCode:       CharCode
         @objc public let uv:             UVBMP
-        @objc public let character:      String      // glyph
+        @objc public let character:      String      // actual glyph
         @objc public let charName:       String      // UNICODE NAME
         @objc public let glyphName:      String      // Adobe Glyph List glyph name
 
-        // for custom encoding
+        // for custom encodings
         public init(charCode: CharCode, glyphName: String) {
             self.charCode = charCode
             self.glyphName = glyphName
-            self.uv = UVBMP(charCode) // FIXME: is this right? I don't think so
-            character = ""
-            charName = ""
+            let uVC = AdobeGlyphList.uv(forGlyphName: glyphName)
+            if uVC != .undefined, let scalar = UnicodeScalar(uVC) {
+                uv = uVC
+                character = String(scalar)
+                charName = scalar.properties.name ?? (character == "" ? NSLocalizedString("APPLE LOGO", comment: "") : "")
+            } else {
+                if self.glyphName == "apple" {
+                    uv = .appleLogo
+                    character = ""
+                    charName = NSLocalizedString("APPLE LOGO", comment: "")
+                } else {
+                    NSLog("\(type(of: self)).\(#function) *** glyphName == \(self.glyphName)")
+                    uv = uVC
+                    character = "????"
+                    charName = "????"
+                }
+            }
             super.init()
         }
 
         public init(charCode: CharCode, uv: UVBMP, glyphName: String) {
             self.charCode = charCode
             self.uv = uv
-            character = String(uv)  // FIXME: is this right?
-            charName = UnicodeScalar(self.uv)?.properties.name ?? "???"
+
+            character = String(UnicodeScalar(self.uv) ?? "?")
+            charName = UnicodeScalar(self.uv)?.properties.name ?? ""
             self.glyphName = glyphName
             super.init()
         }
@@ -45,11 +60,12 @@ extension MacEncoding {
             assert(!encoding.isCustomEncoding)
             var entries: [GlyphNameEntry] = []
             for i: CharCode in 0..<CharCode.max {
-                let UV = encoding.uv(for: i)
-                if UV == .undefined { continue }
-                let entry = GlyphNameEntry(charCode: i, uv: UV, glyphName: encoding.glyphName(for: UV) ?? "???")
+                let uv = encoding.uv(for: i)
+                if uv == .undefined { continue }
+                let entry = GlyphNameEntry(charCode: i, uv: uv, glyphName: encoding.glyphName(for: uv) ?? "????")
                 entries.append(entry)
             }
+            entries.sort(by: <)
             return entries
         }
 

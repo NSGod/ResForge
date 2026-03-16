@@ -32,6 +32,10 @@ public extension CharCode16 {
 
 public typealias UVBMP      = UInt16
 
+public extension UVBMP {
+    static let appleLogo: UVBMP = 0xF8FF
+}
+
 public typealias UV         = UInt32
 
 public extension FixedWidthInteger {

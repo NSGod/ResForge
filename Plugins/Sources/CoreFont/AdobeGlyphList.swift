@@ -9,8 +9,9 @@ import Foundation
 
 public struct AdobeGlyphList {
 
-    public static func glyphName(for UV: UVBMP) -> String? {
-        guard let glyphName = uv2agl[UV] else {
+    public static func glyphName(for uv: UVBMP) -> String? {
+        guard let glyphName = uv2agl[uv] else {
+            if uv == .appleLogo { return "apple" }
             return nil
         }
         // Some glyph names are mapped to more than 1 UV; these are signified in the glyph name by
@@ -20,6 +21,7 @@ public struct AdobeGlyphList {
 
     public static func uv(forGlyphName glyphName: String) -> UVBMP {
         guard let uv = agl2uv[glyphName] else {
+            if glyphName == "apple" { return .appleLogo }
             return .undefined
         }
         return uv
