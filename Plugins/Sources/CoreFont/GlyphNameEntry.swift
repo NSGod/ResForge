@@ -25,7 +25,7 @@ extension MacEncoding {
             if uVC != .undefined, let scalar = UnicodeScalar(uVC) {
                 uv = uVC
                 character = String(scalar)
-                charName = scalar.properties.name ?? (character == "" ? NSLocalizedString("APPLE LOGO", comment: "") : "")
+                charName = scalar.properties.name ?? (character == "" ? NSLocalizedString("APPLE LOGO", comment: "") : "????")
             } else {
                 if self.glyphName == "apple" {
                     uv = .appleLogo
@@ -44,10 +44,19 @@ extension MacEncoding {
         public init(charCode: CharCode, uv: UVBMP, glyphName: String) {
             self.charCode = charCode
             self.uv = uv
-
-            character = String(UnicodeScalar(self.uv) ?? "?")
-            charName = UnicodeScalar(self.uv)?.properties.name ?? ""
             self.glyphName = glyphName
+            if let scalar = UnicodeScalar(self.uv) {
+                character = String(scalar)
+                charName = scalar.properties.name ?? (character == "" ? NSLocalizedString("APPLE LOGO", comment: "") : "????")
+            } else {
+                if self.uv == .appleLogo {
+                    character = ""
+                    charName = NSLocalizedString("APPLE LOGO", comment: "")
+                } else {
+                    character = "????"
+                    charName = "????"
+                }
+            }
             super.init()
         }
 
@@ -56,10 +65,10 @@ extension MacEncoding {
             return copy
         }
 
-        public class func entries(with encoding: MacEncoding) -> [GlyphNameEntry] {
+        public static func entries(with encoding: MacEncoding) -> [GlyphNameEntry] {
             assert(!encoding.isCustomEncoding)
             var entries: [GlyphNameEntry] = []
-            for i: CharCode in 0..<CharCode.max {
+            for i: CharCode in 0...CharCode.max {
                 let uv = encoding.uv(for: i)
                 if uv == .undefined { continue }
                 let entry = GlyphNameEntry(charCode: i, uv: uv, glyphName: encoding.glyphName(for: uv) ?? "????")
@@ -69,12 +78,13 @@ extension MacEncoding {
             return entries
         }
 
-        public class func entries(with charCodesToGlyphNames: [CharCode: String]) -> [GlyphNameEntry] {
+        public static func entries(with charCodesToGlyphNames: [CharCode: String]) -> [GlyphNameEntry] {
             var entries: [GlyphNameEntry] = []
             for (charCode, glyphName) in charCodesToGlyphNames {
                 let entry = GlyphNameEntry(charCode: charCode, glyphName: glyphName)
                 entries.append(entry)
             }
+            entries.sort(by: <)
             return entries
         }
 

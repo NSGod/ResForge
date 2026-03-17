@@ -10,7 +10,7 @@ import Cocoa
 extension NFNT {
 
     public final class Glyph: NSObject {
-        @objc dynamic public let charCode:        CharCode16
+        @objc dynamic public let charCode:        CharCode16    // 0 - 257-ish
         @objc dynamic public let uv:              UVBMP
 
         @objc dynamic public let glyphRect:       NSRect
@@ -21,7 +21,7 @@ extension NFNT {
             return Int16(glyphRect.origin.x)
         }
 
-        @objc dynamic public lazy var character:  String = {  // glyph
+        @objc dynamic public lazy var character:  String = {  // actual glyph (Character)
             if isMissing { return "" }
             if self == .nullGlyph    { return NSLocalizedString("NULL", comment: "") }
             if uv == .undefined      { return "" }
@@ -31,9 +31,16 @@ extension NFNT {
             return ""
         }()
 
-        @objc dynamic public lazy var glyphName: String? = {
-            if isMissing { return nil }
-            return nfnt?.encoding.glyphName(for: self.charCode)
+        @objc dynamic public lazy var glyphName: String = {
+            if self == Self.nullGlyph {
+                return ".null"
+            } else if charCode == nfnt!.lastChar + 1 && uv == .undefined {
+                return ".notdef"
+            } else if charCode <= CharCode.max && uv != .undefined {
+                return nfnt!.encoding.glyphName(for: CharCode(charCode)) ?? ""
+            } else {
+                return ""
+            }
         }()
 
         public var isMissing: Bool {

@@ -108,6 +108,12 @@ public final class NFNT: NSObject {
     private var glyphWidths:                [Fixed8Dot8]?
     private var imageHeights:               [Int16]?
 
+    /// means there is no `FOND` resource which claims us:
+    public lazy var isOrphaned:             Bool = {
+        _ = encoding
+        return _isOrphaned
+    }()
+
     public lazy var encoding:               MacEncoding = {
         guard let manager else { return .macRoman }
         /// we want the 'FOND' resource that has a font association table entry that
@@ -129,6 +135,7 @@ public final class NFNT: NSObject {
                 let fond = try FOND(with: fondResource)
                 for entry in fond.fontAssociationTable.entries {
                     if entry.fontID == resource.id {
+                        _isOrphaned = false
                         if let currentTargetFOND = targetFOND, let currentFontStyle = fontStyle {
                             if entry.fontStyle < currentFontStyle {
                                 targetFOND = fond
@@ -153,7 +160,7 @@ public final class NFNT: NSObject {
     private var _bitmapImageData:   Data?
     private var _notDef:            Glyph!
     private var _charsToGlyphs:     [Character: Glyph]!
-
+    private var _isOrphaned:        Bool = true
     private var resource:           Resource
     private var reader:             BinaryDataReader
     private var haveBuiltGlyphs:    Bool = false
@@ -382,7 +389,7 @@ public final class NFNT: NSObject {
         _charsToGlyphs = [:]
         for i in Int(firstChar)...Int(lastChar) + 2 {
             let charCode = CharCode16(i - Int(firstChar))
-            let uv: UVBMP
+            var uv: UVBMP
             if charCode > CharCode.max {
                 uv = .undefined
             } else {
@@ -395,15 +402,17 @@ public final class NFNT: NSObject {
             if i >= Int(firstChar)  && i < Int(lastChar) + 2 {
                 let pixelOffsetEntry = pixelOffsets[i - Int(firstChar)]
                 let pixelOffsetEntryPlusOne = pixelOffsets[i - Int(firstChar) + 1]
-                let offsetEntry = offsets[i - Int(firstChar)]
-                let widthEntry = widths[i - Int(firstChar)]
+                let offset = offsets[i - Int(firstChar)]
+                let width = widths[i - Int(firstChar)]
                 let glyphRect: NSRect
-                if offsetEntry == -1, widthEntry == -1 {
+                if offset == -1, width == -1 {
                     glyphRect = .zero
+                    /// if low ASCII glyphs are missing, this probably isn't the extended .macRoman encoding
+                    uv = .undefined
                 } else {
                     glyphRect = NSMakeRect(CGFloat(pixelOffsetEntry), 0.0, CGFloat(pixelOffsetEntryPlusOne - pixelOffsetEntry), CGFloat(fRectHeight))
                 }
-                let glyph = Glyph(glyphRect: glyphRect, offset: offsetEntry, width: widthEntry, charCode: charCode, uv: uv, nfnt: self)
+                let glyph = Glyph(glyphRect: glyphRect, offset: offset, width: width, charCode: charCode, uv: uv, nfnt: self)
                 if let char {
                     _charsToGlyphs[char] = glyph
                 }
