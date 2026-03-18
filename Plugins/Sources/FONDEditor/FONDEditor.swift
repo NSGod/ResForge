@@ -308,6 +308,8 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
             return true
         } else if action == #selector(openReferencedFonts(_:)) {
             guard let tag = SenderTag(rawValue: menuItem.tag) else { return false }
+            /// I could make this easier on myself by just disabling multiple selection
+            /// but I seem to be a glutton for punishment...
             if tag == .fontAssociationTableView {
                 let items = fontAssocTableEntriesController.selectedObjects as! [FOND.FontAssociationTable.Entry]
                 if items.isEmpty {
@@ -321,16 +323,22 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
             } else {
                 let items = fontNameSuffixEntriesController.selectedObjects as! [FontNameSuffixEntry]
                 let validItems = items.filter { $0.fontType == .sfnt || $0.fontType == .postScript }
+                var allPS = true
+                validItems.forEach { allPS = allPS && $0.fontType == .postScript }
                 if validItems.isEmpty {
                     menuItem.title = NSLocalizedString("Open Fonts", comment: "")
                 } else if validItems.count == 1 {
                     if validItems.first!.fontType == .sfnt {
                         menuItem.title = NSLocalizedString("Open “\(validItems.first!.postScriptName)”", comment: "")
                     } else {
-                        menuItem.title = NSLocalizedString("Open “\(validItems.first!.lwfnFilename)”", comment: "")
+                        menuItem.title = NSLocalizedString("Show in Finder", comment: "")
                     }
                 } else {
-                    menuItem.title = NSLocalizedString("Open \(validItems.count) Fonts", comment: "")
+                    if allPS {
+                        menuItem.title = NSLocalizedString("Show in Finder", comment: "")
+                    } else {
+                        menuItem.title = NSLocalizedString("Open \(validItems.count) Fonts", comment: "")
+                    }
                 }
                 return validItems.count > 0
             }
