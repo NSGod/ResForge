@@ -22,7 +22,7 @@ extension FOND {
         public init(_ reader: BinaryDataReader?) throws {
             if let reader, !reader.data.isEmpty {
                 numberOfEntries = try reader.read()
-                entries = try (0...numberOfEntries).map { _ in try Entry(reader) }
+                entries = try (0..<numberOfEntries + 1).map { _ in try Entry(reader) }
             } else {
                 numberOfEntries = 0
                 entries = [try Entry(nil)]

@@ -26,7 +26,7 @@ extension FOND {
             numberOfEntries = try reader.read()
             entries = []
             fontStylesToEntries = [:]
-            for _ in 0...numberOfEntries {
+            for _ in 0..<numberOfEntries + 1 {
                 let entry = try Entry(reader, fond: fond)
                 entries.append(entry)
                 fontStylesToEntries[entry.style] = entry

@@ -21,7 +21,7 @@ extension FOND {
 
         public init(_ reader: BinaryDataReader, fond: FOND) throws {
             numberOfEntries = try reader.read()
-            entries = try (0...numberOfEntries).map { _ in try Entry(reader, fond:fond) }
+            entries = try (0..<numberOfEntries + 1).map { _ in try Entry(reader, fond:fond) }
             super.init(fond:fond)
         }
 
