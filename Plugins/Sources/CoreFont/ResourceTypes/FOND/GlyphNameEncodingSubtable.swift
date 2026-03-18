@@ -32,10 +32,10 @@ extension FOND {
         public var charCodesToGlyphNames:  [CharCode: String] = [:]
 
         @objc public override var totalNodeLength: Int {
-            set { _nodeLength = newValue }
-            get { return _nodeLength }
+            return _totalNodeLength
         }
-        private var _nodeLength: Int = 0
+        
+        private var _totalNodeLength: Int = 0
 
         public init(_ reader: BinaryDataReader) throws {
             let before = reader.bytesRead
@@ -46,7 +46,7 @@ extension FOND {
                 charCodesToGlyphNames[charCode] = glyphName
             }
             super.init()
-            totalNodeLength = reader.bytesRead - before
+            _totalNodeLength = reader.bytesRead - before
         }
 
         public override func write(to handle: DataHandle, offset: Int? = nil) throws {

@@ -76,7 +76,6 @@ extension FOND {
                 stringDatas.append(data)
                 _actualStringCount += 1
             }
-
             if _actualStringCount != stringCount {
                 // I've encountered weird values here, hence the logging...
                 NSLog("\(type(of: self)).\(#function) *** WARNING: string count of \(stringCount) (byte-swapped: \(stringCount.byteSwapped)) appears to be wrong; actual string count: \(_actualStringCount)")

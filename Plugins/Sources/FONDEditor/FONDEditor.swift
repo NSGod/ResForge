@@ -159,8 +159,8 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
         }
         // FIXME: !! should this be replacing rather than appending? YES
         mutableArrayValue(forKey: "effectiveGlyphNameEntries").setArray(fond.encoding.glyphNameEntries)
-        if let fontNameSuffixSubtable = fond.styleMappingTable?.fontNameSuffixSubtable {
-            let entries = FontNameSuffixEntry.entries(from: fontNameSuffixSubtable, manager: manager)
+        if let styleMappingTable = fond.styleMappingTable {
+            let entries = FontNameSuffixEntry.entries(from: styleMappingTable, manager: manager)
             mutableArrayValue(forKey: "fontNameSuffixEntries").setArray(entries)
         }
     }

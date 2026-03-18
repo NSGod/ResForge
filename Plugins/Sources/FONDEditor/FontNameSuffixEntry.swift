@@ -32,6 +32,7 @@ public final class FontNameSuffixEntry: NSObject, Comparable {
     @objc dynamic public var lwfnFilename:                      String = ""
     @objc dynamic public var lwfnURL:                           URL?
     public var sfntResID:                                       ResID?
+
     @objc dynamic public var fontType:                          FontType {
         if sfntResID != nil {
             return .sfnt
@@ -42,9 +43,9 @@ public final class FontNameSuffixEntry: NSObject, Comparable {
         }
     }
 
-    public static func entries(from suffixSubtable: FOND.FontNameSuffixSubtable, manager: RFEditorManager) -> [FontNameSuffixEntry] {
+    public static func entries(from styleMappingTable: FOND.StyleMappingTable, manager: RFEditorManager) -> [FontNameSuffixEntry] {
+        let suffixSubtable = styleMappingTable.fontNameSuffixSubtable
         var postScriptNamesToSfntResIDs: [String: Int] = [:]
-        /// first look for an 'sfnt' with this PostScript name
         let sfntResources = manager.allResources(ofType: .sfnt, currentDocumentOnly: true)
         do {
             try sfntResources.forEach { resource in
@@ -72,16 +73,29 @@ public final class FontNameSuffixEntry: NSObject, Comparable {
                 mString.append(NSAttributedString(string: suffixSubtable.stringDatas[Int(key - 2)].dropFirst().map { String(format: "%d", $0) }.joined(separator: " "), attributes: Self.attrs))
                 entry.encodedAttrStringRepresentation = mString
             }
-            if let sfntResID = postScriptNamesToSfntResIDs[entry.postScriptName] {
-                entry.sfntResID = ResID(sfntResID)
-            } else {
-                /// Try to locate the 'LWFN' font file in the same directory as the font suitcase
-                let fontFileName = MD533Filename(forPostScriptFontName: entry.postScriptName)
-                entry.lwfnFilename = fontFileName
-                entry.lwfnURL = docDirURL?.appendingPathComponent(fontFileName)
+            /// Only create an entry that actually references a font if
+            /// the entry index is a valid, used index in the style-mapping tables `indexes` table.
+            /// For example, take Helvetica, whose base-name string is "Helvetica" at Index 1. The plain
+            /// style will reference index 1 ("Helvetica") and the 533 name will be "Helve".
+            /// In contrast, Adobe Garamond's base-name string is "AGaramond" at Index 1. The plain style
+            /// will instead reference Index 2 ("AGaramond-Regular") and the 533 name will be "AGarReg".
+            if styleMappingTable.validIndexes.contains(entry.index) {
+                /// first look for an 'sfnt' with this PostScript name
+                if let sfntResID = postScriptNamesToSfntResIDs[entry.postScriptName] {
+                    entry.sfntResID = ResID(sfntResID)
+                } else {
+                    /// Otherwise, try to locate the 'LWFN' font file in the same directory as the font suitcase
+                    let fontFileName = MD533Filename(forPostScriptFontName: entry.postScriptName)
+                    entry.lwfnFilename = fontFileName
+                    entry.lwfnURL = docDirURL?.appendingPathComponent(fontFileName)
+                }
             }
             entries.append(entry)
         }
+
+        /// Referring to the example given in the diagram at the top of `FontNameSuffixEntry.swift`,
+        /// reconstruct entries for the remaining Indexes 9-12 which aren't
+        /// present in `entryIndexesToPostScriptNames`
         if suffixSubtable.stringCount >= 2 {
             var lastKey: UInt8 = orderedKeys.last! + 1
             for data in suffixSubtable.stringDatas[Int(lastKey - 2)...Int(suffixSubtable.stringCount - 2)] {

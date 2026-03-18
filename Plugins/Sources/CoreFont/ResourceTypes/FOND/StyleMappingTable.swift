@@ -18,13 +18,16 @@ extension FOND {
 
     // Style-mapping table : 58 bytes
     public final class StyleMappingTable: ResourceNode {
-        public var fontClass:                          FontClass   // UInt16
-        public var offset:                             Int32       // offset from the start of this table to the glyph-name-encoding subtable component
-        public var reserved:                           Int32
-        public var indexes:                            [UInt8]     // [48] Indexes into the Font Name Suffix subtable
+        public var fontClass:                           FontClass   // UInt16
+        public var offset:                              Int32       // offset from the start of this table to the glyph-name-encoding subtable component
+        public var reserved:                            Int32
+        public var indexes:                             [UInt8]     // [48] Indexes into the Font Name Suffix subtable
 
-        public var fontNameSuffixSubtable:             FontNameSuffixSubtable
-        @objc public var glyphNameEncodingSubtable:    GlyphNameEncodingSubtable?
+        public var fontNameSuffixSubtable:              FontNameSuffixSubtable
+        @objc public var glyphNameEncodingSubtable:     GlyphNameEncodingSubtable?
+
+        /// the union of all referenced string indexes in `indexes`
+        public let validIndexes:                        IndexSet
 
         public class override var nodeLength: Int {
             MemoryLayout<FontClass.RawValue>.size + MemoryLayout<Int32>.size * 2 + 48  // 58 bytes
@@ -49,6 +52,9 @@ extension FOND {
                 glyphNameTableLength = NSMaxRange(knownRange) - (origOffset + Int(offset))
                 nameSuffixRange.length -= glyphNameTableLength
             }
+            var validIndexes: IndexSet = IndexSet()
+            indexes.forEach { validIndexes.insert(Int($0)) }
+            self.validIndexes = validIndexes
             fontNameSuffixSubtable = try FontNameSuffixSubtable(reader, range: nameSuffixRange)
             if offset != 0 {
                 try reader.pushPosition(origOffset + Int(offset))

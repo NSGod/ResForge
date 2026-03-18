@@ -54,7 +54,7 @@ extension FOND.KernTable {
     public final class Entry: FONDResourceNode {
         public var style:              MacFontStyle            // style this entry applies to
 
-        /// NOTE: While `numKerns` is defined as a `SInt16`, it makes no sense to have negative kern pairs,
+        /// NOTE: While `numKerns` is defined as an `SInt16`, it makes no sense to have negative kern pairs,
         ///       and I *have* encountered fonts that have more than 32,767 kern pairs, so make it an `UInt16`
         ///
         public var numKerns:           UInt16  /// Number of kern pairs that follow (and NOT the entryLength/length
