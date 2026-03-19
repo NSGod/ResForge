@@ -240,7 +240,6 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
 
     /// `sender` can be an `->` `NSButton` or an `NSMenuItem`
     @IBAction func openReferencedFonts(_ sender: Any) {
-        NSLog("\(type(of: self)).\(#function) sender == \(sender)")
         guard let senderTag = SenderTag(rawValue: (sender as AnyObject).tag) else { return }
         if sender is NSMenuItem {
             if senderTag == .fontAssociationTableView {

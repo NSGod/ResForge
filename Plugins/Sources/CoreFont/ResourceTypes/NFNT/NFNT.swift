@@ -235,7 +235,10 @@ public final class NFNT: NSObject {
     private func buildImageAndGlyphsIfNeeded() throws {
         if haveBuiltGlyphs { return }
         if rowWords == 0 {
-            /// this contains no bitmap data
+            /// This `NFNT` contains no bitmap data.
+            /// This is often the case with Asian two-byte-encoding fonts, where, rather
+            /// than having an incomplete set of bitmaps in the `NFNT`, they have an empty `NFNT`
+            /// with the bitmaps in the `sfnt`s `bdat` table.
             NSLog("\(type(of: self)).\(#function) **** NOTICE: rowWords == 0 && this NFNT contains no bitmap data. Resource length: \(resource.data.count)")
             if reader.bytesRemaining > 0 {
                 NSLog("\(type(of: self)).\(#function) **** yet NFNT contains more data!")
@@ -374,16 +377,25 @@ public final class NFNT: NSObject {
         /// zero, the glyph origin corresponds with the left edge of the bit image. Missing glyphs
         /// are represented by a word value of –1. The last word of this table is also –1,
         /// representing the end.
-        for _ in Int(firstChar)...Int(lastChar) + 2 {
+        for i in Int(firstChar)...Int(lastChar) + 2 {
             let widthOffset: Int16 = try reader.read()
             if widthOffset == -1 {
                 widths.append(-1)
                 offsets.append(-1)
             } else {
-                let widthEntry: Int8 = Int8(bitPattern: UInt8(widthOffset & 0x00ff))   // low-order byte
-                let offsetEntry: Int8 = Int8(bitPattern: UInt8(widthOffset >> 8))      // high-order byte
-                widths.append(widthEntry)
-                offsets.append(offsetEntry)
+                if i == Int(lastChar) + 2 {
+                    /// Force the last width and offset entries to be -1 regardless
+                    /// of what's present in the existing file. I've seen Fontographer
+                    /// have junk values like -1232, which is -5, 48, and which would crash the code below
+                    NSLog("\(type(of: self)).\(#function) last width/offset: \(widthOffset)")
+                    widths.append(-1)
+                    offsets.append(-1)
+                } else {
+                    let width: Int8 = Int8(bitPattern: UInt8(widthOffset & 0x00ff))   // low-order byte
+                    let offset: Int8 = Int8(bitPattern: UInt8(widthOffset >> 8))      // high-order byte
+                    widths.append(width)
+                    offsets.append(offset)
+                }
             }
         }
         _charsToGlyphs = [:]
