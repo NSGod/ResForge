@@ -10,7 +10,7 @@ import RFSupport
 
 public final class OSTypeFormatter: Formatter {
 
-    static let attrs = [NSAttributedString.Key.font: NSFont.monospacedDigitSystemFont(ofSize: NSFont.smallSystemFontSize, weight: .regular)]
+    static let attrs = [NSAttributedString.Key.font: NSFont.monospacedSystemFont(ofSize: NSFont.smallSystemFontSize, weight: .regular)]
 
     public override func string(for obj: Any?) -> String? {
         if let osType = obj as? Tag {

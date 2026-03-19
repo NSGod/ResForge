@@ -75,6 +75,10 @@ extension FOND.FontAssociationTable {
             }
         }
 
+        @objc public override var nodeLength: Int {
+            return Self.nodeLength
+        }
+
         public override class var nodeLength: Int {
             return MemoryLayout<Int16>.size * 2 + MemoryLayout<MacFontStyle.RawValue>.size // 6
         }
