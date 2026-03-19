@@ -71,7 +71,7 @@ public struct POST {
                 break
             }
         }
-        // FIXME: or should this be .macOSRoman?
+        // FIXME: or should this be .macOSRoman? Actually, should be safe for ASCII
         // FIXME: this still needs to have octal escape sequences resolved (for example, '\251' -> '©')
         guard let data = mString.data(using: .utf8) else {
             throw PostScriptError.encodingFailed("could not encode in PFA as .utf8 String")

@@ -50,8 +50,8 @@ public final class FontTable_head: FontTable {
     }
 
     @objc public enum IndexToLocFormat: Int16 {
-        case short          = 0 // loca table uses short offsets
-        case long           = 1 // loca table uses long offsets
+        case short          = 0 /// `loca` table uses short offsets
+        case long           = 1 /// `loca` table uses long offsets
     }
 
     public static let checksumConstant:         UInt32 = 0xB1B0AFBA
@@ -129,7 +129,7 @@ public final class FontTable_head: FontTable {
         let before: UInt32 = UInt32(extDataHandle.currentOffset)
         extDataHandle.write(version)
         extDataHandle.write(fontRevision)
-        extDataHandle.write(0 as UInt32)
+        extDataHandle.write(0 as UInt32) // leave checksum adjustment blank for now
         extDataHandle.write(magicNumber)
         extDataHandle.write(flags)
         extDataHandle.write(unitsPerEm.rawValue)

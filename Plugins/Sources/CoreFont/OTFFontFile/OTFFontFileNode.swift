@@ -24,7 +24,7 @@ open class OTFFontFileNode: NSObject {
         fatalError("must be overridden by subclass")
     }
 
-    /// size in bytes
+    /// `class` size in bytes
     public class var nodeLength:    UInt32 {
         fatalError("must be overridden by subclass")
     }

@@ -90,7 +90,6 @@ public final class PostScriptType1FontFile: NSObject {
         return true
     }
 
-    
     /// A set of options that control what additional information is parsed from a PostScript Type 1 font file.
     public struct ParseOptions: OptionSet {
         public let rawValue: Int
@@ -110,16 +109,16 @@ public final class PostScriptType1FontFile: NSObject {
     }
 
     /// we can read in both .pfa and .pfb files (.pfb will be auto transformed to .pfa)
-    public convenience init(contentsOf url: URL, options: ParseOptions = .`default`) throws {
+    public convenience init(contentsOf url: URL, options: ParseOptions = .default) throws {
         let data = try Data(contentsOf: url)
         try self.init(data: data, options: options)
         self.fileUrl = url
     }
 
-    public init(data: Data, options: ParseOptions = .`default`) throws {
+    public init(data: Data, options: ParseOptions = .default) throws {
         /// The data given to us could be in either PFA (ascii) format, or
         /// PFB (binary) format, so make sure to transform it to PFA before continuing
-        let data = try Self.postScriptDataByTransforming(data, toFormat: .ascii)
+        let data = try Self.postScriptDataByTransforming(data, to: .ascii)
         self.data = data
         /// Normally, I would have to decrypt and parse the PFA/PFB file by including code from
         /// Adobe's Font Development Kit for OpenType fonts (afdko), but we have an easier way.
@@ -237,12 +236,12 @@ public final class PostScriptType1FontFile: NSObject {
     fileprivate static let hexDataLineLength: Int = 64
 
     // MARK: only ascii is supported as output format
-    private static func postScriptDataByTransforming(_ data: Data, toFormat: Format = .ascii) throws -> Data {
+    private static func postScriptDataByTransforming(_ data: Data, to outputFormat: Format = .ascii) throws -> Data {
         let reader = BinaryDataReader(data, bigEndian: false)
         var fmt: UInt8 = try reader.peek()
         if let format = DataType(rawValue: fmt), format == .binaryMarker {
             /// is PFB
-            if toFormat == .binary { return data }
+            if outputFormat == .binary { return data }
             /// to ASCII:
             var mString = ""
             var lastFormat: DataType = .none
@@ -289,7 +288,7 @@ public final class PostScriptType1FontFile: NSObject {
             return mString.data(using: .ascii) ?? Data()
         } else {
             /// is already PFA, return existing data
-            if toFormat == .ascii { return data }
+            if outputFormat == .ascii { return data }
             throw PostScriptError.unsupportedFormat("Converting PostScript Type 1 PFA to a PFB font is not currently supported")
         }
     }
