@@ -51,7 +51,7 @@ public final class BitmapFontEditor: AbstractEditor, ResourceEditor, Placeholder
         self.resource = resource
         self.manager = manager
         do {
-            nfnt = try NFNT(with: self.resource)
+            nfnt = try NFNT(with: self.resource, manager: manager)
             objcFontType = nfnt.fontType.rawValue
             objcBitDepth = objcFontType & ~0xFFF3
         } catch  {
