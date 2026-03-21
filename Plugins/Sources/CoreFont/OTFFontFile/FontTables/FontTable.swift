@@ -15,6 +15,21 @@ public enum FontTableError: LocalizedError {
     case writeError(String?)
 }
 
+/// `Ideally:`
+/// immediate parsing:
+/// `head`/`bhed`, `maxp`, `OS/2`
+///
+/// lazy parsing:
+/// `cmap`, `hhea`, `hmtx`, `hdmx`,
+/// `post`, `vhea`, `vmtx`
+/// `name`, `fdsc`, `feat`,
+/// `loca`, `glyf`, `fond`, `gasp`, `cvt `,
+/// `kern`, `kerx`, `DSIG`, `CFF `, `CFF2`
+/// `GPOS`, `GSUB`, `GDEF`,
+/// `cvar`, `fvar`, `gvar`,
+/// `bloc`, `bdat`,
+/// & all others
+
 /// abstract superclass
 open class FontTable: OTFFontFileNode {
     public let tableTag:            TableTag
@@ -122,6 +137,8 @@ open class FontTable: OTFFontFileNode {
     public var vheaTable: FontTable_vhea? { table(for: .vhea) as? FontTable_vhea }
     public var vmtxTable: FontTable_vmtx? { table(for: .vmtx) as? FontTable_vmtx }
     public var featTable: FontTable_feat? { table(for: .feat) as? FontTable_feat }
+    public var bhedTable: FontTable_bhed? { table(for: .bhed) as? FontTable_bhed }
+    public var locaTable: FontTable_loca? { table(for: .loca) as? FontTable_loca }
     
     public var fontNumGlyphs: Int {
         return fontFile.numGlyphs
@@ -166,17 +183,3 @@ extension FontTable {
         .DSIG: 22,
     ]
 }
-
-/// `Ideally:`
-/// immediate parsing:
-/// `head`, `maxp`, `OS/2`
-///
-/// lazy parsing:
-/// `cmap`, `hhea`, `hmtx`, `hdmx`,
-/// `post`, `vhea`, `vmtx`
-/// `name`, `fdsc`, `feat`,
-/// `loca`, `glyf`, `fond`, `gasp`, `cvt `,
-/// `kern`, `kerx`, `DSIG`, `CFF `, `CFF2`
-/// `GPOS`, `GSUB`, `GDEF`,
-/// `cvar`, `fvar`, `gvar`,
-/// & all others

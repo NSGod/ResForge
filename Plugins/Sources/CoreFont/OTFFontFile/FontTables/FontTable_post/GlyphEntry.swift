@@ -19,8 +19,8 @@ public extension FontTable_post {
         }
 
         @objc public var glyphID:     GlyphID = 0
-        @objc public var glyphName:   String?   // CID use code only
-        @objc public var code:        NSNumber?
+        @objc public var glyphName:   String?       // CID-keyed use code-only
+        @objc public var code:        NSNumber?     // only for CID-keyed
 
         public init(glyphID: GlyphID, glyphName: String? = nil, code: NSNumber? = nil) {
             self.glyphID = glyphID

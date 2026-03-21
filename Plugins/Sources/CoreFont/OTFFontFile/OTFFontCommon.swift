@@ -66,6 +66,10 @@ public struct OTFsfntFormat: RawRepresentable, Equatable {
     public static let vt1b:    OTFsfntFormat = .init(rawValue: 0x498182F0) // VT100-Bold
 }
 
+@objc public enum LocaOffsetFormat: Int16 {
+    case short = 0
+    case long  = 1
+}
 
 public func OTFReWritingOrderSort(lhs: TableTag, rhs: TableTag) -> Bool {
     let a = ttfRewriteOrder[lhs] ?? Int.max

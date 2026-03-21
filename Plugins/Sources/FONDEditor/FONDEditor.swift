@@ -9,7 +9,7 @@ import Cocoa
 import RFSupport
 import CoreFont
 
-// FIXME: this class is starting to get a bit unwieldy
+// FIXME: this class is starting to get a bit unwieldy?
 public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEditingDelegate, NSTextFieldDelegate {
     public static var bundle: Bundle { .module }
     public static let supportedTypes = [

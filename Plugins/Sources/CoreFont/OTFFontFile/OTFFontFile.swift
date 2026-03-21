@@ -200,6 +200,12 @@ public final class OTFFontFile: NSObject {
     public var featTable: FontTable_feat? {
         return table(for: .feat) as? FontTable_feat
     }
+    public var bhedTable: FontTable_bhed? {
+        return table(for: .bhed) as? FontTable_bhed
+    }
+    public var locaTable: FontTable_loca? {
+        return table(for: .loca) as? FontTable_loca
+    }
     public func table(for tableTag: TableTag) -> FontTable? {
         return tableTagsToTables[tableTag]
     }

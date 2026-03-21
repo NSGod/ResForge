@@ -12,7 +12,7 @@ import RFSupport
 /// `DEPENDS ON`:
 /// `DISPLAY DEPENDS ON`:
 
-public final class FontTable_head: FontTable {
+public class FontTable_head: FontTable {
 
     @objc public enum Version: Fixed {
         case default1_0 = 0x00010000
@@ -49,11 +49,6 @@ public final class FontTable_head: FontTable {
         case rightToLeftWithNeutrals        = 2
     }
 
-    @objc public enum IndexToLocFormat: Int16 {
-        case short          = 0 /// `loca` table uses short offsets
-        case long           = 1 /// `loca` table uses long offsets
-    }
-
     public static let checksumConstant:         UInt32 = 0xB1B0AFBA
     public static let checksumAdjustmentOffset: UInt32 = 8 // sizeof(UInt32) * 2
     public static let magicNumber:              UInt32 = 0x5F0F3CF5
@@ -74,7 +69,7 @@ public final class FontTable_head: FontTable {
     public var macStyle:                            MacFontStyle = []       // UInt16; should be synced w/ OS/2 fsSelection bits
     @objc dynamic public var lowestRecPPEM:         UInt16 = 0              // smallest readable size in px
     @objc dynamic public var fontDirectionHint:     FontDirectionHint = .fullyMixedLeftToRight // deprecated? (set to 2)
-    @objc dynamic public var indexToLocFormat:      IndexToLocFormat = .short   // 0 for short offsets, 1 for long
+    @objc dynamic public var indexToLocFormat:      LocaOffsetFormat = .short   // 0 for short offsets, 1 for long
     @objc dynamic public var glyphDataFormat:       Int16 = 0               // 0 for current format
 
     public override var calculatedChecksum: UInt32 {

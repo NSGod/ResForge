@@ -11,7 +11,7 @@ import RFSupport
 public extension FontTable_post {
 
     final class Format2_0: Format {
-        public var numberOfGlyphs:          UInt16 = 0      // must be synched with maxp.numGlyphs
+        public var numberOfGlyphs:          UInt16 = 0      /// must be synched with `maxp.numGlyphs`
         public var glyphNameIndexes:        [GlyphID] = []
         // public var glyphNames:           [String]        // inherited
 
