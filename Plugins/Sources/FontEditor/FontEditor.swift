@@ -9,7 +9,7 @@ import Cocoa
 import RFSupport
 import CoreFont
 
-public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
+public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, TypeIconProvider {
     public static var bundle: Bundle { .module }
     public static let supportedTypes = [
         "sfnt",
@@ -17,6 +17,10 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider {
     public static func register() {
         PluginRegistry.register(self)
     }
+
+    public static var typeIcons = [
+        "sfnt": "trueTypeSymbol"
+    ]
 
     @IBOutlet weak var tableView:       NSTableView!
     @IBOutlet weak var tableTagField:   NSTextField!
