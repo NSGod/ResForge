@@ -386,8 +386,12 @@ public final class NFNT: NSObject {
                 if i == Int(lastChar) + 2 {
                     /// Force the last width and offset entries to be -1 regardless
                     /// of what's present in the existing file. I've seen Fontographer
-                    /// have junk values like -1232, which is -5, 48, and which would crash the code below
+                    /// have junk values like -1232, which is -5, 48, and which would crash the code below.
+                    /// Or perhaps I'm going too far and should only be lastChar + 1?
                     NSLog("\(type(of: self)).\(#function) last width/offset: \(widthOffset)")
+                    let width: Int16 = widthOffset & 0x00ff
+                    let offset: Int16 = widthOffset >> 8
+                    NSLog("\(type(of: self)).\(#function) last width: \(width), offset: \(offset)")
                     widths.append(-1)
                     offsets.append(-1)
                 } else {

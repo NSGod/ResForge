@@ -35,6 +35,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     
     @IBOutlet weak var tabView:                         NSTabView!
     @IBOutlet weak var encodingTabView:                 NSTabView!
+    @IBOutlet weak var encodingField:                   NSTextField!
 
     @IBOutlet var popover:                              NSPopover!
     @IBOutlet weak var popoverButton:                   NSButton!
@@ -145,6 +146,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
         }
         objcFFFlags = fond.ffFlags.rawValue
         objcFontClass = fond.styleMappingTable?.fontClass.rawValue ?? 0
+        encodingField.stringValue = fond.encoding.name
         if let kernEntries = fond.kernTable?.entries {
             let kernPairs = kernEntries.map(KernTreeNode.init(representedObject:)).sorted(by: <)
             mutableArrayValue(forKey: "kernPairs").setArray(kernPairs)
