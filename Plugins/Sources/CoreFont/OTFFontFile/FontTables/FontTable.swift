@@ -108,8 +108,8 @@ open class FontTable: OTFFontFileNode {
     public static func `class`(for tableTag: TableTag) -> FontTable.Type {
         if tableTag == .OS_2 { return FontTable_OS2.self }
         if tableTag == .cvt_ { return FontTable_cvt.self }
-//        if tableTag == .CID_ { return FontTable_CID.self }
-//        if tableTag == .CFF_ { return FontTable_CFF.self }
+        // if tableTag == .CID_ { return FontTable_CID.self }
+        // if tableTag == .CFF_ { return FontTable_CFF.self }
         if let theClass: FontTable.Type = NSClassFromString("CoreFont.FontTable_\(tableTag.fourCharString)") as? FontTable.Type {
             return theClass
             /// if class is `Nil`, try byte-swapping the table tag to see if it's wrong in the font

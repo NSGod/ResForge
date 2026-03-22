@@ -10,7 +10,8 @@ import RFSupport
 import CoreFont
 import OrderedCollections
 
-public final class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvider, ExportProvider, NSTableViewDelegate {
+public final class BitmapFontEditor: AbstractEditor, ResourceEditor, PlaceholderProvider, ExportProvider, TypeIconProvider, NSTableViewDelegate {
+
     public static var bundle: Bundle { .module }
     public static let supportedTypes = [
         "NFNT",
@@ -19,6 +20,10 @@ public final class BitmapFontEditor: AbstractEditor, ResourceEditor, Placeholder
     public static func register() {
         PluginRegistry.register(self)
     }
+    public static let typeIcons = [
+        "NFNT": "NFNT",
+        "FONT": "NFNT",
+    ]
 
     @IBOutlet weak var fontTypeBitfieldControl:     BitfieldControl!
     @IBOutlet weak var bitDepthPopUpButton:         NSPopUpButton!

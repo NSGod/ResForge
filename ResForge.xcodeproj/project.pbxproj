@@ -52,6 +52,7 @@
 		C11C2A3A2F15E368002AEBAB /* BitmapFontEditor in Frameworks */ = {isa = PBXBuildFile; productRef = C11C2A392F15E368002AEBAB /* BitmapFontEditor */; };
 		C14989422F22D81B0059329A /* postScriptA.pdf in Resources */ = {isa = PBXBuildFile; fileRef = C14989412F22D81B0059329A /* postScriptA.pdf */; };
 		C16D69832F283CB800AEFB16 /* POSTExporter in Frameworks */ = {isa = PBXBuildFile; productRef = C16D69822F283CB800AEFB16 /* POSTExporter */; };
+		C18991C42F7073C9008E51CB /* NFNT.pdf in Resources */ = {isa = PBXBuildFile; fileRef = C18991C32F7073C9008E51CB /* NFNT.pdf */; };
 		C1960C4C2F049DBC003BC1E4 /* FONDEditor in Frameworks */ = {isa = PBXBuildFile; productRef = C1960C4B2F049DBC003BC1E4 /* FONDEditor */; };
 		C1BECF142F6EEC6C00D1F045 /* trueTypeSymbol.pdf in Resources */ = {isa = PBXBuildFile; fileRef = C1BECF132F6EEC6C00D1F045 /* trueTypeSymbol.pdf */; };
 		C1D84C8D2F1D501400DB8BB7 /* CoreFont in Frameworks */ = {isa = PBXBuildFile; productRef = C1D84C8C2F1D501400DB8BB7 /* CoreFont */; };
@@ -179,6 +180,7 @@
 		550B904B189A0360005AC38D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ResourceItem.xib; sourceTree = "<group>"; };
 		559DE9B3189D665000D55D3A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C14989412F22D81B0059329A /* postScriptA.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = postScriptA.pdf; sourceTree = "<group>"; };
+		C18991C32F7073C9008E51CB /* NFNT.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = NFNT.pdf; sourceTree = "<group>"; };
 		C1BECF132F6EEC6C00D1F045 /* trueTypeSymbol.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = trueTypeSymbol.pdf; sourceTree = "<group>"; };
 		E18BF58C069FEA1400F076B8 /* ResForge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ResForge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E18BF9D706A01A2200F076B8 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -308,6 +310,7 @@
 			children = (
 				C1BECF132F6EEC6C00D1F045 /* trueTypeSymbol.pdf */,
 				C14989412F22D81B0059329A /* postScriptA.pdf */,
+				C18991C32F7073C9008E51CB /* NFNT.pdf */,
 				4996B90725DB6C2F0027FA39 /* Credits.rtf */,
 				B229EEEA15A4FB6F0032C12C /* MainMenu.xib */,
 				B229EEEC15A4FB6F0032C12C /* CreateResource.xib */,
@@ -473,6 +476,7 @@
 				559DE9B4189D665000D55D3A /* Assets.xcassets in Resources */,
 				4996B90925DB6C2F0027FA39 /* Credits.rtf in Resources */,
 				B229EEF715A4FB6F0032C12C /* InfoWindow.xib in Resources */,
+				C18991C42F7073C9008E51CB /* NFNT.pdf in Resources */,
 				C14989422F22D81B0059329A /* postScriptA.pdf in Resources */,
 				B229EEF815A4FB6F0032C12C /* PrefsWindow.xib in Resources */,
 				497A93DE255F371100900C7B /* SelectTemplate.xib in Resources */,
