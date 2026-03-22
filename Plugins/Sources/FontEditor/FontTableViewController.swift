@@ -14,10 +14,14 @@ import CoreFont
 class FontTableViewController: NSViewController {
 
     required init?(with fontTable: FontTable) {
-        super.init(nibName: (NSStringFromClass(Self.self) as NSString).pathExtension, bundle: Bundle.module)
+        super.init(nibName: nil, bundle: Bundle.module)
         self.representedObject = fontTable
     }
-    
+
+    override var nibName: NSNib.Name? {
+        return (NSStringFromClass(Self.self) as NSString).pathExtension
+    }
+
     @MainActor required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

@@ -25,8 +25,8 @@ open class FontTableNode: NSObject, NSCopying, DataHandleWriting {
         fatalError("subclasses must override")
     }
 
-    /// size in bytes
-    public class var nodeLength:    UInt32 {    
+    /// `class` size in bytes
+    public class var nodeLength:    UInt32 {
         fatalError("subclasses must override")
     }
 
