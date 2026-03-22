@@ -34,7 +34,7 @@ public final class POSTExporter: AbstractEditor, ResourceEditor, ExportProvider,
     private let manager:        RFEditorManager
     private var _windowTitle:   String = ""
 
-    @objc public var pfaFile:   PostScriptType1FontFile
+    @objc public var pfaFile:   PostScriptType1FontFile?
 
     required public init?(resource: Resource, manager: any RFEditorManager) {
         self.resource = resource
@@ -46,7 +46,7 @@ public final class POSTExporter: AbstractEditor, ResourceEditor, ExportProvider,
             let postResources: [POST] = try POST.postResources(from: resources)
             let pfaData = try POST.data(from: postResources)
             pfaFile = try PostScriptType1FontFile(data: pfaData, options: .full)
-            if let postScriptName = pfaFile.postScriptName {
+            if let postScriptName = pfaFile?.postScriptName {
                 _windowTitle = NSLocalizedString("POST 501 – \(501 + resources.count): \(postScriptName)", comment: "")
             } else {
                 _windowTitle = NSLocalizedString("POST 501 – \(501 + resources.count)", comment: "")
@@ -54,6 +54,8 @@ public final class POSTExporter: AbstractEditor, ResourceEditor, ExportProvider,
         } catch {
             // FIXME: present error
             NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+            super.init(window: nil)
+            presentError(error)
             return nil
         }
         super.init(window: nil)
@@ -69,13 +71,13 @@ public final class POSTExporter: AbstractEditor, ResourceEditor, ExportProvider,
 
     public override func windowDidLoad() {
         super.windowDidLoad()
-        sampleTextField.font = pfaFile.font
+        sampleTextField.font = pfaFile?.font
     }
 
     public func windowWillClose(_ notification: Notification) {
         NSLog("\(type(of: self)).\(#function)")
         do {
-            try pfaFile.deactivate()
+            try pfaFile?.deactivate()
         } catch {
              NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
         }
@@ -90,7 +92,7 @@ public final class POSTExporter: AbstractEditor, ResourceEditor, ExportProvider,
         NSLog("\(type(of: self)).\(#function)")
         let panel = NSSavePanel()
         panel.allowedFileTypes = ["pfa"]
-        if let psName = pfaFile.postScriptName {
+        if let psName = pfaFile?.postScriptName {
             panel.nameFieldStringValue = psName
         } else {
             panel.nameFieldStringValue = "UntitledFont"
@@ -99,7 +101,7 @@ public final class POSTExporter: AbstractEditor, ResourceEditor, ExportProvider,
             if result == .OK {
                 if let url = panel.url {
                     do {
-                        try self.pfaFile.write(to: url)
+                        try self.pfaFile?.write(to: url)
                     } catch {
                         NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
                     }
