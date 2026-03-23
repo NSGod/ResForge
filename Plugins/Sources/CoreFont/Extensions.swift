@@ -28,6 +28,10 @@ public extension BinaryDataReader {
     }
 }
 
+public protocol BinaryDataReadingNode {
+    init(_ reader: BinaryDataReader?, offset: Int?) throws
+}
+
 public extension Date {
     init(secondsSince1904: Int64) {
         self.init(timeIntervalSinceReferenceDate: Double(secondsSince1904) - kCFAbsoluteTimeIntervalSince1904)

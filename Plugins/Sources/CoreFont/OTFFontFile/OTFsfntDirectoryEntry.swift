@@ -76,6 +76,7 @@ public final class OTFsfntDirectoryEntry: OTFFontFileNode, DataHandleWriting, Co
 
     fileprivate static let tagsToParsingOrder: [TableTag: Int] = [
         .head: 0,
+        .bhed: 0,
         .maxp: 1,
         .OS_2: 2,
         .post: 3,
@@ -84,5 +85,7 @@ public final class OTFsfntDirectoryEntry: OTFFontFileNode, DataHandleWriting, Co
         .hmtx: 6,
         .cmap: 7,
         .gasp: 8,
+        .bloc: 9,
+        .bdat: 10,
     ]
 }

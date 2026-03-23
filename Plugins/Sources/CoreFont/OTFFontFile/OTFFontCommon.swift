@@ -102,6 +102,13 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
         self.rawValue = rawValue
     }
 
+    /// Key: `OT`: OpenType (with PostScript-type outlines in `CFF ` or `CFF2` table)
+    ///      `TT`: TrueType (with TrueType-type outlines in `glyf` table)
+    ///      `AAT`: an Apple-only table that offers advanced features
+
+    /// - Note: Microsoft bitmap fonts use `head`, `EBDT`, `EBLC`, and optionally `EBSC`
+    ///         Apple bitmap fonts use `bhed`, `bdat`, and `bloc`
+
     /// Baseline data table (opt)
     public static let BASE = TableTag(rawValue: Tag(fourCharString: "BASE"))
 
@@ -127,12 +134,14 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
     public static let BLND = TableTag(rawValue: Tag(fourCharString: "BLND"))
 
     /// Embedded bitmap data (B&W/grayscale) (bitmap-only TT fonts)
+    /// Microsoft's identical equivalent to Apple's `bdat` table
     public static let EBDT = TableTag(rawValue: Tag(fourCharString: "EBDT"))
 
     /// Embedded bitmap location data (bitmap-only TT fonts)
+    /// Microsoft's identical equivalent to Apple's `bloc` table
     public static let EBLC = TableTag(rawValue: Tag(fourCharString: "EBLC"))
 
-    /// Embedded bitmap scaling data (bitmap-only TT fonts)
+    /// Embedded bitmap scaling data (MS-only, bitmap-only TT fonts, optional)
     public static let EBSC = TableTag(rawValue: Tag(fourCharString: "EBSC"))
 
     /// Color bitmap data
@@ -165,7 +174,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
     /// Math layout data               OT (opt)
     public static let MATH = TableTag(rawValue: Tag(fourCharString: "MATH"))
 
-    /// OS/2 and Windows-specific metrics (req)
+    /// `OS/2` and Windows-specific metrics (Windows: req, Apple: opt)
     public static let OS_2 = TableTag(rawValue: Tag(fourCharString: "OS/2"))
 
     /// Vertical Origin                OT only (opt)
@@ -189,13 +198,13 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
     /// Anchor point table      AAT (opt)
     public static let ankr = TableTag(rawValue: Tag(fourCharString: "ankr"))
 
-    /// Bitmap data table
+    /// Bitmap data table (Apple equiv to MS `EBDT`; req for bitmap-only)
     public static let bdat = TableTag(rawValue: Tag(fourCharString: "bdat"))
 
-    /// Bitmap font header (Mac equiv to 'head' for bitmap-only TT fonts)
+    /// Bitmap font header (Apple equiv to `head`; req for bitmap-only)
     public static let bhed = TableTag(rawValue: Tag(fourCharString: "bhed"))
 
-    /// Bitmap location table
+    /// Bitmap location table (Apple equiv to MS `EBLC`; req for bitmap-only)
     public static let bloc = TableTag(rawValue: Tag(fourCharString: "bloc"))
 
     /// baseline table
@@ -216,16 +225,16 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
     /// feature table                  AAT TT (opt)
     public static let feat = TableTag(rawValue: Tag(fourCharString: "feat"))
 
-    /// AAT TT (opt) OS X 10.9+ used with 'morx' & 'feat' tables
+    /// AAT TT (opt) OS X 10.9+ used with `morx` & `feat` tables
     public static let ltag = TableTag(rawValue: Tag(fourCharString: "ltag"))
 
     /// Font program                   TT (opt)
     public static let fpgm = TableTag(rawValue: Tag(fourCharString: "fpgm"))
 
-    /// Mac 'FOND' resources           TT (opt)
+    /// Apple `FOND` (& `NFNT`) resources TT (opt)
     public static let fond = TableTag(rawValue: Tag(fourCharString: "fond"))
 
-    /// 'cvt ' variations table        AAT (opt)
+    /// `cvt ` variations table        AAT (opt)
     public static let cvar = TableTag(rawValue: Tag(fourCharString: "cvar"))
 
     /// Font Variations Table          AAT (opt)
@@ -252,13 +261,13 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
     /// Horizontal Metrics (req)
     public static let hmtx = TableTag(rawValue: Tag(fourCharString: "hmtx"))
 
-    /// Horizontal device metrics    Mac (opt)
+    /// Horizontal device metrics    Apple (opt)
     public static let hdmx = TableTag(rawValue: Tag(fourCharString: "hdmx"))
 
     /// Hierarchical Variation Fonts  AAT (opt)
     public static let hvgl = TableTag(rawValue: Tag(fourCharString: "hvgl"))
 
-    /// Hierarchical Variation Fonts  (used w/ 'hvgl') AAT (opt)
+    /// Hierarchical Variation Fonts  (used w/ `hvgl`) AAT (opt)
     public static let hvpm = TableTag(rawValue: Tag(fourCharString: "hvpm"))
 
     /// Justification table            AAT (opt)
@@ -276,7 +285,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
     /// Extended Kerning table         AAT (opt)
     public static let kerx = TableTag(rawValue: Tag(fourCharString: "kerx"))
 
-    /// Maximum profile                (req)
+    /// Maximum profile             OT & TT (req)
     public static let maxp = TableTag(rawValue: Tag(fourCharString: "maxp"))
 
     /// Metadata table (design lang, sup. lang) AAT (opt)
@@ -285,28 +294,28 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
     /// Glyph Metamorphosis table (deprecated) AAT (opt)
     public static let mort = TableTag(rawValue: Tag(fourCharString: "mort"))
 
-    /// Extended Glyph Metamorphosis   AAT
+    /// Extended Glyph Metamorphosis   AAT (opt)
     public static let morx = TableTag(rawValue: Tag(fourCharString: "morx"))
 
-    /// Naming table                   (req)
+    /// Naming table                OT & TT (req)
     public static let name = TableTag(rawValue: Tag(fourCharString: "name"))
 
     /// Optical bounds table           AAT (opt)
     public static let opbd = TableTag(rawValue: Tag(fourCharString: "opbd"))
 
-    /// PostScript information         (req)
+    /// PostScript information      OT & TT (req)
     public static let post = TableTag(rawValue: Tag(fourCharString: "post"))
 
     /// CV Program                     TT (opt)
     public static let prep = TableTag(rawValue: Tag(fourCharString: "prep"))
 
-    /// Glyph Properties table
+    /// Glyph Properties table        AAT (opt)
     public static let prop = TableTag(rawValue: Tag(fourCharString: "prop"))
 
     /// Standard graphics format bitmap data (full color) (Apple-only?)
     public static let sbix = TableTag(rawValue: Tag(fourCharString: "sbix"))
 
-    /// Tracking table                 AAT (opt)
+    /// Tracking table                AAT (opt)
     public static let trak = TableTag(rawValue: Tag(fourCharString: "trak"))
 
     /// Vertical header table          TT (opt)
@@ -315,7 +324,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
     /// Vertical metrics table         TT (opt)
     public static let vmtx = TableTag(rawValue: Tag(fourCharString: "vmtx"))
 
-    /// cross-reference table (AAT) opt
+    /// cross-reference table         AAT (opt)
     public static let xref = TableTag(rawValue: Tag(fourCharString: "xref"))
 
     ///                                AAT (opt)
