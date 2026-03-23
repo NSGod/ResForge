@@ -86,8 +86,8 @@ open class FontTable: OTFFontFileNode {
     /// This method then handles writing that updated `tableData` to the provided external
     /// data handle `handle`.
     /// Subclasses should override `prepareToWrite()` and `write()` rather than override this method.
-    /// The only exception is the `head` table which must do so to leave the
-    /// checksumAdjustment field blank.
+    /// The only exception is the `head`/`bhed` table which must do so to leave the
+    /// `checksumAdjustment` field blank.
     func write(to handle: DataHandle, updating entry: OTFsfntDirectoryEntry) throws {
         dataHandle = DataHandle()
         try prepareToWrite()

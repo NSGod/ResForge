@@ -437,7 +437,7 @@
         </numberFormatter>
         <numberFormatter formatterBehavior="custom10_4" allowsFloats="NO" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="NLI-91-0gB" userLabel="int16NumberFormatter">
             <real key="minimum" value="-32768"/>
-            <real key="maximum" value="32768"/>
+            <real key="maximum" value="32767"/>
         </numberFormatter>
         <numberFormatter formatterBehavior="custom10_4" allowsFloats="NO" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="9FW-tv-86i" userLabel="uInt16NumberFormatter">
             <real key="minimum" value="0.0"/>

@@ -172,7 +172,7 @@
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                         <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="cAh-XQ-dVW">
                                                             <numberFormatter key="formatter" formatterBehavior="default10_4" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="q0S-wr-uf3">
-                                                                <real key="minimum" value="-32767"/>
+                                                                <real key="minimum" value="-32768"/>
                                                                 <real key="maximum" value="32767"/>
                                                             </numberFormatter>
                                                             <font key="font" metaFont="smallSystem"/>
