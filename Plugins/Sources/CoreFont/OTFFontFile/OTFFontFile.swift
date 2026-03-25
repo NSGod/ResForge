@@ -206,6 +206,18 @@ public final class OTFFontFile: NSObject {
     public var locaTable: FontTable_loca? {
         return table(for: .loca) as? FontTable_loca
     }
+    public var blocTable: FontTable_bloc? {
+        return table(for: .bloc) as? FontTable_bloc
+    }
+    public var bdatTable: FontTable_bdat? {
+        return table(for: .bdat) as? FontTable_bdat
+    }
+    public var EBLCTable: FontTable_EBLC? {
+        return table(for: .EBLC) as? FontTable_EBLC
+    }
+    public var EBDTTable: FontTable_EBDT? {
+        return table(for: .EBDT) as? FontTable_EBDT
+    }
     public func table(for tableTag: TableTag) -> FontTable? {
         return tableTagsToTables[tableTag]
     }

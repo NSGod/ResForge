@@ -86,6 +86,8 @@ public final class OTFsfntDirectoryEntry: OTFFontFileNode, DataHandleWriting, Co
         .cmap: 7,
         .gasp: 8,
         .bloc: 9,
+        .EBLC: 9,
         .bdat: 10,
+        .EBDT: 10,
     ]
 }
