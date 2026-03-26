@@ -44,22 +44,19 @@ extension FontTable_bloc {
     // MARK: -
     public final class IndexSubtable: Node {
         public var indexFormat:         Sbit.IndexFormat = .unknown
-        public var imageFormat:         Sbit.DataFormat = .unknown
+        public var imageFormat:         Sbit.GlyphDataFormat = .unknown
         public var imageDataOffset:     UInt32 = 0                      /// Offset to the base of the image data (`bdat`) for this index subtable
         public var format:              Format!
 
-        public init(_ reader: BinaryDataReader, offset: Int? = nil, indexSubtableArray: IndexSubtableArray) throws {
-            assert(offset != nil)
-            if let offset {
-                reader.pushSavedPosition()
-                defer { reader.popPosition() }
-                try reader.setPosition(offset)
-                indexFormat = try reader.read()
-                imageFormat = try reader.read()
-                imageDataOffset = try reader.read()
-                if let formatClass = Format.class(for: indexFormat) {
-                    format = try formatClass.init(reader, indexSubtableArray: indexSubtableArray)
-                }
+        public init(_ reader: BinaryDataReader, offset: Int, indexSubtableArray: IndexSubtableArray) throws {
+            reader.pushSavedPosition()
+            defer { reader.popPosition() }
+            try reader.setPosition(offset)
+            indexFormat = try reader.read()
+            imageFormat = try reader.read()
+            imageDataOffset = try reader.read()
+            if let formatClass = Format.class(for: indexFormat) {
+                format = try formatClass.init(reader, indexSubtableArray: indexSubtableArray)
             }
             try super.init(reader, offset: offset)
         }

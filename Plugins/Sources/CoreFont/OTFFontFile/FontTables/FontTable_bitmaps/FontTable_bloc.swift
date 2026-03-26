@@ -58,6 +58,13 @@ extension FontTable_bloc {
             public static let vertical:     Flags = Flags(rawValue: 1 << 1) // small metrics are vert
         }
 
+        @objc public enum BitDepth: UInt8 {
+            case oneBit     = 1     // black/white
+            case twoBit     = 2     // 4 levels of gray
+            case fourBit    = 4     // 16 levels of gray
+            case eightBit   = 8     // 256 levels of gray
+        }
+
         // MARK: -
         public var indexSubTableArrayOffset:    UInt32 = 0          /// Offset to corresponding index subtable array from the beginning of the `bloc`.
         public var indexTableSize:              UInt32 = 0          /// Length of corresponding index subtables and array
@@ -69,10 +76,14 @@ extension FontTable_bloc {
         public var endGlyphIndex:               GlyphID = 0         /// highest glyph index for this size
         public var ppemX:                       UInt8 = 0           /// target horizontal pixels-per-em
         public var ppemY:                       UInt8 = 0           /// target vertical pixels-per-em
-        public var bitDepth:                    UInt8 = 0           /// bit depth of the strike
+        public var bitDepth:                    BitDepth = .oneBit  /// bit depth of the strike
         public var flags:                       Flags = []
 
-        public var indexSubtable:               IndexSubtableArray!
+        public var indexSubtableArray:          IndexSubtableArray
+
+        public override var nodeLength: UInt32 {
+            return Self.nodeLength + indexSubtableArray.nodeLength
+        }
 
         public override class var nodeLength: UInt32 {
             return UInt32(16 + Sbit.LineMetrics.nodeLength * 2 + 4 + 4)  // 48
@@ -92,7 +103,7 @@ extension FontTable_bloc {
             ppemY = try reader.read()
             bitDepth = try reader.read()
             flags = Flags(rawValue: try reader.read())
-            indexSubtable = try IndexSubtableArray(reader, offset: Int(indexSubTableArrayOffset))
+            indexSubtableArray = try IndexSubtableArray(reader, offset: Int(indexSubTableArrayOffset))
             try super.init(reader, offset: offset)
         }
 

@@ -1,5 +1,5 @@
 //
-//  Sbit.swift
+//  SbitTypes.swift
 //  CoreFont
 //
 //  Created by Mark Douma on 3/24/2026.
@@ -15,7 +15,12 @@
 import Foundation
 import RFSupport
 
-// MARK: -
+/// These data types can be used by both Apple's bitmap fonts
+/// (`bhed`, `bloc`, and `bdat` tables) and by Microsoft's
+/// identical-but-differently-named bitmap fonts (`head`,
+/// `EBLC`, and `EBDT`), so we put them in a separate namespace of `Sbit`
+///
+// MARK: - Sbit = "scaler bitmaps"
 public enum Sbit {
 
     @objc public enum IndexFormat: UInt16 {
@@ -27,11 +32,11 @@ public enum Sbit {
         case monoSparse             = 5
     }
 
-    @objc public enum DataFormat: UInt16 {
+    @objc public enum GlyphDataFormat: UInt16 {
         case unknown                = 0
         case proportionalSmallByte  = 1     // small metrics & data, byte-aligned
         case proportionalSmallBit   = 2     // small metrics & data, bit-aligned
-        case proportionalCompressed = 3     // not used
+        case proportionalCompressed = 3     // not used (obsolete)
         case monoCompressed         = 4     // just compressed data; metrics in 'bloc'
         case mono                   = 5     // bit-aligned data; metrics in 'bloc'
         case proportionalBigByte    = 6     // big metrics & byte-aligned data
@@ -71,6 +76,19 @@ public enum Sbit {
             minAfterBL = try reader.read()
             padding = try reader.read()
             try super.init(reader, offset: offset)
+        }
+    }
+
+    public enum GlyphMetrics {
+        case small(SmallGlyphMetrics)
+        case big(BigGlyphMetrics)
+
+        public init(_ metric: Node) {
+            if let metric = metric as? SmallGlyphMetrics {
+                self = .small(metric)
+            } else {
+                self = .big(metric as! BigGlyphMetrics)
+            }
         }
     }
 

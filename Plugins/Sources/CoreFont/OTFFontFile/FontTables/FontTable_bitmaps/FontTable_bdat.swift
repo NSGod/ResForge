@@ -30,15 +30,19 @@ public class FontTable_bdat: FontTable {
     // MARK: -
     @objc public var version:           Version = .default2_0
 
+    public var bitmapStrikes:           [BitmapStrike] = []
 
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
         version = try reader.read()
-
-
+        guard let blocTable = fontFile.blocTable else {
+            throw FontTableError.parseError("could not find bloc table")
+        }
+        for size in blocTable.sizes {
+            let strike = try BitmapStrike(reader, sizeTable: size)
+            bitmapStrikes.append(strike)
+        }
     }
-
-
 }
 
 /// Microsoft equivalent to Apple's `bdat` table

@@ -26,6 +26,11 @@ public extension BinaryDataReader {
         try self.advance(-length)
         return bigEndian ?? self.bigEndian ? T(bigEndian: val) : T(littleEndian: val)
     }
+
+    /// bad idea??
+    func setPosition<T: FixedWidthInteger>(_ position: T) throws {
+        return try self.setPosition(Int(position))
+    }
 }
 
 public protocol BinaryDataReadingNode {
