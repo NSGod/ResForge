@@ -26,10 +26,10 @@ extension FontTable_bloc {
 
         public override class var nodeLength: UInt32 { return 4 + 4 } // 8
 
-        public required init(_ reader: BinaryDataReader? = nil, offset: Int? = nil) throws {
-            assert(reader != nil && offset != nil)
+        public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
+            assert(offset != nil)
             try super.init(reader, offset: offset)
-            if let reader, let offset {
+            if let offset {
                 reader.pushSavedPosition()
                 defer { reader.popPosition() }
                 try reader.setPosition(offset)
@@ -48,9 +48,9 @@ extension FontTable_bloc {
         public var imageDataOffset:     UInt32 = 0                      /// Offset to the base of the image data (`bdat`) for this index subtable
         public var format:              Format!
 
-        public init(_ reader: BinaryDataReader? = nil, offset: Int? = nil, indexSubtableArray: IndexSubtableArray) throws {
-            assert(reader != nil && offset != nil)
-            if let reader, let offset {
+        public init(_ reader: BinaryDataReader, offset: Int? = nil, indexSubtableArray: IndexSubtableArray) throws {
+            assert(offset != nil)
+            if let offset {
                 reader.pushSavedPosition()
                 defer { reader.popPosition() }
                 try reader.setPosition(offset)
@@ -61,10 +61,11 @@ extension FontTable_bloc {
                     format = try formatClass.init(reader, indexSubtableArray: indexSubtableArray)
                 }
             }
+            try super.init(reader, offset: offset)
         }
         
         @available(*, unavailable, message: "use init that takes indexSubtableArray")
-        public required init(_ reader: BinaryDataReader? = nil, offset: Int? = nil) throws {
+        public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
             fatalError("use init that takes indexSubtableArray")
         }
     }

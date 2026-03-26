@@ -27,7 +27,7 @@ public class Node: BinaryDataReadingNode, DataHandleWriting {
         fatalError("subclasses must override")
     }
 
-    public required init(_ reader: BinaryDataReader? = nil, offset: Int? = nil) throws {
+    public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
 
     }
 

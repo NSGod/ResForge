@@ -58,21 +58,19 @@ public enum Sbit {
             return UInt32(MemoryLayout<UInt8>.size * 10 + MemoryLayout<Int16>.size) // 12
         }
 
-        public required init(_ reader: BinaryDataReader? = nil, offset: Int? = nil) throws {
+        public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
+            ascender = try reader.read()
+            descender = try reader.read()
+            widthMax = try reader.read()
+            caretSlopeNumerator = try reader.read()
+            caretSlopeDenominator = try reader.read()
+            caretOffset = try reader.read()
+            minOriginSB = try reader.read()
+            minAdvanceSB = try reader.read()
+            maxBeforeBL = try reader.read()
+            minAfterBL = try reader.read()
+            padding = try reader.read()
             try super.init(reader, offset: offset)
-            if let reader {
-                ascender = try reader.read()
-                descender = try reader.read()
-                widthMax = try reader.read()
-                caretSlopeNumerator = try reader.read()
-                caretSlopeDenominator = try reader.read()
-                caretOffset = try reader.read()
-                minOriginSB = try reader.read()
-                minAdvanceSB = try reader.read()
-                maxBeforeBL = try reader.read()
-                minAfterBL = try reader.read()
-                padding = try reader.read()
-            }
         }
     }
 
@@ -91,42 +89,38 @@ public enum Sbit {
             return UInt32(MemoryLayout<UInt8>.size * 8)     // 8
         }
 
-        public required init(_ reader: BinaryDataReader? = nil, offset: Int? = nil) throws {
+        public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
+            height = try reader.read()
+            width = try reader.read()
+            horiBearingX = try reader.read()
+            horiBearingY = try reader.read()
+            horiAdvance = try reader.read()
+            vertBearingX = try reader.read()
+            vertBearingY = try reader.read()
+            vertAdvance = try reader.read()
             try super.init(reader, offset: offset)
-            if let reader {
-                height = try reader.read()
-                width = try reader.read()
-                horiBearingX = try reader.read()
-                horiBearingY = try reader.read()
-                horiAdvance = try reader.read()
-                vertBearingX = try reader.read()
-                vertBearingY = try reader.read()
-                vertAdvance = try reader.read()
-            }
         }
     }
 
     // MARK: -
     public class SmallGlyphMetrics: Node {
-        public var height:      UInt8 = 0
-        public var width:       UInt8 = 0
-        public var bearingX:    Int8 = 0
-        public var bearingY:    Int8 = 0
-        public var advance:     UInt8 = 0
+        public var height:      UInt8
+        public var width:       UInt8
+        public var bearingX:    Int8
+        public var bearingY:    Int8
+        public var advance:     UInt8
 
         public override class var nodeLength: UInt32 {
             return UInt32(MemoryLayout<UInt8>.size * 5)     // 5
         }
 
-        public required init(_ reader: BinaryDataReader? = nil, offset: Int? = nil) throws {
+        public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
+            height = try reader.read()
+            width = try reader.read()
+            bearingX = try reader.read()
+            bearingY = try reader.read()
+            advance = try reader.read()
             try super.init(reader, offset: offset)
-            if let reader {
-                height = try reader.read()
-                width = try reader.read()
-                bearingX = try reader.read()
-                bearingY = try reader.read()
-                advance = try reader.read()
-            }
         }
     }
 }

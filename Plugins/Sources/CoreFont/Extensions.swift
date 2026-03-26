@@ -29,7 +29,7 @@ public extension BinaryDataReader {
 }
 
 public protocol BinaryDataReadingNode {
-    init(_ reader: BinaryDataReader?, offset: Int?) throws
+    init(_ reader: BinaryDataReader, offset: Int?) throws
 }
 
 public extension Date {

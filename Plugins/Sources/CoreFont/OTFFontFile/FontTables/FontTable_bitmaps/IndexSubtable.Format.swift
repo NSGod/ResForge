@@ -18,11 +18,12 @@ import RFSupport
 extension FontTable_bloc.IndexSubtable {
 
     public class Format: Node {
-        public required init(_ reader: BinaryDataReader? = nil, offset: Int? = nil, indexSubtableArray: FontTable_bloc.IndexSubtableArray) throws {
+        public required init(_ reader: BinaryDataReader, offset: Int? = nil, indexSubtableArray: FontTable_bloc.IndexSubtableArray) throws {
+            try super.init(reader, offset: offset)
         }
 
         @available(*, unavailable, message: "use init that takes indexSubtableArray")
-        public required init(_ reader: BinaryDataReader? = nil, offset: Int? = nil) throws {
+        public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
             fatalError("use init that takes indexSubtableArray")
         }
 
@@ -48,13 +49,11 @@ extension FontTable_bloc.IndexSubtable {
             return UInt32(MemoryLayout<UInt32>.size * offsets.count)
         }
 
-        public required init(_ reader: BinaryDataReader? = nil, offset: Int? = nil, indexSubtableArray: FontTable_bloc.IndexSubtableArray) throws {
+        public required init(_ reader: BinaryDataReader, offset: Int? = nil, indexSubtableArray: FontTable_bloc.IndexSubtableArray) throws {
             assert(offset == nil)
             try super.init(reader, offset: offset, indexSubtableArray: indexSubtableArray)
-            if let reader {
-                _numOffsets = Int(indexSubtableArray.lastGlyphIndex - indexSubtableArray.firstGlyphIndex) + 2
-                offsets = try (0..<_numOffsets).map { _ in try reader.read() }
-            }
+            _numOffsets = Int(indexSubtableArray.lastGlyphIndex - indexSubtableArray.firstGlyphIndex) + 2
+            offsets = try (0..<_numOffsets).map { _ in try reader.read() }
         }
     }
 
@@ -71,13 +70,11 @@ extension FontTable_bloc.IndexSubtable {
             return 4 + Sbit.BigGlyphMetrics.nodeLength
         }
 
-        public required init(_ reader: BinaryDataReader? = nil, offset: Int? = nil, indexSubtableArray: FontTable_bloc.IndexSubtableArray) throws {
+        public required init(_ reader: BinaryDataReader, offset: Int? = nil, indexSubtableArray: FontTable_bloc.IndexSubtableArray) throws {
             assert(offset == nil)
             try super.init(reader, offset: offset, indexSubtableArray: indexSubtableArray)
-            if let reader {
-                imageSize = try reader.read()
-                metrics = try Sbit.BigGlyphMetrics(reader)
-            }
+            imageSize = try reader.read()
+            metrics = try Sbit.BigGlyphMetrics(reader)
         }
     }
 
@@ -88,15 +85,13 @@ extension FontTable_bloc.IndexSubtable {
 
         private var _numOffsets:        Int = 0
 
-        public required init(_ reader: BinaryDataReader? = nil, offset: Int? = nil, indexSubtableArray: FontTable_bloc.IndexSubtableArray) throws {
+        public required init(_ reader: BinaryDataReader, offset: Int? = nil, indexSubtableArray: FontTable_bloc.IndexSubtableArray) throws {
             assert(offset == nil)
             try super.init(reader, offset: offset, indexSubtableArray: indexSubtableArray)
-            if let reader {
-                _numOffsets = Int(indexSubtableArray.lastGlyphIndex - indexSubtableArray.firstGlyphIndex) + 2
-                offsets = try (0..<_numOffsets).map { _ in try reader.read() }
-                if _numOffsets & 1 != 0 {
-                    _ = try reader.read() as UInt16
-                }
+            _numOffsets = Int(indexSubtableArray.lastGlyphIndex - indexSubtableArray.firstGlyphIndex) + 2
+            offsets = try (0..<_numOffsets).map { _ in try reader.read() }
+            if _numOffsets & 1 != 0 {
+                _ = try reader.read() as UInt16
             }
         }
 
@@ -114,12 +109,11 @@ extension FontTable_bloc.IndexSubtable {
             return 2 + 2                                    // 4
         }
 
-        public required init(_ reader: BinaryDataReader? = nil, offset: Int? = nil) throws {
+        public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
             assert(offset == nil)
-            if let reader {
-                glyphCode = try reader.read()
-                self.offset = try reader.read()
-            }
+            glyphCode = try reader.read()
+            self.offset = try reader.read()
+            try super.init(reader, offset: offset)
         }
     }
 
@@ -132,13 +126,11 @@ extension FontTable_bloc.IndexSubtable {
             return 4 + UInt32(glyphs.count) * CodeOffsetPair.nodeLength
         }
 
-        public required init(_ reader: BinaryDataReader? = nil, offset: Int? = nil, indexSubtableArray: FontTable_bloc.IndexSubtableArray) throws {
+        public required init(_ reader: BinaryDataReader, offset: Int? = nil, indexSubtableArray: FontTable_bloc.IndexSubtableArray) throws {
             assert(offset == nil)
             try super.init(reader, offset: offset, indexSubtableArray: indexSubtableArray)
-            if let reader {
-                numGlyphs = try reader.read()
-                glyphs = try (0..<numGlyphs).map { _ in try CodeOffsetPair(reader) }
-            }
+            numGlyphs = try reader.read()
+            glyphs = try (0..<numGlyphs).map { _ in try CodeOffsetPair(reader) }
         }
     }
 
@@ -153,15 +145,13 @@ extension FontTable_bloc.IndexSubtable {
             return 8 + Sbit.BigGlyphMetrics.nodeLength + UInt32(glyphs.count) * CodeOffsetPair.nodeLength
         }
 
-        public required init(_ reader: BinaryDataReader? = nil, offset: Int? = nil, indexSubtableArray: FontTable_bloc.IndexSubtableArray) throws {
+        public required init(_ reader: BinaryDataReader, offset: Int? = nil, indexSubtableArray: FontTable_bloc.IndexSubtableArray) throws {
             assert(offset == nil)
             try super.init(reader, offset: offset, indexSubtableArray: indexSubtableArray)
-            if let reader {
-                imageSize = try reader.read()
-                metrics = try Sbit.BigGlyphMetrics(reader)
-                numGlyphs = try reader.read()
-                glyphs = try (0..<numGlyphs).map { _ in try CodeOffsetPair(reader) }
-            }
+            imageSize = try reader.read()
+            metrics = try Sbit.BigGlyphMetrics(reader)
+            numGlyphs = try reader.read()
+            glyphs = try (0..<numGlyphs).map { _ in try CodeOffsetPair(reader) }
         }
     }
 }
