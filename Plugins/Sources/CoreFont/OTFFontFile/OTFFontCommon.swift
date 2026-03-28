@@ -94,8 +94,7 @@ private let ttfRewriteOrder: [TableTag: Int] = [
     .vhea: 13,
 ]
 
-public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, CustomStringConvertible {
-
+public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, CustomStringConvertible, CustomDebugStringConvertible {
     public let rawValue: Tag
 
     public init(rawValue: Tag) {
@@ -195,7 +194,10 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
     /// PCL5 HP table (strongly discouraged) TT (opt)
     public static let PCLT = TableTag(rawValue: Tag(fourCharString: "PCLT"))
 
-    /// Anchor point table      AAT (opt)
+    /// Accent attachment table (Apple, deprecated)
+    public static let acnt = TableTag(rawValue: Tag(fourCharString: "acnt"))
+
+    /// Anchor point table      AAT (opt) 10.9+
     public static let ankr = TableTag(rawValue: Tag(fourCharString: "ankr"))
 
     /// Bitmap data table (Apple equiv to MS `EBDT`; req for bitmap-only)
@@ -207,7 +209,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
     /// Bitmap location table (Apple equiv to MS `EBLC`; req for bitmap-only)
     public static let bloc = TableTag(rawValue: Tag(fourCharString: "bloc"))
 
-    /// baseline table
+    /// baseline table          AAT (opt)
     public static let bsln = TableTag(rawValue: Tag(fourCharString: "bsln"))
 
     /// Character codes to glyph index mappings (req)
@@ -233,6 +235,9 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
 
     /// Apple `FOND` (& `NFNT`) resources TT (opt)
     public static let fond = TableTag(rawValue: Tag(fourCharString: "fond"))
+
+    /// axis variations table          AAT (opt)
+    public static let avar = TableTag(rawValue: Tag(fourCharString: "avar"))
 
     /// `cvt ` variations table        AAT (opt)
     public static let cvar = TableTag(rawValue: Tag(fourCharString: "cvar"))
@@ -264,7 +269,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
     /// Horizontal device metrics    Apple (opt)
     public static let hdmx = TableTag(rawValue: Tag(fourCharString: "hdmx"))
 
-    /// Hierarchical Variation Fonts  AAT (opt)
+    /// Hierarchical Variation Fonts  AAT (opt) macOS 15.6+
     public static let hvgl = TableTag(rawValue: Tag(fourCharString: "hvgl"))
 
     /// Hierarchical Variation Fonts  (used w/ `hvgl`) AAT (opt)
@@ -339,6 +344,85 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
     }
 
     public var description: String {
+        switch self {
+            case .BASE: return NSLocalizedString("Baseline table", comment: "")
+            case .CFF_: return NSLocalizedString("Compact Font Format v1 table", comment: "")
+            case .CFF2: return NSLocalizedString("Compact Font Format v2 table", comment: "")
+            case .DSIG: return NSLocalizedString("Digital Signature", comment: "")
+            case .gcid: return NSLocalizedString("Character-to-CID Mapping table", comment: "")
+            case .EBDT: return NSLocalizedString("Embedded Bitmap Data table", comment: "")
+            case .EBLC: return NSLocalizedString("Embedded Bitmap Location table", comment: "")
+            case .EBSC: return NSLocalizedString("Embedded Bitmap Scaling table", comment: "")
+            case .CBDT: return NSLocalizedString("Color Bitmap Data table", comment: "")
+            case .CBLC: return NSLocalizedString("Color Bitmap Location table", comment: "")
+            case .SVG_: return NSLocalizedString("Scalable Vector Graphics table", comment: "")
+            case .COLR: return NSLocalizedString("Color table", comment: "")
+            case .CPAL: return NSLocalizedString("Palette table", comment: "")
+            case .GDEF: return NSLocalizedString("Glyph Definition table", comment: "")
+            case .GPOS: return NSLocalizedString("Glyph Positioning table", comment: "")
+            case .GSUB: return NSLocalizedString("Glyph Substitution table", comment: "")
+            case .JSTF: return NSLocalizedString("Justification table", comment: "")
+            case .MATH: return NSLocalizedString("Mathematical Typesetting table", comment: "")
+            case .OS_2: return NSLocalizedString("Global Font information table", comment: "")
+            case .VORG: return NSLocalizedString("Vertical Origin table", comment: "")
+            case .STAT: return NSLocalizedString("Style Attributes table", comment: "")
+            case .LTSH: return NSLocalizedString("Linear Threshold table", comment: "")
+            case .MERG: return NSLocalizedString("Merge table", comment: "")
+            case .VDMX: return NSLocalizedString("Vertical Device Metrics table", comment: "")
+            case .PCLT: return NSLocalizedString("HP PCL 5 table", comment: "")
+            case .acnt: return NSLocalizedString("Accent Attachment table", comment: "")
+            case .ankr: return NSLocalizedString("Anchor Point table", comment: "")
+            case .avar: return NSLocalizedString("Axis Variations table", comment: "")
+            case .bdat: return NSLocalizedString("Bitmap Data table", comment: "")
+            case .bhed: return NSLocalizedString("Bitmap Header table", comment: "")
+            case .bloc: return NSLocalizedString("Bitmap Location table", comment: "")
+            case .bsln: return NSLocalizedString("Baseline table", comment: "")
+            case .cmap: return NSLocalizedString("Character-to-GlyphID Mapping table", comment: "")
+            case .cvt_: return NSLocalizedString("Control Value table", comment: "")
+            case .fdsc: return NSLocalizedString("Font Descriptors table", comment: "")
+            case .feat: return NSLocalizedString("Feature Name table", comment: "")
+            case .ltag: return NSLocalizedString("IETF Language Tags table", comment: "")
+            case .fpgm: return NSLocalizedString("Font Program table", comment: "")
+            case .fond: return NSLocalizedString("FOND and NFNT resource table", comment: "")
+            case .cvar: return NSLocalizedString("CVT Variations table", comment: "")
+            case .fvar: return NSLocalizedString("Font Variations table", comment: "")
+            case .gvar: return NSLocalizedString("Glyph Variations table", comment: "")
+            case .fmtx: return NSLocalizedString("Font Metrics table", comment: "")
+            case .gasp: return NSLocalizedString("Grid-Fitting and Scan-Conversion Procedure table", comment: "")
+            case .glyf: return NSLocalizedString("Glyf (TrueType outline) data", comment: "")
+            case .head: return NSLocalizedString("Font Header table", comment: "")
+            case .hhea: return NSLocalizedString("Horizontal Header table", comment: "")
+            case .hmtx: return NSLocalizedString("Horizontal Metrics table", comment: "")
+            case .hdmx: return NSLocalizedString("Horizontal Device Metrics table", comment: "")
+            case .hvgl: return NSLocalizedString("Hierarchical Variation font table", comment: "")
+            case .hvpm: return NSLocalizedString("Hierarchical Variation font table", comment: "")
+            case .just: return NSLocalizedString("Justification table", comment: "")
+            case .lcar: return NSLocalizedString("Ligature Caret table", comment: "")
+            case .loca: return NSLocalizedString("Glyf Location table", comment: "")
+            case .kern: return NSLocalizedString("Kerning table", comment: "")
+            case .kerx: return NSLocalizedString("Extended Kerning table", comment: "")
+            case .maxp: return NSLocalizedString("Maximum Profile table", comment: "")
+            case .meta: return NSLocalizedString("Metadata table", comment: "")
+            case .mort: return NSLocalizedString("Glyph Metamorphosis table", comment: "")
+            case .morx: return NSLocalizedString("Extended Glyph Metamorphosis table", comment: "")
+            case .name: return NSLocalizedString("Naming table", comment: "")
+            case .opbd: return NSLocalizedString("Optical Bounds table", comment: "")
+            case .post: return NSLocalizedString("PostScript info table", comment: "")
+            case .prep: return NSLocalizedString("Control value program", comment: "")
+            case .prop: return NSLocalizedString("Glyph Properties table", comment: "")
+            case .sbix: return NSLocalizedString("Standard bitmap graphics table", comment: "")
+            case .trak: return NSLocalizedString("Tracking table", comment: "")
+            case .vhea: return NSLocalizedString("Vertical Header table", comment: "")
+            case .vmtx: return NSLocalizedString("Vertical Metrics table", comment: "")
+            case .xref: return NSLocalizedString("Cross-Reference table", comment: "")
+            case .Zapf: return NSLocalizedString("Glyph Info table", comment: "")
+            case .evrs, .TYP1, .CID_, .BLND:
+                fallthrough
+            default: return fourCharString
+        }
+    }
+
+    public var debugDescription: String {
         return fourCharString
     }
 
@@ -350,7 +434,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
         return lhs.rawValue == rhs.rawValue
     }
 
-    public static let allCases: [TableTag] = [.BASE, .CFF_, .CFF2, .DSIG, .TYP1, .CID_, .gcid, .BLND, .EBDT, .EBLC, .EBSC, .CBDT, .CBLC, .SVG_, .COLR, .CPAL, .GDEF, .GPOS, .GSUB, .JSTF, .MATH, .OS_2, .VORG, .STAT, .LTSH, .MERG, .VDMX, .PCLT, .ankr, .bdat, .bhed, .bloc, .bsln, .cmap, .cvt_, .fdsc, .evrs, .feat, .ltag, .fpgm, .fond, .cvar, .fvar, .gvar, .fmtx, .gasp, .glyf, .head, .hhea, .hmtx, .hdmx, .hvgl, .hvpm, .just, .lcar, .loca, .kern, .kerx, .maxp, .meta, .mort, .morx, .name, .opbd, .post, .prep, .prop, .sbix, .trak, .vhea, .vmtx, .xref, .Zapf]
+    public static let allCases: [TableTag] = [.BASE, .CFF_, .CFF2, .DSIG, .TYP1, .CID_, .gcid, .BLND, .EBDT, .EBLC, .EBSC, .CBDT, .CBLC, .SVG_, .COLR, .CPAL, .GDEF, .GPOS, .GSUB, .JSTF, .MATH, .OS_2, .VORG, .STAT, .LTSH, .MERG, .VDMX, .PCLT, .acnt, .ankr, .avar, .bdat, .bhed, .bloc, .bsln, .cmap, .cvt_, .fdsc, .evrs, .feat, .ltag, .fpgm, .fond, .cvar, .fvar, .gvar, .fmtx, .gasp, .glyf, .head, .hhea, .hmtx, .hdmx, .hvgl, .hvpm, .just, .lcar, .loca, .kern, .kerx, .maxp, .meta, .mort, .morx, .name, .opbd, .post, .prep, .prop, .sbix, .trak, .vhea, .vmtx, .xref, .Zapf]
 
 }
 
