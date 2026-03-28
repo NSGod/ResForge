@@ -185,6 +185,15 @@ extension FontEditor: NSTableViewDelegate, NSTableViewDataSource {
             box.contentView = existingViewController.view
             tableTagField.stringValue = tag.fourCharString
             return
+            // FIXME: do this in one line with || or something?
+        } else if tag == .bdat, let existingVC = tableTagsToViewControllers[.bloc] {
+            box.contentView = existingVC.view
+            tableTagField.stringValue = tag.fourCharString
+            tableTagsToViewControllers[tag] = existingVC
+        } else if tag == .bloc, let existingVC = tableTagsToViewControllers[.bdat] {
+            box.contentView = existingVC.view
+            tableTagField.stringValue = tag.fourCharString
+            tableTagsToViewControllers[tag] = existingVC
         } else {
             let viewControllerClass: FontTableViewController.Type = FontTableViewController.class(for: tag).self
             guard let viewController = viewControllerClass.init(with: selectedDirEntry.table) else {

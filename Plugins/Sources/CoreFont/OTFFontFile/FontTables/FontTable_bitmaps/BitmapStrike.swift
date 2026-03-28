@@ -12,6 +12,7 @@ public final class BitmapStrike: Node {
     public var sizeTable:               FontTable_bloc.BitmapSizeTable
     public var format:                  Sbit.BitmapGlyphFormat
     public var glyphs:                  [BitmapGlyph]
+    public weak var fontFile:           OTFFontFile!
 
     public required init(_ reader: BinaryDataReader, offset: Int? = nil, sizeTable: FontTable_bloc.BitmapSizeTable) throws {
         assert(offset == nil)

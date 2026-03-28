@@ -46,6 +46,7 @@ class FontTableViewController: NSViewController {
     static func `class`(for tableTag: TableTag) -> FontTableViewController.Type {
         if tableTag == .OS_2 { return ViewController_OS2.self }
         if tableTag == .cvt_ { return ViewController_cvt.self }
+        if tableTag == .bloc || tableTag == .bdat { return ViewController_bitmapFont.self }
 //        if tableTag == .CFF_ { return ViewController_CFF.self }
         if let theClass: FontTableViewController.Type = (NSClassFromString("FontEditor.ViewController_\(tableTag.fourCharString)")) as? FontTableViewController.Type {
             return theClass

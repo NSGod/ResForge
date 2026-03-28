@@ -40,11 +40,11 @@ public class BitmapGlyph: Node, Comparable {
                                                     hasAlpha: false,
                                                     isPlanar: false,
                                                     colorSpaceName: .calibratedWhite,
-                                                    bytesPerRow:Int(NSWidth(glyphRect)) / 8,
+                                                    bytesPerRow:(Int(NSWidth(glyphRect)) + 7)/8,
                                                     bitsPerPixel: Int(strike.sizeTable.bitDepth.rawValue)) else {
             return nil
         }
-        let length = Int(NSWidth(glyphRect)) * Int(NSHeight(glyphRect)) * Int(strike.sizeTable.bitDepth.rawValue) / 8
+        let length = bitmapImageRep.bytesPerRow * bitmapImageRep.pixelsHigh
         let bitmapData = bitmapImageRep.bitmapData!
         data.copyBytes(to: bitmapData, count: length)
         // invert bits

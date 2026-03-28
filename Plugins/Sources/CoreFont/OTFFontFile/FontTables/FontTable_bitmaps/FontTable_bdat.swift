@@ -38,10 +38,8 @@ public class FontTable_bdat: FontTable {
         guard let blocTable = fontFile.blocTable else {
             throw FontTableError.parseError("could not find bloc table")
         }
-        for size in blocTable.sizes {
-            let strike = try BitmapStrike(reader, sizeTable: size)
-            bitmapStrikes.append(strike)
-        }
+        bitmapStrikes = try blocTable.sizes.map { try BitmapStrike(reader, sizeTable: $0) }
+        bitmapStrikes.forEach { $0.fontFile = fontFile }
     }
 }
 
