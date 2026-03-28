@@ -289,14 +289,11 @@ public final class NFNT: NSObject {
         }
         // FIXME: add better support for higher font bit depths? Though I've never encountered them in the wild...
         // Since black colorspaces are deprecated, we'll use white but need to flip the bits
-        guard let bitmapData: UnsafeMutablePointer<UInt8> = bitmapImageRep.bitmapData else {
-            NSLog("\(type(of: self)).\(#function) *** ERROR: bitmapImageRep.bitmapData == nil")
-            // FIXME: throw proper error
-            throw CocoaError(.fileReadCorruptFile)
-        }
+        let bitmapData = bitmapImageRep.bitmapData!
+        bitmapImageData.copyBytes(to: bitmapData, count: length)
         for i in 0..<length {
             // NOTE: here, each byte represents 8 pixels worth of data, & we're flipping all 8 bits at the same time
-            bitmapData[i] = ~bitmapImageData[bitmapImageData.startIndex + i]
+            bitmapData[i] ^= 0xFF
         }
         /// We might as well make an RGBX image of this properly padded image so that the `vImageConvert_AnyToAny()`
         /// function will work properly. In more recent versions of OS X, trying to draw the B&W bitmap image for every
