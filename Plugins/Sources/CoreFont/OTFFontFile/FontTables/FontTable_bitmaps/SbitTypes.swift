@@ -94,14 +94,14 @@ public enum Sbit {
 
     // MARK: -
     public class BigGlyphMetrics: Node {
-        public var height:          UInt8 = 0
-        public var width:           UInt8 = 0
-        public var horiBearingX:    Int8 = 0
-        public var horiBearingY:    Int8 = 0
-        public var horiAdvance:     UInt8 = 0
-        public var vertBearingX:    Int8 = 0
-        public var vertBearingY:    Int8 = 0
-        public var vertAdvance:     UInt8 = 0
+        public var height:          UInt8   // # of rows of glyph image data
+        public var width:           UInt8   // # of columns of glyph image data
+        public var horiBearingX:    Int8    // dist. (px) from horiz. origin to left edge of bitmap
+        public var horiBearingY:    Int8    // dist. (px) from horiz. origin to top edge of bitmap
+        public var horiAdvance:     UInt8   // horizontal advance width in pixels
+        public var vertBearingX:    Int8    // dist. (px) from vert. origin to left edge of bitmap
+        public var vertBearingY:    Int8    // dist. (px) from vert. origin to top edge of bitmap
+        public var vertAdvance:     UInt8   // vertical advance width (height) in pixels
 
         public override class var nodeLength: UInt32 {
             return UInt32(MemoryLayout<UInt8>.size * 8)     // 8
@@ -121,24 +121,33 @@ public enum Sbit {
     }
 
     // MARK: -
+    // must consult BitmapSizeTable.flags to see whether these are horizontal or vertical
     public class SmallGlyphMetrics: Node {
-        public var height:      UInt8
-        public var width:       UInt8
-        public var bearingX:    Int8
-        public var bearingY:    Int8
-        public var advance:     UInt8
+        public var height:      UInt8   // # of rows of glyph image data
+        public var width:       UInt8   // # of columns of glyph image data
+        public var bearingX:    Int8    /// see `horiBearingX` or `vertBearingX` depending on `isHorizontal`
+        public var bearingY:    Int8    /// see `horiBearingY` or `vertBearingY` depending on `isHorizontal`
+        public var advance:     UInt8   /// horizontal or vertical advance width/height in pixels
+
+        public var isHorizontal: Bool
 
         public override class var nodeLength: UInt32 {
             return UInt32(MemoryLayout<UInt8>.size * 5)     // 5
         }
 
-        public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
+        public required init(_ reader: BinaryDataReader, isHorizontal: Bool) throws {
+            self.isHorizontal = isHorizontal
             height = try reader.read()
             width = try reader.read()
             bearingX = try reader.read()
             bearingY = try reader.read()
             advance = try reader.read()
-            try super.init(reader, offset: offset)
+            try super.init(reader)
+        }
+
+        @available(*, unavailable, message: "use init(_:isHorizontal:)")
+        public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
+            fatalError("use init(_:isHorizontal:)")
         }
     }
 }

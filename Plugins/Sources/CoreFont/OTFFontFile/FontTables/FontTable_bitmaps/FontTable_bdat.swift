@@ -26,7 +26,7 @@ public class FontTable_bdat: FontTable {
             }
         }
     }
-    
+
     // MARK: -
     @objc public var version:           Version = .default2_0
 

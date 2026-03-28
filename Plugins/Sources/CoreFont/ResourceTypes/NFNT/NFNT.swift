@@ -280,7 +280,7 @@ public final class NFNT: NSObject {
                                                     samplesPerPixel: 1,
                                                     hasAlpha: false,
                                                     isPlanar: false,
-                                                    colorSpaceName: NSColorSpaceName.calibratedWhite,
+                                                    colorSpaceName: .calibratedWhite,
                                                     bytesPerRow: Int(rowWords) * 2,
                                                     bitsPerPixel: Int(fontBitDepth)) else {
             // FIXME: throw better error
@@ -298,7 +298,7 @@ public final class NFNT: NSObject {
             // NOTE: here, each byte represents 8 pixels worth of data, & we're flipping all 8 bits at the same time
             bitmapData[i] = ~bitmapImageData[bitmapImageData.startIndex + i]
         }
-        /// We might as well make an RGBA image of this properly padded image so that the `vImageConvert_AnyToAny()`
+        /// We might as well make an RGBX image of this properly padded image so that the `vImageConvert_AnyToAny()`
         /// function will work properly. In more recent versions of OS X, trying to draw the B&W bitmap image for every
         /// letter was trying to convert each tiny image segment to RGBA on the fly, which could fail if `vImageConvert_AnyToAny()`
         /// (called behind the scenes) didn't like the dimensions given.

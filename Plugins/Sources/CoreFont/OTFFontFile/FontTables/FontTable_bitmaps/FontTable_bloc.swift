@@ -54,8 +54,8 @@ extension FontTable_bloc {
                 self.rawValue = rawValue
             }
 
-            public static let horizontal:   Flags = Flags(rawValue: 1 << 0) // small metrics are hor
-            public static let vertical:     Flags = Flags(rawValue: 1 << 1) // small metrics are vert
+            public static let horizontal:   Flags = Flags(rawValue: 1 << 0) // small metrics are horizontal
+            public static let vertical:     Flags = Flags(rawValue: 1 << 1) // small metrics are vertical
         }
 
         @objc public enum BitDepth: UInt8 {

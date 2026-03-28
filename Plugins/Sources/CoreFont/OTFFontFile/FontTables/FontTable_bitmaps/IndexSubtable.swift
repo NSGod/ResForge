@@ -43,9 +43,9 @@ extension FontTable_bloc {
 
     // MARK: -
     public final class IndexSubtable: Node {
-        public var indexFormat:         Sbit.IndexFormat = .unknown
-        public var imageFormat:         Sbit.GlyphDataFormat = .unknown
-        public var imageDataOffset:     UInt32 = 0                      /// Offset to the base of the image data (`bdat`) for this index subtable
+        public var indexFormat:         Sbit.IndexFormat
+        public var imageFormat:         Sbit.GlyphDataFormat
+        public var imageDataOffset:     UInt32                  /// Offset to the base of the image data (`bdat`) for this index subtable
         public var format:              Format!
 
         public init(_ reader: BinaryDataReader, offset: Int, indexSubtableArray: IndexSubtableArray) throws {
@@ -60,7 +60,7 @@ extension FontTable_bloc {
             }
             try super.init(reader, offset: offset)
         }
-        
+
         @available(*, unavailable, message: "use init that takes indexSubtableArray")
         public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
             fatalError("use init that takes indexSubtableArray")

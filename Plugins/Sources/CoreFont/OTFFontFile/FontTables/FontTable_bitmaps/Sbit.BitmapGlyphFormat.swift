@@ -59,7 +59,7 @@ extension Sbit {
             reader.pushSavedPosition()
             defer { reader.popPosition() }
             try reader.setPosition(sizeTable.indexSubtableArray.indexSubtable.imageDataOffset)
-            smallMetrics = try Sbit.SmallGlyphMetrics(reader)
+            smallMetrics = try Sbit.SmallGlyphMetrics(reader, isHorizontal: sizeTable.flags.contains(.horizontal))
             try super.init(reader, sizeTable: sizeTable)
             glyphs.forEach { $0.metrics = GlyphMetrics(smallMetrics) }
         }
@@ -67,13 +67,13 @@ extension Sbit {
 
     // MARK: - 2
     public final class BitmapGlyphFormat2: BitmapGlyphFormat {
-        public var smallMetrics:        Sbit.SmallGlyphMetrics!
+        public var smallMetrics:        Sbit.SmallGlyphMetrics
 
         public required init(_ reader: BinaryDataReader, sizeTable: FontTable_bloc.BitmapSizeTable) throws {
             reader.pushSavedPosition()
             defer { reader.popPosition() }
             try reader.setPosition(sizeTable.indexSubtableArray.indexSubtable.imageDataOffset)
-            smallMetrics = try Sbit.SmallGlyphMetrics(reader)
+            smallMetrics = try Sbit.SmallGlyphMetrics(reader, isHorizontal: sizeTable.flags.contains(.horizontal))
             try super.init(reader, sizeTable: sizeTable)
             glyphs.forEach { $0.metrics = GlyphMetrics(smallMetrics) }
         }
@@ -153,7 +153,7 @@ extension Sbit {
             reader.pushSavedPosition()
             defer { reader.popPosition() }
             try reader.setPosition(sizeTable.indexSubtableArray.indexSubtable.imageDataOffset)
-            smallMetrics = try Sbit.SmallGlyphMetrics(reader)
+            smallMetrics = try Sbit.SmallGlyphMetrics(reader, isHorizontal: sizeTable.flags.contains(.horizontal))
             pad = try reader.read()
             numComponents = try reader.read()
             components = try (0..<numComponents).map { _ in try Component(reader) }

@@ -9,23 +9,13 @@ import Cocoa
 import RFSupport
 
 public final class BitmapStrike: Node {
-    public var ppemX:                   UInt8
-    public var ppemY:                   UInt8
-
-    public var horizontalMetrics:       Sbit.LineMetrics
-    public var verticalMetrics:         Sbit.LineMetrics
-
-    public var bitDepth:                FontTable_bloc.BitmapSizeTable.BitDepth
+    public var sizeTable:               FontTable_bloc.BitmapSizeTable
     public var format:                  Sbit.BitmapGlyphFormat
     public var glyphs:                  [BitmapGlyph]
 
     public required init(_ reader: BinaryDataReader, offset: Int? = nil, sizeTable: FontTable_bloc.BitmapSizeTable) throws {
         assert(offset == nil)
-        ppemX = sizeTable.ppemX
-        ppemY = sizeTable.ppemY
-        bitDepth = sizeTable.bitDepth
-        horizontalMetrics = sizeTable.hori
-        verticalMetrics = sizeTable.vert
+        self.sizeTable = sizeTable
         let offset = Int(sizeTable.indexSubtableArray.indexSubtable.imageDataOffset)
         guard let formatClass = Sbit.BitmapGlyphFormat.class(for: sizeTable.indexSubtableArray.indexSubtable.imageFormat) else {
             throw FontTableError.unknownFormat("Unsupported bitmap format: \(sizeTable.indexSubtableArray.indexSubtable.imageFormat)")
