@@ -10,26 +10,24 @@ import RFSupport
 
 public final class BitmapStrike: Node {
     public var sizeTable:               FontTable_bloc.BitmapSizeTable
-    public var format:                  Sbit.BitmapGlyphFormat
-    public var glyphs:                  [BitmapGlyph]
+    public var glyphs:                  [Sbit.BitmapGlyph] = []
     public weak var fontFile:           OTFFontFile!
 
-    public required init(_ reader: BinaryDataReader, offset: Int? = nil, sizeTable: FontTable_bloc.BitmapSizeTable) throws {
-        assert(offset == nil)
+    public required init(_ reader: BinaryDataReader, sizeTable: FontTable_bloc.BitmapSizeTable) throws {
         self.sizeTable = sizeTable
-        let offset = Int(sizeTable.indexSubtableArray.indexSubtable.imageDataOffset)
-        guard let formatClass = Sbit.BitmapGlyphFormat.class(for: sizeTable.indexSubtableArray.indexSubtable.imageFormat) else {
-            throw FontTableError.unknownFormat("Unsupported bitmap format: \(sizeTable.indexSubtableArray.indexSubtable.imageFormat)")
+        let imageDataOffset = sizeTable.indexSubtableArray.indexSubtable.imageDataOffset
+        let imageFormat = sizeTable.indexSubtableArray.indexSubtable.imageFormat
+        let isHorizontal = sizeTable.flags.contains(.horizontal)
+        for (glyphID, range) in sizeTable.indexSubtableArray.indexSubtable.format.glyphIDsToRanges {
+            let glyph = try Sbit.BitmapGlyph(reader, imageDataOffset: imageDataOffset, range: range, glyphID: glyphID, imageFormat: imageFormat, horizontalMetrics: isHorizontal)
+            glyphs.append(glyph)
         }
-        format = try formatClass.init(reader, sizeTable: sizeTable)
-        glyphs = format.glyphs
-        try super.init(reader, offset: offset)
+        try super.init(reader)
         glyphs.forEach { $0.strike = self }
-        if sizeTable.indexSubtableArray.indexSubtable.imageFormat == .mono {
-            if let monospacedMetrics = sizeTable.indexSubtableArray.indexSubtable.format.monospacedMetrics {
-                glyphs.forEach { $0.metrics = Sbit.GlyphMetrics(monospacedMetrics) }
-            }
+        if imageFormat == .mono, let monospacedMetrics = sizeTable.indexSubtableArray.indexSubtable.format.monospacedMetrics {
+            glyphs.forEach { $0.metrics = Sbit.GlyphMetrics(monospacedMetrics) }
         }
+        glyphs.sort(by: <)
     }
 
     @available(*, unavailable, message: "use init that takes a sizeTable")

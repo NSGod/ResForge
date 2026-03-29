@@ -172,7 +172,7 @@ extension FontEditor: NSTableViewDelegate, NSTableViewDataSource {
     }
 
     public func tableViewSelectionDidChange(_ notification: Notification) {
-//        NSLog("\(type(of: self)).\(#function) notification == \(notification)")
+        // NSLog("\(type(of: self)).\(#function) notification == \(notification)")
         let indexes = tableView.selectedRowIndexes
         if indexes.count != 1 {
             box.contentView = Self.emptyView

@@ -18,11 +18,9 @@ import RFSupport
 extension FontTable_bloc.IndexSubtable {
 
     public class Format: Node {
-
         // MARK: AUX:
         public var glyphIDsToRanges: [GlyphID: Range<UInt32>] = [:]
-
-        public var monospacedMetrics:           Sbit.BigGlyphMetrics?
+        public var monospacedMetrics:           Sbit.BigGlyphMetrics?   /// present in `Format2` and `Format5`
 
         public required init(_ reader: BinaryDataReader, indexSubtableArray: FontTable_bloc.IndexSubtableArray) throws {
             try super.init(reader)
@@ -125,8 +123,8 @@ extension FontTable_bloc.IndexSubtable {
 
     // MARK: -
     public final class CodeOffsetPair: Node {
-        public var glyphCode:         GlyphID = 0
-        public var offset:            UInt16 = 0    // location in 'bdat'
+        public var glyphCode:         GlyphID
+        public var offset:            UInt16        // location in 'bdat'
 
         public override class var nodeLength: UInt32 {
             return 2 + 2                                    // 4

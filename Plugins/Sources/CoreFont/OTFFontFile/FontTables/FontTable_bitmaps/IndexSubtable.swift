@@ -44,7 +44,7 @@ extension FontTable_bloc {
     // MARK: -
     public final class IndexSubtable: Node {
         public var indexFormat:         Sbit.IndexFormat
-        public var imageFormat:         Sbit.GlyphDataFormat
+        public var imageFormat:         Sbit.GlyphImageFormat
         public var imageDataOffset:     UInt32                  /// Offset to the base of the image data (`bdat`) for this index subtable
         public var format:              Format!
 

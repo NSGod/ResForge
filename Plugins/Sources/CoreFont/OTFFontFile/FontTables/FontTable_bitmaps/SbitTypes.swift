@@ -20,7 +20,7 @@ import RFSupport
 /// identical-but-differently-named bitmap fonts (`head`,
 /// `EBLC`, and `EBDT`), so we put them in a separate namespace of `Sbit`
 ///
-// MARK: - Sbit = "scaler bitmaps"
+// MARK: - Sbit = "Scaler Bitmaps"
 public enum Sbit {
 
     @objc public enum IndexFormat: UInt16 {
@@ -32,17 +32,41 @@ public enum Sbit {
         case monoSparse             = 5
     }
 
-    @objc public enum GlyphDataFormat: UInt16 {
+    public enum GlyphImageFormat: UInt16 {
         case unknown                = 0
-        case proportionalSmallByte  = 1     // small metrics & data, byte-aligned
-        case proportionalSmallBit   = 2     // small metrics & data, bit-aligned
-        case proportionalCompressed = 3     // not used (obsolete)
-        case monoCompressed         = 4     // just compressed data; metrics in 'bloc'
-        case mono                   = 5     // bit-aligned data; metrics in 'bloc'
-        case proportionalBigByte    = 6     // big metrics & byte-aligned data
-        case proportionalBigBit     = 7     // big metrics & bit-aligned data
-        case componentSmall         = 8     // small metrics, component data
-        case componentBig           = 9     // big metrics, component data
+        case proportionalSmallByte  = 1     /// small metrics & data, byte-aligned
+        case proportionalSmallBit   = 2     /// small metrics & data, bit-aligned
+        case proportionalCompressed = 3     /// not used (obsolete)
+        case monoCompressed         = 4     /// just compressed data; metrics in 'bloc' `NOT SUPPORTED`
+        case mono                   = 5     /// bit-aligned data; metrics in 'bloc'
+        case proportionalBigByte    = 6     /// big metrics & byte-aligned data
+        case proportionalBigBit     = 7     /// big metrics & bit-aligned data
+        case componentSmall         = 8     /// small metrics, component data; used in `EBDT`, not `bdat`
+        case componentBig           = 9     /// big metrics, component data; used in `EBDT`, not `bdat`
+
+        public var isSupported: Bool {
+            return self != .unknown && self != .proportionalCompressed && self != .monoCompressed
+        }
+
+        public var hasMonoMetrics: Bool {
+            return self == .mono || self == .monoCompressed
+        }
+
+        public var hasSmallMetrics: Bool {
+            return self == .proportionalSmallBit || self == .proportionalSmallByte || self == .componentSmall
+        }
+
+        public var hasBigMetrics: Bool {
+            return self == .proportionalBigBit || self == .proportionalBigByte || self == .componentBig
+        }
+
+        public var isByteAligned: Bool {
+            return self == .proportionalBigByte || self == .proportionalSmallByte
+        }
+
+        public var isBitAligned: Bool {
+            return self == .proportionalSmallBit || self == .proportionalBigBit
+        }
     }
 
     // MARK: -
@@ -89,6 +113,20 @@ public enum Sbit {
             } else {
                 self = .big(metric as! BigGlyphMetrics)
             }
+        }
+
+        public var smallMetrics: SmallGlyphMetrics? {
+            if case let .small(smallGlyphMetrics) = self {
+                return smallGlyphMetrics
+            }
+            return nil
+        }
+
+        public var bigMetrics: BigGlyphMetrics? {
+            if case let .big(bigGlyphMetrics) = self {
+                return bigGlyphMetrics
+            }
+            return nil
         }
     }
 
