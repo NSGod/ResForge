@@ -1,5 +1,5 @@
 //
-//  BitmapStrike.swift
+//  Sbit.BitmapStrike.swift
 //  CoreFont
 //
 //  Created by Mark Douma on 3/25/2026.
