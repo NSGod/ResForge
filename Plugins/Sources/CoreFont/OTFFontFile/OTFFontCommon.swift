@@ -71,6 +71,10 @@ public struct OTFsfntFormat: RawRepresentable, Equatable {
     case long  = 1
 }
 
+public protocol FontAwaking {
+    func awakeFromFont()
+}
+
 public func OTFReWritingOrderSort(lhs: TableTag, rhs: TableTag) -> Bool {
     let a = ttfRewriteOrder[lhs] ?? Int.max
     let b = ttfRewriteOrder[rhs] ?? Int.max

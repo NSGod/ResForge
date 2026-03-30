@@ -43,6 +43,7 @@ public final class DataHandle {
     }
 
     // FIXME: how to allow all kinds of FixedWidthInteger that are <= Int but not larger?
+    // or is this a bad idea altogether?
     public func seek<T: FixedWidthInteger>(to offset: T) {
         seek(to: Int(offset))
     }
@@ -69,6 +70,7 @@ public final class DataHandle {
     }
 
     // FIXME: how to allow all kinds of FixedWidthInteger that are <= Int but not larger?
+    // or is this a bad idea altogether?
     public func truncate<T: FixedWidthInteger>(at offset: T) {
         truncate(at: Int(offset))
     }

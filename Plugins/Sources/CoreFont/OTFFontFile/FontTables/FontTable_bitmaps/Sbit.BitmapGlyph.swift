@@ -10,18 +10,37 @@ import RFSupport
 
 extension Sbit {
 
-    public final class BitmapGlyph: Node, Comparable {
+    public final class BitmapGlyph: Node, Comparable, FontAwaking {
         public var glyphID:             GlyphID = 0
-
         public var glyphRect:           NSRect = .zero
-        public var data:                Data
-        public var metrics:             GlyphMetrics!
+        public var data:                Data?
         public var advanceWidth:        CGFloat = 0
+
+        public var metrics:             GlyphMetrics! {
+            didSet {
+                if let metrics {
+                    switch metrics {
+                        case .small(let metrics):
+                            glyphRect = NSMakeRect(0, 0, CGFloat(metrics.width), CGFloat(metrics.height))
+                            advanceWidth = CGFloat(metrics.advance)
+                        case .big(let metrics):
+                            glyphRect = NSMakeRect(0, 0, CGFloat(metrics.width), CGFloat(metrics.height))
+                            advanceWidth = CGFloat(metrics.horiAdvance)
+                    }
+                }
+            }
+        }
 
         public weak var strike:         BitmapStrike!
 
+        public var imageFormat:         GlyphImageFormat
+        public var numComponents:       UInt16?
+        public var components:          [Component]?
+
         public lazy var image:          NSImage? = {
-            guard let metrics else { return nil }
+            // FIXME: allow data == nil for .componentSmall && .componentBig
+            // FIXME: add support for generating image using components
+            guard let metrics, let data else { return nil }
             guard let bitmapImageRep = NSBitmapImageRep(bitmapDataPlanes: nil,
                                                         pixelsWide: Int(NSWidth(glyphRect)),
                                                         pixelsHigh: Int(NSHeight(glyphRect)),
@@ -63,6 +82,7 @@ extension Sbit {
                 throw FontTableError.parseError("Unsupported 'bdat' glyph image format \(imageFormat.rawValue)")
             }
             self.glyphID = glyphID
+            self.imageFormat = imageFormat
             reader.pushSavedPosition()
             defer { reader.popPosition() }
             try reader.setPosition(imageDataOffset + range.lowerBound)
@@ -76,13 +96,28 @@ extension Sbit {
                 advanceWidth = CGFloat(metrics.bigMetrics!.horiAdvance)
             }
             // FIXME: add support for .componentSmall && .componentBig
-            data = try reader.subdata(with: UInt32(reader.bytesRead)..<(imageDataOffset + range.upperBound))
+            if imageFormat.hasComponents {
+                if imageFormat.hasSmallMetrics {
+                    /// consume UInt8 padding
+                    try reader.advance(1)
+                }
+                numComponents = try reader.read()
+                components = try (0..<numComponents!).map { _ in try Component(reader) }
+            } else {
+                data = try reader.subdata(with: UInt32(reader.bytesRead)..<(imageDataOffset + range.upperBound))
+            }
             try super.init(reader)
         }
 
         @available(*, unavailable, message: "use init(_:offset:range:glyphID:imageFormat:horizontalMetrics:")
         public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
             fatalError("use init(_:offset:range:glyphID:imageFormat:horizontalMetrics:")
+        }
+
+        public func awakeFromFont() {
+            if let components {
+                components.forEach { $0.glyph = strike.glyph(for: $0.glyphID) }
+            }
         }
 
         public static func < (lhs: BitmapGlyph, rhs: BitmapGlyph) -> Bool {
@@ -94,12 +129,16 @@ extension Sbit {
         }
     }
 
-    /// these later 2 formats generally only found in `EBDT` tables, not `bdat`s
+    /// The last 2 formats (`.componentSmall` (`Format8`) and `.componentBig` (`Format9`) are
+    /// generally found only found in Microsoft `EBDT` tables, not Apple's `bdat`s
     // MARK: -
     public final class Component: Node {
-        public var glyphID:         GlyphID
-        public var xOffset:         Int8
-        public var yOffset:         Int8
+        public var glyphID:         GlyphID         /// glyphID of component
+        public var xOffset:         Int8            /// position of component
+        public var yOffset:         Int8            /// position of component
+
+        // MARK: AUX
+        public weak var glyph:      BitmapGlyph!    // existing referenced glyph
 
         public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
             glyphID = try reader.read()

@@ -60,6 +60,10 @@ public enum Sbit {
             return self == .proportionalBigBit || self == .proportionalBigByte || self == .componentBig
         }
 
+        public var hasComponents: Bool {
+            return self == .componentSmall || self == .componentBig
+        }
+        
         public var isByteAligned: Bool {
             return self == .proportionalBigByte || self == .proportionalSmallByte
         }

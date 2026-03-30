@@ -30,7 +30,7 @@ public class FontTable_bdat: FontTable {
     // MARK: -
     @objc public var version:           Version = .default2_0
 
-    public var bitmapStrikes:           [BitmapStrike] = []
+    public var bitmapStrikes:           [Sbit.BitmapStrike] = []
 
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
@@ -38,7 +38,7 @@ public class FontTable_bdat: FontTable {
         guard let blocTable = fontFile.blocTable else {
             throw FontTableError.parseError("could not find bloc table")
         }
-        bitmapStrikes = try blocTable.sizes.map { try BitmapStrike(reader, sizeTable: $0) }
+        bitmapStrikes = try blocTable.sizes.map { try Sbit.BitmapStrike(reader, sizeTable: $0) }
         bitmapStrikes.forEach { $0.fontFile = fontFile }
     }
 }
