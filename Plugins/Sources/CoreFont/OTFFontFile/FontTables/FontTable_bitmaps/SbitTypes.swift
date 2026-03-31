@@ -20,10 +20,10 @@ import RFSupport
 /// identical-but-differently-named bitmap fonts (`head`,
 /// `EBLC`, and `EBDT`), so we put them in a separate namespace of `Sbit`
 ///
-// MARK: - Sbit = "Scaler Bitmaps"
+// MARK:  Sbit = "Scaler Bitmaps"
 public enum Sbit {
 
-    @objc public enum IndexFormat: UInt16 {
+    public enum IndexFormat: UInt16 {
         case unknown                = 0
         case proportional           = 1
         case mono                   = 2

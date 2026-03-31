@@ -1,5 +1,5 @@
 //
-//  IndexSubtable.swift
+//  Sbit.IndexSubtable.swift
 //  CoreFont
 //
 //  Created by Mark Douma on 3/24/2026.
@@ -15,36 +15,12 @@
 import Foundation
 import RFSupport
 
-extension FontTable_bloc {
+extension Sbit {
 
-    // MARK: -
-    public final class IndexSubtableArray: Node {
-        public var firstGlyphIndex:                 GlyphID = 0
-        public var lastGlyphIndex:                  GlyphID = 0
-        public var additionalOffsetToIndexSubtable: UInt32 = 0
-        public var indexSubtable:                   IndexSubtable!
-
-        public override class var nodeLength: UInt32 { return 4 + 4 } // 8
-
-        public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
-            assert(offset != nil)
-            try super.init(reader, offset: offset)
-            if let offset {
-                reader.pushSavedPosition()
-                defer { reader.popPosition() }
-                try reader.setPosition(offset)
-                firstGlyphIndex = try reader.read()
-                lastGlyphIndex = try reader.read()
-                additionalOffsetToIndexSubtable = try reader.read()
-                indexSubtable = try IndexSubtable(reader, offset: offset + Int(additionalOffsetToIndexSubtable), indexSubtableArray: self)
-            }
-        }
-    }
-
-    // MARK: -
+    /// in `bloc` table
     public final class IndexSubtable: Node {
-        public var indexFormat:         Sbit.IndexFormat
-        public var imageFormat:         Sbit.GlyphImageFormat
+        public var indexFormat:         IndexFormat
+        public var imageFormat:         GlyphImageFormat
         public var imageDataOffset:     UInt32                  /// Offset to the base of the image data (`bdat`) for this index subtable
         public var format:              Format!
 

@@ -8,14 +8,18 @@
 import Cocoa
 import RFSupport
 
+/// "OFF embedded bitmaps are also called 'sbits' (for “scaler bitmaps”).
+/// A set of bitmaps for a face at a given size is called a strike."
+
 extension Sbit {
 
+    /// in `bdat` table
     public final class BitmapStrike: Node {
-        public var sizeTable:               FontTable_bloc.BitmapSizeTable
+        public var sizeTable:               BitmapSizeTable
         public var glyphs:                  [BitmapGlyph] = []
         public weak var fontFile:           OTFFontFile!
 
-        public required init(_ reader: BinaryDataReader, sizeTable: FontTable_bloc.BitmapSizeTable) throws {
+        public required init(_ reader: BinaryDataReader, sizeTable: BitmapSizeTable) throws {
             self.sizeTable = sizeTable
             let imageDataOffset = sizeTable.indexSubtableArray.indexSubtable.imageDataOffset
             let imageFormat = sizeTable.indexSubtableArray.indexSubtable.imageFormat

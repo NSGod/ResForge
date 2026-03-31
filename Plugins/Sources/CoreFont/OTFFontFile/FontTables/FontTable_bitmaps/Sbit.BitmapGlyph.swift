@@ -10,6 +10,7 @@ import RFSupport
 
 extension Sbit {
 
+    /// in `bdat` table
     public final class BitmapGlyph: Node, Comparable, FontAwaking {
         public var glyphID:             GlyphID = 0
         public var data:                Data?
@@ -135,7 +136,8 @@ extension Sbit {
     }
 
     /// The last 2 formats (`.componentSmall` (`Format8`) and `.componentBig` (`Format9`) are
-    /// generally found only found in Microsoft `EBDT` tables, not Apple's `bdat`s
+    /// generally found only found in Microsoft `EBDT` tables, not in Apple `bdat` tables.
+    /// Component glyphs work by combining existing glyphs and applying simple transforms to them
     // MARK: -
     public final class Component: Node {
         public var glyphID:         GlyphID         /// glyphID of component

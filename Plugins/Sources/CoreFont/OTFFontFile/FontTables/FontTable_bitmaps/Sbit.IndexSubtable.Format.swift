@@ -1,5 +1,5 @@
 //
-//  IndexSubtable.Format.swift
+//  Sbit.IndexSubtable.Format.swift
 //  CoreFont
 //
 //  Created by Mark Douma on 3/24/2026.
@@ -15,14 +15,15 @@
 import Foundation
 import RFSupport
 
-extension FontTable_bloc.IndexSubtable {
+extension Sbit.IndexSubtable {
 
+    /// in `bloc` table
     public class Format: Node {
         // MARK: AUX:
         public var glyphIDsToRanges: [GlyphID: Range<UInt32>] = [:]
         public var monospacedMetrics:           Sbit.BigGlyphMetrics?   /// present in `Format2` and `Format5`
 
-        public required init(_ reader: BinaryDataReader, indexSubtableArray: FontTable_bloc.IndexSubtableArray) throws {
+        public required init(_ reader: BinaryDataReader, indexSubtableArray: Sbit.IndexSubtableArray) throws {
             try super.init(reader)
         }
 
@@ -53,7 +54,7 @@ extension FontTable_bloc.IndexSubtable {
             return UInt32(MemoryLayout<UInt32>.size * offsets.count)
         }
 
-        public required init(_ reader: BinaryDataReader, indexSubtableArray: FontTable_bloc.IndexSubtableArray) throws {
+        public required init(_ reader: BinaryDataReader, indexSubtableArray: Sbit.IndexSubtableArray) throws {
             try super.init(reader, indexSubtableArray: indexSubtableArray)
             _numOffsets = Int(indexSubtableArray.lastGlyphIndex - indexSubtableArray.firstGlyphIndex) + 2
             offsets = try (0..<_numOffsets).map { _ in try reader.read() }
@@ -79,7 +80,7 @@ extension FontTable_bloc.IndexSubtable {
             return 4 + Sbit.BigGlyphMetrics.nodeLength
         }
 
-        public required init(_ reader: BinaryDataReader, indexSubtableArray: FontTable_bloc.IndexSubtableArray) throws {
+        public required init(_ reader: BinaryDataReader, indexSubtableArray: Sbit.IndexSubtableArray) throws {
             try super.init(reader, indexSubtableArray: indexSubtableArray)
             imageSize = try reader.read()
             metrics = try Sbit.BigGlyphMetrics(reader)
@@ -99,7 +100,7 @@ extension FontTable_bloc.IndexSubtable {
         public var offsets:             [UInt16] = []
         private var _numOffsets:        Int = 0
 
-        public required init(_ reader: BinaryDataReader, indexSubtableArray: FontTable_bloc.IndexSubtableArray) throws {
+        public required init(_ reader: BinaryDataReader, indexSubtableArray: Sbit.IndexSubtableArray) throws {
             try super.init(reader, indexSubtableArray: indexSubtableArray)
             _numOffsets = Int(indexSubtableArray.lastGlyphIndex - indexSubtableArray.firstGlyphIndex) + 2
             offsets = try (0..<_numOffsets).map { _ in try reader.read() }
@@ -148,7 +149,7 @@ extension FontTable_bloc.IndexSubtable {
             return 4 + UInt32(glyphs.count) * CodeOffsetPair.nodeLength
         }
 
-        public required init(_ reader: BinaryDataReader, indexSubtableArray: FontTable_bloc.IndexSubtableArray) throws {
+        public required init(_ reader: BinaryDataReader, indexSubtableArray: Sbit.IndexSubtableArray) throws {
             try super.init(reader, indexSubtableArray: indexSubtableArray)
             numGlyphs = try reader.read()
             glyphs = try (0..<numGlyphs).map { _ in try CodeOffsetPair(reader) }
@@ -173,7 +174,7 @@ extension FontTable_bloc.IndexSubtable {
             return 8 + Sbit.BigGlyphMetrics.nodeLength + UInt32(glyphs.count) * CodeOffsetPair.nodeLength
         }
 
-        public required init(_ reader: BinaryDataReader, indexSubtableArray: FontTable_bloc.IndexSubtableArray) throws {
+        public required init(_ reader: BinaryDataReader, indexSubtableArray: Sbit.IndexSubtableArray) throws {
             try super.init(reader, indexSubtableArray: indexSubtableArray)
             imageSize = try reader.read()
             metrics = try Sbit.BigGlyphMetrics(reader)
