@@ -12,22 +12,15 @@ extension Sbit {
 
     public final class BitmapGlyph: Node, Comparable, FontAwaking {
         public var glyphID:             GlyphID = 0
-        public var glyphRect:           NSRect = .zero
         public var data:                Data?
+        public var glyphRect:           NSRect = .zero
         public var advanceWidth:        CGFloat = 0
+        public var boundingBox:         NSRect = .zero
 
         public var metrics:             GlyphMetrics! {
             didSet {
-                if let metrics {
-                    switch metrics {
-                        case .small(let metrics):
-                            glyphRect = NSMakeRect(0, 0, CGFloat(metrics.width), CGFloat(metrics.height))
-                            advanceWidth = CGFloat(metrics.advance)
-                        case .big(let metrics):
-                            glyphRect = NSMakeRect(0, 0, CGFloat(metrics.width), CGFloat(metrics.height))
-                            advanceWidth = CGFloat(metrics.horiAdvance)
-                    }
-                }
+                // move this to awakeFromFont() ?
+                // calculateMetrics()
             }
         }
 
@@ -42,14 +35,14 @@ extension Sbit {
             // FIXME: add support for generating image using components
             guard let metrics, let data else { return nil }
             guard let bitmapImageRep = NSBitmapImageRep(bitmapDataPlanes: nil,
-                                                        pixelsWide: Int(NSWidth(glyphRect)),
-                                                        pixelsHigh: Int(NSHeight(glyphRect)),
+                                                        pixelsWide: Int(NSWidth(boundingBox)),
+                                                        pixelsHigh: Int(NSHeight(boundingBox)),
                                                         bitsPerSample: Int(strike.sizeTable.bitDepth.rawValue),
                                                         samplesPerPixel: 1,
                                                         hasAlpha: false,
                                                         isPlanar: false,
                                                         colorSpaceName: .calibratedWhite,
-                                                        bytesPerRow:(Int(NSWidth(glyphRect)) + 7)/8,
+                                                        bytesPerRow:(Int(NSWidth(boundingBox)) + 7)/8,
                                                         bitsPerPixel: Int(strike.sizeTable.bitDepth.rawValue)) else {
                 return nil
             }
@@ -62,14 +55,14 @@ extension Sbit {
             }
             let srgb = CGColorSpace(name: CGColorSpace.sRGB)!
             let context = CGContext(data: nil,
-                                    width: Int(NSWidth(glyphRect)),
-                                    height: Int(NSHeight(glyphRect)),
+                                    width: Int(NSWidth(boundingBox)),
+                                    height: Int(NSHeight(boundingBox)),
                                     bitsPerComponent: 8,
-                                    bytesPerRow: Int(NSWidth(glyphRect)) * 4,
+                                    bytesPerRow: Int(NSWidth(boundingBox)) * 4,
                                     space: srgb,
                                     bitmapInfo: CGBitmapInfo(alpha: .noneSkipLast))
             let imageRef = bitmapImageRep.cgImage!
-            context?.draw(imageRef, in: CGRect(origin: .zero, size: CGSize(width: NSWidth(glyphRect), height: NSHeight(glyphRect))))
+            context?.draw(imageRef, in: CGRect(origin: .zero, size: CGSize(width: NSWidth(boundingBox), height: NSHeight(boundingBox))))
             guard let rgbImageRef = context?.makeImage() else { return nil }
             let imageRep = NSBitmapImageRep(cgImage: rgbImageRef)
             let image = NSImage(size: imageRep.size)
@@ -88,12 +81,8 @@ extension Sbit {
             try reader.setPosition(imageDataOffset + range.lowerBound)
             if imageFormat.hasSmallMetrics {
                 metrics = GlyphMetrics(try SmallGlyphMetrics(reader, isHorizontal: horizontalMetrics))
-                glyphRect = NSMakeRect(0, 0, CGFloat(metrics.smallMetrics!.width), CGFloat(metrics.smallMetrics!.height))
-                advanceWidth = CGFloat(metrics.smallMetrics!.advance)
             } else if imageFormat.hasBigMetrics {
                 metrics = GlyphMetrics(try BigGlyphMetrics(reader))
-                glyphRect = NSMakeRect(0, 0, CGFloat(metrics.bigMetrics!.width), CGFloat(metrics.bigMetrics!.height))
-                advanceWidth = CGFloat(metrics.bigMetrics!.horiAdvance)
             }
             // FIXME: add support for .componentSmall && .componentBig
             if imageFormat.hasComponents {
@@ -115,8 +104,24 @@ extension Sbit {
         }
 
         public func awakeFromFont() {
+            calculateMetrics()
             if let components {
                 components.forEach { $0.glyph = strike.glyph(for: $0.glyphID) }
+            }
+        }
+
+        private func calculateMetrics() {
+            if let metrics, let strike {
+                switch metrics {
+                    case .small(let metrics):
+                        boundingBox = NSMakeRect(CGFloat(metrics.bearingX), CGFloat(Int(metrics.bearingY) - Int(metrics.height)), CGFloat(metrics.width), CGFloat(metrics.height))
+                        glyphRect = NSMakeRect(0, CGFloat(strike.sizeTable.hori.descender), CGFloat(metrics.advance), CGFloat(strike.sizeTable.hori.ascender + abs(strike.sizeTable.hori.descender)))
+                        advanceWidth = CGFloat(metrics.advance)
+                    case .big(let metrics):
+                        boundingBox = NSMakeRect(CGFloat(metrics.horiBearingX), CGFloat(Int(metrics.horiBearingY) - Int(metrics.height)), CGFloat(metrics.width), CGFloat(metrics.height))
+                        glyphRect = NSMakeRect(0, CGFloat(strike.sizeTable.hori.descender), CGFloat(metrics.horiAdvance), CGFloat(strike.sizeTable.hori.ascender + abs(strike.sizeTable.hori.descender)))
+                        advanceWidth = CGFloat(metrics.horiAdvance)
+                }
             }
         }
 
@@ -138,7 +143,7 @@ extension Sbit {
         public var yOffset:         Int8            /// position of component
 
         // MARK: AUX
-        public weak var glyph:      BitmapGlyph!    // existing referenced glyph
+        public weak var glyph:      BitmapGlyph!    /// existing referenced glyph
 
         public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
             glyphID = try reader.read()

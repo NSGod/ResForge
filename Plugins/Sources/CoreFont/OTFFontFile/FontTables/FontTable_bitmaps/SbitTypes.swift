@@ -36,7 +36,7 @@ public enum Sbit {
         case unknown                = 0
         case proportionalSmallByte  = 1     /// small metrics & data, byte-aligned
         case proportionalSmallBit   = 2     /// small metrics & data, bit-aligned
-        case proportionalCompressed = 3     /// not used (obsolete)
+        case proportionalCompressed = 3     /// not used (obsolete)                     `NOT SUPPORTED`
         case monoCompressed         = 4     /// just compressed data; metrics in 'bloc' `NOT SUPPORTED`
         case mono                   = 5     /// bit-aligned data; metrics in 'bloc'
         case proportionalBigByte    = 6     /// big metrics & byte-aligned data
@@ -63,7 +63,7 @@ public enum Sbit {
         public var hasComponents: Bool {
             return self == .componentSmall || self == .componentBig
         }
-        
+
         public var isByteAligned: Bool {
             return self == .proportionalBigByte || self == .proportionalSmallByte
         }
