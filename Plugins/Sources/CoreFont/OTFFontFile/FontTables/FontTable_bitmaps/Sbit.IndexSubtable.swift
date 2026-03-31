@@ -17,14 +17,14 @@ import RFSupport
 
 extension Sbit {
 
-    /// in `bloc` table
+    /// in `bloc`/`EBLC` table
     public final class IndexSubtable: Node {
         public var indexFormat:         IndexFormat
         public var imageFormat:         GlyphImageFormat
-        public var imageDataOffset:     UInt32                  /// Offset to the base of the image data (`bdat`) for this index subtable
+        public var imageDataOffset:     UInt32              /// Offset to the base of the image data (`bdat`) for this index subtable
         public var format:              Format!
 
-        public init(_ reader: BinaryDataReader, offset: Int, indexSubtableArray: IndexSubtableArray) throws {
+        public init(_ reader: BinaryDataReader, offset: Int, glyphIDRange: ClosedRange<GlyphID>) throws {
             reader.pushSavedPosition()
             defer { reader.popPosition() }
             try reader.setPosition(offset)
@@ -32,14 +32,14 @@ extension Sbit {
             imageFormat = try reader.read()
             imageDataOffset = try reader.read()
             if let formatClass = Format.class(for: indexFormat) {
-                format = try formatClass.init(reader, indexSubtableArray: indexSubtableArray)
+                format = try formatClass.init(reader, glyphIDRange: glyphIDRange)
             }
             try super.init(reader, offset: offset)
         }
 
-        @available(*, unavailable, message: "use init that takes indexSubtableArray")
+        @available(*, unavailable, message: "use init that takes glyphIDRange")
         public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
-            fatalError("use init that takes indexSubtableArray")
+            fatalError("use init that takes glyphIDRange")
         }
     }
 }

@@ -13,27 +13,34 @@ import RFSupport
 
 extension Sbit {
 
-    /// in `bdat` table
+    /// in `bdat`/`EBDT` table
     public final class BitmapStrike: Node {
         public var sizeTable:               BitmapSizeTable
         public var glyphs:                  [BitmapGlyph] = []
+        private var glyphIDsToGlyphs:       [GlyphID: BitmapGlyph] = [:]
         public weak var fontFile:           OTFFontFile!
 
         public required init(_ reader: BinaryDataReader, sizeTable: BitmapSizeTable) throws {
             self.sizeTable = sizeTable
-            let imageDataOffset = sizeTable.indexSubtableArray.indexSubtable.imageDataOffset
-            let imageFormat = sizeTable.indexSubtableArray.indexSubtable.imageFormat
             let isHorizontal = sizeTable.flags.contains(.horizontal)
-            for (glyphID, range) in sizeTable.indexSubtableArray.indexSubtable.format.glyphIDsToRanges {
-                let glyph = try BitmapGlyph(reader, imageDataOffset: imageDataOffset, range: range, glyphID: glyphID, imageFormat: imageFormat, horizontalMetrics: isHorizontal)
-                glyphs.append(glyph)
+            for indexSubtableArray in sizeTable.indexSubtableArrays {
+                var bitmapGlyphs: [BitmapGlyph] = []
+                let imageDataOffset = indexSubtableArray.indexSubtable.imageDataOffset
+                let imageFormat = indexSubtableArray.indexSubtable.imageFormat
+                for (glyphID, range) in indexSubtableArray.indexSubtable.format.glyphIDsToRanges {
+                    let glyph = try BitmapGlyph(reader, imageDataOffset: imageDataOffset, range: range, glyphID: glyphID, imageFormat: imageFormat, horizontalMetrics: isHorizontal)
+                    bitmapGlyphs.append(glyph)
+                    glyphIDsToGlyphs[glyphID] = glyph
+                }
+                if imageFormat == .mono, let monospacedMetrics = indexSubtableArray.indexSubtable.format.monospacedMetrics {
+                    bitmapGlyphs.forEach { $0.metrics = GlyphMetrics(monospacedMetrics) }
+                }
+                glyphs.append(contentsOf: bitmapGlyphs)
             }
             try super.init(reader)
             glyphs.forEach { $0.strike = self }
-            if imageFormat == .mono, let monospacedMetrics = sizeTable.indexSubtableArray.indexSubtable.format.monospacedMetrics {
-                glyphs.forEach { $0.metrics = GlyphMetrics(monospacedMetrics) }
-            }
             glyphs.sort(by: <)
+            glyphs.forEach { glyphIDsToGlyphs[$0.glyphID] = $0 }
             glyphs.forEach { $0.awakeFromFont() }
         }
 
@@ -42,8 +49,8 @@ extension Sbit {
             fatalError("use init that takes a sizeTable")
         }
 
-        public func glyph(for glyphID: GlyphID) -> BitmapGlyph {
-            return glyphs[Int(glyphID)]
+        public func glyph(for glyphID: GlyphID) -> BitmapGlyph? {
+            return glyphIDsToGlyphs[glyphID]
         }
     }
 }

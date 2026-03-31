@@ -17,19 +17,19 @@ import RFSupport
 
 extension Sbit.IndexSubtable {
 
-    /// in `bloc` table
+    /// in `bloc`/`EBLC` table
     public class Format: Node {
         // MARK: AUX:
         public var glyphIDsToRanges: [GlyphID: Range<UInt32>] = [:]
         public var monospacedMetrics:           Sbit.BigGlyphMetrics?   /// present in `Format2` and `Format5`
 
-        public required init(_ reader: BinaryDataReader, indexSubtableArray: Sbit.IndexSubtableArray) throws {
+        public required init(_ reader: BinaryDataReader, glyphIDRange: ClosedRange<GlyphID>) throws {
             try super.init(reader)
         }
 
-        @available(*, unavailable, message: "use init that takes indexSubtableArray")
+        @available(*, unavailable, message: "use init that takes glyphIDRange")
         public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
-            fatalError("use init that takes indexSubtableArray")
+            fatalError("use init that takes glyphIDRange")
         }
 
         public static func `class`(for format: Sbit.IndexFormat) -> Format.Type? {
@@ -54,13 +54,13 @@ extension Sbit.IndexSubtable {
             return UInt32(MemoryLayout<UInt32>.size * offsets.count)
         }
 
-        public required init(_ reader: BinaryDataReader, indexSubtableArray: Sbit.IndexSubtableArray) throws {
-            try super.init(reader, indexSubtableArray: indexSubtableArray)
-            _numOffsets = Int(indexSubtableArray.lastGlyphIndex - indexSubtableArray.firstGlyphIndex) + 2
+        public required init(_ reader: BinaryDataReader, glyphIDRange: ClosedRange<GlyphID>) throws {
+            try super.init(reader, glyphIDRange: glyphIDRange)
+            _numOffsets = Int(glyphIDRange.upperBound - glyphIDRange.lowerBound) + 2
             offsets = try (0..<_numOffsets).map { _ in try reader.read() }
             var i = 0
-            while i <= (indexSubtableArray.lastGlyphIndex - indexSubtableArray.firstGlyphIndex) {
-                glyphIDsToRanges[indexSubtableArray.firstGlyphIndex + GlyphID(i)] = offsets[i]..<(offsets[i + 1])
+            while i <= (glyphIDRange.upperBound - glyphIDRange.lowerBound) {
+                glyphIDsToRanges[glyphIDRange.lowerBound + GlyphID(i)] = offsets[i]..<(offsets[i + 1])
                 i += 1
             }
         }
@@ -80,13 +80,13 @@ extension Sbit.IndexSubtable {
             return 4 + Sbit.BigGlyphMetrics.nodeLength
         }
 
-        public required init(_ reader: BinaryDataReader, indexSubtableArray: Sbit.IndexSubtableArray) throws {
-            try super.init(reader, indexSubtableArray: indexSubtableArray)
+        public required init(_ reader: BinaryDataReader, glyphIDRange: ClosedRange<GlyphID>) throws {
             imageSize = try reader.read()
             metrics = try Sbit.BigGlyphMetrics(reader)
+            try super.init(reader, glyphIDRange: glyphIDRange)
             monospacedMetrics = metrics
             var currentOffset: UInt32 = 0
-            for glyphID in indexSubtableArray.firstGlyphIndex..<indexSubtableArray.lastGlyphIndex + 1 {
+            for glyphID in glyphIDRange {
                 glyphIDsToRanges[glyphID] = currentOffset..<(currentOffset + imageSize)
                 currentOffset += imageSize
             }
@@ -100,17 +100,17 @@ extension Sbit.IndexSubtable {
         public var offsets:             [UInt16] = []
         private var _numOffsets:        Int = 0
 
-        public required init(_ reader: BinaryDataReader, indexSubtableArray: Sbit.IndexSubtableArray) throws {
-            try super.init(reader, indexSubtableArray: indexSubtableArray)
-            _numOffsets = Int(indexSubtableArray.lastGlyphIndex - indexSubtableArray.firstGlyphIndex) + 2
+        public required init(_ reader: BinaryDataReader, glyphIDRange: ClosedRange<GlyphID>) throws {
+            try super.init(reader, glyphIDRange: glyphIDRange)
+            _numOffsets = Int(glyphIDRange.upperBound - glyphIDRange.lowerBound) + 2
             offsets = try (0..<_numOffsets).map { _ in try reader.read() }
             if _numOffsets & 1 != 0 {
                 /// consume padding if applicable
                 _ = try reader.read() as UInt16
             }
             var i = 0
-            while i <= (indexSubtableArray.lastGlyphIndex - indexSubtableArray.firstGlyphIndex) {
-                glyphIDsToRanges[indexSubtableArray.firstGlyphIndex + GlyphID(i)] = UInt32(offsets[i])..<UInt32(offsets[i + 1])
+            while i <= (glyphIDRange.upperBound - glyphIDRange.lowerBound) {
+                glyphIDsToRanges[glyphIDRange.lowerBound + GlyphID(i)] = UInt32(offsets[i])..<UInt32(offsets[i + 1])
                 i += 1
             }
         }
@@ -123,9 +123,9 @@ extension Sbit.IndexSubtable {
 
 
     // MARK: -
-    public final class CodeOffsetPair: Node {
-        public var glyphCode:         GlyphID
-        public var offset:            UInt16        // location in 'bdat'
+    public final class GlyphIDOffsetPair: Node {
+        public var glyphID:             GlyphID
+        public var offset:              UInt16        // location in 'bdat'
 
         public override class var nodeLength: UInt32 {
             return 2 + 2                                    // 4
@@ -133,7 +133,7 @@ extension Sbit.IndexSubtable {
 
         public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
             assert(offset == nil)
-            glyphCode = try reader.read()
+            glyphID = try reader.read()
             self.offset = try reader.read()
             try super.init(reader, offset: offset)
         }
@@ -143,22 +143,21 @@ extension Sbit.IndexSubtable {
     /// `Format 4` is for sparsely-embedded glyph data for *proportional* metrics
     public final class Format4 : Format {
         public var numGlyphs:          UInt32 = 0
-        public var glyphs:             [CodeOffsetPair] = []
+        public var glyphs:             [GlyphIDOffsetPair] = []    // [numGlyphs + 1]
 
         public override var nodeLength: UInt32 {
-            return 4 + UInt32(glyphs.count) * CodeOffsetPair.nodeLength
+            return 4 + UInt32(glyphs.count) * GlyphIDOffsetPair.nodeLength
         }
 
-        public required init(_ reader: BinaryDataReader, indexSubtableArray: Sbit.IndexSubtableArray) throws {
-            try super.init(reader, indexSubtableArray: indexSubtableArray)
+        public required init(_ reader: BinaryDataReader, glyphIDRange: ClosedRange<GlyphID>) throws {
+            try super.init(reader, glyphIDRange: glyphIDRange)
             numGlyphs = try reader.read()
-            glyphs = try (0..<numGlyphs).map { _ in try CodeOffsetPair(reader) }
+            glyphs = try (0...numGlyphs).map { _ in try GlyphIDOffsetPair(reader) }
             var currentOffset: UInt32 = 0
             for glyph in glyphs {
-                glyphIDsToRanges[glyph.glyphCode] = currentOffset..<UInt32(glyph.offset)
-                currentOffset += UInt32(glyphIDsToRanges[glyph.glyphCode]!.count)
+                glyphIDsToRanges[glyph.glyphID] = currentOffset..<UInt32(glyph.offset)
+                currentOffset += UInt32(glyphIDsToRanges[glyph.glyphID]!.count)
             }
-
         }
     }
 
@@ -168,19 +167,24 @@ extension Sbit.IndexSubtable {
         public var imageSize:           UInt32 = 0
         public var metrics:             Sbit.BigGlyphMetrics!
         public var numGlyphs:           UInt32 = 0
-        public var glyphs:              [CodeOffsetPair] = []    // [numGlyphs]
+        public var glyphs:              [GlyphIDOffsetPair] = []    // [numGlyphs]
 
         public override var nodeLength: UInt32 {
-            return 8 + Sbit.BigGlyphMetrics.nodeLength + UInt32(glyphs.count) * CodeOffsetPair.nodeLength
+            return 4 + 4 + Sbit.BigGlyphMetrics.nodeLength + UInt32(glyphs.count) * GlyphIDOffsetPair.nodeLength
         }
 
-        public required init(_ reader: BinaryDataReader, indexSubtableArray: Sbit.IndexSubtableArray) throws {
-            try super.init(reader, indexSubtableArray: indexSubtableArray)
+        public required init(_ reader: BinaryDataReader, glyphIDRange: ClosedRange<GlyphID>) throws {
+            try super.init(reader, glyphIDRange: glyphIDRange)
             imageSize = try reader.read()
             metrics = try Sbit.BigGlyphMetrics(reader)
             monospacedMetrics = metrics
             numGlyphs = try reader.read()
-            glyphs = try (0..<numGlyphs).map { _ in try CodeOffsetPair(reader) }
+            glyphs = try (0..<numGlyphs).map { _ in try GlyphIDOffsetPair(reader) }
+            var currentOffset: UInt32 = 0
+            for glyph in glyphs {
+                glyphIDsToRanges[glyph.glyphID] = currentOffset..<UInt32(glyph.offset)
+                currentOffset += UInt32(glyphIDsToRanges[glyph.glyphID]!.count)
+            }
         }
     }
 }

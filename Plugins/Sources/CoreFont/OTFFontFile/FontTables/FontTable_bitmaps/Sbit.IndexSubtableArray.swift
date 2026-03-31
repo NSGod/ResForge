@@ -10,27 +10,26 @@ import RFSupport
 
 extension Sbit {
 
-    /// in `bloc` table
+    /// in `bloc`/`EBLC` table
     public final class IndexSubtableArray: Node {
-        public var firstGlyphIndex:                 GlyphID = 0
-        public var lastGlyphIndex:                  GlyphID = 0
+        public var firstGlyphIndex:                 GlyphID = 0     /// first glyphID in this range
+        public var lastGlyphIndex:                  GlyphID = 0     /// last glyphID in this range (inclusive)
         public var additionalOffsetToIndexSubtable: UInt32 = 0
         public var indexSubtable:                   IndexSubtable!
 
-        public override class var nodeLength: UInt32 { return 4 + 4 } // 8
+        public override class var nodeLength: UInt32 { return 2 + 2 + 4 } // 8
 
-        public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
-            assert(offset != nil)
+        public required init(_ reader: BinaryDataReader, offset: Int) throws {
+            firstGlyphIndex = try reader.read()
+            lastGlyphIndex = try reader.read()
+            additionalOffsetToIndexSubtable = try reader.read()
+            indexSubtable = try IndexSubtable(reader, offset: offset + Int(additionalOffsetToIndexSubtable), glyphIDRange: firstGlyphIndex...lastGlyphIndex)
             try super.init(reader, offset: offset)
-            if let offset {
-                reader.pushSavedPosition()
-                defer { reader.popPosition() }
-                try reader.setPosition(offset)
-                firstGlyphIndex = try reader.read()
-                lastGlyphIndex = try reader.read()
-                additionalOffsetToIndexSubtable = try reader.read()
-                indexSubtable = try IndexSubtable(reader, offset: offset + Int(additionalOffsetToIndexSubtable), indexSubtableArray: self)
-            }
+        }
+
+        @available(*, unavailable, message: "use init that takes non-optional offset")
+        public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
+            fatalError("use init that takes non-optional offset")
         }
     }
 }

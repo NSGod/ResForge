@@ -10,7 +10,7 @@ import RFSupport
 
 extension Sbit {
 
-    /// in `bdat` table
+    /// in `bdat`/`EBDT` table
     public final class BitmapGlyph: Node, Comparable, FontAwaking {
         public var glyphID:             GlyphID = 0
         public var data:                Data?
@@ -18,12 +18,7 @@ extension Sbit {
         public var advanceWidth:        CGFloat = 0
         public var boundingBox:         NSRect = .zero
 
-        public var metrics:             GlyphMetrics! {
-            didSet {
-                // move this to awakeFromFont() ?
-                // calculateMetrics()
-            }
-        }
+        public var metrics:             GlyphMetrics!
 
         public weak var strike:         BitmapStrike!
 
@@ -145,7 +140,7 @@ extension Sbit {
         public var yOffset:         Int8            /// position of component
 
         // MARK: AUX
-        public weak var glyph:      BitmapGlyph!    /// existing referenced glyph
+        public weak var glyph:      BitmapGlyph?    /// existing referenced glyph
 
         public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
             glyphID = try reader.read()
