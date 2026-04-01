@@ -78,17 +78,18 @@ extension Sbit {
                 data.copyBytes(to: bitmapData, count: length)
             } else if imageFormat.isBitAligned {
                 /// Each row is bit-aligned, but each glyph is byte-aligned
-                let length = ((Int(metrics.height) * Int(metrics.width)) + 7)/8
-                for i in 0..<length {
-                    for ch in data {
-                        for j in 0..<8 {
-                            let l = (i * 8 + j) / Int(metrics.width)
-                            let p = (i * 8 + j) % Int(metrics.width)
-                            if l < metrics.height && (ch & (1 << (7 - j))) != 0 {
-                                bitmapData[Int(l) * bytesPerRow + Int(p >> 3)] |= (1 << (7-(p & 7)))
-                            }
+                // let length = ((Int(metrics.height) * Int(metrics.width)) + 7)/8
+                var i = 0
+                for ch in data {
+                    for j in 0..<8 {
+                        let line = (i * 8 + j) / Int(metrics.width)
+                        let pX = (i * 8 + j) % Int(metrics.width)
+                        let test = (ch & (1 << (7 - j)))
+                        if line < metrics.height && test != 0 {
+                            bitmapData[Int(line) * bytesPerRow + Int(pX >> 3)] |= (1 << (7-(pX & 7)))
                         }
                     }
+                    i += 1
                 }
             }
             // invert bits
