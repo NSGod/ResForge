@@ -69,7 +69,7 @@ public enum Sbit {
         }
 
         public var isBitAligned: Bool {
-            return self == .proportionalSmallBit || self == .proportionalBigBit
+            return self == .proportionalSmallBit || self == .proportionalBigBit ||  self == .mono
         }
     }
 
@@ -117,6 +117,14 @@ public enum Sbit {
             } else {
                 self = .big(metric as! BigGlyphMetrics)
             }
+        }
+
+        public var height: UInt8 {
+            if let smallMetrics { return smallMetrics.height } else { return bigMetrics!.height }
+        }
+
+        public var width: UInt8 {
+            if let smallMetrics { return smallMetrics.width } else { return bigMetrics!.width }
         }
 
         public var smallMetrics: SmallGlyphMetrics? {

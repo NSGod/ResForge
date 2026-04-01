@@ -23,6 +23,7 @@ extension Sbit {
         public weak var strike:         BitmapStrike!
 
         public var imageFormat:         GlyphImageFormat
+
         public var numComponents:       UInt16?
         public var components:          [Component]?
 
@@ -30,6 +31,7 @@ extension Sbit {
             // FIXME: allow data == nil for .componentSmall && .componentBig
             // FIXME: add support for generating image using components
             guard let metrics, let data else { return nil }
+            let bytesPerRow = (Int(NSWidth(boundingBox)) + 7)/8
             guard let bitmapImageRep = NSBitmapImageRep(bitmapDataPlanes: nil,
                                                         pixelsWide: Int(NSWidth(boundingBox)),
                                                         pixelsHigh: Int(NSHeight(boundingBox)),
@@ -38,17 +40,34 @@ extension Sbit {
                                                         hasAlpha: false,
                                                         isPlanar: false,
                                                         colorSpaceName: .calibratedWhite,
-                                                        bytesPerRow:(Int(NSWidth(boundingBox)) + 7)/8,
+                                                        bytesPerRow:bytesPerRow,
                                                         bitsPerPixel: Int(strike.sizeTable.bitDepth.rawValue)) else {
                 return nil
             }
             let length = bitmapImageRep.bytesPerRow * bitmapImageRep.pixelsHigh
             let bitmapData = bitmapImageRep.bitmapData!
-            data.copyBytes(to: bitmapData, count: length)
+            if imageFormat.isByteAligned {
+                data.copyBytes(to: bitmapData, count: length)
+            } else if imageFormat.isBitAligned {
+                /// Each row is bit-aligned, but each glyph is byte-aligned
+                let length = ((Int(metrics.height) * Int(metrics.width)) + 7)/8
+                for i in 0..<length {
+                    for ch in data {
+                        for j in 0..<8 {
+                            let l = (i * 8 + j) / Int(metrics.width)
+                            let p = (i * 8 + j) % Int(metrics.width)
+                            if l < metrics.height && (ch & (1 << (7 - j))) != 0 {
+                                bitmapData[Int(l) * bytesPerRow + Int(p >> 3)] |= (1 << (7-(p & 7)))
+                            }
+                        }
+                    }
+                }
+            }
             // invert bits
             for i in 0..<length {
                 bitmapData[i] ^= 0xFF
             }
+            // FIXME: maybe switch to grayscale or something less costly?
             let srgb = CGColorSpace(name: CGColorSpace.sRGB)!
             let context = CGContext(data: nil,
                                     width: Int(NSWidth(boundingBox)),
@@ -101,6 +120,7 @@ extension Sbit {
 
         public func awakeFromFont() {
             calculateMetrics()
+            /// resolve components
             if let components {
                 components.forEach { $0.glyph = strike.glyph(for: $0.glyphID) }
             }

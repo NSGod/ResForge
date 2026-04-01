@@ -27,8 +27,10 @@ extension Sbit {
                 var bitmapGlyphs: [BitmapGlyph] = []
                 let imageDataOffset = indexSubtableArray.indexSubtable.imageDataOffset
                 let imageFormat = indexSubtableArray.indexSubtable.imageFormat
-                for (glyphID, range) in indexSubtableArray.indexSubtable.format.glyphIDsToRanges {
-                    let glyph = try BitmapGlyph(reader, imageDataOffset: imageDataOffset, range: range, glyphID: glyphID, imageFormat: imageFormat, horizontalMetrics: isHorizontal)
+                let glyphIDsToRanges = indexSubtableArray.indexSubtable.format.glyphIDsToRanges
+                let glyphIDs = glyphIDsToRanges.keys.sorted()
+                for glyphID in glyphIDs {
+                    let glyph = try BitmapGlyph(reader, imageDataOffset: imageDataOffset, range: glyphIDsToRanges[glyphID]!, glyphID: glyphID, imageFormat: imageFormat, horizontalMetrics: isHorizontal)
                     bitmapGlyphs.append(glyph)
                     glyphIDsToGlyphs[glyphID] = glyph
                 }

@@ -27,9 +27,9 @@ extension Sbit.IndexSubtable {
             try super.init(reader)
         }
 
-        @available(*, unavailable, message: "use init that takes glyphIDRange")
+        @available(*, unavailable, message: "use init(_:glyphIDRange:)")
         public required init(_ reader: BinaryDataReader, offset: Int? = nil) throws {
-            fatalError("use init that takes glyphIDRange")
+            fatalError("use init(_:glyphIDRange:)")
         }
 
         public static func `class`(for format: Sbit.IndexFormat) -> Format.Type? {
