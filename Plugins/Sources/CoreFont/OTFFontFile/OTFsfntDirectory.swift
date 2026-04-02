@@ -9,15 +9,18 @@ import Foundation
 import RFSupport
 
 public final class OTFsfntDirectory: OTFFontFileNode, DataHandleWriting {
-    public var format:                      OTFsfntFormat            // 0x00010000, 'OTTO', 'true', etc.
-    @objc public var numberOfTables:        UInt16                   // number of tables
-    @objc public var searchRange:           UInt16                   // (max power of 2 <= numberOfTables) x 16
-    @objc public var entrySelector:         UInt16                   // log2(max power of 2 <= numberOfTables)
-    @objc public var rangeShift:            UInt16                   // numberOfTables * (16 - searchRange)
+    public var format:                          OTFsfntFormat            // 0x00010000, 'OTTO', 'true', etc.
+    @objc dynamic public var numberOfTables:    UInt16                   // number of tables
+    @objc dynamic public var searchRange:       UInt16                   // (max power of 2 <= numberOfTables) x 16
+    @objc dynamic public var entrySelector:     UInt16                   // log2(max power of 2 <= numberOfTables)
+    @objc dynamic public var rangeShift:        UInt16                   // numberOfTables * (16 - searchRange)
 
-    @objc public var entries:               [OTFsfntDirectoryEntry]  // [numberOfTables]
+    @objc dynamic public var entries:           [OTFsfntDirectoryEntry]  // [numberOfTables]
 
-    @objc public var objcFormat:            OTFsfntFormat.RawValue { format.rawValue }
+    @objc dynamic public var objcFormat:        UInt32 {
+        get { return format.rawValue }
+        set { format = OTFsfntFormat(rawValue: newValue) }
+    }
 
     public override var totalNodeLength:    UInt32 {
         numberOfTables = UInt16(entries.count)

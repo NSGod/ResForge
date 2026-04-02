@@ -55,10 +55,10 @@ public struct OTFsfntFormat: RawRepresentable, Equatable {
         self.rawValue = rawValue
     }
 
-    public static let `true`:  OTFsfntFormat = .init(rawValue: UInt32(fourCharString: "true"))  // for TT; Apple; prefer .V1_0
-    public static let OTTO:    OTFsfntFormat = .init(rawValue: UInt32(fourCharString: "OTTO"))  // for 'CFF '/'CFF2' outline data
+    public static let `true`:  OTFsfntFormat = .init(rawValue: UInt32(fourCharString: "true"))  /// for TT; Apple; prefer `.V1_0` for better cross-platform support
+    public static let OTTO:    OTFsfntFormat = .init(rawValue: UInt32(fourCharString: "OTTO"))  /// for 'CFF '/'CFF2' outline data
     public static let typ1:    OTFsfntFormat = .init(rawValue: UInt32(fourCharString: "typ1"))
-    public static let V1_0:    OTFsfntFormat = .init(rawValue: 0x00010000)                      // standard TT outline/bitmap
+    public static let V1_0:    OTFsfntFormat = .init(rawValue: 0x00010000)                      /// standard TT outline/bitmap
     public static let ttcf:    OTFsfntFormat = .init(rawValue: UInt32(fourCharString: "ttcf"))
     public static let _kbd:    OTFsfntFormat = .init(rawValue: 0xA56B6264) // '•kbd'    .Keyboard
     public static let _lst:    OTFsfntFormat = .init(rawValue: 0xA56C7374) // '•lst'    .LastResort
@@ -67,10 +67,11 @@ public struct OTFsfntFormat: RawRepresentable, Equatable {
 }
 
 @objc public enum LocaOffsetFormat: Int16 {
-    case short = 0
-    case long  = 1
+    case short = 0  /// entries in the `loca` table should be multiplied by 2 to get actual byte offsets into `glyf` data
+    case long  = 1  /// entries in the `loca` table represent actualy byte offsets into the `glyf` data
 }
 
+/// gives glyphs a chance to resolve metrics and compound/composite glyph references once the font is set up
 public protocol FontAwaking {
     func awakeFromFont()
 }
@@ -108,9 +109,10 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
     /// Key: `OT`: OpenType (with PostScript-type outlines in `CFF ` or `CFF2` table)
     ///      `TT`: TrueType (with TrueType-type outlines in `glyf` table)
     ///      `AAT`: an Apple-only table that offers advanced features
-
+    /// In general, tags with all four lowercase letters are reserved for Apple.
+    ///
     /// - Note: Microsoft bitmap fonts use `head`, `EBDT`, `EBLC`, and optionally `EBSC`
-    ///         Apple bitmap fonts use `bhed`, `bdat`, and `bloc`
+    ///         Apple bitmap fonts use `bhed`, `bdat`, `bloc`, and optionally `EBSC`
 
     /// Baseline data table (opt)
     public static let BASE = TableTag(rawValue: Tag(fourCharString: "BASE"))

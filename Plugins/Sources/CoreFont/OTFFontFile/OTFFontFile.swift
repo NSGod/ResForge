@@ -49,7 +49,7 @@ public final class OTFFontFile: NSObject {
         var entries = directory.entries
         entries.sort {
             /// load/font tables in a specified order, since parsing some
-            /// rely on presence of already-parsed others
+            /// rely on presence of already-parsed-state of others
             return OTFsfntDirectoryEntry.sortForParsing(lhs: $0, rhs: $1)
         }
         for entry in entries {

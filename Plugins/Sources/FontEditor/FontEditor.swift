@@ -132,6 +132,13 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
 
 // MARK: -
 extension FontEditor: NSTableViewDelegate, NSTableViewDataSource {
+
+    // MARK: - <NSControlTextEditingDelegate>
+    public func control(_ control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
+        if fieldEditor.string.isEmpty { return false }
+        return true
+    }
+
     // MARK: <NSTableViewDataSource>
     public func numberOfRows(in tableView: NSTableView) -> Int {
         return fontFile.directory.entries.count
