@@ -22,9 +22,10 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
         "sfnt": "trueTypeSymbol"
     ]
 
-    @IBOutlet weak var tableView:       NSTableView!
-    @IBOutlet weak var tableTagField:   NSTextField!
-    @IBOutlet weak var box:             NSBox!
+    @IBOutlet weak var tableView:                   NSTableView!
+    @IBOutlet weak var tableTagField:               NSTextField!
+    @IBOutlet weak var tableTagDescriptionField:    NSTextField!
+    @IBOutlet weak var box:                         NSBox!
 
     public var resource:            Resource        /// `'sfnt'`
     let manager:                    RFEditorManager
@@ -75,6 +76,7 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
             tableView.deselectAll(self)
             box.contentView = Self.emptyView
             tableTagField.stringValue = ""
+            tableTagDescriptionField.stringValue = ""
             tableTagsToViewControllers.removeAll()
             fontFile = try OTFFontFile(resource.data)
             tableView.reloadData()
@@ -89,6 +91,7 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
                 box.contentView = viewController.view
                 tableTagsToViewControllers[selectedDirEntry.tableTag] = viewController
                 tableTagField.stringValue = selectedDirEntry.tableTag.fourCharString
+                tableTagDescriptionField.stringValue = String(describing: selectedDirEntry.tableTag)
             }
             window?.makeFirstResponder(tableView)
         } catch {
@@ -184,6 +187,7 @@ extension FontEditor: NSTableViewDelegate, NSTableViewDataSource {
         if indexes.count != 1 {
             box.contentView = Self.emptyView
             tableTagField.stringValue = ""
+            tableTagDescriptionField.stringValue = ""
             return
         }
         let selectedDirEntry: OTFsfntDirectoryEntry = fontFile.directory.entries[indexes.first!]
@@ -191,15 +195,18 @@ extension FontEditor: NSTableViewDelegate, NSTableViewDataSource {
         if let existingViewController = tableTagsToViewControllers[tag] {
             box.contentView = existingViewController.view
             tableTagField.stringValue = tag.fourCharString
+            tableTagDescriptionField.stringValue = String(describing: tag)
             return
             // FIXME: do this in one line with || or something?
         } else if tag == .bdat, let existingVC = tableTagsToViewControllers[.bloc] {
             box.contentView = existingVC.view
             tableTagField.stringValue = tag.fourCharString
+            tableTagDescriptionField.stringValue = String(describing: tag)
             tableTagsToViewControllers[tag] = existingVC
         } else if tag == .bloc, let existingVC = tableTagsToViewControllers[.bdat] {
             box.contentView = existingVC.view
             tableTagField.stringValue = tag.fourCharString
+            tableTagDescriptionField.stringValue = String(describing: tag)
             tableTagsToViewControllers[tag] = existingVC
         } else {
             let viewControllerClass: FontTableViewController.Type = FontTableViewController.class(for: tag).self
@@ -207,11 +214,13 @@ extension FontEditor: NSTableViewDelegate, NSTableViewDataSource {
                 NSLog("\(type(of: self)).\(#function) failed to create a controller for \(tag)")
                 box.contentView = Self.emptyView
                 tableTagField.stringValue = ""
+                tableTagDescriptionField.stringValue = ""
                 return
             }
             box.contentView = viewController.view
             tableTagsToViewControllers[tag] = viewController
             tableTagField.stringValue = tag.fourCharString
+            tableTagDescriptionField.stringValue = String(describing: tag)
         }
     }
 }

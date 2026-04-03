@@ -383,7 +383,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
             case .bhed: return NSLocalizedString("Bitmap Header table", comment: "")
             case .bloc: return NSLocalizedString("Bitmap Location table", comment: "")
             case .bsln: return NSLocalizedString("Baseline table", comment: "")
-            case .cmap: return NSLocalizedString("Character-to-GlyphID Mapping table", comment: "")
+            case .cmap: return NSLocalizedString("Character-to-Glyph ID Mapping table", comment: "")
             case .cvt_: return NSLocalizedString("Control Value table", comment: "")
             case .fdsc: return NSLocalizedString("Font Descriptors table", comment: "")
             case .feat: return NSLocalizedString("Feature Name table", comment: "")
@@ -424,7 +424,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
             case .Zapf: return NSLocalizedString("Glyph Info table", comment: "")
             case .evrs, .TYP1, .CID_, .BLND:
                 fallthrough
-            default: return fourCharString
+            default: return NSLocalizedString("\(fourCharString) table", comment: "")
         }
     }
 
