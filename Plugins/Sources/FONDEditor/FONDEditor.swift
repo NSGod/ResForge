@@ -358,7 +358,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
         guard let keyPath, let object else {
             return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
-//        NSLog("\(type(of: self)).\(#function) keyPath: \(keyPath), object: \(String(describing: object)), change: \(String(describing: change))")
+        // NSLog("\(type(of: self)).\(#function) keyPath: \(keyPath), object: \(String(describing: object)), change: \(String(describing: change))")
         if !Self.fondKeyPaths.contains(keyPath) && !Self.keyPaths.contains(keyPath) && !Self.fontAsscKeyPaths.contains(keyPath) {
             return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }

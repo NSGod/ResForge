@@ -273,7 +273,7 @@ public final class MacEncoding: Copyable, CustomStringConvertible {
 
     public var description: String {
         var descriptions: [String] = []
-        for i in 0..<CharCode.max {
+        for i in 0...CharCode.max {
             if let glyphName = customCharCodesToGlyphNames?[CharCode(i)] {
                 descriptions.append("\(i): \(glyphName)")
             }

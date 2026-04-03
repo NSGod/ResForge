@@ -15,12 +15,7 @@ public extension FontTable_post {
         public required init(_ reader: BinaryDataReader, offset: Int? = nil, table: FontTable) throws {
             try super.init(reader, offset: offset, table: table)
             glyphEntries.append(contentsOf: GlyphEntry.standardAppleGlyphEntries)
-            for entry in glyphEntries {
-                glyphIDsToEntries[GlyphID32(entry.glyphID)] = entry
-                if let glyphName = entry.glyphName {
-                    glyphNames.append(glyphName)
-                }
-            }
+            glyphEntries.forEach { glyphIDsToEntries[GlyphID32($0.glyphID)] = $0; glyphNames.append($0.glyphName) }
         }
     }
 }

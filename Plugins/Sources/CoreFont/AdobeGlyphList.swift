@@ -75,6 +75,14 @@ public struct AdobeGlyphList {
 /// https://github.com/adobe-type-tools/afdko
 /// https://github.com/adobe-type-tools/afdko/blob/develop/c/shared/resource/agl2uv.h
 /// MD: turned this into a Swift dictionary for quick lookup
+///
+/// Regarding glyphs with the name form `afiinnnnn`:
+/// `afii` stands for the Association of Font Information Interchange (AFFI)
+/// and nnnnn is a 1- to 10-digit decimal number glyph ID in
+/// the range 0 to (2 32 –1), inclusive. The glyph ID is from an international glyph
+/// registry chartered by ISO 10036; See the following Adobe Standard Cyrillic Font Spec PDF:
+/// https://adobe-type-tools.github.io/font-tech-notes/pdfs/5013.Cyrillic_Font_Spec.pdf
+/// 
 fileprivate let agl2uv: [String: UVBMP] = [
     "A":                    0x0041,
     "AE":                   0x00C6,

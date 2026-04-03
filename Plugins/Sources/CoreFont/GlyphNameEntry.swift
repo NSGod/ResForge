@@ -32,7 +32,7 @@ extension MacEncoding {
                     character = ""
                     charName = NSLocalizedString("APPLE LOGO", comment: "")
                 } else {
-                    NSLog("\(type(of: self)).\(#function) *** glyphName == \(self.glyphName)")
+                    NSLog("\(type(of: self)).\(#function) *** AdobeGlyphList returned .undefined for glyphName: \"\(self.glyphName)\"")
                     uv = uVC
                     character = "????"
                     charName = "????"

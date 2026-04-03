@@ -18,27 +18,30 @@ public extension FontTable_post {
             case uniHex
         }
 
-        @objc public var glyphID:     GlyphID = 0
-        @objc public var glyphName:   String?       // CID-keyed use code-only
-        @objc public var code:        NSNumber?     // only for CID-keyed
+        @objc public var glyphID:       GlyphID
+        @objc public var glyphName:     String      // CID-keyed use code-only
+        public var code:                CharCode16? // represents charCode of 2-byte encoding; only for CID-keyed?
 
-        public init(glyphID: GlyphID, glyphName: String? = nil, code: NSNumber? = nil) {
+        public init(glyphID: GlyphID, glyphName: String? = nil, code: CharCode16? = nil) {
             self.glyphID = glyphID
-            self.glyphName = glyphName
             self.code = code
-            if let codeValue: UVBMP = code?.uint16Value, glyphName == nil {
-                if codeValue == .undefined {
+            if let code, glyphName == nil {
+                if code == .undefined {
                     self.glyphName = String(format:"glyph%05hu", glyphID)
                 } else {
                     switch Self.defaultNameStyle {
                         case .a:
-                            self.glyphName = String(format:"a%04hu", codeValue)
+                            self.glyphName = String(format:"a%04hu", code)
                         case .aHex:
-                            self.glyphName = String(format:"a%04X", codeValue)
+                            self.glyphName = String(format:"a%04X", code)
                         case .uniHex:
-                            self.glyphName = String(format:"uni%04hX", codeValue)
+                            self.glyphName = String(format:"uni%04hX", code)
                     }
                 }
+            } else if let glyphName {
+                self.glyphName = glyphName
+            } else {
+                self.glyphName = String(format:"glyph%05hu", glyphID)
             }
         }
 
