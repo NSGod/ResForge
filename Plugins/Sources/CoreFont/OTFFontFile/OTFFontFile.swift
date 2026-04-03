@@ -29,16 +29,16 @@ public struct FontWritingOptions: OptionSet {
 }
 
 public final class OTFFontFile: NSObject {
-    @objc public var directory:     OTFsfntDirectory!
+    @objc dynamic public var directory: OTFsfntDirectory!
 
-    public var tables:              OrderedSet<FontTable>
+    public var tables:                  OrderedSet<FontTable>
 
-    private var data:               Data
-    private let reader:             BinaryDataReader
+    private var data:                   Data
+    private let reader:                 BinaryDataReader
 
-    private var tableTagsToTables:  [TableTag: FontTable] = [:]
+    private var tableTagsToTables:      [TableTag: FontTable] = [:]
     // this is to help determine table indexes for display in UI:
-    private var rangesToFontTables: [Range<UInt32>: FontTable] = [:]
+    private var rangesToFontTables:     [Range<UInt32>: FontTable] = [:]
 
     public init(_ data: Data) throws {
         self.data = data

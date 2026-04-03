@@ -31,11 +31,18 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
     let manager:                    RFEditorManager
     @objc dynamic var fontFile:     OTFFontFile
 
+    private static var dirEntryContext = 1
+    private static var dirEntryKeyPaths = Set(["objcFormat", "searchRange", "entrySelector", "rangeShift"])
+
     private var tableTagsToViewControllers: [TableTag: FontTableViewController] = [:]
     private var originalData:   Data
 
     public override var windowNibName: NSNib.Name {
         return "FontEditor"
+    }
+
+    public override var undoManager: UndoManager? {
+        return window?.undoManager
     }
 
     public static func filenameExtension(for resourceType: String) -> String {
@@ -64,8 +71,13 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        Self.dirEntryKeyPaths.forEach { fontFile.directory.removeObserver(self, forKeyPath: $0) }
+    }
+
     public override func windowDidLoad() {
         super.windowDidLoad()
+        Self.dirEntryKeyPaths.forEach { fontFile.directory.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.dirEntryContext) }
         window?.makeFirstResponder(tableView)
     }
 
@@ -118,6 +130,25 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
         NSLog("\(type(of: self)).\(#function)")
         reloadFont()
         window?.isDocumentEdited = false
+    }
+
+    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        guard let keyPath, Self.dirEntryKeyPaths.contains(keyPath), context == &Self.dirEntryContext else {
+            return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+        }
+        undoManager?.registerUndo(withTarget: self, handler: {
+            $0.fontFile.directory.setValue(change![.oldKey], forKey: keyPath)
+        })
+        window?.isDocumentEdited = true
+        if keyPath == "objcFormat" {
+            undoManager?.setActionName(NSLocalizedString("Change Format", comment: ""))
+        } else if keyPath == "searchRange" {
+            undoManager?.setActionName(NSLocalizedString("Change Search Range", comment: ""))
+        } else if keyPath == "entrySelector" {
+            undoManager?.setActionName(NSLocalizedString("Change Entry Selector", comment: ""))
+        } else if keyPath == "rangeShift" {
+            undoManager?.setActionName(NSLocalizedString("Change Range Shift", comment: ""))
+        }
     }
 
     static let emptyView: NSView = NSView(frame: NSMakeRect(0, 0, 400, 600))
