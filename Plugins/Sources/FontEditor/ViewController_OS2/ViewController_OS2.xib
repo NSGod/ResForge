@@ -1574,24 +1574,24 @@
             <real key="maximum" value="65535"/>
         </numberFormatter>
         <customView id="n2d-ud-KFO" userLabel="unicodeRangeView">
-            <rect key="frame" x="0.0" y="0.0" width="342" height="634"/>
+            <rect key="frame" x="0.0" y="0.0" width="350" height="634"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="18" horizontalPageScroll="10" verticalLineScroll="18" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G5o-BY-2r0">
-                    <rect key="frame" x="14" y="18" width="314" height="600"/>
+                    <rect key="frame" x="14" y="18" width="322" height="600"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <clipView key="contentView" id="Nxg-oG-5Gh">
-                        <rect key="frame" x="1" y="1" width="312" height="598"/>
+                        <rect key="frame" x="1" y="1" width="320" height="598"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="18" headerView="7fj-5K-Cen" viewBased="YES" id="o04-1g-Fnd" userLabel="unicodeRangesTableView">
-                                <rect key="frame" x="0.0" y="0.0" width="312" height="570"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="570"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <size key="intercellSpacing" width="17" height="0.0"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <color key="gridColor" name="separatorColor" catalog="System" colorSpace="catalog"/>
                                 <tableColumns>
-                                    <tableColumn width="300" minWidth="40" maxWidth="1000" id="J1i-bV-clW">
+                                    <tableColumn width="308" minWidth="40" maxWidth="1000" id="J1i-bV-clW">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Unicode Ranges">
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -1604,11 +1604,11 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView identifier="unicodeRangeTableCellView" id="ylf-wb-dVr" userLabel="unicodeRangeTableCellView" customClass="CheckboxTableCellView" customModule="FontEditor">
-                                                <rect key="frame" x="8" y="0.0" width="295" height="18"/>
+                                                <rect key="frame" x="8" y="0.0" width="303" height="18"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0it-0W-mIT">
-                                                        <rect key="frame" x="2" y="1" width="237" height="16"/>
+                                                        <rect key="frame" x="2" y="1" width="245" height="16"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                         <buttonCell key="cell" type="check" title="Basic Latin" bezelStyle="regularSquare" imagePosition="left" controlSize="small" state="on" inset="2" id="ix7-I3-zld">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -1616,7 +1616,7 @@
                                                         </buttonCell>
                                                     </button>
                                                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9p9-Du-Hvu">
-                                                        <rect key="frame" x="239" y="2" width="47" height="14"/>
+                                                        <rect key="frame" x="247" y="2" width="47" height="14"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Label" id="BQI-Ca-q1f">
                                                             <font key="font" metaFont="smallSystem"/>
@@ -1649,12 +1649,12 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                     <tableHeaderView key="headerView" wantsLayer="YES" id="7fj-5K-Cen">
-                        <rect key="frame" x="0.0" y="0.0" width="312" height="28"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="28"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </tableHeaderView>
                 </scrollView>
             </subviews>
-            <point key="canvasLocation" x="924" y="-205"/>
+            <point key="canvasLocation" x="925" y="-199"/>
         </customView>
         <viewController id="EMU-p4-PJG" userLabel="unicodeRangeViewController">
             <connections>
@@ -1667,24 +1667,24 @@
             </connections>
         </popover>
         <customView id="ano-NX-jha" userLabel="codePageRangeView">
-            <rect key="frame" x="0.0" y="0.0" width="342" height="608"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <rect key="frame" x="0.0" y="0.0" width="350" height="608"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="18" horizontalPageScroll="10" verticalLineScroll="18" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GKW-CK-IpA">
-                    <rect key="frame" x="14" y="18" width="314" height="574"/>
+                    <rect key="frame" x="14" y="18" width="322" height="574"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <clipView key="contentView" id="0S2-gs-eje">
-                        <rect key="frame" x="1" y="1" width="312" height="555"/>
+                        <rect key="frame" x="1" y="1" width="320" height="572"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="18" headerView="BbT-Nn-2E6" viewBased="YES" id="YQg-8o-9DX" userLabel="codePageRangesTableView">
-                                <rect key="frame" x="0.0" y="0.0" width="313" height="527"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="544"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <size key="intercellSpacing" width="17" height="0.0"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <color key="gridColor" name="separatorColor" catalog="System" colorSpace="catalog"/>
                                 <tableColumns>
-                                    <tableColumn width="301" minWidth="40" maxWidth="1000" id="uQ6-Og-fso">
+                                    <tableColumn width="308" minWidth="40" maxWidth="1000" id="uQ6-Og-fso">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Code Page Ranges">
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -1697,11 +1697,11 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView identifier="codePageRangeTableCellView" id="16s-rY-2u2" userLabel="unicodeRangeTableCellView" customClass="CheckboxTableCellView" customModule="FontEditor">
-                                                <rect key="frame" x="8" y="0.0" width="296" height="18"/>
+                                                <rect key="frame" x="8" y="0.0" width="303" height="18"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1Fy-z5-WVD">
-                                                        <rect key="frame" x="2" y="1" width="238" height="16"/>
+                                                        <rect key="frame" x="2" y="1" width="245" height="16"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                         <buttonCell key="cell" type="check" title="Basic Latin" bezelStyle="regularSquare" imagePosition="left" controlSize="small" state="on" inset="2" id="6Vc-3S-wXH">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -1709,7 +1709,7 @@
                                                         </buttonCell>
                                                     </button>
                                                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FOh-yh-3XH">
-                                                        <rect key="frame" x="240" y="2" width="47" height="14"/>
+                                                        <rect key="frame" x="247" y="2" width="47" height="14"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Label" id="MUa-7v-ll1">
                                                             <font key="font" metaFont="smallSystem"/>
@@ -1733,7 +1733,7 @@
                             </tableView>
                         </subviews>
                     </clipView>
-                    <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="QoW-Ze-tcy">
+                    <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="QoW-Ze-tcy">
                         <rect key="frame" x="1" y="556" width="312" height="17"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
@@ -1742,12 +1742,12 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                     <tableHeaderView key="headerView" wantsLayer="YES" id="BbT-Nn-2E6">
-                        <rect key="frame" x="0.0" y="0.0" width="313" height="28"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="28"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </tableHeaderView>
                 </scrollView>
             </subviews>
-            <point key="canvasLocation" x="508" y="-297"/>
+            <point key="canvasLocation" x="511" y="-297"/>
         </customView>
         <viewController id="hOb-xY-RgK" userLabel="codePageRangeViewController">
             <connections>
