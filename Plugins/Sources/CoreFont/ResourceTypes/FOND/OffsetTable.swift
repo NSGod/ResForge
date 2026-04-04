@@ -73,8 +73,15 @@ extension FOND.OffsetTable {
             handle.write(offsetOfTable)
         }
 
+        public override func isEqual(_ object: Any?) -> Bool {
+            guard let other = object as? Entry else { return false }
+            return offsetOfTable == other.offsetOfTable
+        }
+        
+        /// I believe this is what Swift does under the hood/bonnet, but
+        /// better to make it explicitly clear
         public static func == (lhs: Entry, rhs: Entry) -> Bool {
-            return lhs.offsetOfTable == rhs.offsetOfTable
+            return lhs.isEqual(rhs)
         }
     }
 }

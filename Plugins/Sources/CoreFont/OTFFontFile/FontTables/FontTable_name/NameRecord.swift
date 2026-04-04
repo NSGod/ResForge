@@ -8,9 +8,9 @@
 import Foundation
 import RFSupport
 
-public extension FontTable_name {
+extension FontTable_name {
 
-    final class NameRecord: FontTableNode, Comparable {
+    public final class NameRecord: FontTableNode, Comparable {
         public var platformID:      PlatformID = .any   // base-0
         public var encodingID:      EncodingID = .any   // aka `platformSpecificID`/`scriptID`; base-0
         public var languageID:      LanguageID = .any   // base-0
@@ -104,6 +104,16 @@ public extension FontTable_name {
             if lhs.encodingID != rhs.encodingID { return lhs.encodingID < rhs.encodingID }
             if lhs.languageID != rhs.languageID { return lhs.languageID < rhs.languageID }
             return lhs.nameID < rhs.nameID
+        }
+
+        public override func isEqual(_ object: Any?) -> Bool {
+            guard let other = object as? NameRecord else { return false }
+            return nameID == other.nameID &&
+            length == other.length &&
+            offset == other.offset &&
+            platformID == other.platformID &&
+            encodingID == other.encodingID &&
+            languageID == other.languageID
         }
 
         public static func == (lhs: NameRecord, rhs: NameRecord) -> Bool {

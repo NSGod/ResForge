@@ -64,5 +64,17 @@ extension NFNT {
             self.nfnt = nfnt
             super.init()
         }
+
+        public override func isEqual(_ object: Any?) -> Bool {
+            guard let other = object as? Glyph else { return false }
+            return charCode == other.charCode &&
+            uv == other.uv && offset == other.offset && width == other.width
+        }
+
+        /// I believe this is what Swift does under the hood/bonnet, but
+        /// better to make it explicitly clear
+        public static func == (lhs: Glyph, rhs: Glyph) -> Bool {
+            lhs.isEqual(rhs)
+        }
     }
 }

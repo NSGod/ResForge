@@ -62,9 +62,11 @@ public extension FontTable_gasp {
             public static let version1Mask : Behavior = [.gridfit, .doGray, .symmetricGridfit, .symmetricSmoothing]
         }
 
+        // MARK: -
         @objc dynamic public var maxPPEM:       UInt16 = 0
         public var behavior:                    Behavior = .none
 
+        // MARK: -
         @objc dynamic public var objcBehavior:  UInt16 = 0 {
             didSet {
                 behavior = .init(rawValue: objcBehavior)
@@ -74,7 +76,7 @@ public extension FontTable_gasp {
         public class override var nodeLength: UInt32 {
             UInt32(MemoryLayout<UInt16>.size * 2)       // 4
         }
-        
+
         public override init(_ reader: BinaryDataReader?, offset: Int? = nil, table: FontTable) throws {
             assert(offset == nil)
             guard let reader else { throw FontTableError.parseError("No reader") }
@@ -94,9 +96,16 @@ public extension FontTable_gasp {
             return lhs.maxPPEM < rhs.maxPPEM
         }
 
+        public override func isEqual(_ object: Any?) -> Bool {
+            guard let other = object as? Range else { return false }
+            return maxPPEM == other.maxPPEM &&
+            behavior == other.behavior
+        }
+
+        /// I believe this is what Swift does under the hood/bonnet, but
+        /// better to make it explicitly clear
         public static func == (lhs: Range, rhs: Range) -> Bool {
-            return lhs.maxPPEM == rhs.maxPPEM &&
-            lhs.behavior == rhs.behavior
+            return lhs.isEqual(rhs)
         }
     }
 }

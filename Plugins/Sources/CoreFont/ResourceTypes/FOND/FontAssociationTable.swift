@@ -112,9 +112,16 @@ extension FOND.FontAssociationTable {
             }
         }
 
+        public override func isEqual(_ object: Any?) -> Bool {
+            guard let other = object as? Entry else { return false }
+            return fontPointSize == other.fontPointSize &&
+            fontStyle == other.fontStyle && fontID == other.fontID
+        }
+
+        /// I believe this is what Swift does under the hood/bonnet, but
+        /// better to make it explicitly clear
         public static func == (lhs: Entry, rhs: Entry) -> Bool {
-            return lhs.fontPointSize == rhs.fontPointSize &&
-            lhs.fontStyle == rhs.fontStyle && lhs.fontID == rhs.fontID
+            return lhs.isEqual(rhs)
         }
     }
 }

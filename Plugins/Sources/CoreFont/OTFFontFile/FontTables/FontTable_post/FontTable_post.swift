@@ -17,9 +17,9 @@ public final class FontTable_post: FontTable {
     @objc public enum Version: Fixed {
         case version1_0     = 0x00010000  // TT & TTOT
         case version2_0     = 0x00020000  // TT & TTOT
-        case version2_5     = 0x00025000  // TT & TTOT
+        case version2_5     = 0x00025000  // TT & TTOT; deprecated
         case version3_0     = 0x00030000  // TT, TTOT, & PS/CFF OTF fonts
-        case version4_0     = 0x00040000  // for CID fonts?
+        case version4_0     = 0x00040000  // TT, for CID fonts?
     }
 
     @objc dynamic public var version:               Version = .version1_0

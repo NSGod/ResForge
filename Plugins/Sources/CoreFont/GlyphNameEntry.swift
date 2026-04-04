@@ -94,13 +94,23 @@ extension MacEncoding {
             return lhs.glyphName.localizedStandardCompare(rhs.glyphName) == .orderedAscending
         }
 
-        // FIXME: do we want all of these?
+        public override var hash: Int {
+            return charCode.hashValue &+ uv.hashValue &+ character.hashValue &+ charName.hashValue &+ glyphName.hashValue
+        }
+
+        public override func isEqual(_ object: Any?) -> Bool {
+            guard let entry = object as? GlyphNameEntry else { return false }
+            return charCode == entry.charCode &&
+            uv == entry.uv &&
+            glyphName == entry.glyphName &&
+            charName == entry.charName &&
+            character == entry.character
+        }
+
+        /// I believe this is what Swift does under the hood/bonnet, but
+        /// better to make it explicitly clear
         public static func == (lhs: GlyphNameEntry, rhs: GlyphNameEntry) -> Bool {
-            return lhs.charCode == rhs.charCode &&
-            lhs.uv == rhs.uv &&
-            lhs.glyphName == rhs.glyphName &&
-            lhs.charName == rhs.charName &&
-            lhs.character == rhs.character
+            return lhs.isEqual(rhs)
         }
     }
 }

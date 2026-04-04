@@ -8,10 +8,10 @@
 import Foundation
 import RFSupport
 
-public extension FontTable_post {
+extension FontTable_post {
 
     // for display
-    final class GlyphEntry: NSObject {
+    public final class GlyphEntry: NSObject {
         public enum NameStyle {
             case a
             case aHex   // default

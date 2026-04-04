@@ -14,31 +14,20 @@ public final class MacEncoding: Copyable, CustomStringConvertible {
 
     public private(set) lazy var glyphNameEntries: [GlyphNameEntry] = GlyphNameEntry.entries(with: self)
 
-    public private(set) var coveredCharCodes:      IndexSet
-
     private var customCharCodesToGlyphNames: [CharCode: String]?
-    public let encoding: [UVBMP]
+    public var encoding: [UVBMP]
     private let uvsToCharCodes: [UVBMP: CharCode]
 
     public init(name: String, encoding: [UVBMP], uvsToCharCodes: [UVBMP: CharCode]) {
         self.name = name
         self.encoding = encoding
         self.uvsToCharCodes = uvsToCharCodes
-        var covCharCodes = IndexSet()
-        for i in 0...CharCode.max {
-            let uv = encoding[Int(i)]
-            if uv != .undefined {
-                covCharCodes.insert(Int(i))
-            }
-        }
-        coveredCharCodes = covCharCodes
     }
 
     init(with other: MacEncoding) {
         name = other.name + " (Custom)"
         encoding = other.encoding
         uvsToCharCodes = other.uvsToCharCodes
-        coveredCharCodes = other.coveredCharCodes
         isCustomEncoding = other.isCustomEncoding
         logsInvalidCharCodes = other.logsInvalidCharCodes
         glyphNameEntries = other.glyphNameEntries.map { $0.copy() as! GlyphNameEntry }
@@ -100,22 +89,24 @@ public final class MacEncoding: Copyable, CustomStringConvertible {
     public func customEncoding(byReplacing glyphNameEntries: [GlyphNameEntry]) -> MacEncoding {
         NSLog("\(type(of: self)).\(#function)")
         let custom = self.copy()
-        custom.add(custom: glyphNameEntries)
+        custom.replace(withCustomEntries: glyphNameEntries)
         return custom
     }
 
     // FIXME: this should be replacing, not adding? YES
-    func add(custom glyphNameEntries: [GlyphNameEntry]) {
+    func replace(withCustomEntries customGlyphNameEntries: [GlyphNameEntry]) {
         if customCharCodesToGlyphNames == nil { customCharCodesToGlyphNames = [:] }
         if var customEntries = customCharCodesToGlyphNames {
-            for entry in glyphNameEntries {
+            for entry in customGlyphNameEntries {
                 customEntries[entry.charCode] = entry.glyphName
-                coveredCharCodes.insert(Int(entry.charCode))
             }
         }
-        self.glyphNameEntries.append(contentsOf: glyphNameEntries)
-        self.glyphNameEntries.sort(by: <)
+        var glyphNameEntriesSet = Set(glyphNameEntries)
+        glyphNameEntriesSet.formUnion(customGlyphNameEntries)
+        glyphNameEntries = Array(glyphNameEntriesSet)
+        glyphNameEntries.sort(by: <)
         isCustomEncoding = true
+        // FIXME: still need to alter `encoding` && `uvsToCharCodes` to match
     }
 
     fileprivate static let unsupportedScriptIDs: Set<MacScriptID> = Set([.japanese, .tradChinese, .korean, .simpChinese, .vietnamese])
