@@ -39,7 +39,7 @@ extension FontTable_glyf {
 
         }
 
-        // MARK:
+        // MARK: -
         public var flags:                   Flags = .none
         public var glyphID:                 GlyphID = 0
         public var arg1:                    Int16 = 0
@@ -63,6 +63,7 @@ extension FontTable_glyf {
         public weak var glyph:              Glyph?
 
 
+        public init
         public func awakeFromFont() {
 
         }

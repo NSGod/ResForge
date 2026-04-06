@@ -5,14 +5,14 @@
 //  Created by Mark Douma on 4/3/2026.
 //
 
-import Foundation
+import Cocoa
 import RFSupport
 
 extension FontTable_glyf {
 
     public final class SimpleGlyph: Glyph {
-//        public var endPointIndexes:                 [UInt16] = []   /// indexes of last points of contour in all contours
-        public var endPointIndexes:                 IndexSet!
+        // public var endPointIndexes:              [UInt16] = []   /// indexes of last points of contour in all contours
+        public var endPointIndexes:                 IndexSet!       /// [UInt16] indexes of last points of contour in all contours
 
         public var instructionsLength:              UInt16   = 0
         public var instructions:                    Data?
@@ -21,14 +21,18 @@ extension FontTable_glyf {
         public var xCoordinates:                    [Int] = []
         public var yCoordinates:                    [Int] = []
 
+        public override var bezierPath: NSBezierPath? {
+            guard let contours = coordinates?.contours else { return nil }
+            return Contour.bezierPathRepresentation(of: contours, glyph: self)
+        }
+
         private var dropsImpliedOnCurvePoints:      Bool = false
 
         public required init(_ reader: BinaryDataReader, location: FontTable_loca.GlyphLocation, glyphID: GlyphID, table: FontTable_glyf) throws {
             try super.init(reader, location: location, glyphID: glyphID, table: table)
+            assert(numberOfContours > 0)
             let indexes: [UInt16] = try (0..<numberOfContours).map { _ in try reader.read() }
-            let intIndexes = indexes.map { Int($0) }
-            endPointIndexes = IndexSet(intIndexes)
-//            endPointIndexes = try (0..<numberOfContours).map { _ in try reader.read() }
+            endPointIndexes = IndexSet(indexes.map { Int($0) })
             instructionsLength = try reader.read()
             if instructionsLength > 0 {
                 instructions = try reader.readData(length: Int(instructionsLength))
@@ -50,8 +54,7 @@ extension FontTable_glyf {
                 }
             }
             /// read x-coordinates
-            i = 0
-            var coord = 0
+            var coord = 0; i = 0
             while i < numPoints {
                 let flag = flags[i]
                 if flag.contains(.shortX) {

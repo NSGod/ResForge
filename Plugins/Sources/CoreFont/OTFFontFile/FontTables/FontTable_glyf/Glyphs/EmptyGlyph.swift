@@ -11,6 +11,6 @@ import RFSupport
 extension FontTable_glyf {
     
     public final class EmptyGlyph: Glyph {
-
+        
     }
 }

@@ -12,17 +12,22 @@ extension FontTable_glyf {
 
     /// abstract superclass
     public class Glyph: FontTableNode, FontAwaking {
-        public var numberOfContours:    Int16 = 0
-        public var xMin:                Int16 = 0
-        public var yMin:                Int16 = 0
-        public var xMax:                Int16 = 0
-        public var yMax:                Int16 = 0
+        public var numberOfContours:        Int16 = 0
+        public var xMin:                    Int16 = 0
+        public var yMin:                    Int16 = 0
+        public var xMax:                    Int16 = 0
+        public var yMax:                    Int16 = 0
 
-        public var isEmpty:             Bool = false
-        public var isCompound:          Bool = false
+        public var isEmpty:                 Bool = false
+        public var isCompound:              Bool = false
 
-        public var coordinates:         Coordinates?
-        public var bezierPath:          NSBezierPath?
+        public var coordinates:             Coordinates?
+        public var bezierPath: NSBezierPath? {
+            return nil
+        }
+
+        public var horizontalMetric:    HorizontalMetric?
+        public var verticalMetric:      VerticalMetric?
 
         internal required init(_ reader: BinaryDataReader, location: FontTable_loca.GlyphLocation, glyphID: GlyphID, table: FontTable_glyf) throws {
             try super.init(reader, table: table)

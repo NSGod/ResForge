@@ -5,7 +5,7 @@
 //  Created by Mark Douma on 4/4/2026.
 //
 
-import Cocoa
+import Foundation
 
 extension FontTable_glyf {
 
@@ -23,7 +23,7 @@ extension FontTable_glyf {
 
         public var flags:       Flags
 
-        public var onCurve:     Bool {
+        public var isOnCurve:     Bool {
             return flags.contains(Flags.onCurvePoint)
         }
 
@@ -32,13 +32,13 @@ extension FontTable_glyf {
             self.flags = flags
         }
 
-        public mutating func translate(xBy deltaX: CGFloat, yBy deltaY: CGFloat) {
-            point.x += deltaX
-            point.y += deltaY
+        public mutating func translate(x: CGFloat, y: CGFloat) {
+            point.x += x
+            point.y += y
         }
 
         public mutating func transform(using transform: AffineTransform) {
-            self.point = transform.transform(point)
+            point = transform.transform(point)
         }
     }
 }

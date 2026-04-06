@@ -68,12 +68,12 @@ extension FontTable_glyf {
             self.type = type
 //            self.numPoints = numPoints
             self.endPointIndexes = endPointIndexes
-            self.contours = try Contour.contoursWith(xCoordinates: xCoordinates, yCoordinates: yCoordinates, endPointIndexes: endPointIndexes, flags: flags, glyph: glyph, table: table)
+            self.contours = try Contour.contoursWith(xCoordinates: xCoordinates, yCoordinates: yCoordinates, endPointIndexes: endPointIndexes, flags: flags)
             if let contours {
                 self.points = contours.flatMap { $0.points }
             }
-            _xMin = Int16.max; _yMin = Int16.max
-            _xMax = Int16.min; _yMax = Int16.min
+            _xMin = .max; _yMin = .max
+            _xMax = .min; _yMax = .min
             calculateBoundsIfNeeded()
 
         }
@@ -97,8 +97,8 @@ extension FontTable_glyf {
 
         private func calculateBoundsIfNeeded() {
             if _calculatedBounds { return }
-            _xMin = Int16.max; _yMin = Int16.max
-            _xMax = Int16.min; _yMax = Int16.min
+            _xMin = .max; _yMin = .max
+            _xMax = .min; _yMax = .min
             for point in points {
                 _xMin = min(_xMin, Int16(point.x))
                 _yMin = min(_yMin, Int16(point.y))
