@@ -42,6 +42,7 @@ public extension FixedWidthInteger {
     static var undefined: Self { .max }
 }
 
+public typealias Fixed2Dot14    = Int16
 public typealias Fixed4Dot12    = Int16
 public typealias Fixed8Dot8     = Int16
 
