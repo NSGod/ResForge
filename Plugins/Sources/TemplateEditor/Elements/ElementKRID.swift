@@ -21,7 +21,6 @@ class ElementKRID: KeyElement, GroupElement {
             parentList.remove(self)
             return
         }
-        currentSection.parentList = parentList
         parentList.insert(currentSection)
         try currentSection.subElements.configure()
         displayLabel += ": \(caseEl?.displayLabel ?? "Other")"
@@ -32,6 +31,6 @@ class ElementKRID: KeyElement, GroupElement {
     }
 
     override var formatter: Formatter {
-        self.sharedFormatter("INT16") { IntFormatter<Int16>() }
+        self.sharedFormatter("INT16") { IntFormatter(Int16.self) }
     }
 }
