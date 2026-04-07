@@ -23,22 +23,22 @@ public class FontTable_head: FontTable {
         public init(rawValue: UInt16) {
             self.rawValue = rawValue
         }
-        public static let baselineIsY0:                    Flags = Flags(rawValue: 1 << 0)
-        public static let xOfLeftmostBlackIsLSB:           Flags = Flags(rawValue: 1 << 1)
-        public static let instructionsDependOnPointSize:   Flags = Flags(rawValue: 1 << 2)
-        public static let useIntegerScaling:               Flags = Flags(rawValue: 1 << 3)
-        public static let hintsMayAlterAdvanceWidth:       Flags = Flags(rawValue: 1 << 4)
-        public static let verticalBaselineIsX0:            Flags = Flags(rawValue: 1 << 5)
-        public static let bit6:                            Flags = Flags(rawValue: 1 << 6)
-        public static let fontRequiresLayout:              Flags = Flags(rawValue: 1 << 7)
-        public static let fontHasDefaultMorts:             Flags = Flags(rawValue: 1 << 8)
-        public static let fontCanReorder:                  Flags = Flags(rawValue: 1 << 9)
-        public static let fontCanRearrange:                Flags = Flags(rawValue: 1 << 10)
+        public static let horizontalBaselineIsY0:          Flags = Flags(rawValue: 1 << 0)  /// Horiz. baseline for font is at y=0
+        public static let xOfLeftmostBlackIsLSB:           Flags = Flags(rawValue: 1 << 1)  /// x pos of left-most black bit is LSB
+        public static let instructionsDependOnPointSize:   Flags = Flags(rawValue: 1 << 2)  /// scaled pt size `(12 * 2)` ≠ actual point size (24)
+        public static let useIntegerScaling:               Flags = Flags(rawValue: 1 << 3)  /// use integer scaling instead of fractional
+        public static let hintsMayAlterAdvanceWidth:       Flags = Flags(rawValue: 1 << 4)  /// (MS) advance widths may not scale linearly
+        public static let verticalBaselineIsX0:            Flags = Flags(rawValue: 1 << 5)  /// Vert. baseline for font is at x=0; Apple
+        public static let reserved6:                       Flags = Flags(rawValue: 1 << 6)  /// reserved; set to 0
+        public static let fontRequiresLayout:              Flags = Flags(rawValue: 1 << 7)  /// requires layout for correct linguistic rendering (Arabic fonts); `legacy Apple`
+        public static let fontHasDefaultMorts:             Flags = Flags(rawValue: 1 << 8)  /// has a `mort` effect designated as happening by default; `legacy Apple`
+        public static let fontCanReorder:                  Flags = Flags(rawValue: 1 << 9)  /// set if font contains strong R-to-L glyphs; `legacy Apple`
+        public static let fontCanRearrange:                Flags = Flags(rawValue: 1 << 10) /// font contains Indic-style rearrangement effects; `legacy Apple`
         public static let fontDataIsLossless:              Flags = Flags(rawValue: 1 << 11)
         public static let fontIsConverted:                 Flags = Flags(rawValue: 1 << 12)
-        public static let optimizedForClearType:           Flags = Flags(rawValue: 1 << 13)
-        public static let lastResortFont:                  Flags = Flags(rawValue: 1 << 14)
-        public static let bit15:                           Flags = Flags(rawValue: 1 << 15)
+        public static let optimizedForClearType:           Flags = Flags(rawValue: 1 << 13) /// (MS)
+        public static let lastResortFont:                  Flags = Flags(rawValue: 1 << 14) /// set if glyphs are generic symbols for code page ranges
+        public static let reserved15:                      Flags = Flags(rawValue: 1 << 15) /// reserved; set to 0
     }
 
     @objc public enum FontDirectionHint: Int16 {
@@ -73,7 +73,7 @@ public class FontTable_head: FontTable {
     @objc dynamic public var glyphDataFormat:       Int16 = 0               // 0 for current format
 
     public override var calculatedChecksum: UInt32 {
-        /// we're different in that we need to set checksumAdjustment
+        /// we're different in that we need to set `checksumAdjustment`
         /// to 0 before calculating the checksum
         NSLog("\(type(of: self)).\(#function)")
         let dataHandle = DataHandle()
