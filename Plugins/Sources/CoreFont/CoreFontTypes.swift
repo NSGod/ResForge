@@ -42,9 +42,19 @@ public extension FixedWidthInteger {
     static var undefined: Self { .max }
 }
 
-public typealias Fixed2Dot14    = Int16
-public typealias Fixed4Dot12    = Int16
-public typealias Fixed8Dot8     = Int16
+public typealias Fixed2Dot14    = Int16 // 16-bit fixed-point format, integer in high 2 bits and fractional part in low-order 14 bits
+public typealias Fixed4Dot12    = Int16 // 16-bit fixed-point format, integer in high 4 bits and fractional part in low-order 12 bits
+public typealias Fixed8Dot8     = Int16 // 16-bit fixed-point format, integer in high 8 bits and fractional part in low-order 8 bits
+
+fileprivate let fixed14: UInt16 = 1 << 14
+
+public func Fixed2Dot14ToDouble(_ x: Fixed2Dot14) -> Double {
+    Double(x) * 1.0/Double(fixed14)
+}
+
+public func DoubleToFixed2Dot14(_ x: Double) -> Fixed2Dot14 {
+    Fixed2Dot14(x * Double(fixed14) + (x < 0 ? -0.5 : 0.5))
+}
 
 fileprivate let fixed4: UInt16 = 1 << 12
 
