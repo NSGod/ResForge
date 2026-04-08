@@ -71,7 +71,7 @@ public struct OTFsfntFormat: RawRepresentable, Equatable {
     case long  = 1  /// entries in the `loca` table represent actualy byte offsets into the `glyf` data
 }
 
-/// gives glyphs a chance to resolve metrics and compound/composite glyph references once the font is set up
+/// gives glyphs/components a chance to resolve metrics and compound/composite glyph references once the font is set up
 public protocol FontAwaking {
     func awakeFromFont()
 }

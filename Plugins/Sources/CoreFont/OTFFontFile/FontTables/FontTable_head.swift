@@ -103,8 +103,10 @@ public class FontTable_head: FontTable {
         magicNumber = try reader.read()
         flags = Flags(rawValue: try reader.read())
         unitsPerEm = UnitsPerEm(rawValue: try reader.read())
-        created = try reader.read()
-        modified = try reader.read()
+        /// some fonts will have junk in the high 32 bits
+        /// since no fonts should yet have a date past 2/6/2040, mask out the high bits
+        created = try reader.read() & 0xFFFF_FFFF
+        modified = try reader.read() & 0xFFFF_FFFF
         xMin = try reader.read()
         yMin = try reader.read()
         xMax = try reader.read()

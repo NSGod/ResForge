@@ -32,7 +32,6 @@ import Cocoa
 import RFSupport
 
 extension FontTable_glyf {
-    /// #define SCALE_COMPONENT_OFFSET_DEFAULT NO  // 0 == MS, 1 == Apple
 
     public final class Component: FontTableNode, FontAwaking {
         public struct Flags: OptionSet {
@@ -81,7 +80,6 @@ extension FontTable_glyf {
         public var arg2:                    Int16 = 0
 
         public var fDotTransform:           [[Fixed2Dot14]] ///  fDotTransform[2][2]
-//        public var fDotTransfrm:            [[Fixed2Dot14]] = [[Fixed2Dot14]]()
         public var instructionsLength:      UInt16 = 0
         public var instructions:            Data?
 
@@ -91,11 +89,15 @@ extension FontTable_glyf {
 
         public var bezierPath:              NSBezierPath?
 
+        public var coordinates:             Coordinates!
         /// parent glyph:
         public weak var compoundGlyph:      CompoundGlyph!
 
         /// referenced glyph; this could be a simple or compound glyph
-        public weak var glyph:              Glyph?
+        public weak var glyph:         Glyph? {
+            return (table as! FontTable_glyf).glyph(for: glyphID)
+        }
+
 
         public init(_ reader: BinaryDataReader, compoundGlyph: CompoundGlyph, table: FontTable_glyf) throws {
             self.compoundGlyph = compoundGlyph
@@ -181,17 +183,26 @@ extension FontTable_glyf {
                 instructionsLength = try reader.read()
                 instructions = try reader.readData(length: Int(instructionsLength))
             }
+
         }
 
-        public static func components(_ reader: BinaryDataReader, compoundGlyph: CompoundGlyph, table: FontTable) throws -> [Component] {
+        public static func components(_ reader: BinaryDataReader, compoundGlyph: CompoundGlyph, table: FontTable_glyf) throws -> [Component] {
             guard let maxpTable = table.maxpTable else { throw FontTableError.parseError("missing maxp table") }
             let maxComponents = Int(maxpTable.maxComponentElements)
             var mComponents = [Component]()
-            
-
-
-
-            return []
+            var i = 0
+            while true {
+                if i >= maxComponents {
+                    /// exceeded max component count
+                    NSLog("\(type(of: self)).\(#function) *** ERROR: exceeded max component count of \(maxComponents)")
+                    break
+                }
+                let component = try Component(reader, compoundGlyph: compoundGlyph, table: table)
+                mComponents.append(component)
+                if !component.flags.contains(.moreComponents) { break }
+                i += 1
+            }
+            return mComponents
         }
 
         @available(*, unavailable, message: "use `init(_:location:glyphID:table:)")
@@ -207,7 +218,5 @@ extension FontTable_glyf {
         public func awakeFromFont(with coordinates: Coordinates?) {
 
         }
-
-
     }
 }

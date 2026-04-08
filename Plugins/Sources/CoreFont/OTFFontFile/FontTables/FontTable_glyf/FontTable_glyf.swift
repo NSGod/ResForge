@@ -28,6 +28,8 @@ public final class FontTable_glyf: FontTable {
         glyphs.forEach { $0.awakeFromFont() }
     }
 
-
-
+    public func glyph(for glyphID: GlyphID) -> Glyph? {
+        if glyphID >= glyphs.count { return nil }
+        return glyphs[Int(glyphID)]
+    }
 }

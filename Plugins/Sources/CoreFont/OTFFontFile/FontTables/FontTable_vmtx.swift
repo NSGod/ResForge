@@ -80,20 +80,20 @@ public final class FontTable_vmtx: FontTable {
 
 
 public final class VerticalMetric: FontTableNode {
-    @objc public var advanceHeight:     UInt16 = 0
-    @objc public var topSideBearing:    Int16 = 0
+    @objc public var advanceHeight:     UInt16
+    @objc public var topSideBearing:    Int16
 
     // MARK: for display
-    @objc public var glyphID:           GlyphID = 0
+    @objc public var glyphID:           GlyphID
     @objc lazy public var glyphName:    String? = {
-        return table.fontGlyphName(for: GlyphID32(glyphID))
+        return table.fontGlyphName(for: glyphID)
     }()
 
     public init(_ reader: BinaryDataReader, glyphID: GlyphID, table: FontTable) throws {
-        try super.init(reader, table: table)
+        self.glyphID = glyphID
         advanceHeight = try reader.read()
         topSideBearing = try reader.read()
-        self.glyphID = glyphID
+        try super.init(reader, table: table)
     }
 
     @available(*, unavailable, message: "use init(_:glyphID:table:)")

@@ -80,20 +80,20 @@ public final class FontTable_hmtx: FontTable {
 
 
 public final class HorizontalMetric: FontTableNode {
-    @objc public var advanceWidth:      UInt16 = 0
-    @objc public var leftSideBearing:   Int16 = 0
+    @objc public var advanceWidth:      UInt16
+    @objc public var leftSideBearing:   Int16
 
     // MARK: for display
-    @objc public var glyphID:           GlyphID = 0
+    @objc public var glyphID:           GlyphID
     @objc lazy public var glyphName:    String? = {
-        return table.fontGlyphName(for: GlyphID32(glyphID))
+        return table.fontGlyphName(for: glyphID)
     }()
 
     public init(_ reader: BinaryDataReader, glyphID: GlyphID, table: FontTable) throws {
-        try super.init(reader, table: table)
+        self.glyphID = glyphID
         advanceWidth = try reader.read()
         leftSideBearing = try reader.read()
-        self.glyphID = glyphID
+        try super.init(reader, table: table)
     }
 
     @available(*, unavailable, message: "use init(_:glyphID:table:)")

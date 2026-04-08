@@ -15,7 +15,7 @@ import Cocoa
 
 extension FontTable_glyf {
 
-    public struct Contour {
+    public struct Contour: Copyable {
         public var points:          [Point]
 
         public var numPoints:       Int {

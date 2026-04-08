@@ -10,7 +10,7 @@ import Cocoa
 extension FontTable_glyf {
     
     // MARK: this class represents the expanded points with flags
-    public final class Coordinates {
+    public struct Coordinates: Copyable {
         public enum CoordType {
             case absolute
             case relative
@@ -26,56 +26,49 @@ extension FontTable_glyf {
         ///    with compound glyph component point index matching
         public var contours:        [Contour]?
 
-        public var flags:           [Flags] = []
-        public var xCoordinates:    [Int] = []
-        public var yCoordinates:    [Int] = []
+//        public var flags:           [Flags] = []
+//        public var xCoordinates:    [Int] = []
+//        public var yCoordinates:    [Int] = []
 
-        public var endPointIndexes: IndexSet
+//        public var endPointIndexes: IndexSet
 
-        public var xMin:            Int16 {
-            calculateBoundsIfNeeded()
-            return _xMin
-        }
-
-        public var yMin:            Int16 {
-            calculateBoundsIfNeeded()
-            return _yMin
-        }
-
-        public var xMax:            Int16 {
-            calculateBoundsIfNeeded()
-            return _xMax
-        }
-
-        public var yMax:            Int16 {
-            calculateBoundsIfNeeded()
-            return _yMax
-        }
+        public var xMin:            Int16 = 0
+        public var yMin:            Int16 = 0
+        public var xMax:            Int16 = 0
+        public var yMax:            Int16 = 0
 
         public var type:            CoordType = .absolute
 
         public var isAbsolute:      Bool { type == .absolute }
         public var isRelative:      Bool { type == .relative }
 
-        private var _calculatedBounds: Bool = false
-        private var _xMin: Int16 = 0
-        private var _yMin: Int16 = 0
-        private var _xMax: Int16 = 0
-        private var _yMax: Int16 = 0
-
         public init(xCoordinates: [Int], yCoordinates: [Int], endPointIndexes: IndexSet, flags: [Flags], numPoints: Int, type: CoordType, glyph: SimpleGlyph?, table: FontTable) throws {
             assert(xCoordinates.count == yCoordinates.count && yCoordinates.count == flags.count && flags.count == numPoints)
             self.type = type
-//            self.numPoints = numPoints
-            self.endPointIndexes = endPointIndexes
+//            self.flags = flags
+//            self.xCoordinates = xCoordinates
+//            self.yCoordinates = yCoordinates
+//            self.endPointIndexes = endPointIndexes
             self.contours = try Contour.contoursWith(xCoordinates: xCoordinates, yCoordinates: yCoordinates, endPointIndexes: endPointIndexes, flags: flags)
             if let contours {
                 self.points = contours.flatMap { $0.points }
             }
-            _xMin = .max; _yMin = .max
-            _xMax = .min; _yMax = .min
-            calculateBoundsIfNeeded()
-
+            calculateBounds()
+            let hMetric = glyph?.horizontalMetric
+            let vMetric = glyph?.verticalMetric
+            /// Check to see if current coordinates abide by glyph metrics (left/top sidebearing)
+            /// If it doesn't, create a transform to shift them
+            let transform: AffineTransform
+            if let hMetric {
+                if xMin != hMetric.leftSideBearing {
+                    transform = AffineTransform(translationByX: CGFloat(hMetric.leftSideBearing - xMin), byY: 0)
+                }
+            } else if let vMetric {
+                // FIXME: !! not sure if this is right
+                if yMin != vMetric.topSideBearing {
+                    transform = AffineTransform(translationByX: 0, byY: CGFloat(vMetric.topSideBearing - yMin))
+                }
+            }
         }
 
         public subscript (index: Int) -> Point {
@@ -95,31 +88,21 @@ extension FontTable_glyf {
 
         }
 
-        private func calculateBoundsIfNeeded() {
-            if _calculatedBounds { return }
-            _xMin = .max; _yMin = .max
-            _xMax = .min; _yMax = .min
+        private mutating func calculateBounds() {
+            xMin = .max; yMin = .max; xMax = .min; yMax = .min
             for point in points {
-                _xMin = min(_xMin, Int16(point.x))
-                _yMin = min(_yMin, Int16(point.y))
-                _xMax = max(_xMax, Int16(point.x))
-                _yMax = max(_yMax, Int16(point.y))
+                xMin = min(xMin, Int16(point.x))
+                yMin = min(yMin, Int16(point.y))
+                xMax = max(xMax, Int16(point.x))
+                yMax = max(yMax, Int16(point.y))
             }
-            _calculatedBounds = true
         }
 
-        private func clearBoundsIfNeeded() {
-            if !_calculatedBounds { return }
-            _xMin = Int16.max; _yMin = Int16.max
-            _xMax = Int16.min; _yMax = Int16.min
-            _calculatedBounds = false
-        }
-
-        public func convertAbsoluteToRelative() {
+        public mutating func convertAbsoluteToRelative() {
 
         }
 
-        public func convertRelativeToAbsolute() {
+        public mutating func convertRelativeToAbsolute() {
 
         }
 
