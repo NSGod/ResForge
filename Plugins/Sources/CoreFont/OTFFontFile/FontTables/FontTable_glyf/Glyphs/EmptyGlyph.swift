@@ -11,6 +11,9 @@ import RFSupport
 extension FontTable_glyf {
     
     public final class EmptyGlyph: Glyph {
-        
+        required init(_ reader: BinaryDataReader, location: FontTable_loca.GlyphLocation, glyphID: GlyphID, table: FontTable_glyf) throws {
+            try super.init(reader, location: location, glyphID: glyphID, table: table)
+            isEmpty = true
+        }
     }
 }

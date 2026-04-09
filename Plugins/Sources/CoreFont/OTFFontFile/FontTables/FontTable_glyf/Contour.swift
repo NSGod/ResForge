@@ -4,7 +4,7 @@
 //
 //  Created by Mark Douma on 4/4/2026.
 //
-/// part of this code is adapted from Adobe's Font Development Kit for OpenType (AFDKO):
+/// Part of this code is adapted from Adobe's Font Development Kit for OpenType (AFDKO):
 /// https://github.com/NSGod/afdko/blob/develop/c/spot/glyf.c#L643
 ///
 /* Copyright 2014 Adobe Systems Incorporated (http://www.adobe.com/). All Rights Reserved.

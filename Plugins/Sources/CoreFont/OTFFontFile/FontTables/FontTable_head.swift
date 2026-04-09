@@ -18,6 +18,9 @@ public class FontTable_head: FontTable {
         case default1_0 = 0x00010000
     }
 
+    /// More info on the flags in the `head`:
+    /// https://learn.microsoft.com/en-us/typography/opentype/spec/ttch01
+    /// https://developer.apple.com/fonts/TrueType-Reference-Manual/RM01/Chap1.html
     public struct Flags: OptionSet {
         public let rawValue: UInt16
         public init(rawValue: UInt16) {

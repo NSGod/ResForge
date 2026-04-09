@@ -90,6 +90,7 @@ extension FontTable_glyf {
         public var bezierPath:              NSBezierPath?
 
         public var coordinates:             Coordinates!
+        
         /// parent glyph:
         public weak var compoundGlyph:      CompoundGlyph!
 
@@ -216,7 +217,42 @@ extension FontTable_glyf {
 
         /// NOTE: component doesn't alter coordinates, it uses them for component point matching to derive pointMatchingTransform
         public func awakeFromFont(with coordinates: Coordinates?) {
-
+            if !flags.contains(.argsAreXYValues) {
+                /// Component uses two reference points: we apply the transform _before_ computing
+                /// the offset between points.
+                var p1 = 0 /// Compound matching point index
+                var p2 = 0 /// Component matching point index
+                if flags.contains(.argsAre16Bit) {
+                    // p1 = (UInt16)arg1
+                    // p2 = (UInt16)arg2
+                    p1 = Int(arg1)
+                    p2 = Int(arg2)
+                } else {
+                    p1 = Int(arg1)
+                    p2 = Int(arg2)
+                }
+                guard let glyphCoords = glyph?.coordinates else {
+                    NSLog("\(type(of: self)).\(#function) *** ERROR: no coordinates for glyph \(String(describing: glyph?.glyphID))")
+                    return
+                }
+                self.coordinates = glyphCoords
+                self.coordinates.transform(using: transform)
+                if let coordinates {
+                    if p1 > coordinates.numPoints {
+                        // FIXME: !! log error
+                    }
+                    if p2 > self.coordinates.numPoints {
+                        // FIXME: !! log error
+                    }
+                    let point1 = coordinates.points[p1]
+                    let point2 = self.coordinates.points[p2]
+                    // FIXME: get rid of single-point contours used for compound point-matching?
+                    /// add the compount point matching as a translate transform to the existing transform
+                    pointMatchingTransform = .init(translationByX: point1.x - point2.x, byY: point1.y - point2.y)
+                    self.coordinates.transform(using: pointMatchingTransform!)
+                    bezierPath?.transform(using: pointMatchingTransform!)
+                }
+            }
         }
     }
 }

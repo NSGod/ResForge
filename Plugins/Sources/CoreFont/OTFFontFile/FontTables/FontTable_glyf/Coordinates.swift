@@ -8,7 +8,7 @@
 import Cocoa
 
 extension FontTable_glyf {
-    
+
     // MARK: this class represents the expanded points with flags
     public struct Coordinates: Copyable {
         public enum CoordType {
@@ -30,14 +30,14 @@ extension FontTable_glyf {
 //        public var xCoordinates:    [Int] = []
 //        public var yCoordinates:    [Int] = []
 
-//        public var endPointIndexes: IndexSet
+        public var endPointIndexes: IndexSet
 
         public var xMin:            Int16 = 0
         public var yMin:            Int16 = 0
         public var xMax:            Int16 = 0
         public var yMax:            Int16 = 0
 
-        public var type:            CoordType = .absolute
+        public private(set) var type:            CoordType = .absolute
 
         public var isAbsolute:      Bool { type == .absolute }
         public var isRelative:      Bool { type == .relative }
@@ -45,10 +45,7 @@ extension FontTable_glyf {
         public init(xCoordinates: [Int], yCoordinates: [Int], endPointIndexes: IndexSet, flags: [Flags], numPoints: Int, type: CoordType, glyph: SimpleGlyph?, table: FontTable) throws {
             assert(xCoordinates.count == yCoordinates.count && yCoordinates.count == flags.count && flags.count == numPoints)
             self.type = type
-//            self.flags = flags
-//            self.xCoordinates = xCoordinates
-//            self.yCoordinates = yCoordinates
-//            self.endPointIndexes = endPointIndexes
+            self.endPointIndexes = endPointIndexes
             self.contours = try Contour.contoursWith(xCoordinates: xCoordinates, yCoordinates: yCoordinates, endPointIndexes: endPointIndexes, flags: flags)
             if let contours {
                 self.points = contours.flatMap { $0.points }
@@ -58,7 +55,7 @@ extension FontTable_glyf {
             let vMetric = glyph?.verticalMetric
             /// Check to see if current coordinates abide by glyph metrics (left/top sidebearing)
             /// If it doesn't, create a transform to shift them
-            let transform: AffineTransform
+            var transform: AffineTransform?
             if let hMetric {
                 if xMin != hMetric.leftSideBearing {
                     transform = AffineTransform(translationByX: CGFloat(hMetric.leftSideBearing - xMin), byY: 0)
@@ -66,8 +63,12 @@ extension FontTable_glyf {
             } else if let vMetric {
                 // FIXME: !! not sure if this is right
                 if yMin != vMetric.topSideBearing {
+                    /// or should this be `- yMax`?
                     transform = AffineTransform(translationByX: 0, byY: CGFloat(vMetric.topSideBearing - yMin))
                 }
+            }
+            if let transform {
+                self.transform(using: transform)
             }
         }
 
@@ -75,17 +76,37 @@ extension FontTable_glyf {
             return points[index]
         }
 
-        /// copies the receiver's coordinate's points:
-        public func append(_ coordinates: Coordinates) {
-
+        public mutating func append(_ coordinates: Coordinates) {
+            assert(type == coordinates.type)
+            if var contours, let coordContours = coordinates.contours {
+                contours.append(contentsOf: coordContours)
+            } else {
+                contours = coordinates.contours
+            }
+            var shiftedIndexes = coordinates.endPointIndexes
+            guard let first = shiftedIndexes.first, let delta = endPointIndexes.last else { return }
+            shiftedIndexes.shift(startingAt: first, by: delta + 1)
+            endPointIndexes.formUnion(shiftedIndexes)
+            if let contours {
+                points = contours.flatMap(\.points)
+            }
+            calculateBounds()
         }
 
-        public func translate(xBy: CGFloat, yBy: CGFloat) {
-
+        public mutating func translate(x deltaX: CGFloat, y deltaY: CGFloat) {
+            /// must update our points and contours' points
+            if deltaX == 0.0 && deltaY == 0.0 { return }
+            contours?.forEach { contour in var mContour = contour; mContour.translate(x: deltaX, y: deltaY)}
+            points.forEach { point in var mPoint = point; mPoint.translate(x: deltaX, y: deltaY) }
+            calculateBounds()
         }
 
-        public func transform(using transform: AffineTransform) {
-
+        public mutating func transform(using transform: AffineTransform) {
+            /// must update our points and contours' points
+            if transform == .identity { return }
+            contours?.forEach { contour in var mContour = contour; mContour.transform(using: transform) }
+            points.forEach { point in var mPoint = point; mPoint.transform(using: transform) }
+            calculateBounds()
         }
 
         private mutating func calculateBounds() {
@@ -96,19 +117,6 @@ extension FontTable_glyf {
                 xMax = max(xMax, Int16(point.x))
                 yMax = max(yMax, Int16(point.y))
             }
-        }
-
-        public mutating func convertAbsoluteToRelative() {
-
-        }
-
-        public mutating func convertRelativeToAbsolute() {
-
-        }
-
-        public static func bezierPathRepresentation(of contours: [Contour], glyph: SimpleGlyph) throws -> NSBezierPath? {
-
-            return nil
         }
     }
 }

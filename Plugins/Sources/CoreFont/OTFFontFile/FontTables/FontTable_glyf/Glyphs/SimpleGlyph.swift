@@ -84,7 +84,5 @@ extension FontTable_glyf {
             guard xCoordinates.count == yCoordinates.count else { throw FontTableError.parseError("xCoordinates.count != yCoordinates.count") }
             coordinates = try Coordinates(xCoordinates: xCoordinates, yCoordinates: yCoordinates, endPointIndexes: endPointIndexes, flags: flags, numPoints: flags.count, type: .absolute, glyph: self, table: table)
         }
-
-
     }
 }

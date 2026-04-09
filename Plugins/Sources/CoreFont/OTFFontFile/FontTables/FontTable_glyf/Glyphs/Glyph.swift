@@ -26,10 +26,13 @@ extension FontTable_glyf {
             return nil
         }
 
+        public var glyphID:                 GlyphID
+
         public var horizontalMetric:    HorizontalMetric?
         public var verticalMetric:      VerticalMetric?
 
         internal required init(_ reader: BinaryDataReader, location: FontTable_loca.GlyphLocation, glyphID: GlyphID, table: FontTable_glyf) throws {
+            self.glyphID = glyphID
             try super.init(reader, table: table)
             /// allow empty glyph to succeed
             if location.length == 0 { return }
