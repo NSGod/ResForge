@@ -124,8 +124,32 @@ extension FontTable_cmap {
                 if rhs.platformID == .microsoft { return true }
                 return lhs.platformID < rhs.platformID
             }
+            /// `platformID`s are the same
             if lhs.encodingID != rhs.encodingID {
-                
+                if lhs.platformID == .microsoft || lhs.platformID == .unicode {
+                    /// higher is better, except for `.unicodeUVS`
+                    if lhs.platformID == .unicode {
+                        if lhs.encodingID.unicode()! == .unicodeUVS { return true }
+                        if rhs.encodingID.unicode()! == .unicodeUVS { return false }
+                        return lhs.encodingID < rhs.encodingID
+                    } else {
+                        return lhs.encodingID < rhs.encodingID
+                    }
+                } else {
+                    /// Mac: lower is better
+                    return lhs.encodingID < rhs.encodingID
+                }
+            }
+            /// `encodingID`s are the same
+            if lhs.subtable.languageID != rhs.subtable.languageID {
+                if lhs.platformID == .microsoft {
+                    /// prefer English
+                    if lhs.subtable.languageID.microsoft()! == .englishAmerican { return false }
+                    if rhs.subtable.languageID.microsoft()! == .englishAmerican { return true }
+                } else {
+                    /// Mac: lower is better (for English)
+                    return lhs.subtable.languageID < rhs.subtable.languageID
+                }
             }
             return false
         }

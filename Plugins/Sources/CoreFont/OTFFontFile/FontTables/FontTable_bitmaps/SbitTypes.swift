@@ -120,21 +120,21 @@ public enum Sbit {
         }
 
         public var height: UInt8 {
-            if let smallMetrics { return smallMetrics.height } else { return bigMetrics!.height }
+            if let small { return small.height } else { return big!.height }
         }
 
         public var width: UInt8 {
-            if let smallMetrics { return smallMetrics.width } else { return bigMetrics!.width }
+            if let small { return small.width } else { return big!.width }
         }
 
-        public var smallMetrics: SmallGlyphMetrics? {
+        public var small: SmallGlyphMetrics? {
             if case let .small(smallGlyphMetrics) = self {
                 return smallGlyphMetrics
             }
             return nil
         }
 
-        public var bigMetrics: BigGlyphMetrics? {
+        public var big: BigGlyphMetrics? {
             if case let .big(bigGlyphMetrics) = self {
                 return bigGlyphMetrics
             }

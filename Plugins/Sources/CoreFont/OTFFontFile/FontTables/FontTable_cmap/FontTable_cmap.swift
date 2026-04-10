@@ -29,7 +29,10 @@ public final class FontTable_cmap: FontTable {
 
     // MARK: AUX
     // FIXME: !! figure out preferredEncoding
-    @objc dynamic public var preferredEncoding: Encoding!
+    @objc dynamic public lazy var preferredEncoding: Encoding = {
+        var sortedEncodings = encodings.sorted { Encoding.compareForPreferred(lhs: $0, rhs: $1) }
+        return sortedEncodings.first!
+    }()
 
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)

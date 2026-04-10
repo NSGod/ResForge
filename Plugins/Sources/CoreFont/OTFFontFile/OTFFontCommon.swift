@@ -740,13 +740,18 @@ public enum EncodingID: Comparable, CustomStringConvertible, CustomDebugStringCo
         }
     }
 
-    public func macScriptID() -> MacScriptID? {
+    public func mac() -> MacScriptID? {
         guard case .mac(let encID) = self else { return nil }
         return encID
     }
 
-    public func microsoftEncodingID() -> MicrosoftEncodingID? {
+    public func microsoft() -> MicrosoftEncodingID? {
         guard case .microsoft(let encID) = self else { return nil }
+        return encID
+    }
+
+    public func unicode() -> UnicodeEncodingID? {
+        guard case .unicode(let encID) = self else { return nil }
         return encID
     }
 
@@ -830,12 +835,12 @@ public enum LanguageID: Comparable, CustomStringConvertible, CustomDebugStringCo
         return UInt32(rawValue)
     }
 
-    public func macLanguageID() -> MacLanguageID? {
+    public func mac() -> MacLanguageID? {
         guard case .mac(let langID) = self else { return nil }
         return langID
     }
 
-    public func microsoftLanguageID() -> MicrosoftLanguageID? {
+    public func microsoft() -> MicrosoftLanguageID? {
         guard case .microsoft(let langID) = self else { return nil }
         return langID
     }

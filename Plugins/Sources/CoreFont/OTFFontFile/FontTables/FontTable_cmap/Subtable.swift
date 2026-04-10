@@ -15,7 +15,7 @@ extension FontTable_cmap {
         @objc public enum Format: UInt16 {
             case format0 = 0    /// not supported by Apple?
             case format2 = 2
-            case format4 = 4    /// common
+            case format4 = 4    /// very common
             case format6 = 6
             case format8 = 8    /// not suppported by Apple; rare, use discouraged
             case format10 = 10  /// not supported by Apple or Windows; rare, use discouraged
