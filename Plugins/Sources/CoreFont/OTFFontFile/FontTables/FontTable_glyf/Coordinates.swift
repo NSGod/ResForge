@@ -10,7 +10,7 @@ import Cocoa
 extension FontTable_glyf {
 
     // MARK: this class represents the expanded points with flags
-    public struct Coordinates: Copyable {
+    public struct Coordinates {
         public enum CoordType {
             case absolute
             case relative
@@ -37,7 +37,7 @@ extension FontTable_glyf {
         public var xMax:            Int16 = 0
         public var yMax:            Int16 = 0
 
-        public private(set) var type:            CoordType = .absolute
+        public private(set) var type:   CoordType = .absolute
 
         public var isAbsolute:      Bool { type == .absolute }
         public var isRelative:      Bool { type == .relative }
@@ -107,6 +107,18 @@ extension FontTable_glyf {
             contours?.forEach { contour in var mContour = contour; mContour.transform(using: transform) }
             points.forEach { point in var mPoint = point; mPoint.transform(using: transform) }
             calculateBounds()
+        }
+
+        public static func * (lhs: Coordinates, rhs: CGFloat) -> Coordinates {
+            var coordinates = lhs
+            coordinates.points.forEach { point in var mPoint = point; mPoint *= rhs }
+            coordinates.contours?.forEach { contour in var mContour = contour; mContour *= rhs }
+            coordinates.calculateBounds()
+            return coordinates
+        }
+
+        public static func *= (lhs: inout Coordinates, rhs: CGFloat) {
+            lhs = lhs * rhs
         }
 
         private mutating func calculateBounds() {

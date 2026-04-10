@@ -15,7 +15,7 @@ import Cocoa
 
 extension FontTable_glyf {
 
-    public struct Contour: Copyable {
+    public struct Contour {
         public var points:          [Point]
 
         public var numPoints:       Int {
@@ -186,5 +186,15 @@ extension FontTable_glyf {
             calculateBounds()
         }
 
+        public static func * (lhs: Contour, rhs: CGFloat) -> Contour {
+            var contour = lhs
+            contour.points.forEach { point in var mPoint = point; mPoint *= rhs }
+            contour.calculateBounds()
+            return contour
+        }
+
+        public static func *= (lhs: inout Contour, rhs: CGFloat) {
+            lhs = lhs * rhs
+        }
     }
 }

@@ -237,6 +237,8 @@ extension FontTable_glyf {
                 }
                 self.coordinates = glyphCoords
                 self.coordinates.transform(using: transform)
+                bezierPath = glyph?.bezierPath?.copy() as? NSBezierPath
+                bezierPath?.transform(using: transform)
                 if let coordinates {
                     if p1 > coordinates.numPoints {
                         // FIXME: !! log error
