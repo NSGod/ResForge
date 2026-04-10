@@ -144,6 +144,9 @@ open class FontTable: OTFFontFileNode {
     public var EBLCTable: FontTable_EBLC? { table(for: .EBLC) as? FontTable_EBLC }
     public var EBDTTable: FontTable_EBDT? { table(for: .EBDT) as? FontTable_EBDT }
 
+    /// While these may seem redundant, this is adapted from code
+    /// where font files can contain multiple fonts (.ttc, .otc, etc.),
+    /// and where those fonts can share the same tables...
     public var fontNumGlyphs: Int {
         return fontFile.numGlyphs
     }

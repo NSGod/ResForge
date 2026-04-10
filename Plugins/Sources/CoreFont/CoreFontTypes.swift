@@ -206,23 +206,6 @@ public func MD533Filename(forPostScriptFontName psName: String) -> String {
     return mPostScriptFontFilename
 }
 
-public protocol FontMetrics {
-    var unitsPerEm:         UnitsPerEm  { get }
-    /// the following are all intended to be expressed in units per em,
-    /// not scaled to a particular font point size:
-    var ascender:           CGFloat     { get }
-    var descender:          CGFloat     { get }
-    var leading:            CGFloat     { get }
-
-    var underlinePosition:  CGFloat     { get }
-    var underlineThickness: CGFloat     { get }
-    var italicAngle:        CGFloat     { get }
-    var capHeight:          CGFloat     { get }
-    var xHeight:            CGFloat     { get }
-    ///
-    var isFixedPitch:       Bool        { get }
-}
-
 /// See CoreServices/CarbonCore/Script.h
 /// Used in both `FontTable_name.NameRecord`s and in `cmap` entries.
 @objc public enum MacScriptID: UInt16, Comparable {

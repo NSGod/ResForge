@@ -25,7 +25,7 @@ public let MDPFAOutlineFontType: String     = "PostScript Type 1 (ASCII) outline
 public let MDUTTypePFBOutlineFont: String   = "com.adobe.postscript-pfb-font"
 public let MDPFBOutlineFontType: String     = "PostScript Type 1 (Binary) outline font"
 
-public class PSFontMetrics : NSObject, FontMetrics {
+public class PSFontMetrics : NSObject, UIFontMetrics {
     public let unitsPerEm:                  UnitsPerEm
     @objc public let ascender:              CGFloat
     @objc public let descender:             CGFloat
@@ -36,7 +36,8 @@ public class PSFontMetrics : NSObject, FontMetrics {
     @objc public let capHeight:             CGFloat
     @objc public let xHeight:               CGFloat
     @objc public let isFixedPitch:          Bool
-
+    @objc public let boundingRectForFont:   NSRect
+    @objc public let lineHeight:            CGFloat
     @objc public var objcUnitsPerEm: UInt16 {
         return unitsPerEm.rawValue
     }
@@ -53,6 +54,14 @@ public class PSFontMetrics : NSObject, FontMetrics {
         capHeight = font.capHeight * factor
         xHeight = font.xHeight * factor
         isFixedPitch = font.isFixedPitch
+        /// this is not a true `xMin`, `yMin`, `xMax`, `yMax` like from the `head` table
+        /// That only measures the bboxes of simple glyphs, while
+        /// `boundingRectForFont` will expand that out to include all composite glyphs
+        /// as well. For example, a composite glyph Roman Numeral 8 made up of
+        /// `V + I + I + I` will total the width of all those glyphs. Not sure how to
+        /// prevent that.
+        boundingRectForFont = font.boundingRectForFont
+        lineHeight = ascender - descender + leading
         super.init()
     }
 }
