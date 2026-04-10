@@ -9,6 +9,8 @@ import Cocoa
 import RFSupport
 import CoreFont
 
+// FIXME: allow separators (,) on textfield numerical input if possible
+
 public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, TypeIconProvider {
     public static var bundle: Bundle { .module }
     public static let supportedTypes = [

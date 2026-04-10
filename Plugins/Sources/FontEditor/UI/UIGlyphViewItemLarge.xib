@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24765" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24765"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="UIGlyphViewItemLarge" customModule="FontEditor">
+            <connections>
+                <outlet property="backgroundView" destination="Hz6-mo-xeY" id="JnD-W5-wOl"/>
+                <outlet property="glyphView" destination="BMY-Bv-byc" id="jFt-eM-sBN"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView translatesAutoresizingMaskIntoConstraints="NO" id="Hz6-mo-xeY" userLabel="view" customClass="UIGlyphBackgroundView" customModule="FontEditor">
+            <rect key="frame" x="0.0" y="0.0" width="276" height="300"/>
+            <subviews>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="BMY-Bv-byc" userLabel="glyphView" customClass="UIGlyphView" customModule="FontEditor">
+                    <rect key="frame" x="10" y="34" width="256" height="256"/>
+                </customView>
+                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NcU-Mn-fLz">
+                    <rect key="frame" x="45" y="14" width="221" height="20"/>
+                    <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingMiddle" alignment="center" title="glyph name" drawsBackground="YES" id="FlH-Wy-8at">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="alternateSelectedControlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="-2" name="value" keyPath="representedObject.glyphName" id="gFI-dM-cur"/>
+                    </connections>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AWA-OX-h5R">
+                    <rect key="frame" x="10" y="14" width="35" height="20"/>
+                    <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="center" title="1000" drawsBackground="YES" id="X8K-Tq-xzG">
+                        <numberFormatter key="formatter" formatterBehavior="default10_4" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="nj5-bJ-YbA"/>
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="-2" name="value" keyPath="representedObject.glyphID" id="gEX-1c-eyS"/>
+                    </connections>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstItem="NcU-Mn-fLz" firstAttribute="top" secondItem="BMY-Bv-byc" secondAttribute="bottom" id="1sf-8U-1BO"/>
+                <constraint firstItem="NcU-Mn-fLz" firstAttribute="leading" secondItem="AWA-OX-h5R" secondAttribute="trailing" id="3OM-zS-GRB"/>
+                <constraint firstAttribute="trailing" secondItem="BMY-Bv-byc" secondAttribute="trailing" constant="10" id="7gE-jf-l5I"/>
+                <constraint firstItem="NcU-Mn-fLz" firstAttribute="bottom" secondItem="AWA-OX-h5R" secondAttribute="bottom" id="K0z-Q6-CX0"/>
+                <constraint firstItem="AWA-OX-h5R" firstAttribute="top" secondItem="BMY-Bv-byc" secondAttribute="bottom" id="Vge-3P-0Jf"/>
+                <constraint firstAttribute="bottom" secondItem="AWA-OX-h5R" secondAttribute="bottom" constant="14" id="Zda-CH-K9T"/>
+                <constraint firstItem="BMY-Bv-byc" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="10" id="orP-LS-WR9"/>
+                <constraint firstAttribute="bottom" secondItem="BMY-Bv-byc" secondAttribute="bottom" constant="34" id="sMR-jO-VHj"/>
+                <constraint firstItem="AWA-OX-h5R" firstAttribute="leading" secondItem="BMY-Bv-byc" secondAttribute="leading" id="tNt-rc-uxA"/>
+                <constraint firstItem="NcU-Mn-fLz" firstAttribute="trailing" secondItem="BMY-Bv-byc" secondAttribute="trailing" id="w05-sP-ati"/>
+                <constraint firstItem="BMY-Bv-byc" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="10" id="zvY-Zz-Y90"/>
+            </constraints>
+            <point key="canvasLocation" x="-125" y="-57"/>
+        </customView>
+    </objects>
+</document>
