@@ -139,6 +139,7 @@ open class FontTable: OTFFontFileNode {
     public var featTable: FontTable_feat? { table(for: .feat) as? FontTable_feat }
     public var bhedTable: FontTable_bhed? { table(for: .bhed) as? FontTable_bhed }
     public var locaTable: FontTable_loca? { table(for: .loca) as? FontTable_loca }
+    public var glyfTable: FontTable_glyf? { table(for: .glyf) as? FontTable_glyf }
     public var blocTable: FontTable_bloc? { table(for: .bloc) as? FontTable_bloc }
     public var bdatTable: FontTable_bdat? { table(for: .bdat) as? FontTable_bdat }
     public var EBLCTable: FontTable_EBLC? { table(for: .EBLC) as? FontTable_EBLC }

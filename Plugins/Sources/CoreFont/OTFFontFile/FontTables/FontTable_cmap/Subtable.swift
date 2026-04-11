@@ -34,6 +34,7 @@ extension FontTable_cmap {
         // MARK: - AUX:
         public weak var encoding:       Encoding!                   // weak
         public var charCodesToGlyphIDs: [CharCode32: GlyphID32]?
+        /// maybe also have a UV to GlyphID mapping?
 
         @objc dynamic public lazy var glyphMappings: [GlyphMapping] = {
             if _hasLoadedGlyphMappings { return _glyphMappings }

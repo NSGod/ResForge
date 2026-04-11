@@ -11,6 +11,10 @@ extension FontTable_glyf {
 
     public struct Point: Equatable {
         public var point:       NSPoint
+        public var flags:       Flags
+        public var isOnCurve:   Bool {
+            return flags.contains(Flags.onCurvePoint)
+        }
 
         public var x:           CGFloat {
             get { return point.x }
@@ -19,12 +23,6 @@ extension FontTable_glyf {
         public var y:           CGFloat {
             get { return point.y }
             set { point.y = newValue }
-        }
-
-        public var flags:       Flags
-
-        public var isOnCurve:     Bool {
-            return flags.contains(Flags.onCurvePoint)
         }
 
         public init(point: NSPoint, flags: Flags) {

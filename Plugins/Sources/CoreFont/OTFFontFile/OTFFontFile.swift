@@ -206,6 +206,9 @@ public final class OTFFontFile: NSObject {
     public var locaTable: FontTable_loca? {
         return table(for: .loca) as? FontTable_loca
     }
+    public var glyfTable: FontTable_glyf? {
+        return table(for: .glyf) as? FontTable_glyf
+    }
     public var blocTable: FontTable_bloc? {
         return table(for: .bloc) as? FontTable_bloc
     }

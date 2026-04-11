@@ -26,9 +26,9 @@ extension FontTable_glyf {
         ///    with compound glyph component point index matching
         public var contours:        [Contour]?
 
-//        public var flags:           [Flags] = []
-//        public var xCoordinates:    [Int] = []
-//        public var yCoordinates:    [Int] = []
+        // public var flags:           [Flags] = []
+        // public var xCoordinates:    [Int] = []
+        // public var yCoordinates:    [Int] = []
 
         public var endPointIndexes: IndexSet
 
