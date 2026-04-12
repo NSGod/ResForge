@@ -36,16 +36,16 @@ public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
 
     public lazy var glyphs:             [UIGlyph] = {
         buildGlyphsIfNeeded()
-        return glyphs
+        return _glyphs
     }()
 
     public lazy var metrics:            UIFontMetrics = {
         return Metrics(fontFile: self)
     }()
 
-    public lazy var notDefGlyph:        UIGlyph = {
+    public lazy var notDef:             UIGlyph = {
         buildGlyphsIfNeeded()
-        return notDefGlyph
+        return _notDef
     }()
 
     private var data:                   Data
@@ -55,11 +55,12 @@ public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
     // this is to help determine table indexes for display in UI:
     private var rangesToFontTables:     [Range<UInt32>: FontTable] = [:]
 
-
     private var _uvsToGlyphs:           [UV: UIGlyph] = [:]
     private var _glyphNamesToGlyphs:    [String: UIGlyph] = [:]
     private var _haveBuiltGlyphs:       Bool = false
     // private var _charCodesToGlyphs:  [CharCode32: UIGlyph] = [:]
+    private var _glyphs:                [UIGlyph]!
+    private var _notDef:                UIGlyph!
 
     public init(_ data: Data) throws {
         self.data = data
@@ -184,12 +185,12 @@ public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
 
     public func glyph(for uv: UVBMP) -> UIGlyph {
         buildGlyphsIfNeeded()
-        return _uvsToGlyphs[UV(uv)] ?? notDefGlyph
+        return _uvsToGlyphs[UV(uv)] ?? notDef
     }
 
     public func glyph(forName name: String) -> UIGlyph {
         buildGlyphsIfNeeded()
-        return _glyphNamesToGlyphs[name] ?? notDefGlyph
+        return _glyphNamesToGlyphs[name] ?? notDef
     }
 
     public func glyph<T: FixedWidthInteger>(for glyphID: T) -> UIGlyph? {
@@ -230,15 +231,17 @@ public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
             return
         }
         if let glyphs = glyfTable?.glyphs as? [any UIGlyph] {
-            self.glyphs = glyphs
+            _glyphs = glyphs
+        } else {
+            _glyphs = []
         }
         // FIXME: this should be mapping UVs to glyphs, not char codes to glyphs?
-        let glyphCount = glyphs.count
+        let glyphCount = _glyphs.count
         let charCodes = charCodesToGlyphIDs.keys.sorted()
         for charCode in charCodes {
             let glyphID = charCodesToGlyphIDs[charCode]!
             if glyphID >= glyphCount { continue }
-            var glyph = glyphs[Int(glyphID)]
+            var glyph = _glyphs[Int(glyphID)]
             _uvsToGlyphs[charCode] = glyph
             if glyph.uv == .undefined {
                 glyph.uv = charCode
@@ -248,7 +251,7 @@ public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
             }
         }
         var i = 0
-        for var glyph in glyphs {
+        for var glyph in _glyphs {
             if glyphLookupType == .AGL {
                 if glyph.uv != .undefined {
                     if let glyphName = AdobeGlyphList.glyphName(for: UVBMP(glyph.uv)) {
@@ -271,6 +274,7 @@ public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
             i += 1
         }
         _haveBuiltGlyphs = true
+        _notDef = _glyphNamesToGlyphs[".notdef"] ?? _glyphs.first!
     }
 
     public var headTable: FontTable_head? {
