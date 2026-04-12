@@ -21,7 +21,7 @@
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="BMY-Bv-byc" userLabel="glyphView" customClass="UIGlyphView" customModule="FontEditor">
                     <rect key="frame" x="10" y="34" width="256" height="256"/>
                 </customView>
-                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NcU-Mn-fLz">
+                <textField focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NcU-Mn-fLz">
                     <rect key="frame" x="45" y="14" width="221" height="20"/>
                     <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingMiddle" alignment="center" title="glyph name" drawsBackground="YES" id="FlH-Wy-8at">
                         <font key="font" metaFont="smallSystem"/>
@@ -32,7 +32,7 @@
                         <binding destination="-2" name="value" keyPath="representedObject.glyphName" id="gFI-dM-cur"/>
                     </connections>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AWA-OX-h5R">
+                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AWA-OX-h5R">
                     <rect key="frame" x="10" y="14" width="35" height="20"/>
                     <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="center" title="1000" drawsBackground="YES" id="X8K-Tq-xzG">
                         <numberFormatter key="formatter" formatterBehavior="default10_4" usesGroupingSeparator="NO" formatWidth="-1" groupingSize="0" minimumIntegerDigits="1" maximumIntegerDigits="42" id="nj5-bJ-YbA"/>

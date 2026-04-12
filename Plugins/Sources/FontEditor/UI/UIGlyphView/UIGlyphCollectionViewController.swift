@@ -16,9 +16,9 @@ public final class UIGlyphCollectionViewController: NSViewController, NSWindowDe
     @IBInspectable public var itemSizeAutosaveName: String?
 
     public var glyphsProvider:          UIGlyphsProvider!
-    public var glyphs:                  [UIGlyph] = []
+    @objc dynamic public var glyphs:    [FEGlyph] = []
 
-    public var itemSize:                CGFloat = 128.0 {
+    @objc dynamic public var itemSize:  CGFloat = 128.0 {
         didSet {
             collectionView.reloadData()
         }
@@ -43,7 +43,8 @@ public final class UIGlyphCollectionViewController: NSViewController, NSWindowDe
         self.init(nibName: "UIGlyphCollectionViewController", bundle: .module)
         self.itemSizeAutosaveName = itemSizeAutosaveName
         self.glyphsProvider = glyphsProvider
-        self.glyphs = glyphsProvider.glyphs
+        representedObject = self.glyphsProvider
+        glyphs = self.glyphsProvider.glyphs.map { FEGlyph(with: $0) }
         if let itemSizeAutosaveName {
             UserDefaults.standard.register(defaults: [Self.itemSizeKey + " \(itemSizeAutosaveName)": 128.0])
             NSUserDefaultsController.shared.initialValues = [Self.itemSizeKey + " \(itemSizeAutosaveName)": 128.0]
@@ -93,9 +94,9 @@ public final class UIGlyphCollectionViewController: NSViewController, NSWindowDe
 extension UIGlyphCollectionViewController: NSCollectionViewDataSource, NSCollectionViewDelegate, NSCollectionViewDelegateFlowLayout {
 
     public func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-        return (glyphsController.arrangedObjects as! [UIGlyph]).count
+        return (glyphsController.arrangedObjects as! [FEGlyph]).count
     }
-    
+
     public func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
         let glyphViewItem: UIGlyphViewItem
         if itemSize >= 128 {
@@ -104,8 +105,8 @@ extension UIGlyphCollectionViewController: NSCollectionViewDataSource, NSCollect
             glyphViewItem = collectionView.makeItem(withIdentifier: Self.smallIdentifier, for: indexPath) as! UIGlyphViewItem
         }
         aspectRatio = glyphViewItem.originalSize.height / glyphViewItem.originalSize.width
-        let glyph = (glyphsController.arrangedObjects as! [UIGlyph])[indexPath._index(at: 1)]
-        glyphViewItem.glyphView.glyph = glyph
+        let glyph = (glyphsController.arrangedObjects as! [FEGlyph])[indexPath[1]]
+        glyphViewItem.glyphView.glyph = glyph.glyph
         glyphViewItem.representedObject = glyph
         return glyphViewItem
     }

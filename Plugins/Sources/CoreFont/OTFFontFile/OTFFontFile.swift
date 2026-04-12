@@ -34,7 +34,11 @@ public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
 
     public var tables:                  OrderedSet<FontTable>
 
-    public var glyphs:                  [UIGlyph] = []
+    public lazy var glyphs:             [UIGlyph] = {
+        buildGlyphsIfNeeded()
+        return glyphs
+    }()
+
     public lazy var metrics:            UIFontMetrics = {
         return Metrics(fontFile: self)
     }()

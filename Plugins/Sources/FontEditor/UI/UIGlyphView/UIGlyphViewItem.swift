@@ -15,11 +15,11 @@ public class UIGlyphViewItem: NSCollectionViewItem {
     public var originalSize: NSSize = .zero
 
     public override init(nibName nibNameOrNil: NSNib.Name?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: (NSStringFromClass(Self.self) as NSString).lastPathComponent, bundle: nibBundleOrNil)
+        super.init(nibName: nibNameOrNil, bundle: .module)
     }
 
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
     }
 
     public override func viewDidLoad() {

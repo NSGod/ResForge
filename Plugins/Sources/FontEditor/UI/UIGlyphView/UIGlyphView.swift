@@ -15,7 +15,7 @@ public final class UIGlyphView: NSView {
         case glyph
     }
 
-    public var glyph:               UIGlyph? {
+    public var glyph: UIGlyph? {
         didSet {
             transform = .identity
             needsDisplay = true
@@ -35,7 +35,7 @@ public final class UIGlyphView: NSView {
     }
 
     public required init?(coder: NSCoder) {
-        fatalError("not implemented")
+        super.init(coder: coder)
     }
 
     public override func draw(_ dirtyRect: NSRect) {

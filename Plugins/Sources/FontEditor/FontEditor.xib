@@ -356,10 +356,10 @@
                         </textFieldCell>
                     </textField>
                     <box fixedFrame="YES" boxType="custom" borderType="none" cornerRadius="4" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="ZQm-Fk-V6h">
-                        <rect key="frame" x="344" y="22" width="506" height="604"/>
+                        <rect key="frame" x="344" y="22" width="506" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <view key="contentView" id="ene-y2-0pE">
-                            <rect key="frame" x="0.0" y="0.0" width="506" height="604"/>
+                            <rect key="frame" x="0.0" y="0.0" width="506" height="600"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         </view>
                     </box>

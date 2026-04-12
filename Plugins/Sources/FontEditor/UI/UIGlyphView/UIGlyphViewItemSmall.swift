@@ -11,6 +11,5 @@ public class UIGlyphViewItemSmall: UIGlyphViewItem {
 
     public override func viewDidLoad() {
         super.viewDidLoad()
-        // Do view setup here.
     }
 }
