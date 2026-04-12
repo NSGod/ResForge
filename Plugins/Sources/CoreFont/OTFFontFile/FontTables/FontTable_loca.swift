@@ -15,7 +15,7 @@ import RFSupport
 public final class FontTable_loca: FontTable {
 
     // FIXME: figure out a better way of doing UInt32/UInt16?
-    public var offsets:                      [UInt32] = []  // UInt32 or UInt16, depending on format
+    public var offsets:                      [UInt32] = []  /// UInt32 or UInt16, depending on `head.indexToLocFormat` format
 
     // MARK: AUX for display
     @objc dynamic public var glyphLocations: [GlyphLocation] = []
@@ -80,8 +80,8 @@ extension FontTable_loca {
     // MARK: AUX class for display
     public final class GlyphLocation: FontTableNode {
         /// these values are already pre-multiplied to represent actual byte offsets
-        @objc dynamic public var offset:        UInt32
-        @objc dynamic public var length:        UInt32 = 0  // set by FontTable_loca
+        @objc public var offset:        UInt32
+        @objc public var length:        UInt32 = 0  // set by FontTable_loca
 
         @objc public var glyphID:               GlyphID
         @objc public lazy var glyphName:        String = {

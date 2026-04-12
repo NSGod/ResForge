@@ -9,7 +9,7 @@ import Foundation
 
 extension FontTable_glyf {
 
-    public struct Flags: OptionSet {
+    public struct Flags: OptionSet, CustomStringConvertible, CustomDebugStringConvertible, CaseIterable {
         public var rawValue: UInt8
 
         public static let none:                     Flags = []
@@ -35,6 +35,40 @@ extension FontTable_glyf {
 
         public init(rawValue: UInt8) {
             self.rawValue = rawValue
+        }
+
+        public var flagDescription: String {
+            switch self {
+                case .none: return "none"
+                case .onCurvePoint: return "onCurvePoint"
+                case .shortX: return "shortX"
+                case .shortY: return "shortY"
+                case .repeat: return "repeat"
+                case .shortXIsPosOrNextXIsSame: return "shortXIsPosOrNextXIsSame"
+                case .shortYIsPosOrNextYIsSame: return "shortYIsPosOrNextYIsSame"
+                case .overlapSimple: return "overlapSimple"
+                case .cubic: return "cubic"
+                case .undefined:  return "undefined"
+                default: return "\(rawValue)"
+            }
+        }
+
+        public var description: String {
+            var desc = "["
+            for flag in Flags.allCases {
+                if contains(flag) {
+                    desc += flag.flagDescription
+                    desc += " "
+                }
+            }
+            desc += "]"
+            return desc
+        }
+
+        public var debugDescription: String { return description }
+        
+        public static var allCases: [Flags] {
+            return [.onCurvePoint, .shortX, .shortY, .repeat, .shortXIsPosOrNextXIsSame, .shortYIsPosOrNextYIsSame, .overlapSimple, .cubic, .undefined]
         }
     }
 
