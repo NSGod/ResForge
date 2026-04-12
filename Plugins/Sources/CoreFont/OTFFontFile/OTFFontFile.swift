@@ -28,10 +28,21 @@ public struct FontWritingOptions: OptionSet {
     public static let none: FontWritingOptions = []
 }
 
-public final class OTFFontFile: NSObject {
+public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
+
     @objc dynamic public var directory: OTFsfntDirectory!
 
     public var tables:                  OrderedSet<FontTable>
+
+    public var glyphs:                  [UIGlyph] = []
+    public lazy var metrics:            UIFontMetrics = {
+        return Metrics(fontFile: self)
+    }()
+
+    public lazy var notDefGlyph:        UIGlyph = {
+        buildGlyphsIfNeeded()
+        return notDefGlyph
+    }()
 
     private var data:                   Data
     private let reader:                 BinaryDataReader
@@ -39,6 +50,12 @@ public final class OTFFontFile: NSObject {
     private var tableTagsToTables:      [TableTag: FontTable] = [:]
     // this is to help determine table indexes for display in UI:
     private var rangesToFontTables:     [Range<UInt32>: FontTable] = [:]
+
+
+    private var _uvsToGlyphs:           [UV: UIGlyph] = [:]
+    private var _glyphNamesToGlyphs:    [String: UIGlyph] = [:]
+    private var _haveBuiltGlyphs:       Bool = false
+    // private var _charCodesToGlyphs:  [CharCode32: UIGlyph] = [:]
 
     public init(_ data: Data) throws {
         self.data = data
@@ -161,6 +178,97 @@ public final class OTFFontFile: NSObject {
         return glyphName.isEmpty ? "<\(glyphID)>" : glyphName
     }
 
+    public func glyph(for uv: UVBMP) -> UIGlyph {
+        buildGlyphsIfNeeded()
+        return _uvsToGlyphs[UV(uv)] ?? notDefGlyph
+    }
+
+    public func glyph(forName name: String) -> UIGlyph {
+        buildGlyphsIfNeeded()
+        return _glyphNamesToGlyphs[name] ?? notDefGlyph
+    }
+
+    public func glyph<T: FixedWidthInteger>(for glyphID: T) -> UIGlyph? {
+        buildGlyphsIfNeeded()
+        if glyphID > glyphs.count {
+            NSLog("\(type(of: self)).\(#function) *** INVALID glyphID: \(glyphID) > count: \(glyphs.count)")
+            // FIXME: or should this return .notdef glyph?
+            return nil
+        }
+        return glyphs[Int(glyphID)]
+    }
+
+    private var glyphLookupType: GlyphNameLookupType = .undetermined
+
+    private func initGlyphNameLookup() {
+        if glyphLookupType != .undetermined { return }
+        if tableTagsToTables[.CFF_] != nil {
+            glyphLookupType = .CFF
+        } else if let postTable, postTable.version != .version3_0 {
+            glyphLookupType = .post
+        // } else if tableTagsToTables[.cmap] != nil && some other stuff {
+        // glyphLookupType = .CID
+        } else if tableTagsToTables[.TYP1] != nil {
+            glyphLookupType = .TYP1
+        } else if tableTagsToTables[.CID_] != nil {
+            glyphLookupType = .CID
+        } else {
+            glyphLookupType = .AGL
+        }
+    }
+
+    private func buildGlyphsIfNeeded() {
+        initGlyphNameLookup()
+        if _haveBuiltGlyphs { return }
+        NSLog("\(type(of: self)).\(#function) building glyphs....")
+        guard let charCodesToGlyphIDs = cmapTable?.preferredEncoding.subtable.charCodesToGlyphIDs else {
+            NSLog("\(type(of: self)).\(#function) *** NO preferred encoding could be found in cmap table!")
+            return
+        }
+        if let glyphs = glyfTable?.glyphs as? [any UIGlyph] {
+            self.glyphs = glyphs
+        }
+        // FIXME: this should be mapping UVs to glyphs, not char codes to glyphs?
+        let glyphCount = glyphs.count
+        let charCodes = charCodesToGlyphIDs.keys.sorted()
+        for charCode in charCodes {
+            let glyphID = charCodesToGlyphIDs[charCode]!
+            if glyphID >= glyphCount { continue }
+            var glyph = glyphs[Int(glyphID)]
+            _uvsToGlyphs[charCode] = glyph
+            if glyph.uv == .undefined {
+                glyph.uv = charCode
+            } else {
+                if glyph.additionalUVs == nil { glyph.additionalUVs = [] }
+                glyph.additionalUVs?.insert(Int(charCode))
+            }
+        }
+        var i = 0
+        for var glyph in glyphs {
+            if glyphLookupType == .AGL {
+                if glyph.uv != .undefined {
+                    if let glyphName = AdobeGlyphList.glyphName(for: UVBMP(glyph.uv)) {
+                        glyph.glyphName = glyphName
+                    } else {
+                        // FIXME: !! improve this method according to guidelines in AGL/AGLFN?
+                        if glyph.uv <= UVBMP.undefined {
+                            glyph.glyphName = String(format: "uni%04hX", UVBMP(glyph.uv))
+                        } else {
+                            glyph.glyphName = String(format: "u%06X", glyph.uv)
+                        }
+                    }
+                } else if glyph.uv == .undefined && i == 0 {
+                    glyph.glyphName = ".notdef"
+                } else {
+                    glyph.glyphName = "_\(glyph.glyphID)"
+                }
+            }
+            _glyphNamesToGlyphs[glyph.glyphName] = glyph
+            i += 1
+        }
+        _haveBuiltGlyphs = true
+    }
+
     public var headTable: FontTable_head? {
         return table(for: .head) as? FontTable_head
     }
@@ -223,25 +331,6 @@ public final class OTFFontFile: NSObject {
     }
     public func table(for tableTag: TableTag) -> FontTable? {
         return tableTagsToTables[tableTag]
-    }
-
-    private var glyphLookupType: GlyphNameLookupType = .undetermined
-
-    private func initGlyphNameLookup() {
-        if glyphLookupType != .undetermined { return }
-        if tableTagsToTables[.CFF_] != nil {
-            glyphLookupType = .CFF
-        } else if let postTable, postTable.version != .version3_0 {
-            glyphLookupType = .post
-//        } else if tableTagsToTables[.cmap] != nil && other stuff {
-//          glyphLookupType = .CID
-        } else if tableTagsToTables[.TYP1] != nil {
-            glyphLookupType = .TYP1
-        } else if tableTagsToTables[.CID_] != nil {
-            glyphLookupType = .CID
-        } else {
-            glyphLookupType = .AGL
-        }
     }
 
     private enum GlyphNameLookupType {

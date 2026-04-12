@@ -8,7 +8,11 @@
 import Foundation
 import RFSupport
 
-public final class FontTable_glyf: FontTable {
+/// `REQUIRES`: `maxp`, `loca`
+/// `DEPENDS ON`:
+/// `DISPLAY DEPENDS ON`: `post`
+///
+public final class FontTable_glyf: FontTable/*, UIGlyphsProvider */ {
     public var glyphs:      [Glyph] = []
 
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {

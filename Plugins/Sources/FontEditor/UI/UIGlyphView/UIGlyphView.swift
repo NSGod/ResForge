@@ -15,14 +15,20 @@ public final class UIGlyphView: NSView {
         case glyph
     }
 
-    public var glyph:               UIGlyph?
-    public var glyphFit:            Fit = .all
+    public var glyph:               UIGlyph? {
+        didSet {
+            transform = .identity
+            needsDisplay = true
+        }
+    }
+
+    public var glyphFit:            Fit = .glyph
     public var transform:           AffineTransform = .identity
     public var shouldDrawMetrics:   Bool {
         return NSHeight(bounds) >= 128.0
     }
 
-    private var metrics:            NSBezierPath?
+    private var metrics:            NSBezierPath!
 
     public override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -40,9 +46,85 @@ public final class UIGlyphView: NSView {
         glyphFit == .glyph ? NSColor.black.setStroke() : NSColor.red.setStroke()
         NSBezierPath.stroke(bounds.insetBy(dx: -0.5, dy: -0.5))
         guard let glyph else { return }
-
-
+        let yMax = glyph.metricsProvider.metrics.boundingRectForFont.maxX
+        let ascender = glyph.metricsProvider.metrics.ascender
+        // FIXME: !! or should this be glyph.metricsProvider.metrics.boundingRectForFont.minY?
+        // FIXME: I think so
+        let yMin = glyph.metricsProvider.metrics.descender
+        let capHeight = glyph.metricsProvider.metrics.capHeight
+        let xHeight = glyph.metricsProvider.metrics.xHeight
+        let italicAngle = glyph.metricsProvider.metrics.italicAngle
+        let totalHeight = yMax + abs(yMin)
+        var scaleFactor = 1.0
+        if glyphFit == .all {
+            scaleFactor = (bounds.height - 20.0)/totalHeight
+        } else {
+            scaleFactor = NSHeight(bounds)/totalHeight
+        }
+        let drawRect = (glyphFit == .all ? NSInsetRect(bounds, 10.0, 10.0) : bounds)
+        // maybe apply half pixel xy shift transform to metrics to get clean lines?
+        if shouldDrawMetrics {
+            // FIXME: !! set line width to 1.0 and draw on the 0.5 half pixel/point line to create clean 1 px wide lines
+            metrics = NSBezierPath()
+            metrics.lineWidth = 1.0
+            metrics.move(to: drawRect.origin)
+            // descender:
+            metrics.line(to: NSPoint(x: drawRect.maxX, y: drawRect.origin.y))
+            // ascender:
+            metrics.move(to: NSPoint(x: drawRect.origin.x, y: drawRect.origin.y + (abs(yMin) + ascender) * scaleFactor))
+            metrics.line(to: NSPoint(x: drawRect.maxX, y: metrics.currentPoint.y))
+        }
+        var baselineStart = drawRect.origin
+        baselineStart.y += abs(yMin) * scaleFactor
+        var baselineStop = baselineStart
+        baselineStop.x += NSWidth(drawRect)
+        if shouldDrawMetrics {
+            metrics.move(to: baselineStart)
+            metrics.line(to: baselineStop)
+            if xHeight > 0 && capHeight > 0 {
+                var startPoint = drawRect.origin
+                startPoint.y += (abs(yMin) + xHeight) * scaleFactor
+                var stopPoint = NSPoint(x: drawRect.maxX, y: startPoint.y)
+                /// xHeight
+                metrics.move(to: startPoint)
+                metrics.line(to: stopPoint)
+                startPoint = NSPoint(x: drawRect.minX, y: drawRect.origin.y + (abs(yMin) + capHeight) * scaleFactor)
+                stopPoint = NSPoint(x: drawRect.maxX, y: startPoint.y)
+                /// capHeight
+                metrics.move(to: startPoint)
+                metrics.line(to: stopPoint)
+            }
+        }
+        let origin = NSPoint(x: floor(drawRect.midX - floor(glyph.advanceWidth * scaleFactor) / 2.0), y: baselineStart.y)
+        if shouldDrawMetrics {
+            /// left sidebearing
+            var sideBearingStart = NSPoint(x: origin.x, y: drawRect.minY)
+            var sideBearingStop = NSPoint(x: origin.x, y: drawRect.maxY)
+            var italicShift = 0.0
+            if italicAngle != 0 {
+                italicShift = tan(abs(italicAngle).degreesToRadians) * hypot(sideBearingStop.x - sideBearingStart.x, sideBearingStop.y - sideBearingStart.y) / 2.0
+            }
+            sideBearingStop.x += italicShift
+            sideBearingStart.x -= italicShift
+            metrics.move(to: sideBearingStart)
+            metrics.line(to: sideBearingStop)
+            /// right sidebearing
+            let rightSidebearing = floor(drawRect.midX + floor(glyph.advanceWidth * scaleFactor) / 2.0)
+            sideBearingStart = NSPoint(x: rightSidebearing - italicShift, y: drawRect.minY)
+            sideBearingStop = NSPoint(x: rightSidebearing + italicShift, y: drawRect.maxY)
+            metrics.move(to: sideBearingStart)
+            metrics.line(to: sideBearingStop)
+            NSColor.tertiaryLabelColor.setStroke()
+            metrics.stroke()
+        }
+        if transform == .identity {
+            transform.translate(x: origin.x, y: origin.y)
+            transform.scale(scaleFactor)
+        }
+        NSGraphicsContext.saveGraphicsState()
+        (transform as NSAffineTransform).concat()
+        NSColor.black.set()
+        glyph.bezierPath?.fill()
+        NSGraphicsContext.restoreGraphicsState()
     }
-    
-
 }

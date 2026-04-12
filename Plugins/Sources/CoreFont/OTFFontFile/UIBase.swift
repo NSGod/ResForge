@@ -7,17 +7,29 @@
 
 import Cocoa
 
-public protocol UIGlyph {
+public protocol UIGlyph: FontAwaking {
     var glyphID:            GlyphID             { get }
-    var glyphName:          String              { get }
+    var glyphName:          String              { get set }
+
+    var uv:                 UV                  { get set } // primary UV
+    var additionalUVs:      IndexSet?           { get set } // UVs; nil if none or CID-based
+    var allUVs:             IndexSet?           { get set } // UVs; nil if CID-based
 
     var bezierPath:         NSBezierPath?       { get }
 
-    var glyphsProvider:     UIGlyphsProvider?   { get } /// weak
-    var metricsProvider:    UIMetricsProvider?  { get } /// weak
+    var xMin:               CGFloat             { get }
+    var yMin:               CGFloat             { get }
+    var xMax:               CGFloat             { get }
+    var yMax:               CGFloat             { get }
+
+    var advanceWidth:       CGFloat             { get }
+
+    var glyphsProvider:     UIGlyphsProvider!   { get } /// weak
+    var metricsProvider:    UIMetricsProvider!  { get } /// weak
 }
 
-public protocol UIGlyphsProvider {
+
+public protocol UIGlyphsProvider: AnyObject {
     var glyphs:          [UIGlyph] { get }
 
     func glyph<T: FixedWidthInteger>(for glyphID: T) -> UIGlyph?
@@ -34,9 +46,11 @@ extension UIGlyphsProvider {
     }
 }
 
-public protocol UIMetricsProvider {
+
+public protocol UIMetricsProvider: AnyObject {
     var metrics:          UIFontMetrics { get }
 }
+
 
 public protocol UIFontMetrics {
     var unitsPerEm:             UnitsPerEm  { get }

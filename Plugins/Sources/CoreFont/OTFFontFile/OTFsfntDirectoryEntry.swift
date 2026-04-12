@@ -94,10 +94,12 @@ public final class OTFsfntDirectoryEntry: OTFFontFileNode, DataHandleWriting, Co
         .hhea: 5,
         .hmtx: 6,
         .cmap: 7,
-        .gasp: 8,
-        .bloc: 9,
-        .EBLC: 9,
-        .bdat: 10,
-        .EBDT: 10,
+        .loca: 8,
+        .glyf: 9,
+        .gasp: 10,
+        .bloc: 11,
+        .EBLC: 11,
+        .bdat: 12,
+        .EBDT: 12,
     ]
 }

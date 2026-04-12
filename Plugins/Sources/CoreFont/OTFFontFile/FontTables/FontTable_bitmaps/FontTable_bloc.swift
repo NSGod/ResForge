@@ -15,6 +15,10 @@
 import Foundation
 import RFSupport
 
+/// `REQUIRES`: `maxp`
+/// `DEPENDS ON`:
+/// `DISPLAY DEPENDS ON`:
+///
 public class FontTable_bloc: FontTable {
 
     @objc public enum Version: Fixed {

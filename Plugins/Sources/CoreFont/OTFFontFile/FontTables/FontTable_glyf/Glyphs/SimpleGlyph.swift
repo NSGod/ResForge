@@ -51,6 +51,8 @@ extension FontTable_glyf {
                         repeatCnt -= 1
                         i += 1
                     }
+                } else {
+                    i += 1
                 }
             }
             /// read x-coordinates

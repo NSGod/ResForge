@@ -14,6 +14,10 @@ import RFSupport
  close to the table value.
  */
 
+/// `REQUIRES`: `maxp`
+/// `DEPENDS ON`:
+/// `DISPLAY DEPENDS ON`:
+
 public final class FontTable_cvt: FontTable {
     @objc public var controlValues:     [Int16]
 

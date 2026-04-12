@@ -47,6 +47,11 @@ public extension Date {
     }
 }
 
+public extension BinaryFloatingPoint {
+    var degreesToRadians: Self { return self * .pi / 180.0 }
+    var radiansToDegrees: Self { return self * 180.0 / .pi }
+}
+
 public extension URL {
     // FIXME: need to make sure this doesn't exceed NAME_MAX
     func assuringUniqueFilename() -> URL {

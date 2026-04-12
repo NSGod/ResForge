@@ -52,7 +52,7 @@ fileprivate let fixed12: UInt16 = 1 << 12
 public func Fixed2Dot14ToDouble(_ x: Fixed2Dot14) -> Double {
     Double(x) * 1.0/Double(fixed14)
 }
-
+// FIXME: do we still want this +- 0.5 thing in 2Dot14?
 public func DoubleToFixed2Dot14(_ x: Double) -> Fixed2Dot14 {
     Fixed2Dot14(x * Double(fixed14) + (x < 0 ? -0.5 : 0.5))
 }

@@ -8,6 +8,10 @@
 import Foundation
 import RFSupport
 
+/// `REQUIRES`: `maxp`
+/// `DEPENDS ON`:
+/// `DISPLAY DEPENDS ON`:
+
 /// - Note: PPEM = Pixels Per Em
 
 public final class FontTable_gasp: FontTable {
