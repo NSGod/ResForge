@@ -120,8 +120,10 @@ struct RezFormat: ResourceFileFormat {
         writer.write(UInt32(numEntries))
         assert(writer.bytesWritten == rootHeaderLength + groupHeaderLength)
 
-        // Write offsets
+        // Write offsets, deduplicating the data where possible
         var resourceDataOffset = rootHeaderLength + headerLength
+        var dataOffsets: [Data: Int] = [:]
+        var resourcesToWrite: [Resource] = []
         for (type, resources) in resourceMap {
             guard type.attributes.isEmpty else {
                 throw ResourceFormatError.typeAttributesNotSupported
@@ -130,10 +132,15 @@ struct RezFormat: ResourceFileFormat {
                 guard Self.isValid(id: resource.id) else {
                     throw ResourceFormatError.invalidID(resource.id)
                 }
-                writer.write(UInt32(resourceDataOffset))
+                // Use inout closure to get or store the default in the dictionary with only one lookup
+                let offset = {$0}(&dataOffsets[resource.data, default: resourceDataOffset])
+                writer.write(UInt32(offset))
                 writer.write(UInt32(resource.data.count))
                 writer.advance(4) // Skip name offset
-                resourceDataOffset += resource.data.count
+                if offset == resourceDataOffset {
+                    resourceDataOffset += resource.data.count
+                    resourcesToWrite.append(resource)
+                }
             }
         }
 
@@ -150,10 +157,8 @@ struct RezFormat: ResourceFileFormat {
         assert(writer.bytesWritten == rootHeaderLength + headerLength)
 
         // Write resource data
-        for resources in resourceMap.values {
-            for resource in resources {
-                writer.writeData(resource.data)
-            }
+        for resource in resourcesToWrite {
+            writer.writeData(resource.data)
         }
         assert(writer.bytesWritten == resourceDataOffset)
 
