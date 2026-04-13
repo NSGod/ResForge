@@ -115,6 +115,9 @@ public final class UIGlyphView: NSView {
             metrics.move(to: sideBearingStart)
             metrics.line(to: sideBearingStop)
             NSColor.tertiaryLabelColor.setStroke()
+            /// try a (+0.5 px, +0.5 px) transform to align lines to integral dimensions
+            let transform = AffineTransform(translationByX: 0.5, byY: 0.5)
+            metrics.transform(using: transform)
             metrics.stroke()
         }
         if transform == .identity {
