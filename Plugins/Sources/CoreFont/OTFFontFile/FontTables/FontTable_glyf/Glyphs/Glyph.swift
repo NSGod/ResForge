@@ -34,15 +34,21 @@ extension FontTable_glyf {
         }
 
         public let glyphID:                 GlyphID
-        public var glyphName:               String = ""
+        public var glyphName:               String {
+            get {
+                if _glyphName.isEmpty {
+                    _glyphName = table.fontGlyphName(for: glyphID) ?? "<\(glyphID)>"
+                }
+                return _glyphName
+            }
+            set {
+                _glyphName = newValue
+            }
+        }
 
-//        public var glyphName:               String {
-//            self.table.fontGlyphName(for: glyphID) ?? "<\(glyphID)>"
-//        }
-
-        public var uv: UV = .undefined
-        public var additionalUVs: IndexSet?
-        public var allUVs: IndexSet?
+        public var uv:                      UV = .undefined
+        public var additionalUVs:           IndexSet?
+        public var allUVs:                  IndexSet?
 
         public var advanceWidth:            CGFloat {
             return CGFloat(horizontalMetric?.advanceWidth ?? 0)
@@ -63,6 +69,8 @@ extension FontTable_glyf {
         public weak var metricsProvider: (any UIMetricsProvider)! {
             return table.fontFile
         }
+
+        private var _glyphName: String = ""
 
         internal required init(_ reader: BinaryDataReader, location: FontTable_loca.GlyphLocation, glyphID: GlyphID, table: FontTable_glyf) throws {
             self.glyphID = glyphID

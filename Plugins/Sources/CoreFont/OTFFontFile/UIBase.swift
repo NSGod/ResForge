@@ -34,16 +34,7 @@ public protocol UIGlyphsProvider: AnyObject {
 
     func glyph<T: FixedWidthInteger>(for glyphID: T) -> UIGlyph?
     func glyph(for uv: UVBMP) -> UIGlyph?
-
-    /// optional
-    func glyphName<T: FixedWidthInteger>(for glyphID: T) -> String?
-}
-
-extension UIGlyphsProvider {
-    /// optional
-    public func glyphName<T: FixedWidthInteger>(for glyphID: T) -> String? {
-        return nil
-    }
+    func glyphName<T: FixedWidthInteger>(for glyphID: T) -> String
 }
 
 

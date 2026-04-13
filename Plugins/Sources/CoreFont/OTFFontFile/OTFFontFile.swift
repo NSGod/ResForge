@@ -176,7 +176,7 @@ public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
         } else if glyphLookupType == .cmap {
 
         } else if glyphLookupType == .CFF {
-
+            // glyphName = cffTable?.glyphName(for: glyphID) ?? ""
         } else if glyphLookupType == .AGL {
 
         }
@@ -254,6 +254,7 @@ public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
         for var glyph in _glyphs {
             if glyphLookupType == .AGL {
                 if glyph.uv != .undefined {
+                    // FIXME: UVBMP(glyph.uv) is unsafe
                     if let glyphName = AdobeGlyphList.glyphName(for: UVBMP(glyph.uv)) {
                         glyph.glyphName = glyphName
                     } else {
@@ -267,6 +268,7 @@ public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
                 } else if glyph.uv == .undefined && i == 0 {
                     glyph.glyphName = ".notdef"
                 } else {
+                    // ala FontLab
                     glyph.glyphName = "_\(glyph.glyphID)"
                 }
             }
