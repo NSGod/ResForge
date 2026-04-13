@@ -46,11 +46,12 @@ public final class UIGlyphView: NSView {
         glyphFit == .glyph ? NSColor.black.setStroke() : NSColor.red.setStroke()
         NSBezierPath.stroke(bounds.insetBy(dx: -0.5, dy: -0.5))
         guard let glyph else { return }
-        let yMax = glyph.metricsProvider.metrics.boundingRectForFont.maxX
+        let yMax = glyph.metricsProvider.metrics.boundingRectForFont.maxY
         let ascender = glyph.metricsProvider.metrics.ascender
         // FIXME: !! or should this be glyph.metricsProvider.metrics.boundingRectForFont.minY?
         // FIXME: I think so
-        let yMin = glyph.metricsProvider.metrics.descender
+        // let yMin = glyph.metricsProvider.metrics.descender
+        let yMin = glyph.metricsProvider.metrics.boundingRectForFont.minY
         let capHeight = glyph.metricsProvider.metrics.capHeight
         let xHeight = glyph.metricsProvider.metrics.xHeight
         let italicAngle = glyph.metricsProvider.metrics.italicAngle
@@ -96,26 +97,29 @@ public final class UIGlyphView: NSView {
             }
         }
         let origin = NSPoint(x: floor(drawRect.midX - floor(glyph.advanceWidth * scaleFactor) / 2.0), y: baselineStart.y)
+        let baselineRatio = baselineStart.y / drawRect.height
         if shouldDrawMetrics {
             /// left sidebearing
             var sideBearingStart = NSPoint(x: origin.x, y: drawRect.minY)
             var sideBearingStop = NSPoint(x: origin.x, y: drawRect.maxY)
             var italicShift = 0.0
             if italicAngle != 0 {
-                italicShift = tan(abs(italicAngle).degreesToRadians) * hypot(sideBearingStop.x - sideBearingStart.x, sideBearingStop.y - sideBearingStart.y) / 2.0
+                italicShift = tan(abs(italicAngle).degreesToRadians) * hypot(sideBearingStop.x - sideBearingStart.x, sideBearingStop.y - sideBearingStart.y)
             }
-            sideBearingStop.x += italicShift
-            sideBearingStart.x -= italicShift
+            let italicBottomShift = -italicShift * baselineRatio
+            let italicTopShift = italicShift + italicBottomShift
+            sideBearingStop.x += italicTopShift
+            sideBearingStart.x += italicBottomShift
             metrics.move(to: sideBearingStart)
             metrics.line(to: sideBearingStop)
             /// right sidebearing
             let rightSidebearing = floor(drawRect.midX + floor(glyph.advanceWidth * scaleFactor) / 2.0)
-            sideBearingStart = NSPoint(x: rightSidebearing - italicShift, y: drawRect.minY)
-            sideBearingStop = NSPoint(x: rightSidebearing + italicShift, y: drawRect.maxY)
+            sideBearingStart = NSPoint(x: rightSidebearing + italicBottomShift, y: drawRect.minY)
+            sideBearingStop = NSPoint(x: rightSidebearing + italicTopShift, y: drawRect.maxY)
             metrics.move(to: sideBearingStart)
             metrics.line(to: sideBearingStop)
             NSColor.tertiaryLabelColor.setStroke()
-            /// try a (+0.5 px, +0.5 px) transform to align lines to integral dimensions
+            /// use a (+0.5 px, +0.5 px) transform to align lines to integral dimensions
             let transform = AffineTransform(translationByX: 0.5, byY: 0.5)
             metrics.transform(using: transform)
             metrics.stroke()
