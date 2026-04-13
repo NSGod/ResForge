@@ -45,7 +45,7 @@ extension OTFFontFile {
             if capHeight == 0 { capHeight = fontFile.glyph(forName: "H").yMax }
             if xHeight == 0 { xHeight = fontFile.glyph(forName: "x").yMax }
             if let postTable = fontFile.postTable {
-                italicAngle = CGFloat(postTable.italicAngle)
+                italicAngle = FixedToDouble(postTable.italicAngle)
             }
             
         }
