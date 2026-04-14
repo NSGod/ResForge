@@ -33,6 +33,9 @@ public func DoubleToFixed(_ x: Double) -> Fixed {
 public func FixedToFloat(_ x: Fixed) -> Float {
     Float(x) * 1.0/Float(fixedScale)
 }
+public func FloatToFixed(_ x: Float) -> Fixed {
+    Fixed(x * Float(fixedScale) + (x < 0 ? -0.5 : 0.5))
+}
 
 public extension Fixed {
     func makeVersion(_ major: Int32, _ minor: Int32) -> Fixed {
