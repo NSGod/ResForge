@@ -126,10 +126,13 @@ class ResourceDocument: NSDocument, NSWindowDelegate, NSDraggingDestination, NST
     override func prepareSavePanel(_ savePanel: NSSavePanel) -> Bool {
         if let ext = format.filenameExtension(for: fileURL) {
             savePanel.nameFieldStringValue.append(".\(ext)")
+            if #available(macOS 15, *) {
+                savePanel.currentContentType = .init(ClassicFormat.typeName)
+            }
         }
         savePanel.isExtensionHidden = false
         savePanel.allowsOtherFileTypes = true
-        return super.prepareSavePanel(savePanel)
+        return true
     }
 
     override func writeSafely(to url: URL, ofType typeName: String, for saveOperation: NSDocument.SaveOperationType) throws {
