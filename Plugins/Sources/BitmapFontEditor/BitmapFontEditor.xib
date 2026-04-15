@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24764" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24765" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24764"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24765"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="System colors introduced in macOS 10.14" minToolsVersion="10.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -10,6 +10,7 @@
         <customObject id="-2" userLabel="File's Owner" customClass="BitmapFontEditor" customModule="BitmapFontEditor">
             <connections>
                 <outlet property="bitDepthPopUpButton" destination="hd4-0v-R7c" id="sia-XS-MIA"/>
+                <outlet property="encodingField" destination="cSl-su-cuW" id="CuO-ZJ-sZZ"/>
                 <outlet property="fontTypeBitfieldControl" destination="5aj-GY-zA2" id="5Na-aW-uHY"/>
                 <outlet property="popover" destination="XSO-mT-6GH" id="FcX-hM-DiG"/>
                 <outlet property="popoverButton" destination="2jR-1S-GSs" id="UC9-Yl-VhR"/>
@@ -622,14 +623,14 @@
                         </userDefinedRuntimeAttributes>
                     </customView>
                     <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rA4-sH-MeB">
-                        <rect key="frame" x="280" y="23" width="622" height="328"/>
+                        <rect key="frame" x="280" y="23" width="622" height="309"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" id="GGi-zA-SES">
-                            <rect key="frame" x="1" y="1" width="620" height="326"/>
+                            <rect key="frame" x="1" y="1" width="620" height="307"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" autosaveName="glyphsTableView" rowHeight="20" headerView="shp-p7-phf" viewBased="YES" id="EcZ-3V-gHT" userLabel="tableView">
-                                    <rect key="frame" x="0.0" y="0.0" width="620" height="298"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="620" height="279"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <size key="intercellSpacing" width="8" height="0.0"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -928,6 +929,24 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </tableHeaderView>
                     </scrollView>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8fD-pY-JiW">
+                        <rect key="frame" x="278" y="338" width="73" height="14"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Encoding:" id="Ya4-A3-8qe">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cSl-su-cuW">
+                        <rect key="frame" x="351" y="338" width="177" height="14"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="left" id="jyK-dA-vkn">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
             </view>
             <connections>

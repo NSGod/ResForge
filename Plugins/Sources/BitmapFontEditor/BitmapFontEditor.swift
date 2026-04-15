@@ -31,6 +31,7 @@ public final class BitmapFontEditor: AbstractEditor, ResourceEditor, Placeholder
 
     @IBOutlet var popover:                          NSPopover!
     @IBOutlet weak var popoverButton:               NSButton!
+    @IBOutlet weak var encodingField:               NSTextField!
 
     public let resource:                    Resource
     private let manager:                    RFEditorManager
@@ -103,6 +104,7 @@ public final class BitmapFontEditor: AbstractEditor, ResourceEditor, Placeholder
         previewView.alignment = .center
         previewView.stringValue = string
         previewView.nfnt = nfnt
+        encodingField.stringValue = nfnt.encoding.name
     }
 
     @IBAction func showPopover(_ sender: Any) {
@@ -214,6 +216,7 @@ public final class BitmapFontEditor: AbstractEditor, ResourceEditor, Placeholder
     }
 
     public static func placeholderName(for resource: Resource) -> String? {
+        NSLog("\(type(of: self)).\(#function)")
         // TODO: parse FONDs and label NFNTs according to font association entries?
         return nil
     }
