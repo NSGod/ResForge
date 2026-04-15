@@ -5,7 +5,7 @@
 //  Created by Mark Douma on 4/4/2026.
 //
 
-import Cocoa
+import Foundation
 
 extension FontTable_glyf {
 

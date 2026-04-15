@@ -38,7 +38,7 @@ extension FontTable_glyf {
             public let rawValue: UInt16
 
             public static let none:                     Flags = []
-            public static let argsAre16Bit:        Flags = .init(rawValue: 1 << 0)  /// (1, 0x01) if set, they're 16-bit, otherwise 8-bit
+            public static let argsAre16Bit:             Flags = .init(rawValue: 1 << 0)  /// (1, 0x01) if set, they're 16-bit, otherwise 8-bit
             public static let argsAreXYValues:          Flags = .init(rawValue: 1 << 1)  /// (2, 0x02) if set, arguments are xy values, otherwise they're points
             public static let roundXYToGrid:            Flags = .init(rawValue: 1 << 2)  /// (4, 0x04) if set, round xy values to grid, otherwise don't
                                                                                          ///   (only relevant if `.argsAreXYValues` is set)
@@ -58,7 +58,7 @@ extension FontTable_glyf {
             /// bits 4, 13, 14, & 15 are reserved; set to 0
 
             /// The Apple and MS rasterizers behave differently for
-            /// scaled composite components: one does scale first and then translate
+            /// scaled composite components: one does scale first and then translate,
             /// and the other does it vice versa. MS defined some flags to indicate
             /// the difference, but it seems nobody actually _sets_ those flags.
             ///
@@ -74,8 +74,8 @@ extension FontTable_glyf {
         }
 
         // MARK: -
-        public var flags:                   Flags = .none
-        public var glyphID:                 GlyphID = 0
+        public var flags:                   Flags = .none       /// UInt16
+        public var glyphID:                 GlyphID = 0         /// UInt16
         public var arg1:                    Int16 = 0
         public var arg2:                    Int16 = 0
 
@@ -87,19 +87,41 @@ extension FontTable_glyf {
         public var transform:               AffineTransform = .identity
         public var pointMatchingTransform:  AffineTransform?    /// for compound points
 
-        public var bezierPath:              NSBezierPath?
+        public var bezierPath:              NSBezierPath? {
+            get {
+                if let _bezierPath { return _bezierPath }
+                var path = glyph.bezierPath!.copy() as! NSBezierPath
+                path.transform(using: transform)
+                _bezierPath = path
+                return _bezierPath
+            }
+            set {
+                _bezierPath = newValue
+            }
+        }
 
-        public var coordinates:             Coordinates!
-        
+        public var coordinates:             Coordinates {
+            get {
+                if let _coordinates { return _coordinates }
+                var coords = glyph.coordinates!
+                coords.transform(using: transform)
+                _coordinates = coords
+                return _coordinates
+            }
+            set {
+                _coordinates = newValue
+            }
+        }
+
         /// parent glyph:
         public weak var compoundGlyph:      CompoundGlyph!
 
         /// referenced glyph; this could be a simple or compound glyph
-        public weak var glyph:         Glyph? {
-            return (table as! FontTable_glyf).glyph(for: glyphID)
-        }
+        public weak var glyph:              Glyph!
 
-
+        private var _bezierPath:            NSBezierPath!
+        private var _coordinates:           Coordinates!
+        
         public init(_ reader: BinaryDataReader, compoundGlyph: CompoundGlyph, table: FontTable_glyf) throws {
             self.compoundGlyph = compoundGlyph
             fDotTransform = Array(repeating: Array(repeating: 0, count: 2), count: 2)
@@ -184,7 +206,6 @@ extension FontTable_glyf {
                 instructionsLength = try reader.read()
                 instructions = try reader.readData(length: Int(instructionsLength))
             }
-
         }
 
         public static func components(_ reader: BinaryDataReader, compoundGlyph: CompoundGlyph, table: FontTable_glyf) throws -> [Component] {
@@ -215,11 +236,12 @@ extension FontTable_glyf {
             /// compound glyph calls our variation below
         }
 
-        /// NOTE: component doesn't alter coordinates, it uses them for component point matching to derive pointMatchingTransform
+        /// NOTE: component doesn't alter coordinates, it uses them for component point matching to derive `pointMatchingTransform`
         public func awakeFromFont(with coordinates: Coordinates?) {
+            glyph = (table as! FontTable_glyf).glyph(for: glyphID)
             if !flags.contains(.argsAreXYValues) {
                 /// Component uses two reference points: we apply the transform _before_ computing
-                /// the offset between points.
+                /// the offset between the points.
                 var p1 = 0 /// Compound matching point index
                 var p2 = 0 /// Component matching point index
                 if flags.contains(.argsAre16Bit) {

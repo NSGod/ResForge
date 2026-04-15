@@ -38,10 +38,10 @@ extension FontTable_glyf {
             var allCoordinates: Coordinates? = nil
             for component in components {
                 component.awakeFromFont(with: allCoordinates)
-                if var allCoordinates {
-                    allCoordinates.append(component.coordinates)
-                } else {
+                if allCoordinates == nil {
                     allCoordinates = component.coordinates
+                } else {
+                    allCoordinates!.append(component.coordinates)
                 }
             }
             coordinates = allCoordinates

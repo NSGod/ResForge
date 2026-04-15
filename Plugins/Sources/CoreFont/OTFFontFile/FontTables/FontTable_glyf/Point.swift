@@ -40,12 +40,35 @@ extension FontTable_glyf {
         }
 
         public static func * (lhs: Point, rhs: CGFloat) -> Point {
-            return Point(point: NSMakePoint(lhs.x * rhs, lhs.y * rhs), flags: lhs.flags)
+            return Point(point: NSPoint(x: lhs.x * rhs, y: lhs.y * rhs), flags: lhs.flags)
         }
 
         public static func *= (lhs: inout Point, rhs: CGFloat) {
             lhs = lhs * rhs
         }
 
+        public static func + (lhs: Point, rhs: CGFloat) -> Point {
+            return Point(point: NSPoint(x: lhs.x + rhs, y: lhs.y + rhs), flags: lhs.flags)
+        }
+
+        public static func += (lhs: inout Point, rhs: CGFloat) {
+            lhs = lhs + rhs
+        }
+
+        public static func + (lhs: Point, rhs: (CGFloat, CGFloat)) -> Point {
+            return Point(point: NSPoint(x: lhs.x + rhs.0, y: lhs.y + rhs.1), flags: lhs.flags)
+        }
+
+        public static func += (lhs: inout Point, rhs: (CGFloat, CGFloat)) {
+            lhs = lhs + rhs
+        }
+
+        public static func - (lhs: Point, rhs: CGFloat) -> Point {
+            Point(point: NSPoint(x: lhs.x - rhs, y: lhs.y - rhs), flags: lhs.flags)
+        }
+
+        public static func - (lhs: Point, rhs: (CGFloat, CGFloat)) -> Point {
+            Point(point: NSPoint(x: lhs.x - rhs.0, y: lhs.y - rhs.1), flags: lhs.flags)
+        }
     }
 }
