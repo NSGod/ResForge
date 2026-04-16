@@ -1,5 +1,5 @@
 //
-//  UIBitmapGlyph.swift
+//  FEBitmapGlyph.swift
 //  FontEditor
 //
 //  Created by Mark Douma on 3/28/2026.
@@ -8,8 +8,8 @@
 import Cocoa
 import CoreFont
 
-public final class UIBitmapGlyph: NSObject, Comparable {
-
+/// UI/objc-wrapper around `Sbit.BitmapGlyph`
+public final class FEBitmapGlyph: NSObject, Comparable {
     var glyph:                  Sbit.BitmapGlyph
     @objc let glyphID:          GlyphID
     @objc lazy var glyphName:   String = {
@@ -22,15 +22,15 @@ public final class UIBitmapGlyph: NSObject, Comparable {
         super.init()
     }
 
-    public static func bitmapGlyphs(with strike: UIBitmapStrike) -> [UIBitmapGlyph] {
-        return strike.strike.glyphs.map { UIBitmapGlyph(with: $0) }
+    public static func bitmapGlyphs(with strike: FEBitmapStrike) -> [FEBitmapGlyph] {
+        return strike.strike.glyphs.map { FEBitmapGlyph(with: $0) }
     }
 
-    public static func < (lhs: UIBitmapGlyph, rhs: UIBitmapGlyph) -> Bool {
+    public static func < (lhs: FEBitmapGlyph, rhs: FEBitmapGlyph) -> Bool {
         return lhs.glyph < rhs.glyph
     }
 
-    public static func == (lhs: UIBitmapGlyph, rhs: UIBitmapGlyph) -> Bool {
+    public static func == (lhs: FEBitmapGlyph, rhs: FEBitmapGlyph) -> Bool {
         return lhs.glyph == rhs.glyph
     }
 }

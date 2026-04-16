@@ -17,7 +17,7 @@ final class ViewController_bitmapFont: FontTableViewController, NSTableViewDeleg
     var blocTable:              FontTable_bloc
     var bdatTable:              FontTable_bdat
 
-    @objc dynamic var strikes:  [UIBitmapStrike]
+    @objc dynamic var strikes:  [FEBitmapStrike]
 
     @MainActor required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -39,7 +39,7 @@ final class ViewController_bitmapFont: FontTableViewController, NSTableViewDeleg
             }
             self.blocTable = blocTable
         }
-        strikes = UIBitmapStrike.bitmapStrikes(with: bdatTable.bitmapStrikes)
+        strikes = FEBitmapStrike.bitmapStrikes(with: bdatTable.bitmapStrikes)
         super.init(with: fontTable)
     }
     
@@ -50,7 +50,7 @@ final class ViewController_bitmapFont: FontTableViewController, NSTableViewDeleg
 
     // MARK: <NSTableViewDelegate>
     func tableViewSelectionDidChange(_ notification: Notification) {
-        let uiGlyph = glyphsController.selectedObjects.first! as! UIBitmapGlyph
+        let uiGlyph = glyphsController.selectedObjects.first! as! FEBitmapGlyph
         let image = uiGlyph.glyph.image
         imageView.image = image
     }

@@ -90,7 +90,7 @@ extension FontTable_glyf {
         public var bezierPath:              NSBezierPath? {
             get {
                 if let _bezierPath { return _bezierPath }
-                var path = glyph.bezierPath!.copy() as! NSBezierPath
+                let path = glyph.bezierPath!.copy() as! NSBezierPath
                 path.transform(using: transform)
                 _bezierPath = path
                 return _bezierPath
