@@ -71,7 +71,7 @@ extension FontTable_glyf {
             var pt2: Point  /// next point
             var workingPoint: NSPoint = .zero
             var iStart = 0 // start coordinate index
-            var bPathRep = NSBezierPath()
+            let bPathRep = NSBezierPath()
             for contour in contours {
                 assert(contour.numPoints > 0)
                 let iEnd = contour.points.count - 1
@@ -142,6 +142,7 @@ extension FontTable_glyf {
                         nSegs -= 1
                     }
                 }
+                iStart = iEnd + 1
             }
             let hMetric = glyph.horizontalMetric
             let vMetric = glyph.verticalMetric
