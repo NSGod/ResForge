@@ -227,19 +227,8 @@ extension FontEditor: NSTableViewDelegate, NSTableViewDataSource {
         let tag: TableTag = selectedDirEntry.table.tableTag
         if let existingViewController = tableTagsToViewControllers[tag] {
             box.contentView = existingViewController.view
-            tableTagField.stringValue = tag.fourCharString
-            tableTagDescriptionField.stringValue = String(describing: tag)
-            return
-            // FIXME: do this in one line with || or something?
-        } else if tag == .bdat, let existingVC = tableTagsToViewControllers[.bloc] {
+        } else if tag == .bdat || tag == .bloc, let existingVC = tableTagsToViewControllers[tag == .bdat ? .bloc : .bdat] {
             box.contentView = existingVC.view
-            tableTagField.stringValue = tag.fourCharString
-            tableTagDescriptionField.stringValue = String(describing: tag)
-            tableTagsToViewControllers[tag] = existingVC
-        } else if tag == .bloc, let existingVC = tableTagsToViewControllers[.bdat] {
-            box.contentView = existingVC.view
-            tableTagField.stringValue = tag.fourCharString
-            tableTagDescriptionField.stringValue = String(describing: tag)
             tableTagsToViewControllers[tag] = existingVC
         } else {
             let viewControllerClass: FontTableViewController.Type = FontTableViewController.class(for: tag).self
@@ -252,8 +241,8 @@ extension FontEditor: NSTableViewDelegate, NSTableViewDataSource {
             }
             box.contentView = viewController.view
             tableTagsToViewControllers[tag] = viewController
-            tableTagField.stringValue = tag.fourCharString
-            tableTagDescriptionField.stringValue = String(describing: tag)
         }
+        tableTagField.stringValue = tag.fourCharString
+        tableTagDescriptionField.stringValue = String(describing: tag)
     }
 }
