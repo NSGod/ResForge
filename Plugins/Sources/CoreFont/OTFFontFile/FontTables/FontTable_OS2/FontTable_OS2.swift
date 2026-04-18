@@ -23,31 +23,6 @@ public final class FontTable_OS2: FontTable {
         case version5           = 5
         case none               = 0xffff
 
-        public var length: Int {
-            switch self {
-                case .version0:
-                    return 78
-                case .version1:
-                    return 86
-                case .version2, .version3, .version4:
-                    return 96
-                case .version5:
-                    return 100
-                case .none:
-                    return 0
-            }
-        }
-
-        public static func version(forLength length: Int) -> Version {
-            switch length {
-                case 78: return .version0
-                case 86: return .version1
-                case 96: return .version2
-                case 100: return .version5
-                default: return .version0
-            }
-        }
-
         public static func < (lhs: Version, rhs: Version) -> Bool {
             return lhs.rawValue < rhs.rawValue
         }
