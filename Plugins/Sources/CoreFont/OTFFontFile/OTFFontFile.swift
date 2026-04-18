@@ -48,6 +48,26 @@ public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
         return _notDef
     }()
 
+    @objc public var postScriptName: String {
+        return nameTable?.postScriptName ?? NSLocalizedString("<Unknown>", comment: "")
+    }
+
+    public var numGlyphs: Int {
+        if glyphLookupType == .undetermined { initGlyphNameLookup() }
+        // FIXME: !! allow for other methods to get glyph count (see /afdko/c/spot/source/global.c for more info)
+        if glyphLookupType == .post || glyphLookupType == .cmap {
+            return Int(maxpTable?.numGlyphs ?? 0)
+        } else if glyphLookupType == .CFF {
+            // return CFFTable.numGlyphs
+            return 0
+        } else if glyphLookupType == .TYP1 {
+            return 0
+        } else if glyphLookupType == .CID {
+            return 0
+        }
+        return Int(maxpTable?.numGlyphs ?? 0)
+    }
+
     private var data:                   Data
     private let reader:                 BinaryDataReader
 
@@ -145,26 +165,6 @@ public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
 
     private func sortTables() {
         tables.sort(by: FontTable.OTFWritingOrderSort)
-    }
-
-    public var postScriptName: String {
-        return nameTable?.postScriptName ?? NSLocalizedString("<Unknown>", comment: "")
-    }
-    
-    public var numGlyphs: Int {
-        if glyphLookupType == .undetermined { initGlyphNameLookup() }
-        // FIXME: !! allow for other methods to get glyph count (see /afdko/c/spot/source/global.c for more info)
-        if glyphLookupType == .post || glyphLookupType == .cmap {
-            return Int(maxpTable?.numGlyphs ?? 0)
-        } else if glyphLookupType == .CFF {
-            // return CFFTable.numGlyphs
-            return 0
-        } else if glyphLookupType == .TYP1 {
-            return 0
-        } else if glyphLookupType == .CID {
-            return 0
-        }
-        return Int(maxpTable?.numGlyphs ?? 0)
     }
 
     public func glyphName<T: FixedWidthInteger>(for glyphID: T) -> String {
@@ -279,66 +279,27 @@ public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
         _notDef = _glyphNamesToGlyphs[".notdef"] ?? _glyphs.first!
     }
 
-    public var headTable: FontTable_head? {
-        return table(for: .head) as? FontTable_head
-    }
-    public var maxpTable: FontTable_maxp? {
-        return table(for: .maxp) as? FontTable_maxp
-    }
-    public var postTable: FontTable_post? {
-        return table(for: .post) as? FontTable_post
-    }
-    public var nameTable: FontTable_name? {
-        return table(for: .name) as? FontTable_name
-    }
-    public var hheaTable: FontTable_hhea? {
-        return table(for: .hhea) as? FontTable_hhea
-    }
-    public var hmtxTable: FontTable_hmtx? {
-        return table(for: .hmtx) as? FontTable_hmtx
-    }
-    public var os2Table: FontTable_OS2? {
-        return table(for: .OS_2) as? FontTable_OS2
-    }
-    public var gaspTable: FontTable_gasp? {
-        return table(for: .gasp) as? FontTable_gasp
-    }
-    public var cvtTable: FontTable_cvt? {
-        return table(for: .cvt_ ) as? FontTable_cvt
-    }
-    public var cmapTable: FontTable_cmap? {
-        return table(for: .cmap) as? FontTable_cmap
-    }
-    public var vheaTable: FontTable_vhea? {
-        return table(for: .vhea) as? FontTable_vhea
-    }
-    public var vmtxTable: FontTable_vmtx? {
-        return table(for: .vmtx) as? FontTable_vmtx
-    }
-    public var featTable: FontTable_feat? {
-        return table(for: .feat) as? FontTable_feat
-    }
-    public var bhedTable: FontTable_bhed? {
-        return table(for: .bhed) as? FontTable_bhed
-    }
-    public var locaTable: FontTable_loca? {
-        return table(for: .loca) as? FontTable_loca
-    }
-    public var glyfTable: FontTable_glyf? {
-        return table(for: .glyf) as? FontTable_glyf
-    }
-    public var blocTable: FontTable_bloc? {
-        return table(for: .bloc) as? FontTable_bloc
-    }
-    public var bdatTable: FontTable_bdat? {
-        return table(for: .bdat) as? FontTable_bdat
-    }
-    public var EBLCTable: FontTable_EBLC? {
-        return table(for: .EBLC) as? FontTable_EBLC
-    }
-    public var EBDTTable: FontTable_EBDT? {
-        return table(for: .EBDT) as? FontTable_EBDT
-    }
+    public var headTable: FontTable_head? { table(for: .head) as? FontTable_head }
+    public var maxpTable: FontTable_maxp? { table(for: .maxp) as? FontTable_maxp }
+    public var postTable: FontTable_post? { table(for: .post) as? FontTable_post }
+    public var nameTable: FontTable_name? { table(for: .name) as? FontTable_name }
+    public var hheaTable: FontTable_hhea? { table(for: .hhea) as? FontTable_hhea }
+    public var hmtxTable: FontTable_hmtx? { table(for: .hmtx) as? FontTable_hmtx }
+    public var os2Table:  FontTable_OS2?  { table(for: .OS_2) as? FontTable_OS2  }
+    public var gaspTable: FontTable_gasp? { table(for: .gasp) as? FontTable_gasp }
+    public var cvtTable:  FontTable_cvt?  { table(for: .cvt_) as? FontTable_cvt  }
+    public var cmapTable: FontTable_cmap? { table(for: .cmap) as? FontTable_cmap }
+    public var vheaTable: FontTable_vhea? { table(for: .vhea) as? FontTable_vhea }
+    public var vmtxTable: FontTable_vmtx? { table(for: .vmtx) as? FontTable_vmtx }
+    public var featTable: FontTable_feat? { table(for: .feat) as? FontTable_feat }
+    public var bhedTable: FontTable_bhed? { table(for: .bhed) as? FontTable_bhed }
+    public var locaTable: FontTable_loca? { table(for: .loca) as? FontTable_loca }
+    public var glyfTable: FontTable_glyf? { table(for: .glyf) as? FontTable_glyf }
+    public var blocTable: FontTable_bloc? { table(for: .bloc) as? FontTable_bloc }
+    public var bdatTable: FontTable_bdat? { table(for: .bdat) as? FontTable_bdat }
+    public var EBLCTable: FontTable_EBLC? { table(for: .EBLC) as? FontTable_EBLC }
+    public var EBDTTable: FontTable_EBDT? { table(for: .EBDT) as? FontTable_EBDT }
+
     public func table(for tableTag: TableTag) -> FontTable? {
         return tableTagsToTables[tableTag]
     }
