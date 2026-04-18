@@ -29,6 +29,10 @@ extension FontTable_cmap {
         public var idRangeOffsets:      [UInt16] = []   // [segCount]
         public var glyphIDs:            [GlyphID] = []  // [numGlyphs]
 
+        public override var nodeLength: UInt32 {
+            return Self.nodeLengthFor(segmentCount: segCountX2 / 2, glyphCount: UInt16(glyphIDs.count))
+        }
+
         public required init(_ reader: BinaryDataReader?, offset: Int? = nil, encoding: Encoding, table: FontTable) throws {
             try super.init(reader, offset: offset, encoding: encoding, table: table)
             if let reader {

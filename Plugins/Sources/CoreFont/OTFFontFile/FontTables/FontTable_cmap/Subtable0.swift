@@ -16,6 +16,10 @@ extension FontTable_cmap {
         // public var languageID:       LanguageID      // one-based for Mac; should be 0 for all other platforms
         public var glyphIDs:            [UInt8] = []    // UInt8[256]
 
+        public override var nodeLength: UInt32 {
+            return 262
+        }
+
         public required init(_ reader: BinaryDataReader?, offset: Int? = nil, encoding: Encoding, table: FontTable) throws {
             try super.init(reader, offset: offset, encoding: encoding, table: table)
             if let reader {
@@ -40,10 +44,6 @@ extension FontTable_cmap {
             handle.write(languageID.rawValue)   // UInt16
             glyphIDs.forEach { handle.write($0) }
             handle.popAndSeekToSavedOffset()
-        }
-
-        public override var nodeLength: UInt32 {
-            return 262
         }
     }
 }

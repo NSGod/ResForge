@@ -18,6 +18,10 @@ extension FontTable_cmap {
         public var numGroups:           UInt32 = 0
         public var groups:              [Group] = []    // [numGroups]
 
+        public override var nodeLength: UInt32 {
+            return UInt32(MemoryLayout<UInt32>.size) * 4 + numGroups * Group.nodeLength
+        }
+
         public required init(_ reader: BinaryDataReader?, offset: Int? = nil, encoding: FontTable_cmap.Encoding, table: FontTable) throws {
             try super.init(reader, offset: offset, encoding: encoding, table: table)
             if let reader {
