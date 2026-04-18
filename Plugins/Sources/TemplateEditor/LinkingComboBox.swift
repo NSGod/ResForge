@@ -32,7 +32,7 @@ class LinkingComboBox: NSComboBox {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func draw(_ dirtyRect: NSRect) {
+    override func viewWillDraw() {
         if let linkIcon {
             linkButton.image = NSImage(systemSymbolName: linkIcon, accessibilityDescription: nil)
         }
@@ -46,7 +46,7 @@ class LinkingComboBox: NSComboBox {
                 clip.frame = frame
             }
         }
-        super.draw(dirtyRect)
+        super.viewWillDraw()
     }
 
     @objc private func followLink(_ sender: Any) {
@@ -65,16 +65,6 @@ class LinkingComboBoxCell: NSComboBoxCell {
             dRect.size.width -= 16
         }
         return dRect
-    }
-
-    // On macOS 26 we need to adjust both the drawingRect (when editing) and the interior (when not editing)
-    // On earlier versions, we only need to adjust one
-    override func drawInterior(withFrame cellFrame: NSRect, in controlView: NSView) {
-        var dRect = cellFrame
-        if #available(macOS 26, *), let control = controlView as? LinkingComboBox, control.linkIcon != nil {
-            dRect.size.width -= 16
-        }
-        super.drawInterior(withFrame: dRect, in: controlView)
     }
 }
 
