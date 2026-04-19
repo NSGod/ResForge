@@ -72,7 +72,7 @@ extension FontTable_cmap {
         public override func write(to handle: DataHandle, offset: Int? = nil) throws {
             assert(offset == nil)
             handle.write(platformID)
-            handle.write(encodingID.rawValue)
+            handle.write(encodingID)
             handle.write(self.offset)
             try subtable.write(to: handle, offset: Int(self.offset))
         }

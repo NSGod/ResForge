@@ -76,10 +76,10 @@ extension FontTable_name {
         }
 
         public func write(to handle: DataHandle, stringOffset: UInt16) throws {
-            handle.write(platformID.rawValue)
-            handle.write(encodingID.rawValue)
-            handle.write(languageID.rawValue)
-            handle.write(nameID.rawValue)
+            handle.write(platformID)
+            handle.write(encodingID)
+            handle.write(languageID)
+            handle.write(nameID)
             handle.write(length)
             handle.write(offset)
             /// if our data has been set to nil, our offset is referencing an existing string,

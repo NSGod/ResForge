@@ -41,7 +41,7 @@ extension FontTable_cmap {
             handle.seek(to: offset)
             try super.write(to: handle, offset: offset)
             handle.write(length)
-            handle.write(languageID.rawValue)   // UInt16
+            handle.write(languageID)   // UInt16
             glyphIDs.forEach { handle.write($0) }
             handle.popAndSeekToSavedOffset()
         }

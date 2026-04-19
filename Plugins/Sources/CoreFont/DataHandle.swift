@@ -96,6 +96,10 @@ public final class DataHandle {
         write(value.rawValue, bigEndian: bigEndian)
     }
 
+    public func write<T: FauxRawRepresentable>(_ value: T, bigEndian: Bool? = nil) where T.RawValue: FixedWidthInteger {
+        write(value.rawValue, bigEndian: bigEndian)
+    }
+
     public func writeData(_ data: Data) {
         let subrange = _dataOffset..<_dataOffset + data.count
         if !self.data.indices.contains(subrange.upperBound) {

@@ -43,7 +43,7 @@ extension FontTable_feat {
             handle.pushSavedOffset()
             handle.seek(to: offset)
             handle.write(setting)
-            handle.write(nameID.rawValue)
+            handle.write(nameID)
             handle.popAndSeekToSavedOffset()
         }
     }

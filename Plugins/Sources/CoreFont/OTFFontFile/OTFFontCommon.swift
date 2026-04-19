@@ -51,6 +51,12 @@ public extension FixedWidthInteger {
     }
 }
 
+public protocol FauxRawRepresentable<RawValue> {
+    associatedtype RawValue
+
+    var rawValue: Self.RawValue { get }
+}
+
 public struct OTFsfntFormat: RawRepresentable, Equatable {
     public let rawValue: UInt32
 
@@ -724,7 +730,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
 }
 
 // MARK: -
-public enum EncodingID: Comparable, CustomStringConvertible, CustomDebugStringConvertible {
+public enum EncodingID: FauxRawRepresentable, Comparable, CustomStringConvertible, CustomDebugStringConvertible {
     case unicode(UnicodeEncodingID)
     case mac(MacScriptID)
     case microsoft(MicrosoftEncodingID)
@@ -816,7 +822,7 @@ public enum EncodingID: Comparable, CustomStringConvertible, CustomDebugStringCo
 }
 
 
-public enum LanguageID: Comparable, CustomStringConvertible, CustomDebugStringConvertible {
+public enum LanguageID: FauxRawRepresentable, Comparable, CustomStringConvertible, CustomDebugStringConvertible {
     case unicode
     case mac(MacLanguageID)
     case microsoft(MicrosoftLanguageID)
@@ -910,7 +916,7 @@ public enum LanguageID: Comparable, CustomStringConvertible, CustomDebugStringCo
 
 public extension FontTable_name {
 
-    enum FontNameID: Hashable, CustomStringConvertible, CustomDebugStringConvertible {
+    enum FontNameID: FauxRawRepresentable, Hashable, CustomStringConvertible, CustomDebugStringConvertible {
         case copyright                 // = 0
         case family                    // = 1
         case subfamily                 // = 2

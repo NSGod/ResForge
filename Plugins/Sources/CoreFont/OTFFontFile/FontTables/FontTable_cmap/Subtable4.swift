@@ -80,7 +80,7 @@ extension FontTable_cmap {
                 self.charCodesToGlyphIDs = charCodesToGlyphIDs
             }
         }
-        
+
         public static func nodeLengthFor(segmentCount: UInt16, glyphCount: UInt16) -> UInt32 {
             var nodeLength = MemoryLayout<UInt16>.size * 8
             nodeLength += MemoryLayout<UInt16>.size * 4 * Int(segmentCount)
@@ -95,7 +95,7 @@ extension FontTable_cmap {
             handle.seek(to: offset)
             try super.write(to: handle, offset: offset)
             handle.write(length)
-            handle.write(languageID.rawValue)   // UInt16
+            handle.write(languageID)   // UInt16
             handle.write(segCountX2)
             handle.write(searchRange)
             handle.write(entrySelector)
