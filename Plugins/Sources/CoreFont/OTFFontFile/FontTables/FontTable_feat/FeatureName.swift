@@ -62,6 +62,7 @@ extension FontTable_feat {
             handle.write(nSettings)
             handle.write(settingOffset)
             handle.write(flags)
+            handle.write(nameID)
             try settings.forEach { try $0.write(to: handle, offset: Int(settingOffset)) }
         }
     }
