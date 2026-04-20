@@ -30,8 +30,10 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
     @IBOutlet weak var box:                         NSBox!
 
     public var resource:            Resource        /// `'sfnt'`
+    @objc dynamic var fontFile:     OTFFontFile!
     let manager:                    RFEditorManager
-    @objc dynamic var fontFile:     OTFFontFile
+
+    private var fontImporter:       FontImporterController?
 
     private static var dirEntryContext = 1
     private static var dirEntryKeyPaths = Set(["objcFormat", "searchRange", "entrySelector", "rangeShift"])
@@ -57,14 +59,16 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
     }
 
     public required init?(resource: Resource, manager: RFEditorManager) {
+        NSLog("\(type(of: self)).\(#function)")
         self.resource = resource
         self.manager = manager
-        do {
-            originalData = resource.data
-            fontFile = try OTFFontFile(resource.data)
-        } catch {
-            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
-            return nil
+        originalData = resource.data
+        if !resource.data.isEmpty {
+            do {
+                fontFile = try OTFFontFile(resource.data)
+            } catch {
+                NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+            }
         }
         super.init(window: nil)
     }
@@ -74,13 +78,30 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
     }
 
     deinit {
-        Self.dirEntryKeyPaths.forEach { fontFile.directory.removeObserver(self, forKeyPath: $0) }
+        NSLog("\(type(of: self)).\(#function)")
+        Self.dirEntryKeyPaths.forEach { fontFile?.directory.removeObserver(self, forKeyPath: $0) }
     }
 
     public override func windowDidLoad() {
+        NSLog("\(type(of: self)).\(#function)")
         super.windowDidLoad()
-        Self.dirEntryKeyPaths.forEach { fontFile.directory.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.dirEntryContext) }
-        window?.makeFirstResponder(tableView)
+        if resource.data.isEmpty {
+            window?.orderOut(nil)
+            fontImporter = FontImporterController(fontEditor: self)
+            fontImporter?.showWindow(nil)
+        } else {
+            Self.dirEntryKeyPaths.forEach { fontFile?.directory.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.dirEntryContext) }
+            window?.makeFirstResponder(tableView)
+        }
+    }
+
+    public override func showWindow(_ sender: Any?) {
+        NSLog("\(type(of: self)).\(#function)")
+        fontImporter?.showWindow(sender) ?? super.showWindow(sender)
+    }
+
+    func updateUIForSelection() {
+
     }
 
     // FIXME: consolidate all loading view code when selection changes, etc.
@@ -92,7 +113,11 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
             tableTagField.stringValue = ""
             tableTagDescriptionField.stringValue = ""
             tableTagsToViewControllers.removeAll()
+            if let fontFile {
+                Self.dirEntryKeyPaths.forEach { fontFile.directory.removeObserver(self, forKeyPath: $0) }
+            }
             fontFile = try OTFFontFile(resource.data)
+            Self.dirEntryKeyPaths.forEach { fontFile?.directory.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.dirEntryContext) }
             tableView.reloadData()
             if !indexes.isEmpty {
                 tableView.selectRowIndexes(indexes, byExtendingSelection: false)
@@ -120,6 +145,7 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
             let tableTags: [TableTag] = tableTagsToViewControllers.keys.sorted(by: OTFReWritingOrderSort)
             try tableTags.forEach { try tableTagsToViewControllers[$0]!.prepareToSave() }
             resource.data = try fontFile.data()
+            originalData = resource.data
             reloadFont()
             window?.isDocumentEdited = false
         } catch {
@@ -130,8 +156,18 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
 
     @IBAction public func revertResource(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
+        resource.data = originalData
         reloadFont()
         window?.isDocumentEdited = false
+    }
+
+    public func importFont(with data: Data) {
+        resource.data = data
+        window?.makeKeyAndOrderFront(nil)
+        window?.isDocumentEdited = true
+        reloadFont()
+        fontImporter?.close()
+        fontImporter = nil
     }
 
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -177,10 +213,11 @@ extension FontEditor: NSTableViewDelegate, NSTableViewDataSource {
 
     // MARK: <NSTableViewDataSource>
     public func numberOfRows(in tableView: NSTableView) -> Int {
-        return fontFile.directory.entries.count
+        return fontFile?.directory.entries.count ?? 0
     }
 
     public func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
+        guard let fontFile else { return nil }
         if let identifer = tableColumn?.identifier, identifer.rawValue == "index" {
             let entry = fontFile.directory.entries[row]
             return fontFile.tables.firstIndex(of: entry.table) ?? -1
@@ -191,6 +228,7 @@ extension FontEditor: NSTableViewDelegate, NSTableViewDataSource {
 
     // MARK: <NSTableViewDelegate>
     public func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+        guard let fontFile else { return nil }
         let view: NSTableCellView = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
         guard let tableColumn, tableColumn.identifier.rawValue == "checksum" || tableColumn.identifier.rawValue == "tableTagString" else {
             view.textField?.font = .monospacedSystemFont(ofSize: NSFont.smallSystemFontSize, weight: .regular)
@@ -225,8 +263,8 @@ extension FontEditor: NSTableViewDelegate, NSTableViewDataSource {
         }
         let selectedDirEntry: OTFsfntDirectoryEntry = fontFile.directory.entries[indexes.first!]
         let tag: TableTag = selectedDirEntry.table.tableTag
-        if let existingViewController = tableTagsToViewControllers[tag] {
-            box.contentView = existingViewController.view
+        if let existingVC = tableTagsToViewControllers[tag] {
+            box.contentView = existingVC.view
         } else if tag == .bdat || tag == .bloc, let existingVC = tableTagsToViewControllers[tag == .bdat ? .bloc : .bdat] {
             box.contentView = existingVC.view
             tableTagsToViewControllers[tag] = existingVC

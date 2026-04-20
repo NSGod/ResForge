@@ -8,6 +8,7 @@
 import Foundation
 import RFSupport
 import OrderedCollections
+import UniformTypeIdentifiers
 
 public enum FontFileError: LocalizedError {
     case invalidRange(TableTag)
@@ -20,12 +21,24 @@ public enum FontFileError: LocalizedError {
     }
 }
 
+public struct FontReadingOptions: OptionSet {
+    public let rawValue: Int
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    public static let none: FontReadingOptions = []
+}
+
 public struct FontWritingOptions: OptionSet {
     public let rawValue: Int
     public init(rawValue: Int) {
         self.rawValue = rawValue
     }
     public static let none: FontWritingOptions = []
+}
+
+extension UTType {
+    public static let ttfFont:     UTType = UTType("public.truetype-ttf-font")!
 }
 
 public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
@@ -82,7 +95,11 @@ public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
     private var _glyphs:                [UIGlyph]!
     private var _notDef:                UIGlyph!
 
-    public init(_ data: Data) throws {
+    public convenience init(contentsOf url: URL, options: FontReadingOptions = []) throws {
+        try self.init(try Data(contentsOf: url), options: options)
+    }
+
+    public init(_ data: Data, options: FontReadingOptions = []) throws {
         self.data = data
         reader = BinaryDataReader(data)
         tables = OrderedSet()

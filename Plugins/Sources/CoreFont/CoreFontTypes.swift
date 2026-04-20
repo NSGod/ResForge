@@ -65,6 +65,29 @@ public func DoubleToFixed4Dot12(_ x: Double) -> Fixed4Dot12 {
     Fixed4Dot12(x * Double(fixed12) + (x < 0 ? -0.5 : 0.5))
 }
 
+public struct FontCreationOptions {
+    public var fontFile:    OTFFontFile
+    public var sfnt:        Resource
+    public var createFOND:  Bool = true
+    public var encoding:    MacEncoding = .macRoman
+    public var createNFNT:  Bool = true
+    public var sizes:       [Int]?
+
+    public init(fontFile: OTFFontFile, sfnt: Resource, createFOND: Bool = true, encoding: MacEncoding, createNFNT: Bool, sizes: [Int]? = nil) {
+        self.fontFile = fontFile
+        self.sfnt = sfnt
+        self.createFOND = createFOND
+        self.encoding = encoding
+        self.createNFNT = createNFNT
+        self.sizes = sizes
+    }
+
+    public static let createFONDKey = "createFOND"
+    public static let createNFNTKey = "createNFNT"
+    public static let sizesKey      = "sizes"
+}
+
+
 public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible {
     public let rawValue: UInt16
 

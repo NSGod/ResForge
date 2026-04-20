@@ -167,7 +167,7 @@ public final class NFNT: NSObject {
     private var manager:            RFEditorManager?
 
     // MARK: - init
-    public init(with resource: Resource, manager: RFEditorManager? = nil) throws {
+    public init(with resource: Resource, manager: RFEditorManager? = nil, options: FontCreationOptions? = nil) throws {
         reader = BinaryDataReader(resource.data)
         self.manager = manager
         self.resource = resource

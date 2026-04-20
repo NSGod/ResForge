@@ -163,7 +163,7 @@ public final class FOND: NSObject {
     private var stylesToUnitsPerEm:     [MacFontStyle: UnitsPerEm] = [:]
 
     // MARK: - init
-    public init(with resource: Resource) throws {
+    public init(with resource: Resource, options: FontCreationOptions? = nil) throws {
         // FIXME: deal with FOND w/ no name error
         reader = BinaryDataReader(resource.data)
         self.resource = resource
