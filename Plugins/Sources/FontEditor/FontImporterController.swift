@@ -21,7 +21,8 @@ class FontImporterController: NSWindowController, NSWindowDelegate {
 
     private weak var fontEditor:    FontEditor!
     private var importingFont:      Bool = false
-    private var listFormatter:      ListFormatter!
+
+    // FIXME: limit encoding popup button menu to only those encoding MacScriptIDs found in cmap table
 
     deinit {
         NSLog("\(type(of: self)).\(#function)")
@@ -44,12 +45,6 @@ class FontImporterController: NSWindowController, NSWindowDelegate {
         createFOND = UserDefaults.standard.bool(forKey: FontCreationOptions.createFONDKey)
         createNFNT = UserDefaults.standard.bool(forKey: FontCreationOptions.createNFNTKey)
         sizes = UserDefaults.standard.array(forKey: FontCreationOptions.sizesKey) as! [Int]
-        listFormatter = .init()
-        let numFormatter = NumberFormatter()
-        numFormatter.numberStyle = .decimal
-        numFormatter.minimum = 0
-        numFormatter.maximum = 100
-        listFormatter.itemFormatter = numFormatter
         super.init(window: nil)
     }
 
@@ -59,7 +54,6 @@ class FontImporterController: NSWindowController, NSWindowDelegate {
 
     override func windowDidLoad() {
         NSLog("\(type(of: self)).\(#function)")
-        sizesField.formatter = listFormatter
         super.windowDidLoad()
     }
 
