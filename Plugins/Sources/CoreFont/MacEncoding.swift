@@ -9,6 +9,7 @@ import Foundation
 
 public final class MacEncoding: Copyable, CustomStringConvertible {
     public let name:                               String
+    public let scriptID:                           MacScriptID
     public private(set) var isCustomEncoding:      Bool = false
     public var logsInvalidCharCodes:               Bool = false
 
@@ -18,14 +19,16 @@ public final class MacEncoding: Copyable, CustomStringConvertible {
     public var encoding: [UVBMP]
     private let uvsToCharCodes: [UVBMP: CharCode]
 
-    public init(name: String, encoding: [UVBMP], uvsToCharCodes: [UVBMP: CharCode]) {
+    public init(name: String, encoding: [UVBMP], uvsToCharCodes: [UVBMP: CharCode], scriptID: MacScriptID) {
         self.name = name
+        self.scriptID = scriptID
         self.encoding = encoding
         self.uvsToCharCodes = uvsToCharCodes
     }
 
     init(with other: MacEncoding) {
         name = other.name + " (Custom)"
+        scriptID = other.scriptID
         encoding = other.encoding
         uvsToCharCodes = other.uvsToCharCodes
         isCustomEncoding = other.isCustomEncoding
@@ -39,23 +42,23 @@ public final class MacEncoding: Copyable, CustomStringConvertible {
     }
 
     // The numbers in the brackets are MacScriptIDs...
-    public static let macRoman                 = MacEncoding(name: "[0] Mac Roman", encoding: macRomanEncoding, uvsToCharCodes: uvsToMacRoman)
-    public static let macArabic                = MacEncoding(name: "[4] Mac Arabic", encoding: macArabicEncoding, uvsToCharCodes: uvsToMacArabic)
-    public static let macHebrew                = MacEncoding(name: "[5] Mac Hebrew", encoding: macHebrewEncoding, uvsToCharCodes: uvsToMacHebrew)
-    public static let macGreek                 = MacEncoding(name: "[6] Mac Greek", encoding: macGreekEncoding, uvsToCharCodes: uvsToMacGreek)
-    public static let macCyrillic              = MacEncoding(name: "[7] Mac Cyrillic", encoding: macCyrillicEncoding, uvsToCharCodes: uvsToMacCyrillic)
-    public static let macCentralEuropean       = MacEncoding(name: "[29] Mac CE", encoding: macCEEncoding, uvsToCharCodes: uvsToMacCE)
-    public static let macTurkish               = MacEncoding(name: "[0] Mac Turkish", encoding: macTurkishEncoding, uvsToCharCodes: uvsToMacTurkish)
-    public static let macThai                  = MacEncoding(name: "[21] Mac Thai", encoding: macThaiEncoding, uvsToCharCodes: uvsToMacThai)
-    public static let macCroatian              = MacEncoding(name: "[0] Mac Croatian", encoding: macCroatianEncoding, uvsToCharCodes: uvsToMacCroatian)
-    public static let macIcelandic             = MacEncoding(name: "[0] Mac Icelandic", encoding: macIcelandicEncoding, uvsToCharCodes: uvsToMacIcelandic)
-    public static let macDevanagari            = MacEncoding(name: "[9] Mac Devanagari", encoding: macDevanagariEncoding, uvsToCharCodes: uvsToMacDevanagari)
-    public static let macRomanian              = MacEncoding(name: "[0] Mac Romanian", encoding: macRomanianEncoding, uvsToCharCodes: uvsToMacRomanian)
-    public static let macFarsi                 = MacEncoding(name: "[4] Mac Farsi", encoding: macFarsiEncoding, uvsToCharCodes: uvsToMacFarsi)
-    public static let macGujarati              = MacEncoding(name: "[11] Mac Gujarati", encoding: macGujaratiEncoding, uvsToCharCodes: uvsToMacGujarati)
-    public static let macGurmukhi              = MacEncoding(name: "[10] Mac Gurmukhi", encoding: macGurmukhiEncoding, uvsToCharCodes: uvsToMacGurmukhi)
-    public static let macDingbats              = MacEncoding(name: "[0] Mac Dingbats", encoding: macDingbatsEncoding, uvsToCharCodes: uvsToMacDingbats)
-    public static let macSymbol                = MacEncoding(name: "[0] Mac Symbol", encoding: macSymbolEncoding, uvsToCharCodes: uvsToMacSymbol)
+    public static let macRoman                 = MacEncoding(name: "[0] Mac Roman", encoding: macRomanEncoding, uvsToCharCodes: uvsToMacRoman, scriptID: .roman)
+    public static let macArabic                = MacEncoding(name: "[4] Mac Arabic", encoding: macArabicEncoding, uvsToCharCodes: uvsToMacArabic, scriptID: .arabic)
+    public static let macHebrew                = MacEncoding(name: "[5] Mac Hebrew", encoding: macHebrewEncoding, uvsToCharCodes: uvsToMacHebrew, scriptID: .hebrew)
+    public static let macGreek                 = MacEncoding(name: "[6] Mac Greek", encoding: macGreekEncoding, uvsToCharCodes: uvsToMacGreek, scriptID: .greek)
+    public static let macCyrillic              = MacEncoding(name: "[7] Mac Cyrillic", encoding: macCyrillicEncoding, uvsToCharCodes: uvsToMacCyrillic, scriptID: .cyrillic)
+    public static let macCentralEuropean       = MacEncoding(name: "[29] Mac CE", encoding: macCEEncoding, uvsToCharCodes: uvsToMacCE, scriptID: .ceRoman)
+    public static let macTurkish               = MacEncoding(name: "[0] Mac Turkish", encoding: macTurkishEncoding, uvsToCharCodes: uvsToMacTurkish, scriptID: .roman)
+    public static let macThai                  = MacEncoding(name: "[21] Mac Thai", encoding: macThaiEncoding, uvsToCharCodes: uvsToMacThai, scriptID: .thai)
+    public static let macCroatian              = MacEncoding(name: "[0] Mac Croatian", encoding: macCroatianEncoding, uvsToCharCodes: uvsToMacCroatian, scriptID: .roman)
+    public static let macIcelandic             = MacEncoding(name: "[0] Mac Icelandic", encoding: macIcelandicEncoding, uvsToCharCodes: uvsToMacIcelandic, scriptID: .roman)
+    public static let macDevanagari            = MacEncoding(name: "[9] Mac Devanagari", encoding: macDevanagariEncoding, uvsToCharCodes: uvsToMacDevanagari, scriptID: .devanagari)
+    public static let macRomanian              = MacEncoding(name: "[0] Mac Romanian", encoding: macRomanianEncoding, uvsToCharCodes: uvsToMacRomanian, scriptID: .roman)
+    public static let macFarsi                 = MacEncoding(name: "[4] Mac Farsi", encoding: macFarsiEncoding, uvsToCharCodes: uvsToMacFarsi, scriptID: .arabic)
+    public static let macGujarati              = MacEncoding(name: "[11] Mac Gujarati", encoding: macGujaratiEncoding, uvsToCharCodes: uvsToMacGujarati, scriptID: .gujarati)
+    public static let macGurmukhi              = MacEncoding(name: "[10] Mac Gurmukhi", encoding: macGurmukhiEncoding, uvsToCharCodes: uvsToMacGurmukhi, scriptID: .gurmukhi)
+    public static let macDingbats              = MacEncoding(name: "[0] Mac Dingbats", encoding: macDingbatsEncoding, uvsToCharCodes: uvsToMacDingbats, scriptID: .roman)
+    public static let macSymbol                = MacEncoding(name: "[0] Mac Symbol", encoding: macSymbolEncoding, uvsToCharCodes: uvsToMacSymbol, scriptID: .roman)
 
     // primitive:
     public func uv(for charCode: CharCode) -> UVBMP {
@@ -85,7 +88,6 @@ public final class MacEncoding: Copyable, CustomStringConvertible {
         return AdobeGlyphList.glyphName(for: uv)
     }
 
-    // FIXME: this should be replacing, not adding? YES
     public func customEncoding(byReplacing glyphNameEntries: [GlyphNameEntry]) -> MacEncoding {
         NSLog("\(type(of: self)).\(#function)")
         let custom = self.copy()
@@ -93,7 +95,6 @@ public final class MacEncoding: Copyable, CustomStringConvertible {
         return custom
     }
 
-    // FIXME: this should be replacing, not adding? YES
     func replace(withCustomEntries customGlyphNameEntries: [GlyphNameEntry]) {
         if customCharCodesToGlyphNames == nil { customCharCodesToGlyphNames = [:] }
         if var customEntries = customCharCodesToGlyphNames {
@@ -259,6 +260,45 @@ public final class MacEncoding: Copyable, CustomStringConvertible {
             return .extendedArabic
         } else if fondID <= ResID.max {
             return .uninterpreted
+        }
+    }
+
+    public static func resID(for scriptID: MacScriptID) -> ResID {
+        switch scriptID {
+            case .roman:                    return ResID.random(in: 128..<16384)
+            case .japanese:                 return ResID.random(in: 16384..<16896)
+            case .tradChinese:              return ResID.random(in: 16896..<17408)
+            case .korean:                   return ResID.random(in: 17408..<17920)
+            case .arabic:                   return ResID.random(in: 17920..<18432)
+            case .hebrew:                   return ResID.random(in: 18432..<18944)
+            case .greek:                    return ResID.random(in: 18944..<19456)
+            case .cyrillic:                 return ResID.random(in: 19456..<19968)
+            case .rightToLeftSymbol:        return ResID.random(in: 19968..<20480)
+            case .devanagari:               return ResID.random(in: 20480..<20992)
+            case .gurmukhi:                 return ResID.random(in: 20992..<21504)
+            case .gujarati:                 return ResID.random(in: 21504..<22016)
+            case .oriya:                    return ResID.random(in: 22016..<22528)
+            case .bengali:                  return ResID.random(in: 22528..<23040)
+            case .tamil:                    return ResID.random(in: 23040..<23552)
+            case .telugu:                   return ResID.random(in: 23552..<24064)
+            case .kannada:                  return ResID.random(in: 24064..<24576)
+            case .malayalam:                return ResID.random(in: 24576..<25088)
+            case .sinhalese:                return ResID.random(in: 25088..<25600)
+            case .burmese:                  return ResID.random(in: 25600..<26112)
+            case .khmer:                    return ResID.random(in: 26112..<26624)
+            case .thai:                     return ResID.random(in: 26624..<27136)
+            case .lao:                      return ResID.random(in: 27136..<27648)
+            case .georgian:                 return ResID.random(in: 27648..<28160)
+            case .armenian:                 return ResID.random(in: 28160..<28672)
+            case .simpChinese:              return ResID.random(in: 28672..<29184)
+            case .tibetan:                  return ResID.random(in: 29184..<29696)
+            case .mongolian:                return ResID.random(in: 29696..<30208)
+            case .ethiopic:                 return ResID.random(in: 30208..<30720)
+            case .ceRoman:                  return ResID.random(in: 30720..<31232)
+            case .vietnamese:               return ResID.random(in: 31232..<31744)
+            case .extendedArabic:           return ResID.random(in: 31744..<32256)
+            case .uninterpreted:            return ResID.random(in: 32256...ResID.max)
+            case .none:                     return ResID.min
         }
     }
 

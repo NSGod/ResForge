@@ -18,14 +18,15 @@ extension FOND {
 
     // Style-mapping table : 58 bytes
     public final class StyleMappingTable: ResourceNode {
-        public var fontClass:                           FontClass   // UInt16
-        public var offset:                              Int32       // offset from the start of this table to the glyph-name-encoding subtable component
+        public var fontClass:                           FontClass   /// UInt16
+        public var offset:                              Int32       /// offset from the start of this table to the `glyph-name-encoding subtable` component
         public var reserved:                            Int32
-        public var indexes:                             [UInt8]     // [48] Indexes into the Font Name Suffix subtable
+        public var indexes:                             [UInt8]     /// [48] Indexes into the `FontNameSuffixSubtable`
 
         public var fontNameSuffixSubtable:              FontNameSuffixSubtable
         @objc public var glyphNameEncodingSubtable:     GlyphNameEncodingSubtable?
 
+        // MARK: AUX:
         /// the union of all referenced string indexes in `indexes`
         public let validIndexes:                        IndexSet
 
@@ -86,7 +87,7 @@ extension FOND {
 }
 
 extension FOND.StyleMappingTable {
-    /* Font class. An integer value that specifies a collection of flags that alert
+    /* Font class. An UInt16 value that specifies a collection of flags that alert
      the printer driver to what type of PostScript font this font family is. This value
      is represented by the fontClass field of the StyleTable data type.
      The default font class definition is 0, which has settings that indicate

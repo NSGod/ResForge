@@ -154,7 +154,6 @@ public final class FOND: NSObject {
 
     private var resource:                   Resource
     private var reader:                     BinaryDataReader
-    @objc public var remainingTableData:    Data
 
     // FIXME: switch to Swift Ranges?
     private var offsetTypesToRanges:    [TableOffsetType: NSRange] = [:]
@@ -233,13 +232,6 @@ public final class FOND: NSObject {
         }
         // FIXME: add validation/error-checking here
         fontAssociationTable = try FontAssociationTable(reader)
-        if !reader.data.isEmpty {
-            reader.pushSavedPosition()
-            remainingTableData = try reader.readData(length: reader.bytesRemaining)
-            reader.popPosition()
-        } else {
-            remainingTableData = Data()
-        }
         super.init()
     }
 
