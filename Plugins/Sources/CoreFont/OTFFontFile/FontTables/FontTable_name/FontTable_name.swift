@@ -15,11 +15,10 @@ import RFSupport
 public final class FontTable_name: FontTable {
     @objc public enum Format: UInt16 {
         case format0    = 0
-        case format1    = 1     // not supported by Apple
-        
+        case format1    = 1     // not supported by Apple (or us, for writing)
+
         /// I've encountered some weird values here (UInt16.max), but
-        /// `.format0` is pretty much the only value used so
-        /// default back to that.
+        /// `.format0` is really the only value used, so default back to that.
         public init?(rawValue: UInt16) {
             switch rawValue {
                 case 0: self = .format0

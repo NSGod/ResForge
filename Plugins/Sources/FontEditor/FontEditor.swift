@@ -86,6 +86,7 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
         NSLog("\(type(of: self)).\(#function)")
         super.windowDidLoad()
         if resource.data.isEmpty {
+            /// don't close the window, just hide it temporarily
             window?.orderOut(nil)
             fontImporter = FontImporterController(fontEditor: self)
             fontImporter?.showWindow(nil)

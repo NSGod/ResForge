@@ -48,10 +48,10 @@ extension FontTable_feat {
                 settingOffset = try reader.read()
                 flags = try reader.read()
                 nameID = FontTable_name.FontNameID(rawValue: try reader.read())
-                for i in 0..<UInt32(nSettings) {
-                    let setting = try SettingName(reader, offset: Int(settingOffset + SettingName.nodeLength * i), table: table)
-                    settings.append(setting)
-                }
+                reader.pushSavedPosition()
+                defer { reader.popPosition() }
+                try reader.setPosition(settingOffset)
+                settings = try (0..<nSettings).map { _ in try SettingName(reader, table: table) }
             }
         }
 
@@ -63,7 +63,10 @@ extension FontTable_feat {
             handle.write(settingOffset)
             handle.write(flags)
             handle.write(nameID)
-            try settings.forEach { try $0.write(to: handle, offset: Int(settingOffset)) }
+            handle.pushSavedOffset()
+            defer { handle.popAndSeekToSavedOffset() }
+            handle.seek(to: settingOffset)
+            try settings.forEach { try $0.write(to: handle) }
         }
     }
 }

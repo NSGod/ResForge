@@ -105,5 +105,56 @@ extension FontTable_feat {
         case unknown16000               = 16000
         case unknown16001               = 16001
         case none                       = 0xffff
+
+        public init?(rawValue: UInt16) {
+            switch rawValue {
+                case 0: self = .all
+                case 1: self = .ligatures
+                case 2: self = .cursiveConnection
+                case 3: self = .letterCase
+                case 4: self = .verticalSubstitution
+                case 5: self = .linguisticRearrangement
+                case 6: self = .numberSpacing
+                case 8: self = .smartSwash
+                case 9: self = .diacritics
+                case 10: self = .verticalPosition
+                case 11: self = .fractions
+                case 13: self = .overlappingCharacters
+                case 14: self = .typographicExtras
+                case 15: self = .mathematicalExtras
+                case 16: self = .ornamentSets
+                case 17: self = .characterAlternatives
+                case 18: self = .designComplexity
+                case 19: self = .styleOptions
+                case 20: self = .characterShape
+                case 21: self = .numberCase
+                case 22: self = .textSpacing
+                case 23: self = .transliteration
+                case 24: self = .annotation
+                case 25: self = .kanaSpacing
+                case 26: self = .ideographicSpacing
+                case 27: self = .unicodeDecomposition
+                case 28: self = .rubyKana
+                case 29: self = .cjkSymbolAlternatives
+                case 30: self = .ideographicAlternatives
+                case 31: self = .cjkVerticalRomanPlacement
+                case 32: self = .italicCJKRoman
+                case 33: self = .caseSensitiveLayout
+                case 34: self = .alternateKana
+                case 35: self = .stylisticAlternatives
+                case 36: self = .contextualAlternatives
+                case 37: self = .lowerCase
+                case 38: self = .upperCase
+                case 39: self = .languageTag
+                case 103: self = .cjkRomanSpacing
+                case 16000: self = .unknown16000
+                case 16001: self = .unknown16001
+                case 0xffff: self = .none
+                default:
+                    NSLog("\(type(of: self)).\(#function) *** ERROR: unknown rawValue: \(rawValue)")
+                    return nil
+            }
+
+        }
     }
 }
