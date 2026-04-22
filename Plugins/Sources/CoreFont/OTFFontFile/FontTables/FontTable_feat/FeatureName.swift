@@ -10,7 +10,7 @@ import RFSupport
 
 extension FontTable_feat {
 
-    @objc public enum Flag: UInt16 {
+    @objc public enum Flags: UInt16 {
         case none       = 0
         case exclusive  = 0x8000 /// if set, feature settings are mutually exclusive
     }
@@ -19,11 +19,11 @@ extension FontTable_feat {
     /// https://developer.apple.com/fonts/TrueType-Reference-Manual/RM09/AppendixF.html
 
     public final class FeatureName: FontTableNode {
-        @objc public var feature:           FeatureType = .none
-        @objc public var nSettings:         UInt16 = 0
-        @objc public var settingOffset:     UInt32 = 0
-        @objc public var flags:             Flag = .none
-        public var nameID:                  FontTable_name.FontNameID = .any    // 255 < nameID < 32768
+        public var feature:             FeatureType = .none
+        public var nSettings:           UInt16 = 0
+        public var settingOffset:       UInt32 = 0
+        public var flags:               Flags = .none
+        public var nameID:              FontTable_name.FontNameID = .any    // 255 < nameID < 32768
 
         @objc dynamic public var settings:  [SettingName] = []
 

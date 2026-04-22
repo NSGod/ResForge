@@ -121,7 +121,7 @@ extension FontTable_glyf {
 
         private var _bezierPath:            NSBezierPath!
         private var _coordinates:           Coordinates!
-        
+
         public init(_ reader: BinaryDataReader, compoundGlyph: CompoundGlyph, table: FontTable_glyf) throws {
             self.compoundGlyph = compoundGlyph
             fDotTransform = Array(repeating: Array(repeating: 0, count: 2), count: 2)

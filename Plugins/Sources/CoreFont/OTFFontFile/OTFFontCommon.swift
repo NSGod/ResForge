@@ -944,10 +944,10 @@ public extension FontTable_name {
         case darkBackgroundPalette     // = 24
         case varsPostScriptNamePrefix  // = 25
         case lastReserved              // = 255
-        case custom(UInt16)            // custom names above 255 can be referenced in other tables like `feat`
+        case custom(Int16)            // custom names above 255 can be referenced in other tables like `feat`
         case any                       // = 0xffff
 
-        public init(rawValue: UInt16) {
+        public init(rawValue: Int16) {
             if let nameID = Self.rawValuesToCases[rawValue] {
                 self = nameID
             } else {
@@ -955,7 +955,7 @@ public extension FontTable_name {
             }
         }
 
-        public var rawValue: UInt16 {
+        public var rawValue: Int16 {
             switch self {
                 case .copyright:                return 0
                 case .family:                   return 1
@@ -984,8 +984,8 @@ public extension FontTable_name {
                 case .darkBackgroundPalette:    return 24
                 case .varsPostScriptNamePrefix: return 25
                 case .lastReserved:             return 255
-                case .custom(let v):            return UInt16(v)
-                case .any:                      return 0xffff
+                case .custom(let v):            return Int16(v)
+                case .any:                      return -1
             }
         }
 
@@ -1038,7 +1038,7 @@ public extension FontTable_name {
             return "\(self.rawValue)"
         }
 
-        fileprivate static let rawValuesToCases: [UInt16: FontNameID] =
+        fileprivate static let rawValuesToCases: [Int16: FontNameID] =
         [
             0: .copyright,
             1: .family,
@@ -1067,7 +1067,7 @@ public extension FontTable_name {
             24: .darkBackgroundPalette,
             25: .varsPostScriptNamePrefix,
             255: .lastReserved,
-            0xffff: .any,
+            -1: .any,
         ]
     }
 }

@@ -17,10 +17,10 @@ import RFSupport
 
 public final class FontTable_feat: FontTable {
     @objc public enum Version: Fixed {
-        case versionDefault1_0 = 0x00010000
+        case default1_0 = 0x00010000
     }
 
-    @objc dynamic public var version:       Version = .versionDefault1_0
+    @objc dynamic public var version:       Version = .default1_0
     @objc dynamic public var numNames:      UInt16 = 0
     @objc dynamic public var numSets:       UInt16 = 0 /// unused; must be zero
     @objc dynamic public var setOffset:     UInt32 = 0 /// unused; must be zero
