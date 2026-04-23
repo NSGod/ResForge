@@ -104,7 +104,7 @@ public final class NFNT: NSObject {
         /// 2) The 'FOND' named `"Helvetica Bold"` where the font association table has an entry
         /// for our 'NFNT' where the style is `0`, or plain (meaning unadulterated from standard, which is bold).
         /// We prefer 2) over 1).
-        let fondResources = manager.allResources(ofType: .fond, currentDocumentOnly: false)
+        let fondResources = manager.allResources(ofType: .fond, currentDocumentOnly: true)
         var targetFOND: FOND? = nil
         var fontStyle: MacFontStyle? = nil
         for fondResource in fondResources {
