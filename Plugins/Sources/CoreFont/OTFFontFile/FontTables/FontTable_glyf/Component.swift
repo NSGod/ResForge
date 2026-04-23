@@ -79,7 +79,7 @@ extension FontTable_glyf {
         public var arg1:                    Int16 = 0
         public var arg2:                    Int16 = 0
 
-        public var fDotTransform:           [[Fixed2Dot14]] ///  fDotTransform[2][2]
+        public var fDotTransform:           [[Fixed2Dot14]]     ///  fDotTransform[2][2]
         public var instructionsLength:      UInt16 = 0
         public var instructions:            Data?
 
@@ -90,8 +90,8 @@ extension FontTable_glyf {
         public var bezierPath:              NSBezierPath? {
             get {
                 if let _bezierPath { return _bezierPath }
-                let path = glyph.bezierPath!.copy() as! NSBezierPath
-                path.transform(using: transform)
+                let path = glyph.bezierPath?.copy() as? NSBezierPath
+                path?.transform(using: transform)
                 _bezierPath = path
                 return _bezierPath
             }
@@ -100,12 +100,13 @@ extension FontTable_glyf {
             }
         }
 
-        public var coordinates:             Coordinates {
+        public var coordinates:             Coordinates? {
             get {
                 if let _coordinates { return _coordinates }
-                var coords = glyph.coordinates!
-                coords.transform(using: transform)
-                _coordinates = coords
+                if var coords = glyph.coordinates {
+                    coords.transform(using: transform)
+                    _coordinates = coords
+                }
                 return _coordinates
             }
             set {
@@ -119,8 +120,8 @@ extension FontTable_glyf {
         /// referenced glyph; this could be a simple or compound glyph
         public weak var glyph:              Glyph!
 
-        private var _bezierPath:            NSBezierPath!
-        private var _coordinates:           Coordinates!
+        private var _bezierPath:            NSBezierPath?
+        private var _coordinates:           Coordinates?
 
         public init(_ reader: BinaryDataReader, compoundGlyph: CompoundGlyph, table: FontTable_glyf) throws {
             self.compoundGlyph = compoundGlyph
@@ -136,16 +137,12 @@ extension FontTable_glyf {
                 /// byte arguments
                 if flags.contains(.argsAreXYValues) {
                     /// signed offsets
-                    let byte1: Int8 = try reader.read()
-                    let byte2: Int8 = try reader.read()
-                    arg1 = Int16(byte1)
-                    arg2 = Int16(byte2)
+                    arg1 = Int16(try reader.read() as Int8)
+                    arg2 = Int16(try reader.read() as Int8)
                 } else {
                     /// unsigned anchor points
-                    let byte1: UInt8 = try reader.read()
-                    let byte2: UInt8 = try reader.read()
-                    arg1 = Int16(byte1)
-                    arg2 = Int16(byte2)
+                    arg1 = Int16(try reader.read() as UInt8)
+                    arg2 = Int16(try reader.read() as UInt8)
                 }
             }
             if flags.contains(.weHaveAScale) {
@@ -180,7 +177,7 @@ extension FontTable_glyf {
                     let msWay = flags.contains(.unscaledComponentOffset)
                     if appleWay && msWay {
                         NSLog("\(type(of: self)).\(#function) *** ERROR: cannot have both scaled component offset and unscaled component offset flags")
-                        throw FontTableError.parseError("both scaled and unscaled component offset flags")
+                        throw FontTableError.parseError("glyf table: glyphID: \(compoundGlyph.glyphID); both scaled and unscaled component offset flags")
                     }
                     var scaleComponentOffset = false
                     if !(appleWay || msWay) {
@@ -254,26 +251,26 @@ extension FontTable_glyf {
                     p2 = Int(arg2)
                 }
                 guard let glyphCoords = glyph?.coordinates else {
-                    NSLog("\(type(of: self)).\(#function) *** ERROR: no coordinates for glyph \(String(describing: glyph?.glyphID))")
+                    NSLog("\(type(of: self)).\(#function) *** NOTE: no coordinates for glyph \(glyph?.glyphName ?? "????") (\(String(describing: glyph?.glyphID)))")
                     return
                 }
                 self.coordinates = glyphCoords
-                self.coordinates.transform(using: transform)
+                self.coordinates?.transform(using: transform)
                 bezierPath = glyph?.bezierPath?.copy() as? NSBezierPath
                 bezierPath?.transform(using: transform)
-                if let coordinates {
+                if let coordinates, var ourCoords = self.coordinates {
                     if p1 > coordinates.numPoints {
                         // FIXME: !! log error
                     }
-                    if p2 > self.coordinates.numPoints {
+                    if p2 > ourCoords.numPoints {
                         // FIXME: !! log error
                     }
                     let point1 = coordinates.points[p1]
-                    let point2 = self.coordinates.points[p2]
-                    // FIXME: get rid of single-point contours used for compound point-matching?
-                    /// add the compount point matching as a translate transform to the existing transform
+                    let point2 = ourCoords.points[p2]
+                    // FIXME: get rid of single-point contours used for compound-point-matching?
+                    /// add the compound-point-matching as a translate transform to the existing transform
                     pointMatchingTransform = .init(translationByX: point1.x - point2.x, byY: point1.y - point2.y)
-                    self.coordinates.transform(using: pointMatchingTransform!)
+                    ourCoords.transform(using: pointMatchingTransform!)
                     bezierPath?.transform(using: pointMatchingTransform!)
                 }
             }
