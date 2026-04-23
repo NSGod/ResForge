@@ -40,6 +40,15 @@ public final class FontTable_name: FontTable {
     public var langTagCount:                        UInt16 = 0      // format 1 only
     @objc dynamic public var languageTagRecords:    [LanguageTagRecord]?
 
+    // MARK: - AUX
+    public var postScriptName:  String {
+        return nameFor(nameID: .postscript) ?? NSLocalizedString("<Unknown>", comment: "")
+    }
+
+    public var familyName:      String {
+        return nameFor(nameID: .family) ?? NSLocalizedString("<Unknown>", comment: "")
+    }
+
     // MARK: -
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
         try super.init(with: tableData, tableTag: tableTag, fontFile: fontFile)
@@ -93,10 +102,6 @@ public final class FontTable_name: FontTable {
         // FIXME: add support for format 1?
     }
 
-    public var postScriptName: String {
-        return nameFor(nameID: .postscript) ?? NSLocalizedString("<Unknown>", comment: "")
-    }
-    
     // FIXME: something better to allow preference of English?
     public func nameFor(nameID: FontNameID, platformID: PlatformID = .any, encodingID: EncodingID = .any, languageID: LanguageID = .any) -> String? {
         return recordFor(nameID: nameID, platformID: platformID, encodingID: encodingID, languageID: languageID)?.value

@@ -65,6 +65,10 @@ public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
         return nameTable?.postScriptName ?? NSLocalizedString("<Unknown>", comment: "")
     }
 
+    public var familyName: String {
+        return nameTable?.familyName ?? NSLocalizedString("<Unknown>", comment: "")
+    }
+
     public var numGlyphs: Int {
         if glyphLookupType == .undetermined { initGlyphNameLookup() }
         // FIXME: !! allow for other methods to get glyph count (see /afdko/c/spot/source/global.c for more info)
