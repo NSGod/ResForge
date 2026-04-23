@@ -50,54 +50,31 @@ public final class NFNT: NSObject {
     @objc dynamic public var rowWords:      Int16       /// row width of bit image / 2
                                                         /// `rowWords` × 16 = width of image in px.
 
-    public var lineHeight:             CGFloat { CGFloat(fRectHeight + leading) }
+    public var lineHeight:                  CGFloat { CGFloat(fRectHeight + leading) }  /// AUX
 
-    @objc dynamic public lazy var glyphs:            [Glyph] = {
-        do {
-            try buildImageAndGlyphsIfNeeded()
-        } catch {
-            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
-        }
+    @objc dynamic public lazy var glyphs:   [Glyph] = {
+        buildImageAndGlyphsIfNeeded()
         return _glyphs
     }()
 
-    /// can be nil if `rowWords` == 0
-    /// image's dimensions are `fRectHeight` px. x `rowWords x 16` px.
-    public lazy var bitmapImage:       NSImage? = {
-        do {
-            try buildImageAndGlyphsIfNeeded()
-        } catch {
-            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
-        }
+    /// image's dimensions are `fRectHeight` px. × `rowWords × 16` px.
+    public lazy var bitmapImage:            NSImage? = {    /// can be nil if `rowWords` == 0
+        buildImageAndGlyphsIfNeeded()
         return _bitmapImage
     }()
 
-    /// can be nil if `rowWords` == 0
-    public lazy var bitmapImageData:   Data? = {
-        do {
-            try buildImageAndGlyphsIfNeeded()
-        } catch {
-            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
-        }
+    public lazy var bitmapImageData:        Data? = {       /// can be nil if `rowWords` == 0
+        buildImageAndGlyphsIfNeeded()
         return _bitmapImageData
     }()
 
-    /// if `rowWords` == 0, will be `.nullGlyph`
-    public lazy var notDef:            Glyph = {
-        do {
-            try buildImageAndGlyphsIfNeeded()
-        } catch {
-            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
-        }
+    public lazy var notDef:                 Glyph = {      /// if `rowWords` == 0, will be `.nullGlyph`
+        buildImageAndGlyphsIfNeeded()
         return _notDef
     }()
 
     lazy private var charsToGlyphs:         [Character: Glyph] = {
-        do {
-            try buildImageAndGlyphsIfNeeded()
-        } catch {
-            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
-        }
+        buildImageAndGlyphsIfNeeded()
         return _charsToGlyphs
     }()
 
@@ -232,7 +209,7 @@ public final class NFNT: NSObject {
         return charsToGlyphs[character] ?? notDef
     }
 
-    private func buildImageAndGlyphsIfNeeded() throws {
+    private func buildImageAndGlyphsIfNeeded() {
         if haveBuiltGlyphs { return }
         if rowWords == 0 {
             /// This `NFNT` contains no bitmap data.
@@ -258,7 +235,7 @@ public final class NFNT: NSObject {
         } else {
             fontBitDepth = 1
         }
-        try reader.pushPosition(Int(FontRec.length))
+        try? reader.pushPosition(Int(FontRec.length))
         defer { reader.popPosition() }
         /// `Bit image table`. The bit image of the glyphs in the font. The glyph images of every
         /// defined glyph in the font are placed sequentially in order of increasing ASCII code.
@@ -269,7 +246,7 @@ public final class NFNT: NSObject {
 
         // avoid overflow
         let length: Int = Int(fRectHeight) * Int(rowWords * 16) * Int(fontBitDepth)/8
-        bitmapImageData = try reader.readData(length: length)
+        bitmapImageData = try? reader.readData(length: length)
         guard let bitmapImageData else {
             return
         }
@@ -283,9 +260,8 @@ public final class NFNT: NSObject {
                                                     colorSpaceName: .calibratedWhite,
                                                     bytesPerRow: Int(rowWords) * 2,
                                                     bitsPerPixel: Int(fontBitDepth)) else {
-            // FIXME: throw better error
             NSLog("\(type(of: self)).\(#function) *** ERROR: bitmapImageRep == nil")
-            throw CocoaError(.fileReadCorruptFile)
+            return
         }
         // FIXME: add better support for higher font bit depths? Though I've never encountered them in the wild...
         // Since black colorspaces are deprecated, we'll use white but need to flip the bits
@@ -311,12 +287,12 @@ public final class NFNT: NSObject {
                                       bitmapInfo: CGBitmapInfo(alpha: .noneSkipLast))
         guard let imageRef = bitmapImageRep.cgImage else {
             NSLog("\(type(of: self)).\(#function) *** ERROR: failed to get CGImage from bitmapImageRep == \(bitmapImageRep)")
-            throw CocoaError(.fileReadCorruptFile)
+            return
         }
         bitmapContext?.draw(imageRef, in: CGRectMake(0.0, 0.0, CGFloat(rowWords * 16), CGFloat(fRectHeight)))
         guard let rgbImageRef = bitmapContext?.makeImage() else {
             NSLog("\(type(of: self)).\(#function) *** ERROR: failed to make image from bitmapContext == \(String(describing: bitmapContext))")
-            throw CocoaError(.fileReadCorruptFile)
+            return
         }
         let rgbImageRep = NSBitmapImageRep(cgImage: rgbImageRef)
         let image = NSImage(size: rgbImageRep.size)
@@ -341,7 +317,7 @@ public final class NFNT: NSObject {
         /// the missing glyph entry, which is usually a rectangular box — w/ or w/o an X through it —
         /// to be used for any char codes that don't have an actual bitmap glyph image. Following that is
         /// a sentinel final glyph entry that has a -1 offset and width.
-        pixelOffsets = try (Int(firstChar)...Int(lastChar) + 2).map { _ in try reader.read() }
+        pixelOffsets = try? (Int(firstChar)...Int(lastChar) + 2).map { _ in try reader.read() }
         widths = []
         offsets = []
 
@@ -361,7 +337,7 @@ public final class NFNT: NSObject {
         /// NOTE: here, (8 x MemoryLayout<Int16>.size) is the partial size of the first 8 elements of the FontRec (`fontType` thru `fRectHeight`)
         /// Multiply by 2 because it's in words and we want bytes.
         let widthTableOffset: UInt32 = (UInt32(nDescent > 0 ? nDescent << 16 : 0) + UInt32(owTLoc)) * 2
-        try reader.pushPosition(Int(8 * MemoryLayout<Int16>.size) + Int(widthTableOffset))
+        try? reader.pushPosition(Int(8 * MemoryLayout<Int16>.size) + Int(widthTableOffset))
         defer { reader.popPosition() }
 
         /// `Width/offset table`. For every glyph in the font, this table contains a word with
@@ -375,7 +351,13 @@ public final class NFNT: NSObject {
         /// are represented by a word value of –1. The last word of this table is also –1,
         /// representing the end.
         for i in Int(firstChar)...Int(lastChar) + 2 {
-            let widthOffset: Int16 = try reader.read()
+            let widthOffset: Int16
+            do {
+                widthOffset = try reader.read()
+            } catch {
+                NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+                return
+            }
             if widthOffset == -1 {
                 widths.append(-1)
                 offsets.append(-1)
@@ -438,10 +420,10 @@ public final class NFNT: NSObject {
         haveBuiltGlyphs = true
         /// never encountered these, but worth a shot
         if reader.bytesRemaining > 0 {
-            glyphWidths = try (Int(firstChar)...Int(lastChar) + 2).map { _ in try reader.read() }
+            glyphWidths = try? (Int(firstChar)...Int(lastChar) + 2).map { _ in try reader.read() }
         }
         if fontType.contains(.hasImageHeightTable) {
-            imageHeights = try (Int(firstChar)...Int(lastChar) + 2).map { _ in try reader.read() }
+            imageHeights = try? (Int(firstChar)...Int(lastChar) + 2).map { _ in try reader.read() }
         }
     }
 }
