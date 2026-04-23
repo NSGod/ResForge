@@ -360,7 +360,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
 
     public var description: String {
         switch self {
-            case .BASE: return NSLocalizedString("Baseline table", comment: "")
+            case .BASE: return NSLocalizedString("Baseline (OT) table", comment: "")
             case .CFF_: return NSLocalizedString("Compact Font Format v1 table", comment: "")
             case .CFF2: return NSLocalizedString("Compact Font Format v2 table", comment: "")
             case .DSIG: return NSLocalizedString("Digital Signature", comment: "")
@@ -376,7 +376,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
             case .GDEF: return NSLocalizedString("Glyph Definition table", comment: "")
             case .GPOS: return NSLocalizedString("Glyph Positioning table", comment: "")
             case .GSUB: return NSLocalizedString("Glyph Substitution table", comment: "")
-            case .JSTF: return NSLocalizedString("Justification table", comment: "")
+            case .JSTF: return NSLocalizedString("Justification (OT) table", comment: "")
             case .MATH: return NSLocalizedString("Mathematical Typesetting table", comment: "")
             case .OS_2: return NSLocalizedString("Global Font information table", comment: "")
             case .VORG: return NSLocalizedString("Vertical Origin table", comment: "")
@@ -391,7 +391,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
             case .bdat: return NSLocalizedString("Bitmap Data table", comment: "")
             case .bhed: return NSLocalizedString("Bitmap Header table", comment: "")
             case .bloc: return NSLocalizedString("Bitmap Location table", comment: "")
-            case .bsln: return NSLocalizedString("Baseline table", comment: "")
+            case .bsln: return NSLocalizedString("Baseline (AAT) table", comment: "")
             case .cmap: return NSLocalizedString("Character-to-Glyph ID Mapping table", comment: "")
             case .cvt_: return NSLocalizedString("Control Value table", comment: "")
             case .fdsc: return NSLocalizedString("Font Descriptors table", comment: "")
@@ -411,7 +411,7 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
             case .hdmx: return NSLocalizedString("Horizontal Device Metrics table", comment: "")
             case .hvgl: return NSLocalizedString("Hierarchical Variation font table", comment: "")
             case .hvpm: return NSLocalizedString("Hierarchical Variation font table", comment: "")
-            case .just: return NSLocalizedString("Justification table", comment: "")
+            case .just: return NSLocalizedString("Justification (AAT) table", comment: "")
             case .lcar: return NSLocalizedString("Ligature Caret table", comment: "")
             case .loca: return NSLocalizedString("Glyf Location table", comment: "")
             case .kern: return NSLocalizedString("Kerning table", comment: "")
