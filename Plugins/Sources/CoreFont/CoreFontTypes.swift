@@ -73,7 +73,7 @@ public struct FontCreationOptions {
     public var createNFNT:  Bool = true
     public var sizes:       [Int]?
 
-    public init(fontFile: OTFFontFile, sfnt: Resource, createFOND: Bool = true, encoding: MacEncoding, createNFNT: Bool, sizes: [Int]? = nil) {
+    public init(fontFile: OTFFontFile, sfnt: Resource, createFOND: Bool, encoding: MacEncoding, createNFNT: Bool, sizes: [Int]? = nil) {
         self.fontFile = fontFile
         self.sfnt = sfnt
         self.createFOND = createFOND

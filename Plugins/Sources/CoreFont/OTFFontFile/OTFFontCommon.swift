@@ -64,7 +64,7 @@ public struct OTFsfntFormat: RawRepresentable, Equatable {
         self.rawValue = rawValue
     }
 
-    public static let `true`:  OTFsfntFormat = .init(rawValue: UInt32(fourCharString: "true"))  /// for TT; Apple; prefer `.V1_0` for better cross-platform support
+    public static let `true`:  OTFsfntFormat = .init(rawValue: UInt32(fourCharString: "true"))  /// for TT; Apple-only; prefer `.V1_0` for better cross-platform support
     public static let OTTO:    OTFsfntFormat = .init(rawValue: UInt32(fourCharString: "OTTO"))  /// for 'CFF '/'CFF2' outline data
     public static let typ1:    OTFsfntFormat = .init(rawValue: UInt32(fourCharString: "typ1"))
     public static let V1_0:    OTFsfntFormat = .init(rawValue: 0x00010000)                      /// standard TT outline/bitmap
@@ -450,7 +450,6 @@ public struct TableTag: RawRepresentable, Comparable, Hashable, CaseIterable, Cu
     }
 
     public static let allCases: [TableTag] = [.BASE, .CFF_, .CFF2, .DSIG, .TYP1, .CID_, .gcid, .BLND, .EBDT, .EBLC, .EBSC, .CBDT, .CBLC, .SVG_, .COLR, .CPAL, .GDEF, .GPOS, .GSUB, .JSTF, .MATH, .OS_2, .VORG, .STAT, .LTSH, .MERG, .VDMX, .PCLT, .acnt, .ankr, .avar, .bdat, .bhed, .bloc, .bsln, .cmap, .cvt_, .fdsc, .evrs, .feat, .ltag, .fpgm, .fond, .cvar, .fvar, .gvar, .fmtx, .gasp, .glyf, .head, .hhea, .hmtx, .hdmx, .hvgl, .hvpm, .just, .lcar, .loca, .kern, .kerx, .maxp, .meta, .mort, .morx, .name, .opbd, .post, .prep, .prop, .sbix, .trak, .vhea, .vmtx, .xref, .Zapf]
-
 }
 
 // MARK: -

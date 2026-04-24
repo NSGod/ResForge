@@ -11,8 +11,9 @@ import RFSupport
 /// `REQUIRES`: `maxp`, `loca`
 /// `DEPENDS ON`:
 /// `DISPLAY DEPENDS ON`: `post`
-///
-public final class FontTable_glyf: FontTable/*, UIGlyphsProvider */ {
+
+public final class FontTable_glyf: FontTable {
+    // FIXME: make this lazy if possible?
     public var glyphs:      [Glyph] = []
 
     public required init(with tableData: Data, tableTag: TableTag, fontFile: OTFFontFile) throws {
