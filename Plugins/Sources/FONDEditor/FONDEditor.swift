@@ -35,7 +35,9 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     
     @IBOutlet weak var tabView:                         NSTabView!
     @IBOutlet weak var encodingTabView:                 NSTabView!
+    @IBOutlet weak var styleMappingTabView:             NSTabView!
     @IBOutlet weak var encodingField:                   NSTextField!
+    @IBOutlet weak var famIDField:                      NSTextField!
 
     @IBOutlet var popover:                              NSPopover!
     @IBOutlet weak var popoverButton:                   NSButton!
@@ -82,7 +84,8 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
 
     public required init?(resource: Resource, manager: RFEditorManager) {
         UserDefaults.standard.register(defaults: ["FONDEditor.selectedTabIndex": 0,
-                                                  "FONDEditor.selectedEncodingTabIndex": 1])
+                                                  "FONDEditor.selectedEncodingTabIndex": 1,
+                                                  "FONDEditor.selectedStyleMappingTabIndex": 1])
         self.resource = resource
         self.manager = manager
         do {
@@ -112,6 +115,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
         fontClassBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFontClass")
         tabView.selectTabViewItem(at: UserDefaults.standard.integer(forKey: "FONDEditor.selectedTabIndex"))
         encodingTabView.selectTabViewItem(at: UserDefaults.standard.integer(forKey: "FONDEditor.selectedEncodingTabIndex"))
+        styleMappingTabView.selectTabViewItem(at: UserDefaults.standard.integer(forKey: "FONDEditor.selectedStyleMappingTabIndex"))
         tableView.doubleAction = #selector(doubleClickOpenReferencedFont(_:))
         fontNameSuffixTableView.doubleAction = #selector(doubleClickOpenReferencedFont(_:))
         loadFOND()
@@ -123,6 +127,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     public func windowWillClose(_ notification: Notification) {
         UserDefaults.standard.set(tabView.indexOfTabViewItem(tabView.selectedTabViewItem!), forKey: "FONDEditor.selectedTabIndex")
         UserDefaults.standard.set(encodingTabView.indexOfTabViewItem(encodingTabView.selectedTabViewItem!), forKey: "FONDEditor.selectedEncodingTabIndex")
+        UserDefaults.standard.set(styleMappingTabView.indexOfTabViewItem(styleMappingTabView.selectedTabViewItem!), forKey: "FONDEditor.selectedStyleMappingTabIndex")
     }
 
     private func loadFOND() {
