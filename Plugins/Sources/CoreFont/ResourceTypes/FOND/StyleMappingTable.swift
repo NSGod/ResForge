@@ -80,7 +80,7 @@ extension FOND {
         }
 
         public func postScriptNameForFont(with style: MacFontStyle) -> String? {
-            let entryIndex = indexes[Int(style.compressed().rawValue)]
+            let entryIndex = indexes[Int(style.abridged().rawValue)]
             return fontNameSuffixSubtable.postScriptNameForFontEntry(at: entryIndex)
         }
     }

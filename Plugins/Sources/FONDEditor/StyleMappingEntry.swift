@@ -22,7 +22,7 @@ public final class StyleMappingEntry: NSObject {
 
     public init(compressedStyle: MacFontStyle, stringIndex: Int, fontNameSuffixEntry: FontNameSuffixEntry) {
         styleIndex = Int(compressedStyle.rawValue)
-        self.style = compressedStyle.uncompressed()
+        self.style = compressedStyle.unabridged()
         self.stringIndex = stringIndex + 1
         self.fontNameSuffixEntry = fontNameSuffixEntry
     }

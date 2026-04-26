@@ -102,15 +102,15 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
     public static let condensed        = Self(rawValue: 1 << 5)    // 32
     public static let extended         = Self(rawValue: 1 << 6)    // 64
 
-    public private(set) var isCompressed = false
+    public private(set) var isAbridged = false
 
     public init(rawValue: UInt16) {
         self.rawValue = rawValue
     }
 
-    public init(rawValue: UInt16, isCompressed: Bool = false) {
+    public init(rawValue: UInt16, isAbridged: Bool = false) {
         self.init(rawValue: rawValue)
-        self.isCompressed = isCompressed
+        self.isAbridged = isAbridged
     }
 
     public var styleDescription: String {
@@ -131,10 +131,10 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
         if self == .regular { return styleDescription }
         var description = ""
         var i = Self.bold.rawValue
-        let uncompressed = uncompressed()
+        let unabridged = unabridged()
         while i <= Self.extended.rawValue {
             let style = MacFontStyle(rawValue: i)
-            if uncompressed.contains(style) {
+            if unabridged.contains(style) {
                 description = description.isEmpty ? style.styleDescription : "\(description) \(style.styleDescription)"
             }
             i *= 2
@@ -148,8 +148,8 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
     /// StyleMappingTable, we compress the style value first before finding the index in indexes UInt8[48].
     /// Also, I guess `.underline` doesn't come into play since it's an after-effect?
     /// This is used when getting the PostScript name of the font.
-    public func compressed() -> MacFontStyle {
-        if isCompressed { return self }
+    public func abridged() -> MacFontStyle {
+        if isAbridged { return self }
         var rawValue: UInt16 = 0
         if self.contains(.bold) { rawValue += 1 }
         if self.contains(.italic) { rawValue += 2 }
@@ -160,12 +160,11 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
         } else if self.contains(.extended) {
             rawValue += 32
         }
-        return MacFontStyle(rawValue: rawValue, isCompressed: true)
+        return MacFontStyle(rawValue: rawValue, isAbridged: true)
     }
 
-    /// `expanded()` too similar to `.extended`?
-    public func uncompressed() -> MacFontStyle {
-        if !isCompressed { return self }
+    public func unabridged() -> MacFontStyle {
+        if !isAbridged { return self }
         var rawValue: UInt16 = 0
         if self.rawValue & 1 != 0 { rawValue += Self.bold.rawValue }
         if self.rawValue & 2 != 0 { rawValue += Self.italic.rawValue }
