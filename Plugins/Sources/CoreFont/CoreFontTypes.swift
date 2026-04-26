@@ -102,8 +102,15 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
     public static let condensed        = Self(rawValue: 1 << 5)    // 32
     public static let extended         = Self(rawValue: 1 << 6)    // 64
 
+    public private(set) var isCompressed = false
+
     public init(rawValue: UInt16) {
         self.rawValue = rawValue
+    }
+
+    public init(rawValue: UInt16, isCompressed: Bool = false) {
+        self.init(rawValue: rawValue)
+        self.isCompressed = isCompressed
     }
 
     public var styleDescription: String {
@@ -124,9 +131,10 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
         if self == .regular { return styleDescription }
         var description = ""
         var i = Self.bold.rawValue
+        let uncompressed = uncompressed()
         while i <= Self.extended.rawValue {
             let style = MacFontStyle(rawValue: i)
-            if self.contains(style) {
+            if uncompressed.contains(style) {
                 description = description.isEmpty ? style.styleDescription : "\(description) \(style.styleDescription)"
             }
             i *= 2
@@ -138,8 +146,10 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
     /// of all possible combination of styles to be 32 + 8 + 4 + 2 + 1 = 47. Add 1 for no
     /// style and you have 48. So, when trying to look up the PostScript name in the
     /// StyleMappingTable, we compress the style value first before finding the index in indexes UInt8[48].
+    /// Also, I guess `.underline` doesn't come into play since it's an after-effect?
     /// This is used when getting the PostScript name of the font.
     public func compressed() -> MacFontStyle {
+        if isCompressed { return self }
         var rawValue: UInt16 = 0
         if self.contains(.bold) { rawValue += 1 }
         if self.contains(.italic) { rawValue += 2 }
@@ -150,6 +160,19 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
         } else if self.contains(.extended) {
             rawValue += 32
         }
+        return MacFontStyle(rawValue: rawValue, isCompressed: true)
+    }
+
+    /// `expanded()` too similar to `.extended`?
+    public func uncompressed() -> MacFontStyle {
+        if !isCompressed { return self }
+        var rawValue: UInt16 = 0
+        if self.rawValue & 1 != 0 { rawValue += Self.bold.rawValue }
+        if self.rawValue & 2 != 0 { rawValue += Self.italic.rawValue }
+        if self.rawValue & 4 != 0 { rawValue += Self.outline.rawValue }
+        if self.rawValue & 8 != 0 { rawValue += Self.shadow.rawValue }
+        if self.rawValue & 16 != 0 { rawValue += Self.condensed.rawValue }
+        if self.rawValue & 32 != 0 { rawValue += Self.extended.rawValue }
         return MacFontStyle(rawValue: rawValue)
     }
 

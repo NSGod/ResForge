@@ -27,10 +27,12 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     @IBOutlet weak var fontClassField:                  NSTextField!
     @IBOutlet weak var tableView:                       NSTableView! // font assoc. table entries
     @IBOutlet weak var fontNameSuffixTableView:         NSTableView!
-    
+    @IBOutlet weak var styleMappingTableView:           TableView!
+
     @IBOutlet var fontAssocTableEntriesController:      NSArrayController!
     @IBOutlet var bBoxEntriesController:                NSArrayController!
     @IBOutlet var kernPairsTreeController:              NSTreeController!
+    @IBOutlet var styleMappingEntriesController:        NSArrayController!
     @IBOutlet var fontNameSuffixEntriesController:      NSArrayController!
     
     @IBOutlet weak var tabView:                         NSTabView!
@@ -55,6 +57,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     @objc dynamic var effectiveGlyphNameEntries:    [MacEncoding.GlyphNameEntry] = []
 
     @objc dynamic var fontNameSuffixEntries:        [FontNameSuffixEntry] = []
+    @objc dynamic var styleMappingEntries:          [StyleMappingEntry] = []
 
     @objc dynamic var objcFFFlags:                  UInt16 = 0
     @objc dynamic var objcFontClass:                UInt16 = 0
@@ -118,6 +121,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
         styleMappingTabView.selectTabViewItem(at: UserDefaults.standard.integer(forKey: "FONDEditor.selectedStyleMappingTabIndex"))
         tableView.doubleAction = #selector(doubleClickOpenReferencedFont(_:))
         fontNameSuffixTableView.doubleAction = #selector(doubleClickOpenReferencedFont(_:))
+        styleMappingTableView.doubleAction = #selector(showFontNameSuffixEntry(_:))
         loadFOND()
         Self.fondKeyPaths.forEach { fond.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.fondContext) }
         Self.keyPaths.forEach { addObserver(self, forKeyPath: $0, options: [.new, .old], context: nil) }
@@ -142,12 +146,14 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
         if fond.wTabOff != 0 {
             tabView.tabViewItems[2].label = NSLocalizedString("✅ Glyph Width Table", comment: "")
         }
-        if fond.styleMappingTable?.glyphNameEncodingSubtable != nil {
-            tabView.tabViewItems[3].label = NSLocalizedString("✅ Encoding", comment: "")
-            encodingTabView.tabViewItems[1].label = NSLocalizedString("✅ Glyph Name-Encoding Subtable", comment: "")
-        }
-        if fond.styleMappingTable?.fontNameSuffixSubtable != nil {
+        if let styleMappingTable = fond.styleMappingTable {
             tabView.tabViewItems[4].label = NSLocalizedString("✅ Style-Mapping Table", comment: "")
+            styleMappingTabView.tabViewItems[0].label = NSLocalizedString("✅ Style-Mapping Table", comment: "")
+            styleMappingTabView.tabViewItems[1].label = NSLocalizedString("✅ Font Name Suffix Subtable", comment: "")
+            if styleMappingTable.glyphNameEncodingSubtable != nil {
+                tabView.tabViewItems[3].label = NSLocalizedString("✅ Encoding", comment: "")
+                encodingTabView.tabViewItems[1].label = NSLocalizedString("✅ Glyph Name-Encoding Subtable", comment: "")
+            }
         }
         objcFFFlags = fond.ffFlags.rawValue
         objcFontClass = fond.styleMappingTable?.fontClass.rawValue ?? 0
@@ -164,11 +170,12 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
             let entries = MacEncoding.GlyphNameEntry.entries(with: charCodesToGlyphNames).sorted(by: <)
             mutableArrayValue(forKey: "glyphNameEntries").setArray(entries)
         }
-        // FIXME: !! should this be replacing rather than appending? YES
         mutableArrayValue(forKey: "effectiveGlyphNameEntries").setArray(fond.encoding.glyphNameEntries)
         if let styleMappingTable = fond.styleMappingTable {
             let entries = FontNameSuffixEntry.entries(from: styleMappingTable, manager: manager)
             mutableArrayValue(forKey: "fontNameSuffixEntries").setArray(entries)
+            let styleEntries = StyleMappingEntry.entries(from: styleMappingTable, fontNameSuffixEntries: entries)
+            mutableArrayValue(forKey: "styleMappingEntries").setArray(styleEntries)
         }
     }
 
@@ -219,6 +226,22 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     private enum SenderTag: Int {
         case fontAssociationTableView = 1
         case fontNameSuffixTableView = 2
+    }
+
+    @IBAction func showFontNameSuffixEntry(_ sender: Any) {
+        var entry: StyleMappingEntry? = nil
+        if sender is NSButton {
+            guard let loc = NSApp.currentEvent?.locationInWindow else { return }
+            let row = styleMappingTableView.row(at: styleMappingTableView.convert(loc, from: nil))
+            entry = (styleMappingEntriesController.arrangedObjects as! [StyleMappingEntry])[row]
+        } else {
+            /// double-click
+            entry = (styleMappingEntriesController.arrangedObjects as! [StyleMappingEntry])[styleMappingTableView.clickedRow]
+        }
+        if let entry {
+            styleMappingTabView.selectTabViewItem(at: 1)
+            fontNameSuffixEntriesController.setSelectionIndex(entry.stringIndex - 1)
+        }
     }
 
     // MARK: - open font association table fonts
@@ -488,6 +511,9 @@ extension FONDEditor: NSTableViewDelegate, NSOutlineViewDelegate {
                 if entry.fontType == .missingPostScript { bCellView.textField?.toolTip = NSLocalizedString("\(entry.lwfnURL?.path ?? "Unknown") (missing)", comment: "") }
             }
             bCellView.button.tag = SenderTag.fontNameSuffixTableView.rawValue
+            return view
+        } else if tableView == styleMappingTableView {
+            let view: NSTableCellView = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
             return view
         }
         return nil
