@@ -82,9 +82,9 @@ public struct FontCreationOptions {
         self.sizes = sizes
     }
 
-    public static let createFONDKey = "createFOND"
-    public static let createNFNTKey = "createNFNT"
-    public static let sizesKey      = "sizes"
+    public static let createFONDKey = "FontCreationOptions.createFOND"
+    public static let createNFNTKey = "FontCreationOptions.createNFNT"
+    public static let sizesKey      = "FontCreationOptions.sizes"
 }
 
 
