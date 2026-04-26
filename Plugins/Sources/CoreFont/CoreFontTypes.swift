@@ -165,18 +165,22 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
 
     public func unabridged() -> MacFontStyle {
         if !isAbridged { return self }
-        var rawValue: UInt16 = 0
-        if self.rawValue & 1 != 0 { rawValue += Self.bold.rawValue }
-        if self.rawValue & 2 != 0 { rawValue += Self.italic.rawValue }
-        if self.rawValue & 4 != 0 { rawValue += Self.outline.rawValue }
-        if self.rawValue & 8 != 0 { rawValue += Self.shadow.rawValue }
-        if self.rawValue & 16 != 0 { rawValue += Self.condensed.rawValue }
-        if self.rawValue & 32 != 0 { rawValue += Self.extended.rawValue }
-        return MacFontStyle(rawValue: rawValue)
+        var style: MacFontStyle = []
+        if rawValue & 1 != 0 { style.insert(.bold) }
+        if rawValue & 2 != 0 { style.insert(.italic) }
+        if rawValue & 4 != 0 { style.insert(.outline) }
+        if rawValue & 8 != 0 { style.insert(.shadow) }
+        if rawValue & 16 != 0 {
+            style.insert(.condensed)
+        } else if self.rawValue & 32 != 0 {
+            style.insert(.extended)
+        }
+        return style
     }
 
     public static func == (lhs: MacFontStyle, rhs: MacFontStyle) -> Bool {
-        return lhs.rawValue == rhs.rawValue
+        return lhs.rawValue == rhs.rawValue &&
+        lhs.isAbridged == rhs.isAbridged
     }
 
     public static func < (lhs: MacFontStyle, rhs: MacFontStyle) -> Bool {
