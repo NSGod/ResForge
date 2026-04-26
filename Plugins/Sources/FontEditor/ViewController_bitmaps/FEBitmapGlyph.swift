@@ -26,11 +26,16 @@ public final class FEBitmapGlyph: NSObject, Comparable {
         return strike.strike.glyphs.map { FEBitmapGlyph(with: $0) }
     }
 
-    public static func < (lhs: FEBitmapGlyph, rhs: FEBitmapGlyph) -> Bool {
-        return lhs.glyph < rhs.glyph
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? FEBitmapGlyph else { return false }
+        return glyphID == other.glyphID
     }
 
     public static func == (lhs: FEBitmapGlyph, rhs: FEBitmapGlyph) -> Bool {
-        return lhs.glyph == rhs.glyph
+        return lhs.isEqual(rhs)
+    }
+
+    public static func < (lhs: FEBitmapGlyph, rhs: FEBitmapGlyph) -> Bool {
+        return lhs.glyph < rhs.glyph
     }
 }

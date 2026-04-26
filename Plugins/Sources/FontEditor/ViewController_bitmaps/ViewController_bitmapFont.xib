@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24765" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24765"/>
         <capability name="System colors introduced in macOS 10.14" minToolsVersion="10.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -9,8 +10,10 @@
         <customObject id="-2" userLabel="File's Owner" customClass="ViewController_bitmapFont" customModuleProvider="target">
             <connections>
                 <outlet property="glyphsController" destination="X6i-M1-6LA" id="0yx-yt-GcZ"/>
+                <outlet property="glyphsTableView" destination="I6C-tu-Rsd" id="z99-i6-zsi"/>
                 <outlet property="imageView" destination="KG5-z3-1uU" id="8HL-L8-0RK"/>
                 <outlet property="strikesController" destination="ECe-vs-4zM" id="lBY-kF-QY5"/>
+                <outlet property="tableView" destination="xV3-ZV-Y6J" id="dsY-vN-Eib"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
             </connections>
         </customObject>
@@ -117,6 +120,7 @@
                                                                 <connections>
                                                                     <binding destination="ECe-vs-4zM" name="content" keyPath="arrangedObjects" id="wbo-fc-9QS"/>
                                                                     <binding destination="ECe-vs-4zM" name="selectionIndexes" keyPath="selectionIndexes" previousBinding="wbo-fc-9QS" id="xl5-lJ-B9o"/>
+                                                                    <outlet property="delegate" destination="-2" id="2au-K4-uUQ"/>
                                                                 </connections>
                                                             </tableView>
                                                         </subviews>
@@ -255,7 +259,7 @@
                                                                 </tableColumns>
                                                                 <connections>
                                                                     <binding destination="X6i-M1-6LA" name="content" keyPath="arrangedObjects" id="Qzz-If-Jf4"/>
-                                                                    <binding destination="X6i-M1-6LA" name="selectionIndexes" keyPath="selectionIndexes" previousBinding="Qzz-If-Jf4" id="nDV-He-VJn"/>
+                                                                    <binding destination="X6i-M1-6LA" name="selectionIndexes" keyPath="selectionIndexes" previousBinding="Qzz-If-Jf4" id="a6Z-rr-XH1"/>
                                                                     <outlet property="delegate" destination="-2" id="BNH-88-q92"/>
                                                                 </connections>
                                                             </tableView>
@@ -304,14 +308,14 @@
             </subviews>
             <point key="canvasLocation" x="224" y="157"/>
         </customView>
-        <arrayController objectClassName="FontEditor.UIBitmapStrike" automaticallyPreparesContent="YES" automaticallyRearrangesObjects="YES" id="ECe-vs-4zM" userLabel="strikesController">
-            <classReference key="objectClass" className="UIBitmapStrike" moduleName="FontEditor"/>
+        <arrayController objectClassName="FontEditor.FEBitmapStrike" automaticallyPreparesContent="YES" automaticallyRearrangesObjects="YES" id="ECe-vs-4zM" userLabel="strikesController">
+            <classReference key="objectClass" className="FEBitmapStrike" moduleName="FontEditor"/>
             <connections>
                 <binding destination="-2" name="contentArray" keyPath="strikes" id="5ME-4u-PgI"/>
             </connections>
         </arrayController>
-        <arrayController objectClassName="FontEditor.UIBitmapGlyph" automaticallyPreparesContent="YES" automaticallyRearrangesObjects="YES" id="X6i-M1-6LA" userLabel="glyphsController">
-            <classReference key="objectClass" className="UIBitmapGlyph" moduleName="FontEditor"/>
+        <arrayController objectClassName="FontEditor.FEBitmapGlyph" automaticallyPreparesContent="YES" automaticallyRearrangesObjects="YES" id="X6i-M1-6LA" userLabel="glyphsController">
+            <classReference key="objectClass" className="FEBitmapGlyph" moduleName="FontEditor"/>
             <connections>
                 <binding destination="ECe-vs-4zM" name="contentArray" keyPath="selection.glyphs" id="nEm-yv-N0d"/>
             </connections>

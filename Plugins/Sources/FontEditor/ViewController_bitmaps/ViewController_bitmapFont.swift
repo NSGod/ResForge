@@ -14,6 +14,9 @@ final class ViewController_bitmapFont: FontTableViewController, NSTableViewDeleg
     @IBOutlet var strikesController:    NSArrayController!
     @IBOutlet var glyphsController:     NSArrayController!
 
+    @IBOutlet weak var tableView:       NSTableView!
+    @IBOutlet weak var glyphsTableView: NSTableView!
+    
     var blocTable:              FontTable_bloc
     var bdatTable:              FontTable_bdat
 
@@ -50,8 +53,10 @@ final class ViewController_bitmapFont: FontTableViewController, NSTableViewDeleg
 
     // MARK: <NSTableViewDelegate>
     func tableViewSelectionDidChange(_ notification: Notification) {
-        let uiGlyph = glyphsController.selectedObjects.first! as! FEBitmapGlyph
-        let image = uiGlyph.glyph.image
-        imageView.image = image
+        if let tv = notification.object as? NSTableView, tv == glyphsTableView {
+            let uiGlyph = glyphsController.selectedObjects.first! as! FEBitmapGlyph
+            let image = uiGlyph.glyph.image
+            imageView.image = image
+        }
     }
 }
