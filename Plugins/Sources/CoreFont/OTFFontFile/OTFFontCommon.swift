@@ -916,35 +916,35 @@ public enum LanguageID: FauxRawRepresentable, Comparable, CustomStringConvertibl
 public extension FontTable_name {
 
     enum FontNameID: FauxRawRepresentable, Hashable, CustomStringConvertible, CustomDebugStringConvertible {
-        case copyright                 // = 0
-        case family                    // = 1
-        case subfamily                 // = 2
-        case unique                    // = 3
-        case full                      // = 4
-        case version                   // = 5
-        case postscript                // = 6   // 63 char len; ASCII subset, codes 33-126, except for the 10 characters [](){}<>/%
-        case trademark                 // = 7
-        case manufacturer              // = 8
-        case designer                  // = 9
-        case description               // = 10
-        case vendorURL                 // = 11
-        case designerURL               // = 12
-        case licenseDescription        // = 13
-        case licenseInfoURL            // = 14
-        case reserved                  // = 15
-        case typographicFamily         // = 16
-        case typographicSubfamily      // = 17
-        case macCompatibleFull         // = 18
-        case sampleText                // = 19
-        case postScriptCID             // = 20  // 63 char len; ASCII subset, codes 33-126, except for the 10 characters [](){}<>/%
-        case wwsFamily                 // = 21  // Weight-Width-Slope; fsSelection WWS field
-        case wwsSubfamily              // = 22  // Weight-Width-Slope; fsSelection WWS field
-        case lightBackgroundPalette    // = 23
-        case darkBackgroundPalette     // = 24
-        case varsPostScriptNamePrefix  // = 25
-        case lastReserved              // = 255
-        case custom(Int16)            // custom names above 255 can be referenced in other tables like `feat`
-        case any                       // = 0xffff
+        case copyright                  // = 0
+        case family                     // = 1
+        case subfamily                  // = 2
+        case unique                     // = 3
+        case full                       // = 4
+        case version                    // = 5
+        case postscript                 // = 6   // 63 char len; ASCII subset, codes 33-126, except for the 10 characters [](){}<>/%
+        case trademark                  // = 7
+        case manufacturer               // = 8
+        case designer                   // = 9
+        case description                // = 10
+        case vendorURL                  // = 11
+        case designerURL                // = 12
+        case licenseDescription         // = 13
+        case licenseInfoURL             // = 14
+        case reserved                   // = 15
+        case typographicFamily          // = 16
+        case typographicSubfamily       // = 17
+        case macCompatibleFull          // = 18
+        case sampleText                 // = 19
+        case postScriptCID              // = 20  // 63 char len; ASCII subset, codes 33-126, except for the 10 characters [](){}<>/%
+        case wwsFamily                  // = 21  // Weight-Width-Slope; fsSelection WWS field
+        case wwsSubfamily               // = 22  // Weight-Width-Slope; fsSelection WWS field
+        case lightBackgroundPalette     // = 23
+        case darkBackgroundPalette      // = 24
+        case varsPostScriptNamePrefix   // = 25
+        case lastReserved               // = 255
+        case custom(Int16)              // custom names above 255 can be referenced in other tables like `feat`
+        case any                        // = -1
 
         public init(rawValue: Int16) {
             if let nameID = Self.rawValuesToCases[rawValue] {
