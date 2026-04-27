@@ -192,10 +192,10 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
     }
 }
 
-public enum UnitsPerEm: CustomStringConvertible {
+public enum UnitsPerEm: FauxRawRepresentable, CustomStringConvertible {
     case custom(UInt16)
-    case postScriptStandard,
-         trueTypeStandard
+    case postScriptStandard
+    case trueTypeStandard
 
     public init(rawValue: UInt16) {
         if rawValue == 1000 {

@@ -132,7 +132,7 @@ public class FontTable_head: FontTable {
         extDataHandle.write(0 as UInt32) // leave checksum adjustment blank for now
         extDataHandle.write(magicNumber)
         extDataHandle.write(flags)
-        extDataHandle.write(unitsPerEm.rawValue)
+        extDataHandle.write(unitsPerEm)
         extDataHandle.write(created)
         extDataHandle.write(modified)
         extDataHandle.write(xMin)
