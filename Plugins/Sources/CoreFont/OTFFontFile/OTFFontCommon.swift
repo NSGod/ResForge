@@ -998,7 +998,7 @@ public extension FontTable_name {
         public func hash(into hasher: inout Hasher) {
             hasher.combine(rawValue)
         }
-        
+
         public var description: String {
             switch self {
                 case .copyright:                return NSLocalizedString("Copyright", comment: "")

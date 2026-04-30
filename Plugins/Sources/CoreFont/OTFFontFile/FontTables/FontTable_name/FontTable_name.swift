@@ -17,7 +17,7 @@ public final class FontTable_name: FontTable {
         case format0    = 0
         case format1    = 1     // not supported by Apple (or us, for writing)
 
-        /// I've encountered some weird values here (UInt16.max), but
+        /// I've encountered some weird values here (`UInt16.max`), but
         /// `.format0` is really the only value used, so default back to that.
         public init?(rawValue: UInt16) {
             switch rawValue {
@@ -77,8 +77,8 @@ public final class FontTable_name: FontTable {
         }
         var hashNamesToRecords: [HashName: NameRecord] = [:]
         /// Allow shared string storage among records that share the same `fontNameID` and
-        /// where the data is the same. For example, a Unicode platform entry for `fontNameID` of `.postscript`
-        /// has a value of "Helvetica" in UTF-16BE. A Windows platform entry for `fontNameID` of `.postscript`
+        /// where the data is the same. For example, a Unicode platform entry for a `fontNameID` of `.postscript`
+        /// has a value of "Helvetica" in UTF-16BE. A Windows platform entry for a `fontNameID` of `.postscript`
         /// (which will also be in UTF16-BE) that is also equal to "Helvetica" can simply reference the
         /// same string storage that the Unicode entry does.
         for nameRecord in nameRecords {

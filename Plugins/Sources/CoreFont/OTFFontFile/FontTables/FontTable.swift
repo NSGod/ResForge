@@ -30,7 +30,7 @@ public enum FontTableError: LocalizedError {
 /// `bloc`, `bdat`,
 /// & all others
 
-/// abstract superclass
+/// abstract superclass or generic class for unsupported tables without a specialized subclass
 open class FontTable: OTFFontFileNode {
     public let tableTag:            TableTag
     public var tableData:           Data
@@ -66,7 +66,7 @@ open class FontTable: OTFFontFileNode {
         try super.init(fontFile: fontFile)
     }
 
-    /// give table a chance to update its in memory data structures
+    /// give table a chance to update its in-memory data structures
     func prepareToWrite() throws {
 
     }
@@ -146,7 +146,7 @@ open class FontTable: OTFFontFileNode {
     public var EBDTTable: FontTable_EBDT? { table(for: .EBDT) as? FontTable_EBDT }
 
     /// While these may seem redundant/trivial, this is adapted from code
-    /// where font files (.ttc, .otc, etc.) can contain multiple fonts,
+    /// where font files (.ttc, .otc, etc.) are containers that can actually contain multiple fonts,
     /// and where font tables can be shared among several fonts...
     public var fontNumGlyphs: Int {
         return fontFile.numGlyphs

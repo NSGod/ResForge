@@ -233,7 +233,7 @@ extension FontTable_glyf {
             /// compound glyph calls our variation below
         }
 
-        /// NOTE: component doesn't alter coordinates, it uses them for component point matching to derive `pointMatchingTransform`
+        /// NOTE: component doesn't alter `coordinates`, it uses them for component-point-matching to derive `pointMatchingTransform`
         public func awakeFromFont(with coordinates: Coordinates?) {
             glyph = (table as! FontTable_glyf).glyph(for: glyphID)
             if !flags.contains(.argsAreXYValues) {

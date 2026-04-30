@@ -112,7 +112,7 @@ public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
         var entries = directory.entries
         entries.sort {
             /// load/font tables in a specified order, since parsing some
-            /// rely on presence of already-parsed-state of others
+            /// rely on the presence of the already-parsed-state of others
             return OTFsfntDirectoryEntry.sortForParsing(lhs: $0, rhs: $1)
         }
         for entry in entries {
@@ -174,6 +174,7 @@ public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
         }
         dataHandle.seek(to: 0)
         try directory.write(to: dataHandle)
+        // calculate the final checksum
         var checksum = directory.calculatedChecksum(with: dataHandle)
         // add in the table checksums
         directory.entries.forEach { checksum &+= $0.checksum }

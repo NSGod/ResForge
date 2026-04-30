@@ -23,9 +23,9 @@ public final class FontTable_post: FontTable {
     }
 
     @objc dynamic public var version:               Version = .version1_0
-    @objc dynamic public var italicAngle:           Fixed = 0   // Italic angle in cntr-clockwise degrees from vert.
-    @objc dynamic public var underlinePosition:     Int16 = 0   //
-    @objc dynamic public var underlineThickness:    Int16 = 0   // should match thickness of U+005F LOW LINE & OS/2.yStrikeoutSize
+    @objc dynamic public var italicAngle:           Fixed = 0   /// Italic angle in cntr-clockwise degrees from vert.
+    @objc dynamic public var underlinePosition:     Int16 = 0   ///
+    @objc dynamic public var underlineThickness:    Int16 = 0   /// should match thickness of U+005F LOW LINE & OS/2.yStrikeoutSize
     @objc dynamic public var isFixedPitch:          UInt32 = 0
     @objc dynamic public var minMemType42:          UInt32 = 0
     @objc dynamic public var maxMemType42:          UInt32 = 0
@@ -34,7 +34,7 @@ public final class FontTable_post: FontTable {
 
     /// make lazy because `Format4_0` requires `.fontNumGlyphs` which can't be
     /// calculated until after `post` has been created.
-    @objc dynamic lazy public var format:           Format? = { /// nil for `.version3_0`:
+    @objc dynamic lazy public var format:           Format? = { /// nil for `.version3_0`
         guard let tableClass: Format.Type = Format.class(for: version).self else {
             return nil
         }

@@ -20,7 +20,7 @@ public extension FontTable_post {
      *
      * Elements values are glyph names. Index by glyph index (GID) get glyph name.
      */
-
+    // FIXME: !! should 001 be "NULL" as ".name" should be disallowed except for ".notdef"?
     static let appleStdGlyphNames: [String] = [
         /* 000 */   ".notdef",
         /* 001 */   ".null",

@@ -171,7 +171,7 @@ public enum Sbit {
     }
 
     // MARK: -
-    // must consult BitmapSizeTable.flags to see whether these are horizontal or vertical
+    /// must consult `BitmapSizeTable.flags` to see whether these are horizontal or vertical
     public class SmallGlyphMetrics: Node {
         public var height:      UInt8   // # of rows of glyph image data
         public var width:       UInt8   // # of columns of glyph image data
