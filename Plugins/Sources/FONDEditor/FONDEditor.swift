@@ -46,9 +46,9 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
 
     @IBOutlet weak var exportKernPairButton:            NSButton!
 
-    public let resource:                    Resource
-    private let manager:                    RFEditorManager
-    @objc dynamic var fond:                 FOND
+    public var resource:                            Resource
+    @objc dynamic var fond:                         FOND!
+    private let manager:                            RFEditorManager
 
     @objc dynamic var kernPairs:                    [KernTreeNode] = []
     @objc dynamic var glyphWidths:                  [WidthTreeNode] = []
@@ -61,6 +61,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
 
     @objc dynamic var objcFFFlags:                  UInt16 = 0
     @objc dynamic var objcFontClass:                UInt16 = 0
+    private var isSavingItem = false
 
     private static var fondContext = 1
     private static let fondKeyPaths = Set(["famID", "firstChar", "lastChar", "ascent", "descent", "leading", "widMax",
@@ -69,7 +70,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     private static let keyPaths = Set(["objcFFFlags", "objcFontClass"])
     private static let fontAsscKeyPaths = Set(["objcFontStyle", "fontPointSize", "fontID"])
     private static var fontAsscContext = 2
-    
+
     private static var postScriptARedIcon: NSImage = {
         return NSImage(contentsOf: FONDEditor.bundle.url(forResource: "postScriptARed", withExtension: "pdf")!)!
     }()
@@ -86,17 +87,12 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     }
 
     public required init?(resource: Resource, manager: RFEditorManager) {
+        NSLog("\(type(of: self)).\(#function)")
         UserDefaults.standard.register(defaults: ["FONDEditor.selectedTabIndex": 0,
                                                   "FONDEditor.selectedEncodingTabIndex": 1,
                                                   "FONDEditor.selectedStyleMappingTabIndex": 1])
         self.resource = resource
         self.manager = manager
-        do {
-            fond = try FOND(with: self.resource)
-        } catch {
-            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
-            return nil
-        }
         super.init(window: nil)
     }
 
@@ -105,15 +101,18 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     }
 
     deinit {
+        NSLog("\(type(of: self)).\(#function)")
+        NotificationCenter.default.removeObserver(self)
         flagsBitfieldControl.unbind(NSBindingName("objectValue"))
         fontClassBitfieldControl.unbind(NSBindingName("objectValue"))
         Self.fondKeyPaths.forEach { fond.removeObserver(self, forKeyPath: $0) }
-        Self.keyPaths.forEach { removeObserver(self, forKeyPath: $0) }
         Self.fontAsscKeyPaths.forEach { (fond.fontAssociationTable.entries as NSArray).removeObserver(self, fromObjectsAt: IndexSet(0..<(fond.fontAssociationTable.entries.count)), forKeyPath: $0, context: &Self.fontAsscContext) }
+        Self.keyPaths.forEach { removeObserver(self, forKeyPath: $0) }
     }
 
     public override func windowDidLoad() {
         super.windowDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(resourceDataChanged(_:)), name: .ResourceDataDidChange, object: nil)
         flagsBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFFFlags")
         fontClassBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFontClass")
         tabView.selectTabViewItem(at: UserDefaults.standard.integer(forKey: "FONDEditor.selectedTabIndex"))
@@ -123,9 +122,6 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
         fontNameSuffixTableView.doubleAction = #selector(doubleClickOpenReferencedFont(_:))
         styleMappingTableView.doubleAction = #selector(showFontNameSuffixEntry(_:))
         loadFOND()
-        Self.fondKeyPaths.forEach { fond.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.fondContext) }
-        Self.keyPaths.forEach { addObserver(self, forKeyPath: $0, options: [.new, .old], context: nil) }
-        Self.fontAsscKeyPaths.forEach { (fond.fontAssociationTable.entries as NSArray).addObserver(self, toObjectsAt: IndexSet(0..<fond.fontAssociationTable.entries.count),  forKeyPath: $0, options: [.new, .old], context: &Self.fontAsscContext) }
     }
 
     public func windowWillClose(_ notification: Notification) {
@@ -135,6 +131,20 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     }
 
     private func loadFOND() {
+        if let fond {
+            Self.fondKeyPaths.forEach { fond.removeObserver(self, forKeyPath: $0) }
+            Self.fontAsscKeyPaths.forEach { (fond.fontAssociationTable.entries as NSArray).removeObserver(self, fromObjectsAt: IndexSet(0..<(fond.fontAssociationTable.entries.count)), forKeyPath: $0, context: &Self.fontAsscContext) }
+            Self.keyPaths.forEach { removeObserver(self, forKeyPath: $0) }
+        }
+        do {
+            fond = try FOND(with: resource)
+        } catch {
+            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+            window?.presentError(error)
+        }
+        Self.fondKeyPaths.forEach { fond.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.fondContext) }
+        Self.fontAsscKeyPaths.forEach { (fond.fontAssociationTable.entries as NSArray).addObserver(self, toObjectsAt: IndexSet(0..<fond.fontAssociationTable.entries.count),  forKeyPath: $0, options: [.new, .old], context: &Self.fontAsscContext) }
+        Self.keyPaths.forEach { addObserver(self, forKeyPath: $0, options: [.new, .old], context: nil) }
         fontClassBitfieldControl.isEnabled = fond.styleOff != 0
         fontClassField.isEnabled = fond.styleOff != 0
         if fond.boundingBoxTable != nil {
@@ -179,6 +189,12 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
         }
     }
 
+    @objc func resourceDataChanged(_ notification: Notification) {
+        NSLog("\(type(of: self)).\(#function)")
+        if isSavingItem { return }
+        loadFOND()
+    }
+
     @IBAction func showPopover(_ sender: Any) {
         popover.show(relativeTo: popoverButton.bounds, of: popoverButton, preferredEdge: .minX)
     }
@@ -200,26 +216,25 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
             objcFontClass = objcFontClass & ~UInt16(sender.tag)
         }
     }
-    
+
     @IBAction public func saveResource(_ sender: Any) {
+        isSavingItem = true
+        /// push local values into FOND
         fond.ffFlags = FOND.Flags(rawValue: objcFFFlags)
         fond.styleMappingTable?.fontClass = FOND.StyleMappingTable.FontClass(rawValue: objcFontClass)
         do {
             resource.data = try fond.data()
         } catch {
             NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+            window?.presentError(error)
         }
         self.setDocumentEdited(false)
+        isSavingItem = false
     }
 
     @IBAction public func revertResource(_ sender: Any) {
         undoManager?.removeAllActions()
-        do {
-            fond = try FOND(with: resource)
-            loadFOND()
-        } catch {
-            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
-        }
+        loadFOND()
         self.setDocumentEdited(false)
     }
 
@@ -472,7 +487,7 @@ extension FONDEditor: NSTableViewDelegate, NSOutlineViewDelegate {
         if tableView == bBoxTableView {
             let view: NSTableCellView = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
             if let id = tableColumn?.identifier, id.rawValue == "style" { return view }
-            /// need to set the unitsPerEm of the `Fixed4Dot12ToEmValueFormatter`
+            /// need to set the `unitsPerEm` of the `Fixed4Dot12ToEmValueFormatter`
             if let bboxEntries = bBoxEntriesController.arrangedObjects as? [FOND.BoundingBoxTable.Entry] {
                 if let formatter = view.textField?.formatter as? Fixed4Dot12ToEmValueFormatter {
                     let entry = bboxEntries[row]
@@ -501,7 +516,6 @@ extension FONDEditor: NSTableViewDelegate, NSOutlineViewDelegate {
             }
             let bCellView = view as! ButtonTableCellView
             if entry.fontType == .sfnt {
-                // bCellView.imageView?.image = NSImage(systemSymbolName: "f.cursive", accessibilityDescription: nil)
                 bCellView.imageView?.image = Self.trueTypeIcon
                 bCellView.textField?.stringValue = entry.postScriptName
             } else if entry.fontType == .postScript || entry.fontType == .missingPostScript {

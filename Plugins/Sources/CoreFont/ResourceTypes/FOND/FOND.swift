@@ -198,11 +198,19 @@ public final class FOND: NSObject {
             }
         } else {
             ffFlags         = [.dontUseFractWidthTable, .ignoreFractEnable]
+            if let fixedPitch = options?.fontFile.postTable?.isFixedPitch, fixedPitch > 0 {
+               ffFlags.insert(.isFixedWidth)
+            }
             famID           = ResID(resource.id)
             firstChar       = 0
             lastChar        = 255
-            ascent          = DoubleToFixed4Dot12(0.75)
-            descent         = DoubleToFixed4Dot12(-0.25)
+            let unitsPerEm = options?.fontFile.metrics.unitsPerEm ?? .trueTypeStandard
+            if let ascender = options?.fontFile.metrics.ascender {
+                ascent = DoubleToFixed4Dot12(Double(ascender/CGFloat(unitsPerEm.rawValue)))
+            } else { ascent = DoubleToFixed4Dot12(0.75) }
+            if let descender = options?.fontFile.metrics.descender {
+                descent = DoubleToFixed4Dot12(Double(descender/CGFloat(unitsPerEm.rawValue)))
+            } else { descent = DoubleToFixed4Dot12(-0.25) }
             leading         = DoubleToFixed4Dot12(0.1)
             widMax          = DoubleToFixed4Dot12(1.0)
             wTabOff         = 0
@@ -231,8 +239,11 @@ public final class FOND: NSObject {
              needs to be saved, etc. */
         }
         // FIXME: add validation/error-checking here
-        fontAssociationTable = try FontAssociationTable(reader)
+        fontAssociationTable = try FontAssociationTable(reader, options: options)
         super.init()
+        if let options {
+            styleMappingTable = try StyleMappingTable(reader, range: nil, options: options)
+        }
     }
 
     public func data() throws -> Data {

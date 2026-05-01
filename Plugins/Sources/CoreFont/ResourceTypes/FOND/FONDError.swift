@@ -27,6 +27,7 @@ public enum FONDError: LocalizedError {
     case glyphNameTableUsability
     case kernTableUsability
     case noSuchFontAssociationTableEntry
+    case creationError(String?)
 
     public var errorDescription: String? {
         switch self {
@@ -68,6 +69,8 @@ public enum FONDError: LocalizedError {
                 return NSLocalizedString("The Kern table is too short and doesn’t contain enough data to be usable.", comment: "")
             case .noSuchFontAssociationTableEntry:
                 return NSLocalizedString("The specified font association table entry could not be found.", comment: "")
+            case .creationError(let message):
+                return NSLocalizedString("Creation Error: \(message ?? "<unspecified>")", comment: "")
         }
     }
 }

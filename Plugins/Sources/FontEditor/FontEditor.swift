@@ -39,7 +39,6 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
     private static var dirEntryKeyPaths = Set(["objcFormat", "searchRange", "entrySelector", "rangeShift"])
 
     private var tableTagsToViewControllers: [TableTag: FontTableViewController] = [:]
-    private var originalData:   Data
 
     public override var windowNibName: NSNib.Name {
         return "FontEditor"
@@ -62,14 +61,6 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
         NSLog("\(type(of: self)).\(#function)")
         self.resource = resource
         self.manager = manager
-        originalData = resource.data
-        if !resource.data.isEmpty {
-            do {
-                fontFile = try OTFFontFile(resource.data)
-            } catch {
-                NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
-            }
-        }
         super.init(window: nil)
     }
 
@@ -88,11 +79,10 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
         if resource.data.isEmpty {
             /// don't close the window, just hide it temporarily
             window?.orderOut(nil)
-            fontImporter = FontImporterController(fontEditor: self)
+            fontImporter = FontImporterController(fontEditor: self, manager: manager)
             fontImporter?.showWindow(nil)
         } else {
-            Self.dirEntryKeyPaths.forEach { fontFile?.directory.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.dirEntryContext) }
-            window?.makeFirstResponder(tableView)
+            loadFont()
         }
     }
 
@@ -106,7 +96,7 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
     }
 
     // FIXME: consolidate all loading view code when selection changes, etc.
-    func reloadFont() {
+    func loadFont() {
         do {
             let indexes = tableView.selectedRowIndexes
             tableView.deselectAll(self)
@@ -136,6 +126,7 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
             window?.makeFirstResponder(tableView)
         } catch {
             NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+            window?.presentError(error)
         }
     }
 
@@ -146,8 +137,7 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
             let tableTags: [TableTag] = tableTagsToViewControllers.keys.sorted(by: OTFReWritingOrderSort)
             try tableTags.forEach { try tableTagsToViewControllers[$0]!.prepareToSave() }
             resource.data = try fontFile.data()
-            originalData = resource.data
-            reloadFont()
+            loadFont()
             window?.isDocumentEdited = false
         } catch {
             NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
@@ -157,24 +147,73 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
 
     @IBAction public func revertResource(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
-        resource.data = originalData
-        reloadFont()
+        loadFont()
         window?.isDocumentEdited = false
     }
 
-    public func importFont(with data: Data) {
+    public func importFont(with data: Data, options: FontCreationOptions) {
         resource.data = data
+        resource.name = options.fontFile.postScriptName
         window?.makeKeyAndOrderFront(nil)
         window?.isDocumentEdited = true
-        reloadFont()
+        // FIXME: prevent duplicate ResIDs
+        var fondResource: Resource?
+        var fond: FOND?
+        if options.createFOND {
+            manager.createResource(type: .fond, id: Int(MacEncoding.resID(for: options.encoding.scriptID)), name: options.fontFile.familyName) { fondRes in
+                do {
+                    fondResource = fondRes
+                    fond = try FOND(with: fondRes, options: options)
+                    if let fond, let entry = fond.fontAssociationTable.entries.first {
+                        self.resource.id = Int(entry.fontID)
+                        fondResource?.data = try fond.data()
+                    }
+                } catch {
+                    NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+                }
+            }
+        }
+
+        loadFont()
         fontImporter?.close()
         fontImporter = nil
+        // MARK: not sure yet how to handle NFNT creation
+//        if let fond, let entry = fond.fontAssociationTable.entries.first {
+//            resource.id = Int(entry.fontID)
+//        }
+//        if options.createNFNT, let sizes = options.sizes, sizes.count > 0 {
+//            for size in sizes {
+//                manager.createResource(type: .nfnt) { nfntResource in
+//                    do {
+//                        let nfnt = try NFNT(with: nfntResource, manager: self.manager, options: options, fontPointSize: Int16(size))
+//                        nfntResource.data = try nfnt.data()
+//                        if let fond {
+//                            let entry = try FOND.FontAssociationTable.Entry()
+//                            entry.fontPointSize = Int16(size)
+//                            entry.fontStyle = options.fontFile.headTable?.macStyle ?? .regular
+//                            entry.fontID = ResID(nfntResource.id)
+//                            try fond.add(entry)
+//                        }
+//                    } catch {
+//                        NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+//                    }
+//                }
+//            }
+//        }
+//        if let fond, let fondResource {
+//            do {
+//                fondResource.data = try fond.data()
+//            } catch {
+//                NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+//            }
+//        }
     }
 
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard let keyPath, Self.dirEntryKeyPaths.contains(keyPath), context == &Self.dirEntryContext else {
             return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
+        NSLog("\(type(of: self)).\(#function) keyPath: \(keyPath)")
         undoManager?.registerUndo(withTarget: self, handler: {
             $0.fontFile.directory.setValue(change![.oldKey], forKey: keyPath)
         })

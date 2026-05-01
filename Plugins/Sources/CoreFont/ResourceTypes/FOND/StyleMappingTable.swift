@@ -39,29 +39,41 @@ extension FOND {
         }
 
         // MARK: - init
-        public init(_ reader: BinaryDataReader, range knownRange: NSRange) throws {
-            let origOffset = reader.bytesRead
-            fontClass = try reader.read()
-            offset = try reader.read()
-            reserved = try reader.read()
-            indexes = try (0..<48).map { _ in try reader.read() }
-            var nameSuffixRange = knownRange
-            nameSuffixRange.location += Self.nodeLength
-            nameSuffixRange.length -= Self.nodeLength
-            var glyphNameTableLength = 0
-            if offset != 0 {
-                glyphNameTableLength = NSMaxRange(knownRange) - (origOffset + Int(offset))
-                nameSuffixRange.length -= glyphNameTableLength
+        public init(_ reader: BinaryDataReader?, range knownRange: NSRange?, options: FontCreationOptions? = nil) throws {
+            if let reader, let knownRange {
+                let origOffset = reader.bytesRead
+                fontClass = try reader.read()
+                offset = try reader.read()
+                reserved = try reader.read()
+                indexes = try (0..<48).map { _ in try reader.read() }
+                NSLog("\(type(of: self)).\(#function) indexes == \(indexes)")
+                var nameSuffixRange = knownRange
+                nameSuffixRange.location += Self.nodeLength
+                nameSuffixRange.length -= Self.nodeLength
+                var glyphNameTableLength = 0
+                if offset != 0 {
+                    glyphNameTableLength = NSMaxRange(knownRange) - (origOffset + Int(offset))
+                    nameSuffixRange.length -= glyphNameTableLength
+                }
+                var validIndexes: IndexSet = IndexSet()
+                indexes.forEach { validIndexes.insert(Int($0)) }
+                self.validIndexes = validIndexes
+                fontNameSuffixSubtable = try FontNameSuffixSubtable(reader, range: nameSuffixRange)
+                if offset != 0 {
+                    try reader.pushPosition(origOffset + Int(offset))
+                    glyphNameEncodingSubtable = try GlyphNameEncodingSubtable(reader)
+                    reader.popPosition()
+                }
+            } else {
+                assert(options != nil)
+                fontClass = []
+                offset = 0
+                reserved = 0
+                indexes = Array(repeating: 1, count: 48)
+                validIndexes = IndexSet([1])
+                fontNameSuffixSubtable = try FontNameSuffixSubtable(reader, options: options)
             }
-            var validIndexes: IndexSet = IndexSet()
-            indexes.forEach { validIndexes.insert(Int($0)) }
-            self.validIndexes = validIndexes
-            fontNameSuffixSubtable = try FontNameSuffixSubtable(reader, range: nameSuffixRange)
-            if offset != 0 {
-                try reader.pushPosition(origOffset + Int(offset))
-                glyphNameEncodingSubtable = try GlyphNameEncodingSubtable(reader)
-                reader.popPosition()
-            }
+            super.init()
         }
 
         public override func write(to handle: DataHandle, offset: Int? = nil) throws {

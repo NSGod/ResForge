@@ -46,35 +46,37 @@ public typealias Fixed2Dot14    = Int16 // 16-bit fixed-point format, integer in
 public typealias Fixed4Dot12    = Int16 // 16-bit fixed-point format, integer in high 4 bits and fractional part in low-order 12 bits
 public typealias Fixed8Dot8     = Int16 // 16-bit fixed-point format, integer in high 8 bits and fractional part in low-order 8 bits
 
-fileprivate let fixed14: UInt16 = 1 << 14
-fileprivate let fixed12: UInt16 = 1 << 12
+@usableFromInline internal let fixed14: UInt16 = 1 << 14
+@usableFromInline internal let fixed12: UInt16 = 1 << 12
 
-public func Fixed2Dot14ToDouble(_ x: Fixed2Dot14) -> Double {
+@inlinable public func Fixed2Dot14ToDouble(_ x: Fixed2Dot14) -> Double {
     Double(x) * 1.0/Double(fixed14)
 }
 // FIXME: do we still want this +- 0.5 thing in 2Dot14?
-public func DoubleToFixed2Dot14(_ x: Double) -> Fixed2Dot14 {
+@inlinable public func DoubleToFixed2Dot14(_ x: Double) -> Fixed2Dot14 {
     Fixed2Dot14(x * Double(fixed14) + (x < 0 ? -0.5 : 0.5))
 }
 
-public func Fixed4Dot12ToDouble(_ x: Fixed4Dot12) -> Double {
+@inlinable public func Fixed4Dot12ToDouble(_ x: Fixed4Dot12) -> Double {
     Double(x) * 1.0/Double(fixed12)
 }
 
-public func DoubleToFixed4Dot12(_ x: Double) -> Fixed4Dot12 {
+@inlinable public func DoubleToFixed4Dot12(_ x: Double) -> Fixed4Dot12 {
     Fixed4Dot12(x * Double(fixed12) + (x < 0 ? -0.5 : 0.5))
 }
 
 public struct FontCreationOptions {
-    public var fontFile:    OTFFontFile
-    public var sfnt:        Resource
-    public var createFOND:  Bool = true
-    public var encoding:    MacEncoding = .macRoman
-    public var createNFNT:  Bool = true
-    public var sizes:       [Int]?
+    public var fontFile:        OTFFontFile
+    public var sfnt:            Resource
+    public var createFOND:      Bool = true
+    public var encoding:        MacEncoding = .macRoman
+    public var createNFNT:      Bool = true
+    public var sizes:           [Int]?
+    public var editorManager:   RFEditorManager
 
-    public init(fontFile: OTFFontFile, sfnt: Resource, createFOND: Bool, encoding: MacEncoding, createNFNT: Bool, sizes: [Int]? = nil) {
+    public init(fontFile: OTFFontFile, editorManager: RFEditorManager, sfnt: Resource, createFOND: Bool, encoding: MacEncoding, createNFNT: Bool, sizes: [Int]? = nil) {
         self.fontFile = fontFile
+        self.editorManager = editorManager
         self.sfnt = sfnt
         self.createFOND = createFOND
         self.encoding = encoding

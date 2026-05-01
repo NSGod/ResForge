@@ -52,6 +52,20 @@ public extension BinaryFloatingPoint {
     var radiansToDegrees: Self { return self * 180.0 / .pi }
 }
 
+public extension RFEditorManager {
+    
+    func uniqueResID(for type: ResourceType) -> ResID {
+        var id: ResID = ResID.random(in: 1024..<0x7FFF)
+        while true {
+            if findResource(type: type, id: Int(id), currentDocumentOnly: true) != nil {
+                id += 1
+            } else {
+                return id
+            }
+        }
+    }
+}
+
 public extension URL {
     // FIXME: need to make sure this doesn't exceed NAME_MAX
     func assuringUniqueFilename() -> URL {

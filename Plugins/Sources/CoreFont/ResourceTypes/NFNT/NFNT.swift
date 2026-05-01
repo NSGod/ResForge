@@ -143,24 +143,43 @@ public final class NFNT: NSObject {
     private var haveBuiltGlyphs:    Bool = false
     private var manager:            RFEditorManager?
 
+    private var fontPointSize:      Int16?
+
     // MARK: - init
-    public init(with resource: Resource, manager: RFEditorManager? = nil, options: FontCreationOptions? = nil) throws {
+    public init(with resource: Resource, manager: RFEditorManager? = nil, options: FontCreationOptions? = nil, fontPointSize: Int16? = nil) throws {
         reader = BinaryDataReader(resource.data)
         self.manager = manager
         self.resource = resource
-        fontType = FontType(rawValue: try reader.read())
-        firstChar = try reader.read()
-        lastChar = try reader.read()
-        widMax = try reader.read()
-        kernMax = try reader.read()
-        nDescent = try reader.read()
-        fRectWidth = try reader.read()
-        fRectHeight = try reader.read()
-        owTLoc = try reader.read()
-        ascent = try reader.read()
-        descent = try reader.read()
-        leading = try reader.read()
-        rowWords = try reader.read()
+        self.fontPointSize = fontPointSize
+        if resource.data.isEmpty {
+            fontType = [.reserved12]
+            firstChar = 0
+            lastChar = 255
+            widMax = 0
+            kernMax = 0
+            nDescent = 0
+            fRectWidth = 0
+            fRectHeight = 0
+            owTLoc = 0
+            ascent = 0
+            descent = 0
+            leading = 0
+            rowWords = -1
+        } else {
+            fontType = FontType(rawValue: try reader.read())
+            firstChar = try reader.read()
+            lastChar = try reader.read()
+            widMax = try reader.read()
+            kernMax = try reader.read()
+            nDescent = try reader.read()
+            fRectWidth = try reader.read()
+            fRectHeight = try reader.read()
+            owTLoc = try reader.read()
+            ascent = try reader.read()
+            descent = try reader.read()
+            leading = try reader.read()
+            rowWords = try reader.read()
+        }
     }
 
     public func data() throws -> Data {

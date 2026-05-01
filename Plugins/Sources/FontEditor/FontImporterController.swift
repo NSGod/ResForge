@@ -9,20 +9,23 @@ import Cocoa
 import RFSupport
 import CoreFont
 
-class FontImporterController: NSWindowController, NSWindowDelegate {
+final class FontImporterController: NSWindowController, NSWindowDelegate {
     @IBOutlet weak var sizesField:  NSTextField!
 
     @objc dynamic var fontFile:     OTFFontFile?
     @objc dynamic var url:          URL?
+    var data:                       Data?
 
     @objc dynamic var createFOND:    Bool = true
     @objc dynamic var createNFNT:    Bool = true
     @objc dynamic var sizes:         [Int] = []
 
     private weak var fontEditor:    FontEditor!
+    private let manager:            RFEditorManager
     private var importingFont:      Bool = false
 
     // FIXME: limit encoding popup button menu to only those encoding MacScriptIDs found in cmap table
+    // FIXME: try to find an existing FOND and present that/give the option to use that one instead of creating new one
 
     deinit {
         NSLog("\(type(of: self)).\(#function)")
@@ -36,12 +39,13 @@ class FontImporterController: NSWindowController, NSWindowDelegate {
         return "FontImporterController"
     }
 
-    init(fontEditor: FontEditor) {
+    init(fontEditor: FontEditor, manager: RFEditorManager) {
         NSLog("\(type(of: self)).\(#function)")
         UserDefaults.standard.register(defaults: [FontCreationOptions.createFONDKey: true,
                                                   FontCreationOptions.createNFNTKey: true,
                                                   FontCreationOptions.sizesKey: [9, 10, 11, 12, 16]])
         self.fontEditor = fontEditor
+        self.manager = manager
         createFOND = UserDefaults.standard.bool(forKey: FontCreationOptions.createFONDKey)
         createNFNT = UserDefaults.standard.bool(forKey: FontCreationOptions.createNFNTKey)
         sizes = UserDefaults.standard.array(forKey: FontCreationOptions.sizesKey) as! [Int]
@@ -65,6 +69,10 @@ class FontImporterController: NSWindowController, NSWindowDelegate {
     func windowWillClose(_ notification: Notification) {
         NSLog("\(type(of: self)).\(#function) \(notification)")
         if !importingFont {
+            /// If our window is closing, and we're not importing a font, then the
+            /// user has canceled the operation. Close the `FontEditor`'s window so that
+            /// we (`FontEditor` & `FontImporterController`) will both be deallocated,
+            /// and the user returned to the document window.
             fontEditor.window?.close()
             return
         }
@@ -82,7 +90,9 @@ class FontImporterController: NSWindowController, NSWindowDelegate {
             if returnCode == .OK, let url = panel.url {
                 self.url = url
                 do {
-                    self.fontFile = try OTFFontFile(contentsOf: url)
+                    fontFile = try OTFFontFile(contentsOf: url)
+                    data = try Data(contentsOf: url)
+                    // FIXME: update the encoding popup button to choose the default encoding based on 'cmap' entries
                 } catch {
                     NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
                     self.presentError(error)
@@ -93,12 +103,8 @@ class FontImporterController: NSWindowController, NSWindowDelegate {
 
     @IBAction func importFont(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
-        do {
-            let data = try Data(contentsOf: url!)
-            importingFont = true
-            fontEditor.importFont(with: data)
-        } catch {
-            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
-        }
+        importingFont = true
+        let options = FontCreationOptions(fontFile: fontFile!, editorManager: manager, sfnt: fontEditor.resource, createFOND: createFOND, encoding: .macRoman, createNFNT: createNFNT)
+        fontEditor.importFont(with: data!, options: options)
     }
 }
