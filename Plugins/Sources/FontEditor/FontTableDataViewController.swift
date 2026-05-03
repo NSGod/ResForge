@@ -68,7 +68,7 @@ final class FontTableDataViewController: FontTableViewController {
     override func updateUI() {
         NSLog("\(type(of: self)).\(#function) '\(table.tableTag.fourCharString)'")
     }
-    
+
     // MARK: - <HFTextViewDelegate>
     func hexTextView(_ view: HFTextView, didChangeProperties properties: HFControllerPropertyBits) {
         if properties.contains(.contentValue) {

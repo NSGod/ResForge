@@ -1,6 +1,6 @@
 //
 //  FEListFormatter.swift
-//  FontEditor
+//  CoreFont
 //
 //  Created by Mark Douma on 4/21/2026.
 //

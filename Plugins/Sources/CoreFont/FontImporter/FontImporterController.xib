@@ -6,7 +6,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="FontImporterController" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="FontImporterController" customModule="CoreFont">
             <connections>
                 <outlet property="sizesField" destination="8Su-T9-wB8" id="Ghs-X8-RRG"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
@@ -39,7 +39,7 @@
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0VD-cE-6hv">
                         <rect key="frame" x="107" y="159" width="351" height="24"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="border" drawsBackground="YES" id="OXC-z1-ou3">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="border" placeholderString="Choose a .ttf file…" drawsBackground="YES" id="OXC-z1-ou3">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -83,7 +83,7 @@
                         <rect key="frame" x="204" y="23" width="150" height="24"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="border" drawsBackground="YES" id="mWD-0t-dUr">
-                            <customFormatter key="formatter" id="X0H-e1-WdW" userLabel="FEListFormatter" customClass="FEListFormatter" customModule="FontEditor"/>
+                            <customFormatter key="formatter" id="X0H-e1-WdW" userLabel="FEListFormatter" customClass="FEListFormatter" customModule="CoreFont"/>
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>

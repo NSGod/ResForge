@@ -1,26 +1,31 @@
 //
 //  FontImporterController.swift
-//  FontEditor
+//  CoreFont
 //
 //  Created by Mark Douma on 4/16/2026.
 //
 
 import Cocoa
 import RFSupport
-import CoreFont
 
-final class FontImporterController: NSWindowController, NSWindowDelegate {
+public protocol FontImporterDelegate: AnyObject {
+    var resource: Resource { get set }
+    func importFont(with data: Data, options: FontCreationOptions)
+}
+
+public final class FontImporterController: NSWindowController, NSWindowDelegate {
     @IBOutlet weak var sizesField:  NSTextField!
 
-    @objc dynamic var fontFile:     OTFFontFile?
-    @objc dynamic var url:          URL?
-    var data:                       Data?
+    @objc dynamic public var fontFile:     OTFFontFile?
+    @objc dynamic public var url:          URL?
+    public var data:                       Data?
 
-    @objc dynamic var createFOND:    Bool = true
-    @objc dynamic var createNFNT:    Bool = true
-    @objc dynamic var sizes:         [Int] = []
+    public weak var delegate:              FontImporterDelegate?
 
-    private weak var fontEditor:    FontEditor!
+    @objc dynamic public var createFOND:   Bool = true
+    @objc dynamic public var createNFNT:   Bool = true
+    @objc dynamic public var sizes:        [Int] = []
+
     private let manager:            RFEditorManager
     private var importingFont:      Bool = false
 
@@ -31,20 +36,20 @@ final class FontImporterController: NSWindowController, NSWindowDelegate {
         NSLog("\(type(of: self)).\(#function)")
     }
 
-    override var windowNibPath: String? {
-        return FontEditor.bundle.url(forResource: windowNibName, withExtension: "nib")?.path
+    public override var windowNibPath: String? {
+        return Bundle.module.url(forResource: windowNibName, withExtension: "nib")?.path
     }
 
-    override var windowNibName: NSNib.Name? {
+    public override var windowNibName: NSNib.Name? {
         return "FontImporterController"
     }
 
-    init(fontEditor: FontEditor, manager: RFEditorManager) {
+    public init(delegate: FontImporterDelegate, manager: RFEditorManager) {
         NSLog("\(type(of: self)).\(#function)")
         UserDefaults.standard.register(defaults: [FontCreationOptions.createFONDKey: true,
                                                   FontCreationOptions.createNFNTKey: true,
                                                   FontCreationOptions.sizesKey: [9, 10, 11, 12, 16]])
-        self.fontEditor = fontEditor
+        self.delegate = delegate
         self.manager = manager
         createFOND = UserDefaults.standard.bool(forKey: FontCreationOptions.createFONDKey)
         createNFNT = UserDefaults.standard.bool(forKey: FontCreationOptions.createNFNTKey)
@@ -52,29 +57,31 @@ final class FontImporterController: NSWindowController, NSWindowDelegate {
         super.init(window: nil)
     }
 
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func windowDidLoad() {
+    public override func windowDidLoad() {
         NSLog("\(type(of: self)).\(#function)")
         super.windowDidLoad()
     }
 
-    override func showWindow(_ sender: Any?) {
+    public override func showWindow(_ sender: Any?) {
         NSLog("\(type(of: self)).\(#function)")
         super.showWindow(sender)
     }
 
-    func windowWillClose(_ notification: Notification) {
+    public func windowWillClose(_ notification: Notification) {
         NSLog("\(type(of: self)).\(#function) \(notification)")
         if !importingFont {
             /// If our window is closing, and we're not importing a font, then the
             /// user has canceled the operation. Close the `FontEditor`'s window so that
             /// we (`FontEditor` & `FontImporterController`) will both be deallocated,
             /// and the user returned to the document window.
-            fontEditor.window?.close()
-            return
+            if let delegate = delegate as? NSWindowController {
+                delegate.window?.close()
+                return
+            }
         }
         UserDefaults.standard.set(createFOND, forKey: FontCreationOptions.createFONDKey)
         UserDefaults.standard.set(createNFNT, forKey: FontCreationOptions.createNFNTKey)
@@ -104,7 +111,9 @@ final class FontImporterController: NSWindowController, NSWindowDelegate {
     @IBAction func importFont(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
         importingFont = true
-        let options = FontCreationOptions(fontFile: fontFile!, editorManager: manager, sfnt: fontEditor.resource, createFOND: createFOND, encoding: .macRoman, createNFNT: createNFNT)
-        fontEditor.importFont(with: data!, options: options)
+        if let delegate {
+            let options = FontCreationOptions(fontFile: fontFile!, editorManager: manager, sfnt: delegate.resource, createFOND: createFOND, encoding: .macRoman, createNFNT: createNFNT)
+            delegate.importFont(with: data!, options: options)
+        }
     }
 }

@@ -11,7 +11,7 @@ import CoreFont
 
 // FIXME: allow separators (,) on textfield numerical input if possible
 
-public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, TypeIconProvider {
+public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, TypeIconProvider, FontImporterDelegate {
     public static var bundle: Bundle { .module }
     public static let supportedTypes = [
         "sfnt",
@@ -79,7 +79,7 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
         if resource.data.isEmpty {
             /// don't close the window, just hide it temporarily
             window?.orderOut(nil)
-            fontImporter = FontImporterController(fontEditor: self, manager: manager)
+            fontImporter = FontImporterController(delegate: self, manager: manager)
             fontImporter?.showWindow(nil)
         } else {
             loadFont()
