@@ -91,7 +91,7 @@ extension FOND.FontAssociationTable {
             } else {
                 fontPointSize = 0
                 fontStyle = options?.fontFile.headTable?.macStyle ?? .regular
-                fontID = options?.editorManager.uniqueResID(for: .nfnt) ?? ResID.random(in: 1024..<0x7FFF)
+                fontID = options?.editorManager.uniqueResID(for: .sfnt) ?? ResID.random(in: 1024..<0x7FFF)
             }
             objcFontStyle = fontStyle.rawValue
             super.init()
