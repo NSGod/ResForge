@@ -1,5 +1,5 @@
 //
-//  FEListFormatter.swift
+//  CFListFormatter.swift
 //  CoreFont
 //
 //  Created by Mark Douma on 4/21/2026.
@@ -7,10 +7,9 @@
 
 import Foundation
 
-public final class FEListFormatter: ListFormatter {
+public final class CFListFormatter: ListFormatter {
 
     public override init() {
-        // NSLog("\(type(of: self)).\(#function)")
         super.init()
         let numFormatter = NumberFormatter()
         numFormatter.numberStyle = .decimal
@@ -20,7 +19,6 @@ public final class FEListFormatter: ListFormatter {
     }
 
     public required init?(coder: NSCoder) {
-        // NSLog("\(type(of: self)).\(#function)")
         super.init(coder: coder)
         let numFormatter = NumberFormatter()
         numFormatter.numberStyle = .decimal

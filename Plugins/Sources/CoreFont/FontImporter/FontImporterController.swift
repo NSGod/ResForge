@@ -48,7 +48,7 @@ public final class FontImporterController: NSWindowController, NSWindowDelegate 
         NSLog("\(type(of: self)).\(#function)")
         UserDefaults.standard.register(defaults: [FontCreationOptions.createFONDKey: true,
                                                   FontCreationOptions.createNFNTKey: true,
-                                                  FontCreationOptions.sizesKey: [9, 10, 11, 12, 16]])
+                                                  FontCreationOptions.sizesKey: [10, 11, 12]])
         self.delegate = delegate
         self.manager = manager
         createFOND = UserDefaults.standard.bool(forKey: FontCreationOptions.createFONDKey)
@@ -75,9 +75,9 @@ public final class FontImporterController: NSWindowController, NSWindowDelegate 
         NSLog("\(type(of: self)).\(#function) \(notification)")
         if !importingFont {
             /// If our window is closing, and we're not importing a font, then the
-            /// user has canceled the operation. Close the `FontEditor`'s window so that
-            /// we (`FontEditor` & `FontImporterController`) will both be deallocated,
-            /// and the user returned to the document window.
+            /// user has canceled the operation. Close the `delegate`'s window so that
+            /// we (the delegate (`FontEditor` or `FONDEditor`) & `FontImporterController`) will
+            /// both be deallocated, and the user returned to the document window.
             if let delegate = delegate as? NSWindowController {
                 delegate.window?.close()
                 return
