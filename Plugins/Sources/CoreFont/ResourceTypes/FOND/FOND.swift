@@ -49,9 +49,9 @@ public final class FOND: NSObject {
 
     @objc dynamic public var fontAssociationTable:  FontAssociationTable
 
-    @objc public var offsetTable:           OffsetTable?
+    @objc dynamic public var offsetTable:           OffsetTable?
 
-    @objc public lazy var boundingBoxTable: BoundingBoxTable? = {
+    @objc public lazy var boundingBoxTable:         BoundingBoxTable? = {
         do {
             try calculateOffsetsIfNeeded()
             // can only have a Bounding Box table if we have an offset table to specify its offset
@@ -68,7 +68,7 @@ public final class FOND: NSObject {
         return nil
     }()
 
-    @objc public lazy var widthTable:       WidthTable? = {
+    @objc public lazy var widthTable:               WidthTable? = {
         if wTabOff == 0 { return nil }
         do {
             try calculateOffsetsIfNeeded()
@@ -82,7 +82,7 @@ public final class FOND: NSObject {
         return nil
     }()
 
-    @objc public lazy var styleMappingTable:    StyleMappingTable? = {
+    @objc public lazy var styleMappingTable:        StyleMappingTable? = {
         if styleOff == 0 { return nil }
         do {
             try calculateOffsetsIfNeeded()
