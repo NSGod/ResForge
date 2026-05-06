@@ -142,9 +142,6 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
             NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
             window?.presentError(error)
         }
-        Self.fondKeyPaths.forEach { fond.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.fondContext) }
-        Self.fontAsscKeyPaths.forEach { (fond.fontAssociationTable.entries as NSArray).addObserver(self, toObjectsAt: IndexSet(0..<fond.fontAssociationTable.entries.count),  forKeyPath: $0, options: [.new, .old], context: &Self.fontAsscContext) }
-        Self.keyPaths.forEach { addObserver(self, forKeyPath: $0, options: [.new, .old], context: nil) }
         fontClassBitfieldControl.isEnabled = fond.styleOff != 0
         fontClassField.isEnabled = fond.styleOff != 0
         if fond.boundingBoxTable != nil {
@@ -187,6 +184,9 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
             let styleEntries = StyleMappingEntry.entries(from: styleMappingTable, fontNameSuffixEntries: entries)
             mutableArrayValue(forKey: "styleMappingEntries").setArray(styleEntries)
         }
+        Self.fondKeyPaths.forEach { fond.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.fondContext) }
+        Self.fontAsscKeyPaths.forEach { (fond.fontAssociationTable.entries as NSArray).addObserver(self, toObjectsAt: IndexSet(0..<fond.fontAssociationTable.entries.count),  forKeyPath: $0, options: [.new, .old], context: &Self.fontAsscContext) }
+        Self.keyPaths.forEach { addObserver(self, forKeyPath: $0, options: [.new, .old], context: nil) }
     }
 
     @objc func resourceDataChanged(_ notification: Notification) {
