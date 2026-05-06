@@ -105,11 +105,5 @@ public extension FontTable_gasp {
             return maxPPEM == other.maxPPEM &&
             behavior == other.behavior
         }
-
-        /// I believe this is what Swift does under the hood/bonnet, but
-        /// better to make it explicitly clear
-        public static func == (lhs: Range, rhs: Range) -> Bool {
-            return lhs.isEqual(rhs)
-        }
     }
 }

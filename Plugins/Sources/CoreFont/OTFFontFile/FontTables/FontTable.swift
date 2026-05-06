@@ -120,6 +120,7 @@ open class FontTable: OTFFontFileNode {
         return FontTable.self
     }
 
+    /// for finding sibling tables from within a table:
     public func table(for tableTag: TableTag) -> FontTable? {
         return fontFile?.table(for: tableTag)
     }

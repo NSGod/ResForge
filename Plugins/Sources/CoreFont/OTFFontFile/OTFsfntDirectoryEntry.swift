@@ -74,12 +74,6 @@ public final class OTFsfntDirectoryEntry: OTFFontFileNode, DataHandleWriting, Co
         length == other.length
     }
 
-    /// I believe this is what Swift does under the hood/bonnet, but
-    /// better to make it explicitly clear
-    public static func == (lhs: OTFsfntDirectoryEntry, rhs: OTFsfntDirectoryEntry) -> Bool {
-        return lhs.isEqual(rhs)
-    }
-
     public override var description: String {
         "OTFsfntDirectoryEntry('\(tableTagString)', checksum: \(String(format: "0x%08x", checksum)), offset: \(offset), length: \(length))"
     }

@@ -117,11 +117,5 @@ extension FOND.FontAssociationTable {
             return fontPointSize == other.fontPointSize &&
             fontStyle == other.fontStyle && fontID == other.fontID
         }
-
-        /// I believe this is what Swift does under the hood/bonnet, but
-        /// better to make it explicitly clear
-        public static func == (lhs: Entry, rhs: Entry) -> Bool {
-            return lhs.isEqual(rhs)
-        }
     }
 }

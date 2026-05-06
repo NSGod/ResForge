@@ -70,11 +70,5 @@ extension NFNT {
             return charCode == other.charCode &&
             uv == other.uv && offset == other.offset && width == other.width
         }
-
-        /// I believe this is what Swift does under the hood/bonnet, but
-        /// better to make it explicitly clear
-        public static func == (lhs: Glyph, rhs: Glyph) -> Bool {
-            lhs.isEqual(rhs)
-        }
     }
 }
