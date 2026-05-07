@@ -8,6 +8,7 @@
 import Cocoa
 import CoreFont
 
+// for display
 final class KernTreeNode: NSTreeNode, Comparable {
 
     override init(representedObject modelObject: Any?) {

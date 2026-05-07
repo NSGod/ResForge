@@ -9,6 +9,7 @@ import Cocoa
 import CoreFont
 import RFSupport
 
+// for display
 public final class StyleMappingEntry: NSObject {
     @objc dynamic public var styleIndex:            Int = 0
     public var style:                               MacFontStyle = .regular

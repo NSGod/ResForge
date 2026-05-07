@@ -8,6 +8,7 @@
 import Cocoa
 import CoreFont
 
+// for display
 final class WidthTreeNode: NSTreeNode, Comparable {
 
     override init(representedObject modelObject: Any?) {
