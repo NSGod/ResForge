@@ -61,6 +61,10 @@ public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
         return _notDef
     }()
 
+    public var macStyle: MacFontStyle? {
+        return headTable?.macStyle ?? bhedTable?.macStyle ?? nil
+    }
+
     @objc public var postScriptName: String {
         return nameTable?.postScriptName ?? NSLocalizedString("<Unknown>", comment: "")
     }

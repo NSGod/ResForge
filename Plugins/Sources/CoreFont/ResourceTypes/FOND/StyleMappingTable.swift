@@ -28,7 +28,7 @@ extension FOND {
 
         // MARK: AUX:
         /// the union of all referenced string indexes in `indexes`
-        public let validIndexes:                        IndexSet
+        public var validIndexes:                        IndexSet
 
         public class override var nodeLength: Int {
             MemoryLayout<FontClass.RawValue>.size + MemoryLayout<Int32>.size * 2 + 48  // 58 bytes
@@ -66,12 +66,15 @@ extension FOND {
                 }
             } else {
                 assert(options != nil)
-                fontClass = []
+                fontClass = [.simOutByPaintType]
                 offset = 0
                 reserved = 0
                 indexes = Array(repeating: 1, count: 48)
                 validIndexes = IndexSet([1])
                 fontNameSuffixSubtable = try FontNameSuffixSubtable(reader, options: options)
+                if let macStyle = options?.fontFile.macStyle {
+                    fontClass.update(for: macStyle)
+                }
             }
             super.init()
         }
@@ -142,6 +145,28 @@ extension FOND.StyleMappingTable {
 
         public init(rawValue: UInt16) {
             self.rawValue = rawValue
+        }
+
+        public mutating func update(for macStyle: MacFontStyle) {
+            var newClass = self
+            if macStyle.contains(.bold) {
+                newClass.insert(.noSimBoldBySmearing)
+                newClass.remove(.simBoldBySize)
+            }
+            if macStyle.contains(.italic) {
+                newClass.insert(.noSimItalic)
+            }
+            if macStyle.contains(.condensed) {
+                newClass.insert(.noSimCondensed)
+            }
+            if macStyle.contains(.extended) {
+                newClass.insert(.noSimExtended)
+            }
+            if macStyle.contains(.outline) {
+                newClass.insert(.noSimOutBySmearing)
+                newClass.remove(.simOutByPaintType)
+            }
+            self = newClass
         }
 
         public var classDescription: String {

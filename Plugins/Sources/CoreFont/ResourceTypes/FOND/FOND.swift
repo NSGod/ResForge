@@ -118,6 +118,7 @@ public final class FOND: NSObject {
         return nil
     }()
 
+    // MARK: -
     // used to help inform encoding choice (e.g. Symbol and Dingbat fonts have special encodings)
     public lazy var basePostScriptName:     String? = {
         if styleOff == 0 { return nil }
