@@ -115,39 +115,10 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
         self.isAbridged = isAbridged
     }
 
-    public var styleDescription: String {
-        switch self {
-            case .regular, .plain, .normal: return NSLocalizedString("Regular", comment: "")
-            case .bold: return NSLocalizedString("Bold", comment: "")
-            case .italic: return NSLocalizedString("Italic", comment: "")
-            case .underline: return NSLocalizedString("Underline", comment: "")
-            case .outline: return NSLocalizedString("Outline", comment: "")
-            case .shadow: return NSLocalizedString("Shadow", comment: "")
-            case .condensed: return NSLocalizedString("Condensed", comment: "")
-            case .extended: return NSLocalizedString("Extended", comment: "")
-            default: return NSLocalizedString("Unknown", comment: "")
-        }
-    }
-
-    public var description: String {
-        if self == .regular { return styleDescription }
-        var description = ""
-        var i = Self.bold.rawValue
-        let unabridged = unabridged()
-        while i <= Self.extended.rawValue {
-            let style = MacFontStyle(rawValue: i)
-            if unabridged.contains(style) {
-                description = description.isEmpty ? style.styleDescription : "\(description) \(style.styleDescription)"
-            }
-            i *= 2
-        }
-        return description
-    }
-
     /// Assuming `.condensed` and `.extended` are mutually-exclusive, that makes the maximum value
     /// of all possible combination of styles to be 32 + 8 + 4 + 2 + 1 = 47. Add 1 for no
     /// style and you have 48. So, when trying to look up the PostScript name in the
-    /// StyleMappingTable, we abridge the style value first before finding the index in indexes UInt8[48].
+    /// StyleMappingTable, we abridge the style value first before finding the index in `indexes UInt8[48]`.
     /// Also, I guess `.underline` doesn't come into play since it's an after-effect?
     /// This is used when getting the PostScript name of the font.
     /// - Note: `unabridged() -> abridged() -> unabridged()` is not lossless,
@@ -184,6 +155,20 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
         return style
     }
 
+    public func closestMatch(in styles: [MacFontStyle]) -> MacFontStyle {
+        let styles = styles.map { $0.abridged().unabridged() }
+        if styles.contains(self) { return self }
+        var matches = [Int]()
+        var highestMatch: Int = 0
+        for style in styles {
+            let bitsInCommon = (rawValue & style.rawValue).nonzeroBitCount
+            matches.append(bitsInCommon)
+            highestMatch = max(highestMatch, bitsInCommon)
+        }
+        let bestStyleIndex = matches.firstIndex(of: highestMatch)!
+        return styles[bestStyleIndex]
+    }
+
     public static func == (lhs: MacFontStyle, rhs: MacFontStyle) -> Bool {
         return lhs.rawValue == rhs.rawValue &&
         lhs.isAbridged == rhs.isAbridged
@@ -191,6 +176,35 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
 
     public static func < (lhs: MacFontStyle, rhs: MacFontStyle) -> Bool {
         return lhs.rawValue < rhs.rawValue
+    }
+
+    public var styleDescription: String {
+        switch self {
+            case .regular, .plain, .normal: return NSLocalizedString("Regular", comment: "")
+            case .bold: return NSLocalizedString("Bold", comment: "")
+            case .italic: return NSLocalizedString("Italic", comment: "")
+            case .underline: return NSLocalizedString("Underline", comment: "")
+            case .outline: return NSLocalizedString("Outline", comment: "")
+            case .shadow: return NSLocalizedString("Shadow", comment: "")
+            case .condensed: return NSLocalizedString("Condensed", comment: "")
+            case .extended: return NSLocalizedString("Extended", comment: "")
+            default: return NSLocalizedString("Unknown", comment: "")
+        }
+    }
+
+    public var description: String {
+        if self == .regular { return styleDescription }
+        var description = ""
+        var i = Self.bold.rawValue
+        let unabridged = unabridged()
+        while i <= Self.extended.rawValue {
+            let style = MacFontStyle(rawValue: i)
+            if unabridged.contains(style) {
+                description = description.isEmpty ? style.styleDescription : "\(description) \(style.styleDescription)"
+            }
+            i *= 2
+        }
+        return description
     }
 }
 

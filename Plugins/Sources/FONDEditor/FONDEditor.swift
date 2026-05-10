@@ -283,7 +283,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
         if urls.count > 0 { NSWorkspace.shared.activateFileViewerSelecting(urls) }
     }
 
-    /// `sender` can be an `->` `NSButton` or an `NSMenuItem`
+    /// `sender` can be an arrow `->` `NSButton` or an `NSMenuItem`
     @IBAction func openReferencedFonts(_ sender: Any) {
         guard let senderTag = SenderTag(rawValue: (sender as AnyObject).tag) else { return }
         if sender is NSMenuItem {

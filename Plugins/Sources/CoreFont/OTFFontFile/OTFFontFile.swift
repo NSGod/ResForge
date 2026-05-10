@@ -61,8 +61,8 @@ public final class OTFFontFile: NSObject, UIGlyphsProvider, UIMetricsProvider {
         return _notDef
     }()
 
-    public var macStyle: MacFontStyle? {
-        return headTable?.macStyle ?? bhedTable?.macStyle ?? nil
+    public var macStyle: MacFontStyle {
+        return headTable?.macStyle ?? bhedTable?.macStyle ?? .regular
     }
 
     @objc public var postScriptName: String {

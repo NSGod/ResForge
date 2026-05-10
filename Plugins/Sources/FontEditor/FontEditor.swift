@@ -190,7 +190,7 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
 //                        if let fond {
 //                            let entry = try FOND.FontAssociationTable.Entry()
 //                            entry.fontPointSize = Int16(size)
-//                            entry.fontStyle = options.fontFile.headTable?.macStyle ?? .regular
+//                            entry.fontStyle = options.fontFile.macStyle
 //                            entry.fontID = ResID(nfntResource.id)
 //                            try fond.add(entry)
 //                        }
