@@ -161,13 +161,13 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
         var fondResource: Resource?
         var fond: FOND?
         if options.createFOND {
-            manager.createResource(type: .fond, id: Int(MacEncoding.resID(for: options.encoding.scriptID)), name: options.fontFile.familyName) { fondRes in
+            // FIXME: better matching than just resource name?
+            if let existingFondResource = manager.findResource(type: .fond, name: options.fontFile.familyName, currentDocumentOnly: true) {
                 do {
-                    fondResource = fondRes
-                    fond = try FOND(with: fondRes, options: options)
-                    if let fond, let entry = fond.fontAssociationTable.entries.first {
-                        self.resource.id = Int(entry.fontID)
-                        fondResource?.data = try fond.data()
+                    fond = try FOND(with: existingFondResource, options: options)
+                    if let fond {
+                        try fond.addEntry(for: Sfnt(resource: resource, fontFile: options.fontFile), options: options)
+                        existingFondResource.data = try fond.data()
                     }
                 } catch {
                     NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
@@ -189,7 +189,6 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
                 }
             }
         }
-
         loadFont()
         fontImporter?.close()
         fontImporter = nil

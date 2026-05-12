@@ -94,6 +94,14 @@ extension FOND {
             }
         }
 
+        public func add(_ fontFile: OTFFontFile, existingFontFiles: [OTFFontFile]) throws {
+            fontClass.update(for: fontFile.macStyle)
+            try fontNameSuffixSubtable.add(fontFile, existingFontFiles: existingFontFiles)
+            indexes = fontNameSuffixSubtable.indexes
+            validIndexes = IndexSet()
+            indexes.forEach { validIndexes.insert(Int($0)) }
+        }
+
         public func postScriptNameForFont(with style: MacFontStyle) -> String? {
             let entryIndex = indexes[Int(style.abridged().rawValue)]
             return fontNameSuffixSubtable.postScriptNameForFontEntry(at: entryIndex)
@@ -102,7 +110,7 @@ extension FOND {
 }
 
 extension FOND.StyleMappingTable {
-    /* Font class. An UInt16 value that specifies a collection of flags that alert
+    /* Font class. A UInt16 value that specifies a collection of flags that alert
      the printer driver to what type of PostScript font this font family is. This value
      is represented by the fontClass field of the StyleTable data type.
      The default font class definition is 0, which has settings that indicate

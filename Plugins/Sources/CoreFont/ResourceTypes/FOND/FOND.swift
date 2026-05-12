@@ -9,7 +9,7 @@
 import Foundation
 import RFSupport
 
-public final class FOND: NSObject {
+public final class FOND: NSObject, CFResource {
     private struct FontFamilyRecord {
         static let length = 52
     }
@@ -153,7 +153,7 @@ public final class FOND: NSObject {
         case kernTable
     }
 
-    private var resource:                   Resource
+    public var resource:                    Resource
     private var reader:                     BinaryDataReader
 
     // FIXME: switch to Swift Ranges?
@@ -436,6 +436,23 @@ public final class FOND: NSObject {
     public func remove(_ entry: FontAssociationTable.Entry) throws {
         try fontAssociationTable.remove(entry)
         shiftOffsetsAndRanges(by: -entry.nodeLength)
+    }
+
+    public func addEntry(for resource: CFResource, options: FontCreationOptions) throws {
+        let entry = try FontAssociationTable.Entry(options: options)
+        if let res = resource as? NFNT , let fontPointSize = res.fontPointSize {
+            entry.fontPointSize = fontPointSize
+        }
+        try add(entry)
+        let existingSfntResources = options.editorManager.allResources(ofType: .sfnt, currentDocumentOnly: true)
+        var fontFiles: [OTFFontFile] = []
+        for sfntResource in existingSfntResources {
+            if sfntResource != resource.resource {
+                let fontFile = try OTFFontFile(sfntResource.data)
+                fontFiles.append(fontFile)
+            }
+        }
+        try styleMappingTable?.add(options.fontFile, existingFontFiles: fontFiles)
     }
 
     private func shiftOffsetsAndRanges(by deltaLength: Int) {

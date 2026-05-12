@@ -156,12 +156,13 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
     }
 
     public func closestMatch(in styles: [MacFontStyle]) -> MacFontStyle {
+        let unabridged = self.unabridged()
         let styles = styles.map { $0.abridged().unabridged() }
-        if styles.contains(self) { return self }
+        if styles.contains(unabridged) { return unabridged.abridged() }
         var matches = [Int]()
         var highestMatch: Int = 0
         for style in styles {
-            let bitsInCommon = (rawValue & style.rawValue).nonzeroBitCount
+            let bitsInCommon = (unabridged.rawValue & style.rawValue).nonzeroBitCount
             matches.append(bitsInCommon)
             highestMatch = max(highestMatch, bitsInCommon)
         }

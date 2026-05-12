@@ -23,7 +23,7 @@ public final class StyleMappingEntry: NSObject {
 
     public init(abridgedStyle: MacFontStyle, stringIndex: Int, fontNameSuffixEntry: FontNameSuffixEntry) {
         styleIndex = Int(abridgedStyle.rawValue)
-        self.style = abridgedStyle.unabridged()
+        style = abridgedStyle.unabridged()
         self.stringIndex = stringIndex + 1
         self.fontNameSuffixEntry = fontNameSuffixEntry
     }

@@ -197,7 +197,7 @@ extension FontTable_glyf {
                     transform.translate(x: CGFloat(arg1), y: CGFloat(arg2))
                 }
             } else {
-                NSLog("\(type(of: self)).\(#function) *** NOTICE: compound point for \(String(describing: table.fontGlyphName(for: glyphID))): {\(arg1), \(arg2)}")
+//                NSLog("\(type(of: self)).\(#function) *** NOTICE: compound point for \(String(describing: table.fontGlyphName(for: glyphID))): {\(arg1), \(arg2)}")
             }
             if flags.contains(.weHaveInstructions) {
                 instructionsLength = try reader.read()

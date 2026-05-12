@@ -30,7 +30,7 @@ extension NFNT {
     }
 }
 
-public final class NFNT: NSObject {
+public final class NFNT: NSObject, CFResource {
     struct FontRec {
         static let length = 26
     }
@@ -138,12 +138,12 @@ public final class NFNT: NSObject {
     private var _notDef:            Glyph!
     private var _charsToGlyphs:     [Character: Glyph]!
     private var _isOrphaned:        Bool = true
-    private var resource:           Resource
+    public var resource:            Resource
     private var reader:             BinaryDataReader
     private var haveBuiltGlyphs:    Bool = false
     private var manager:            RFEditorManager?
 
-    private var fontPointSize:      Int16?
+    var fontPointSize:      Int16?
 
     // MARK: - init
     public init(with resource: Resource, manager: RFEditorManager? = nil, options: FontCreationOptions? = nil, fontPointSize: Int16? = nil) throws {
