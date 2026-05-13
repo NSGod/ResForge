@@ -31,10 +31,6 @@ public final class FEBitmapGlyph: NSObject, Comparable {
         return glyphID == other.glyphID
     }
 
-    public static func == (lhs: FEBitmapGlyph, rhs: FEBitmapGlyph) -> Bool {
-        return lhs.isEqual(rhs)
-    }
-
     public static func < (lhs: FEBitmapGlyph, rhs: FEBitmapGlyph) -> Bool {
         return lhs.glyph < rhs.glyph
     }

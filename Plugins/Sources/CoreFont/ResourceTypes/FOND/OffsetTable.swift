@@ -43,8 +43,9 @@ extension FOND {
             try entries.forEach { try $0.write(to: handle) }
         }
 
-        public static func == (lhs: OffsetTable, rhs: OffsetTable) -> Bool {
-            return lhs.numberOfEntries == rhs.numberOfEntries && lhs.entries == rhs.entries
+        public override func isEqual(_ object: Any?) -> Bool {
+            guard let rhs = object as? OffsetTable else { return false }
+            return numberOfEntries == rhs.numberOfEntries && entries == rhs.entries
         }
     }
 }

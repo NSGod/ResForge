@@ -131,7 +131,7 @@ extension FOND.KernTable {
             return "\(kernFirst), \(kernSecond), \(Fixed4Dot12ToDouble(kernWidth))"
         }
 
-        public static func == (lhs: FOND.KernTable.KernPair, rhs: FOND.KernTable.KernPair) -> Bool {
+        public static func == (lhs: KernPair, rhs: KernPair) -> Bool {
             return lhs.kernFirst == rhs.kernFirst && lhs.kernSecond == rhs.kernSecond && lhs.kernWidth == rhs.kernWidth
         }
     }

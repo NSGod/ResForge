@@ -121,10 +121,6 @@ public final class FontNameSuffixEntry: NSObject, Comparable {
         return index == other.index
     }
 
-    public static func == (lhs: FontNameSuffixEntry, rhs: FontNameSuffixEntry) -> Bool {
-        return lhs.isEqual(rhs)
-    }
-
     public static func < (lhs: FontNameSuffixEntry, rhs: FontNameSuffixEntry) -> Bool {
         return lhs.index < rhs.index
     }

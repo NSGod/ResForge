@@ -116,16 +116,6 @@ extension FontTable_name {
             languageID == other.languageID
         }
 
-        public static func == (lhs: NameRecord, rhs: NameRecord) -> Bool {
-            return lhs.platformID == rhs.platformID &&
-            lhs.nameID     == rhs.nameID &&
-            lhs.length     == rhs.length &&
-            lhs.offset    == rhs.offset &&
-            lhs.platformID == rhs.platformID &&
-            lhs.encodingID == rhs.encodingID &&
-            lhs.languageID == rhs.languageID
-        }
-
         public override var description: String {
             "NameRecord(\(platformID.debugDescription), \(encodingID.debugDescription), \(languageID.debugDescription), \(nameID.rawValue), \(string.prefix(7)))"
         }
