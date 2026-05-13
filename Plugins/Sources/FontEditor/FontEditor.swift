@@ -154,6 +154,7 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
     public func importFont(with data: Data, options: FontCreationOptions) {
         resource.data = data
         resource.name = options.fontFile.postScriptName
+        resource.attributes = [.purgeable, .sysHeap]
         window?.makeKeyAndOrderFront(nil)
         window?.isDocumentEdited = true
         // FIXME: prevent duplicate ResIDs
@@ -170,6 +171,21 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
                     }
                 } catch {
                     NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+                }
+            } else {
+                manager.createResource(type: .fond, id: Int(MacEncoding.resID(for: options.encoding.scriptID)), name: options.fontFile.familyName) { fondRes in
+                    do {
+                        fondRes.attributes = [.purgeable, .sysHeap]
+                        fondResource = fondRes
+                        fond = try FOND(with: fondRes, options: options)
+                        if let fond, let entry = fond.fontAssociationTable.entries.first {
+                            // do we really need to update our resID?
+                            self.resource.id = Int(entry.fontID)
+                            fondResource?.data = try fond.data()
+                        }
+                    } catch {
+                        NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+                    }
                 }
             }
         }
