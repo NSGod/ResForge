@@ -242,7 +242,8 @@ public final class FOND: NSObject, CFResource {
         // FIXME: add validation/error-checking here
         fontAssociationTable = try FontAssociationTable(reader, options: options)
         super.init()
-        if let options {
+        /// only create a new `styleMappingTable` if existing one doesn't already exist
+        if styleOff != 0, let options {
             styleMappingTable = try StyleMappingTable(reader, range: nil, options: options)
         }
     }
