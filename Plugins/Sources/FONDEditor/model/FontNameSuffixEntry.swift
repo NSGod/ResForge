@@ -37,7 +37,16 @@ public final class FontNameSuffixEntry: NSObject, Comparable {
         if sfntResID != nil {
             return .sfnt
         } else if let lwfnURL {
-            return FileManager.default.fileExists(atPath: lwfnURL.path) ? .postScript : .missingPostScript
+            /// make sure file is actually an `LWFN`
+            if FileManager.default.fileExists(atPath: lwfnURL.path) {
+                do {
+                    let attrs = try FileManager.default.attributesOfItem(atPath: lwfnURL.path)
+                    if let type: OSType = attrs[.hfsTypeCode] as? OSType {
+                        return type == .lwfn ? .postScript : .missingPostScript
+                    }
+                } catch { }
+            }
+            return .missingPostScript
         } else {
             return .none
         }

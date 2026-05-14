@@ -9,7 +9,10 @@ import Foundation
 import RFSupport
 
 //NSString * const MDUTTypeMacOutlineFont                = @"com.adobe.postscript-lwfn-font";
-//const OSType     MDOSTypeMacOutlineFont                = 'LWFN';
+
+extension OSType {
+    public static let lwfn: OSType = OSType(fourCharString: "LWFN")
+}
 
 public enum MacPostScriptType1FontFileError: Error {
     case notAPostScriptFont
