@@ -52,22 +52,23 @@ extension FOND {
 extension FOND.KernTable {
 
     public final class Entry: FONDResourceNode {
-        public var style:              MacFontStyle            // style this entry applies to
+        public var style:               MacFontStyle            // style this entry applies to
 
         /// NOTE: While `numKerns` is defined as an `SInt16`, it makes no sense to have negative kern pairs,
         ///       and I *have* encountered fonts that have more than 32,767 kern pairs, so make it an `UInt16`
         ///
-        public var numKerns:           UInt16  /// Number of kern pairs that follow (and NOT the entryLength/length
+        public var numKerns:            UInt16  /// Number of kern pairs that follow (and NOT the entryLength/length
                                                /// of the data that follows this struct as is documented in IM).
 
-        public var kernPairs:          [KernPair]
+        public var kernPairs:           [KernPair]
 
         // MARK: AUX
         public var hasOutOfRangeCharCodes: Bool = false
 
         // needed for display:
-        @objc public var objcStyle:    MacFontStyle.RawValue {
-            didSet { style = .init(rawValue: objcStyle) }
+        @objc public var objcStyle:     UInt16 {
+            get { return style.rawValue }
+            set { style = .init(rawValue: newValue) }
         }
 
         @objc public override var totalNodeLength:    Int {
@@ -76,7 +77,6 @@ extension FOND.KernTable {
 
         public init(_ reader: BinaryDataReader, fond: FOND) throws {
             style = try reader.read()
-            objcStyle = style.rawValue
             numKerns = try reader.read()
             kernPairs = []
             for _ in 0..<numKerns {

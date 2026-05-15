@@ -12,8 +12,8 @@ import RFSupport
 extension FOND {
 
     public final class WidthTable: FONDResourceNode {
-        public var numberOfEntries:    Int16               // number of entries - 1
-        public var entries:            [Entry]
+        public var numberOfEntries:     Int16               // number of entries - 1
+        public var entries:             [Entry]
 
         public override var totalNodeLength: Int {
             return MemoryLayout<Int16>.size + entries.reduce(0) { $0 + $1.totalNodeLength }
@@ -37,12 +37,13 @@ extension FOND {
 extension FOND.WidthTable {
 
     public final class Entry: FONDResourceNode {
-        public var style:              MacFontStyle        // style entry applies to
-        @objc public var widths:       [Fixed4Dot12]
+        public var style:               MacFontStyle        // style entry applies to
+        @objc public var widths:        [Fixed4Dot12]
 
         /// needed for display:
-        @objc public var objcStyle:    MacFontStyle.RawValue {
-            didSet { style = .init(rawValue: self.objcStyle) }
+        @objc public var objcStyle:     UInt16 {
+            get { return style.rawValue }
+            set { style = .init(rawValue: newValue) }
         }
 
         public override var totalNodeLength: Int {
@@ -51,10 +52,9 @@ extension FOND.WidthTable {
 
         public init(_ reader: BinaryDataReader, fond: FOND) throws {
             style = try reader.read()
-            objcStyle = style.rawValue
             /// I'm not exactly sure why this is + 3, but that's what FontForge does
             /// https://github.com/fontforge/fontforge/blob/7195402701ace7783753ef9424153eff48c9af44/fontforge/macbinary.c#L2342
-            /// this is why we neeed to be a FONDResourceNode w/ access to the FOND:
+            /// this is why we need to be a FONDResourceNode w/ access to the FOND.
             /// So additional info on where this 258 character count comes from: I first saw code
             /// that alluded to this in FontForge:
             /// https://github.com/fontforge/fontforge/blob/7195402701ace7783753ef9424153eff48c9af44/fontforge/macbinary.c#L2342

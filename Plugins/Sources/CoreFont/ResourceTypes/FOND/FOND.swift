@@ -208,10 +208,14 @@ public final class FOND: NSObject, CFResource {
             let unitsPerEm = options?.fontFile.metrics.unitsPerEm ?? .trueTypeStandard
             if let ascender = options?.fontFile.metrics.ascender {
                 ascent = DoubleToFixed4Dot12(Double(ascender/CGFloat(unitsPerEm.rawValue)))
-            } else { ascent = DoubleToFixed4Dot12(0.75) }
+            } else {
+                ascent = DoubleToFixed4Dot12(0.75)
+            }
             if let descender = options?.fontFile.metrics.descender {
                 descent = DoubleToFixed4Dot12(Double(descender/CGFloat(unitsPerEm.rawValue)))
-            } else { descent = DoubleToFixed4Dot12(-0.25) }
+            } else {
+                descent = DoubleToFixed4Dot12(-0.25)
+            }
             leading         = DoubleToFixed4Dot12(0.1)
             widMax          = DoubleToFixed4Dot12(1.0)
             wTabOff         = 0

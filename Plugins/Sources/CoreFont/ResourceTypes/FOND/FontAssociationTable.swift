@@ -69,10 +69,9 @@ extension FOND.FontAssociationTable {
         @objc dynamic public var fontID:            ResID
 
         /// needed for display:
-        @objc dynamic public var objcFontStyle:     MacFontStyle.RawValue {
-            didSet {
-                fontStyle = .init(rawValue: objcFontStyle)
-            }
+        @objc dynamic public var objcFontStyle:     UInt16 {
+            get { return fontStyle.rawValue }
+            set { fontStyle = .init(rawValue: newValue) }
         }
 
         @objc public override var nodeLength: Int {
@@ -93,7 +92,6 @@ extension FOND.FontAssociationTable {
                 fontStyle = options?.fontFile.macStyle ?? .regular
                 fontID = options?.editorManager.uniqueResID(for: .sfnt) ?? ResID.random(in: 1024..<0x7FFF)
             }
-            objcFontStyle = fontStyle.rawValue
             super.init()
         }
 

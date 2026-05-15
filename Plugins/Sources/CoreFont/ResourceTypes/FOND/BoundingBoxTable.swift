@@ -37,15 +37,16 @@ extension FOND {
 extension FOND.BoundingBoxTable {
 
     public final class Entry: ResourceNode {
-        public var style:              MacFontStyle
-        @objc public var left:         Fixed4Dot12
-        @objc public var bottom:       Fixed4Dot12
-        @objc public var right:        Fixed4Dot12
-        @objc public var top:          Fixed4Dot12
+        public var style:               MacFontStyle
+        @objc public var left:          Fixed4Dot12
+        @objc public var bottom:        Fixed4Dot12
+        @objc public var right:         Fixed4Dot12
+        @objc public var top:           Fixed4Dot12
 
         /// needed for display:
-        @objc var objcStyle:    MacFontStyle.RawValue {
-            didSet { style = .init(rawValue: objcStyle) }
+        @objc public var objcStyle:     UInt16 {
+            get { return style.rawValue }
+            set { style = .init(rawValue: newValue) }
         }
 
         public override class var nodeLength: Int {
@@ -58,7 +59,6 @@ extension FOND.BoundingBoxTable {
             bottom = try reader.read()
             right = try reader.read()
             top = try reader.read()
-            objcStyle = style.rawValue
             super.init()
         }
 
