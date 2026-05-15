@@ -246,15 +246,18 @@ public final class FOND: NSObject, CFResource {
         // FIXME: add validation/error-checking here
         fontAssociationTable = try FontAssociationTable(reader, options: options)
         super.init()
-        /// only create a new `styleMappingTable` if one doesn't already exist
+        /// only create a new `styleMappingTable` if we're creating a FOND from
+        /// scratch (`options != nil`) and one doesn't already exist
         if let options, styleOff == 0 {
             styleMappingTable = try StyleMappingTable(reader, range: nil, options: options)
-            // FIXME: !! setup styleOff and calculatedRanges()
+            let offset = FontFamilyRecord.length + fontAssociationTable.totalNodeLength
+            styleOff = Int32(offset)
+            offsetTypesToRanges[.styleTable] = NSMakeRange(offset, styleMappingTable!.totalNodeLength)
+            offsetsCalculated = true
         }
     }
 
     public func data() throws -> Data {
-        let handle = DataHandle()
         _ = boundingBoxTable; _ = styleMappingTable
         _ = widthTable; _ = kernTable
         styleOff = 0; kernOff = 0; wTabOff = 0
@@ -281,6 +284,7 @@ public final class FOND: NSObject, CFResource {
         if kernTable != nil {
             kernOff = Int32(offset)
         }
+        let handle = DataHandle()
         handle.write(ffFlags)
         handle.write(famID)
         handle.write(firstChar)
@@ -445,10 +449,15 @@ public final class FOND: NSObject, CFResource {
     }
 
     public func addEntry(for resource: CFResource, options: FontCreationOptions) throws {
-        let entry = try FontAssociationTable.Entry(options: options)
+        let entry = try FontAssociationTable.Entry(options: options, fontID: ResID(resource.resource.id))
         if let res = resource as? NFNT , let fontPointSize = res.fontPointSize {
             entry.fontPointSize = fontPointSize
         }
+        /// force loading of tables before we change data ranges
+        _ = boundingBoxTable
+        _ = styleMappingTable
+        _ = kernTable
+        _ = widthTable
         try add(entry)
         let existingSfntResources = options.editorManager.allResources(ofType: .sfnt, currentDocumentOnly: true)
         var fontFiles: [OTFFontFile] = []

@@ -179,7 +179,7 @@ extension FOND {
                 if let entry = $0 as? Entry {
                     if !entry.isBaseFontName {
                         stringDatas.append(entry.stringData)
-                        stylesToIndexes[entry.fontFile!.macStyle] = entry.index
+                        stylesToIndexes[entry.fontFile!.macStyle.abridged()] = entry.index
                     }
                 } else {
                     stringDatas.append(($0 as! StyleString).stringData)

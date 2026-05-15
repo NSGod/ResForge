@@ -82,15 +82,15 @@ extension FOND.FontAssociationTable {
             return MemoryLayout<Int16>.size * 2 + MemoryLayout<MacFontStyle.RawValue>.size // 6
         }
 
-        public init(_ reader: BinaryDataReader? = nil, options: FontCreationOptions? = nil) throws {
+        public init(_ reader: BinaryDataReader? = nil, options: FontCreationOptions? = nil, fontID: ResID? = nil) throws {
             if let reader, !reader.data.isEmpty {
                 fontPointSize = try reader.read()
                 fontStyle = try reader.read()
-                fontID = try reader.read()
+                self.fontID = try reader.read()
             } else {
                 fontPointSize = 0
                 fontStyle = options?.fontFile.macStyle ?? .regular
-                fontID = options?.editorManager.uniqueResID(for: .sfnt) ?? ResID.random(in: 1024..<0x7FFF)
+                self.fontID = fontID ?? options?.editorManager.uniqueResID(for: .sfnt) ?? ResID.random(in: 1024..<0x7FFF)
             }
             super.init()
         }

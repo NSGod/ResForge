@@ -121,8 +121,7 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
     /// StyleMappingTable, we abridge the style value first before finding the index in `indexes UInt8[48]`.
     /// Also, I guess `.underline` doesn't come into play since it's an after-effect?
     /// This is used when getting the PostScript name of the font.
-    /// - Note: `unabridged() -> abridged() -> unabridged()` is not lossless,
-    ///    as `.underline` cannot be preserved.
+    /// - Note: `unabridged() -> abridged() -> unabridged()` is not lossless, as `.underline` cannot be preserved.
     public func abridged() -> MacFontStyle {
         if isAbridged { return self }
         var rawValue: UInt16 = 0
@@ -138,8 +137,7 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
         return MacFontStyle(rawValue: rawValue, isAbridged: true)
     }
 
-    /// - Note: `unabridged() -> abridged() -> unabridged()` is not lossless,
-    ///    as `.underline` cannot be preserved.
+    /// - Note: `unabridged() -> abridged() -> unabridged()` is not lossless, as `.underline` cannot be preserved.
     public func unabridged() -> MacFontStyle {
         if !isAbridged { return self }
         var style: MacFontStyle = []
@@ -171,12 +169,11 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
     }
 
     public static func == (lhs: MacFontStyle, rhs: MacFontStyle) -> Bool {
-        return lhs.rawValue == rhs.rawValue &&
-        lhs.isAbridged == rhs.isAbridged
+        return lhs.unabridged().rawValue == rhs.unabridged().rawValue
     }
 
     public static func < (lhs: MacFontStyle, rhs: MacFontStyle) -> Bool {
-        return lhs.rawValue < rhs.rawValue
+        return lhs.unabridged().rawValue < rhs.unabridged().rawValue
     }
 
     public var styleDescription: String {
