@@ -149,7 +149,7 @@ extension FOND {
             fontFiles.sort { lhs, rhs in
                 return lhs.macStyle < rhs.macStyle
             }
-            styles = fontFiles.compactMap(\.macStyle).sorted(by: >)
+            styles = fontFiles.compactMap(\.macStyle).sorted(by: <)
             indexes = Array(repeating: 1, count: 48)
             entriesAndStrings = Entry.entries(with: fontFiles)
             var styleNames = OrderedSet<StyleString>()
@@ -186,7 +186,7 @@ extension FOND {
                 }
             }
             for styleIndex: UInt16 in 0..<48 {
-                let style = MacFontStyle(rawValue: styleIndex, isAbridged: true)
+                let style = MacFontStyle(rawValue: styleIndex, isAbridged: true).unabridged()
                 let bestStyleMatch = style.closestMatch(in: styles)
                 indexes[Int(styleIndex)] = UInt8(stylesToIndexes[bestStyleMatch] ?? 1)
             }
