@@ -9,6 +9,7 @@
 import Foundation
 import RFSupport
 import OrderedCollections
+
 ///    Diagram of the font name suffix subtable structure:
 ///       Index     Contents
 ///       1         \pExampleFont
@@ -230,7 +231,7 @@ public extension FOND.FontNameSuffixSubtable {
         weak var fontFile:  OTFFontFile?
         let baseFontName:   String
         var styleName:      String  = ""
-        var styleNames:     [StyleString] = []
+        var styleNames:     OrderedSet<StyleString> = []
         var index:          Int = 0
 
         var stringData:     Data {
@@ -240,13 +241,25 @@ public extension FOND.FontNameSuffixSubtable {
 
         var isBaseFontName: Bool { styleName.isEmpty && fontFile == nil }
 
-        init(fontFile: OTFFontFile?, baseFontName: String) {
+        init(fontFile: OTFFontFile?, baseFontName: String, styleNames: OrderedSet<StyleString>? = nil) {
             self.fontFile = fontFile
             self.baseFontName = baseFontName
             // FIXME: be able to deal with a leading - in the name
             if let psName = fontFile?.postScriptName, psName.hasPrefix(baseFontName) {
                 styleName = String(psName.dropFirst(baseFontName.count))
-                styleNames = styleName.splitCamelCase().map { .init(string: $0) }
+                let genStyleNames: OrderedSet<StyleString> = OrderedSet(styleName.splitCamelCase().map { .init(string: $0) })
+                if let existingStyleNames = styleNames {
+                    var revStyleNames = genStyleNames
+                    for genStyleName in genStyleNames {
+                        if existingStyleNames.contains(genStyleName) {
+                            let existingStyleName = existingStyleNames[existingStyleNames.firstIndex(of: genStyleName)!]
+                            revStyleNames.updateOrAppend(existingStyleName)
+                        }
+                    }
+                    self.styleNames = revStyleNames
+                } else {
+                    self.styleNames = genStyleNames
+                }
             }
         }
 
@@ -266,7 +279,12 @@ public extension FOND.FontNameSuffixSubtable {
                 let entry = Entry(fontFile: nil, baseFontName: commonPrefix)
                 entries.append(entry)
             }
-            entries.append(contentsOf: fontFiles.map { Entry(fontFile: $0, baseFontName: commonPrefix) })
+            var styleNames: OrderedSet<StyleString> = []
+            for fontFile in fontFiles {
+                let entry = Entry(fontFile: fontFile, baseFontName: commonPrefix, styleNames: styleNames)
+                entries.append(entry)
+                styleNames.append(contentsOf: entry.styleNames)
+            }
             var i = 1
             entries.forEach { $0.index = i; i += 1 }
             return entries
@@ -292,7 +310,8 @@ public extension FOND.FontNameSuffixSubtable {
         }
 
         public static func == (lhs: StyleString, rhs: StyleString) -> Bool {
-            return lhs.string == rhs.string && lhs.index == rhs.index
+            return lhs.string == rhs.string &&
+                   lhs.index == rhs.index
         }
 
         public func hash(into hasher: inout Hasher) {
