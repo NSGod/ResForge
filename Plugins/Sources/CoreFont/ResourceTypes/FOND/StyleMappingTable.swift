@@ -157,11 +157,11 @@ extension FOND.StyleMappingTable {
 
         public mutating func update(for macStyle: MacFontStyle) {
             var newClass = self
-            if macStyle.contains(.bold) {
+            if macStyle.contains(.bold) && !macStyle.contains(.italic) {
                 newClass.insert(.noSimBoldBySmearing)
                 newClass.remove(.simBoldBySize)
             }
-            if macStyle.contains(.italic) {
+            if macStyle.contains(.italic) && !macStyle.contains(.bold) {
                 newClass.insert(.noSimItalic)
             }
             if macStyle.contains(.condensed) {

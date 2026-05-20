@@ -163,6 +163,12 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
         if !unabridged.contains(.italic) {
             mStyles.removeAll { $0.contains(.italic) }
         }
+        if !unabridged.contains(.condensed) {
+            mStyles.removeAll { $0.contains(.condensed) }
+        }
+        if !unabridged.contains(.extended) {
+            mStyles.removeAll { $0.contains(.extended) }
+        }
         var matches = [Int]()
         var highestMatch: Int = 0
         for style in mStyles {
