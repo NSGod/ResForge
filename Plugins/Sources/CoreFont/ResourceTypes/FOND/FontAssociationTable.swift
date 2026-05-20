@@ -79,7 +79,7 @@ extension FOND.FontAssociationTable {
         }
 
         public override class var nodeLength: Int {
-            return MemoryLayout<Int16>.size * 2 + MemoryLayout<MacFontStyle.RawValue>.size // 6
+            return MemoryLayout<Int16>.size * 2 + MemoryLayout<MacFontStyle.RawValue>.size /// 6
         }
 
         public init(_ reader: BinaryDataReader? = nil, options: FontCreationOptions? = nil, fontID: ResID? = nil) throws {

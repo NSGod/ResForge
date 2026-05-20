@@ -50,7 +50,7 @@ extension FOND.BoundingBoxTable {
         }
 
         public override class var nodeLength: Int {
-            return MemoryLayout<Int16>.size * 5 // 10
+            return MemoryLayout<Int16>.size * 5 /// 10
         }
 
         public init(_ reader: BinaryDataReader) throws {

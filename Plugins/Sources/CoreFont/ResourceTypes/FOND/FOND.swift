@@ -24,12 +24,12 @@ public final class FOND: NSObject, CFResource {
     @objc dynamic public var leading:       Fixed4Dot12     /// maximum leading for 1pt font; Fixed 4.12
     @objc dynamic public var widMax:        Fixed4Dot12     /// maximum width for 1pt font;   Fixed 4.12
 
-    @objc dynamic public var wTabOff:       Int32           /* offset to family glyph-width table from beginning of font family
-                                                               resource to beginning of table, in bytes */
-    @objc dynamic public var kernOff:       Int32           /* offset to kerning table from beginning of font family resource to
-                                                               beginning of table, in bytes */
-    @objc dynamic public var styleOff:      Int32           /* offset to style mapping table from beginning of font family
-                                                               resource to beginning of table, in bytes */
+    @objc dynamic public var wTabOff:       Int32           /// Offset to family glyph-width table (`WidthTable`) from beginning
+                                                            ///   of font family resource to beginning of table, in bytes.
+    @objc dynamic public var kernOff:       Int32           /// Offset to kerning table (`KernTable`) from beginning of
+                                                            ///   font family resource to beginning of table, in bytes.
+    @objc dynamic public var styleOff:      Int32           /// Offset to style mapping table (`StyleMappingTable`) from beginning
+                                                            ///   of font family resource to beginning of table, in bytes.
 
                                                             /// style property info; extra widths for different styles
     @objc dynamic public var ewSPlain:      Fixed4Dot12     /// should be 0
@@ -129,6 +129,7 @@ public final class FOND: NSObject, CFResource {
         return nil
     }()
 
+    /// only 1-byte encodings are supported; 2-byte CJK are not
     public lazy var encoding:               MacEncoding = {
         // FIXME: improve non-MacRoman encodings
         let scriptID = MacEncoding.scriptID(for: ResID(resource.id))
@@ -198,7 +199,7 @@ public final class FOND: NSObject, CFResource {
                 NSLog("\(type(of: self)).\(#function) *** NOTICE: unknown version: \(vers); defaulting to .version1")
             }
         } else {
-            ffFlags         = [.dontUseFractWidthTable, .ignoreFractEnable]
+            ffFlags         = [.ignoreFractEnable]
             if let fixedPitch = options?.fontFile.postTable?.isFixedPitch, fixedPitch > 0 {
                ffFlags.insert(.isFixedWidth)
             }
@@ -326,24 +327,25 @@ public final class FOND: NSObject, CFResource {
     }
 
     public func unitsPerEm(for fontStyle: MacFontStyle, manager: RFEditorManager? = nil) -> UnitsPerEm {
-        /* Here we'll assume that if there's a mix of font association table entries for both TrueType
-         (fontPointSize of 0) and Bitmap fonts, that the bitmap fonts are merely for
-         screen display and don't necessarily reference possible PostScript outline fonts 'LWFN'. So
-         we first check for any TT fonts w/ the specified style, then resort to looking
-         at the bitmap entries if that finds nothing.
-
-         This value for UnitsPerEm should now be fairly accurate.
-
-         For PS fonts, to get a more accurate measurement, we search for the
-         Mac PostScript Type 1 outline font (file type 'LWFN' w/ 'POST' resources
-         which holds the PFA/PFB font) in the same directory as the font suitcase.
-         We can temporarily activate the PFA font locally to our process,
-         extract metrics data, and then deactivate it.
-
-         For TT fonts, to get a more accurate measurement, we look
-         at the actual unitsPerEm value in the 'sfnt''s 'head' table,
-         (The data in an 'sfnt' entry is exactly what a Windows .ttf contains:
-         see my answer here https://stackoverflow.com/a/7418915/277952) */
+        ///
+        ///  Here we'll assume that if there's a mix of font association table entries for both TrueType
+        ///  (`fontPointSize` of 0) and Bitmap fonts, that the bitmap fonts are merely for
+        ///  screen display and don't necessarily reference possible PostScript outline fonts 'LWFN'. So
+        ///  we first check for any TT fonts w/ the specified style, then resort to looking
+        ///  at the bitmap entries if that finds nothing.
+        ///
+        ///  This value for `UnitsPerEm` should now be fairly accurate.
+        ///
+        ///  For PS fonts, to get a more accurate measurement, we search for the
+        ///  Mac PostScript Type 1 outline font (file type 'LWFN' w/ 'POST' resources
+        ///  which holds the PFA/PFB font) in the same directory as the font suitcase.
+        ///  We can temporarily activate the PFA font locally to our process,
+        ///  extract metrics data, and then deactivate it.
+        ///
+        ///  For TT fonts, to get a more accurate measurement, we look
+        ///  at the actual `unitsPerEm` value in the 'sfnt''s `head` table,
+        ///  (The data in an 'sfnt' entry is exactly what a Windows .ttf contains:
+        ///  see my answer here https://stackoverflow.com/a/7418915/277952)
 
         /// - Note: cache these results as this can be quite costly, and this method gets called a lot:
         if let cachedUnitsPerEm = stylesToUnitsPerEm[fontStyle] {
@@ -372,8 +374,8 @@ public final class FOND: NSObject, CFResource {
             }
         }
 
-        // If there's no TT fonts, then assume the bitmaps are for PostScript fonts.
-        // Try to locate the 'LWFN' font file in the same directory as the font suitcase
+        /// If there's no TT fonts, then assume the bitmaps are for PostScript fonts.
+        /// Try to locate the 'LWFN' font file in the same directory as the font suitcase
         guard let psName = postScriptNameForFont(with: fontStyle), let document = manager?.document else {
             stylesToUnitsPerEm[fontStyle] = .postScriptStandard
             return .postScriptStandard
@@ -397,7 +399,7 @@ public final class FOND: NSObject, CFResource {
                  NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
             }
         }
-        // If 'LWFN' can't be found, fall back to default
+        /// If 'LWFN' can't be found, fall back to default
         stylesToUnitsPerEm[fontStyle] = .postScriptStandard
         return .postScriptStandard
     }

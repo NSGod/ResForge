@@ -11,6 +11,10 @@ import RFSupport
 
 extension FOND {
 
+    /// The description of the `OffsetTable` in `Inside Macintosh: Text` is incorrect.
+    /// The `OffsetTable` is only used when there is a `BoundingBoxTable` present in the
+    /// `FOND`. It always contains an entry where the `offsetOfTable` is 6 bytes.
+
     public final class OffsetTable: ResourceNode {
         public var numberOfEntries:        Int16               // number of entries - 1
         @objc public var entries:          [Entry]
@@ -23,7 +27,7 @@ extension FOND {
             return entries.count == 1 && entries[0].offsetOfTable == 6
         }
 
-        /// create the standard entry for a Bounding Box Table
+        /// create the standard entry for a `BoundingBoxTable`
         public override init() {
             numberOfEntries = 0
             entries = [Entry()]
@@ -53,7 +57,7 @@ extension FOND {
 extension FOND.OffsetTable {
 
     public final class Entry: ResourceNode {
-        @objc public var offsetOfTable: Int32    // number of bytes from START OF THE OFFSET TABLE to the start of the table
+        @objc public var offsetOfTable: Int32    /// number of bytes from START OF THE OFFSET TABLE to the start of the table
 
         public override init() {
             offsetOfTable = 6

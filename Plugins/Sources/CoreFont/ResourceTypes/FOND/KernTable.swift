@@ -52,13 +52,13 @@ extension FOND {
 extension FOND.KernTable {
 
     public final class Entry: FONDResourceNode {
-        public var style:               MacFontStyle            // style this entry applies to
+        public var style:               MacFontStyle            /// style this entry applies to
 
-        /// NOTE: While `numKerns` is defined as an `SInt16`, it makes no sense to have negative kern pairs,
-        ///       and I *have* encountered fonts that have more than 32,767 kern pairs, so make it an `UInt16`
+        /// - Note: While `numKerns` is defined as an `SInt16`, it makes no sense to have negative kern pairs,
+        ///          and I *have* encountered fonts that have more than 32,767 kern pairs, so make it an `UInt16`
         ///
         public var numKerns:            UInt16  /// Number of kern pairs that follow (and NOT the entryLength/length
-                                               /// of the data that follows this struct as is documented in IM).
+                                                /// of the data that follows this struct as is documented in IM).
 
         public var kernPairs:           [KernPair]
 
@@ -105,7 +105,7 @@ extension FOND.KernTable {
         public var kernWidth:  Fixed4Dot12     // kerning distance, in pixels, for the 2 glyphs at size of 1pt; fixed-point 4.12 format
 
         public static var nodeLength: Int {
-            return MemoryLayout<UInt8>.size * 2 + MemoryLayout<Fixed4Dot12>.size // 4
+            return MemoryLayout<UInt8>.size * 2 + MemoryLayout<Fixed4Dot12>.size /// 4
         }
 
         public init(_ reader: BinaryDataReader) throws {
@@ -126,7 +126,7 @@ extension FOND.KernTable {
             return kernFirst < 0x20 || kernSecond < 0x20 || kernFirst == 0x7F || kernSecond == 0x7F
         }
 
-        /// bare-bones `description` that doesn't try to resolve glyph names or factor in unitsPerEm
+        /// bare-bones `description` that doesn't try to resolve glyph names or factor in `unitsPerEm`
         public var description: String {
             return "\(kernFirst), \(kernSecond), \(Fixed4Dot12ToDouble(kernWidth))"
         }
