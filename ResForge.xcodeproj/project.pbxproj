@@ -50,6 +50,7 @@
 		B229EEF815A4FB6F0032C12C /* PrefsWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = B229EEF015A4FB6F0032C12C /* PrefsWindow.xib */; };
 		B229EEF915A4FB6F0032C12C /* ResourceDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = B229EEF215A4FB6F0032C12C /* ResourceDocument.xib */; };
 		C11C2A3A2F15E368002AEBAB /* BitmapFontEditor in Frameworks */ = {isa = PBXBuildFile; productRef = C11C2A392F15E368002AEBAB /* BitmapFontEditor */; };
+		C14849002FBE022B00DB9F12 /* TextEditor in Frameworks */ = {isa = PBXBuildFile; productRef = C14848FF2FBE022B00DB9F12 /* TextEditor */; };
 		C14989422F22D81B0059329A /* postScriptA.pdf in Resources */ = {isa = PBXBuildFile; fileRef = C14989412F22D81B0059329A /* postScriptA.pdf */; };
 		C16D69832F283CB800AEFB16 /* POSTExporter in Frameworks */ = {isa = PBXBuildFile; productRef = C16D69822F283CB800AEFB16 /* POSTExporter */; };
 		C18991C42F7073C9008E51CB /* NFNT.pdf in Resources */ = {isa = PBXBuildFile; fileRef = C18991C32F7073C9008E51CB /* NFNT.pdf */; };
@@ -197,6 +198,7 @@
 				49AA91FE2DC0A902007944F6 /* RFSupport in Frameworks */,
 				498001B12DC05A6F006C39BE /* DialogEditor in Frameworks */,
 				49D6D349271BAA9F002DEA97 /* OrderedCollections in Frameworks */,
+				C14849002FBE022B00DB9F12 /* TextEditor in Frameworks */,
 				496107642DC0E71000D73B44 /* TemplateEditor in Frameworks */,
 				C11C2A3A2F15E368002AEBAB /* BitmapFontEditor in Frameworks */,
 				C1D84C8D2F1D501400DB8BB7 /* CoreFont in Frameworks */,
@@ -356,6 +358,7 @@
 				C11C2A392F15E368002AEBAB /* BitmapFontEditor */,
 				C1D84C8C2F1D501400DB8BB7 /* CoreFont */,
 				C16D69822F283CB800AEFB16 /* POSTExporter */,
+				C14848FF2FBE022B00DB9F12 /* TextEditor */,
 			);
 			productInstallPath = "$(USER_APPS_DIR)";
 			productName = ResForge;
@@ -797,6 +800,10 @@
 		C11C2A392F15E368002AEBAB /* BitmapFontEditor */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = BitmapFontEditor;
+		};
+		C14848FF2FBE022B00DB9F12 /* TextEditor */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TextEditor;
 		};
 		C16D69822F283CB800AEFB16 /* POSTExporter */ = {
 			isa = XCSwiftPackageProductDependency;

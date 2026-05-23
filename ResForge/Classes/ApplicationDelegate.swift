@@ -12,6 +12,7 @@ import FONDEditor
 import FontEditor
 import BitmapFontEditor
 import POSTExporter
+import TextEditor
 
 let plugins: [RFPlugin.Type] = [
     HexEditor.self,
@@ -25,6 +26,7 @@ let plugins: [RFPlugin.Type] = [
     FontEditor.self,
     BitmapFontEditor.self,
     POSTExporter.self,
+    TextEditor.self
 ]
 
 @main

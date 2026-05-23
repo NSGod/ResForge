@@ -48,6 +48,9 @@ let package = Package(
         .library(
             name: "SoundEditor",
             targets: ["SoundEditor"]),
+        .library(
+            name: "TextEditor",
+            targets: ["TextEditor"]),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-collections.git", "1.0.0"..<"2.0.0"),
@@ -113,6 +116,9 @@ let package = Package(
             resources: [.process("Templates.rsrc")]),
         .target(
             name: "SoundEditor",
+            dependencies: [.target(name: "RFSupport")]),
+        .target(
+            name: "TextEditor",
             dependencies: [.target(name: "RFSupport")]),
     ]
 )
