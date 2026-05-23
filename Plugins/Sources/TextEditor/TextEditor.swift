@@ -127,7 +127,10 @@ public class TextEditor: AbstractEditor, ResourceEditor {
 //                            let obliqueTransform = CGAffineTransform(1, tan(Angle(degrees: 0.0).radians), tan(Angle(degrees: 20.0).radians), 1, 0, 0)
 //                            font = CTFont(descriptor, transform: obliqueTransform)
 //                            let obliqueTransform = AffineTransform(m11: newFont.pointSize, m12: tan(Angle(degrees: 0.0).radians), m21: tan(Angle(degrees: 20.0).radians), m22: newFont.pointSize, tX: 0, tY: 0)
-                            let obliqueTransform = AffineTransform(m11: newFont.pointSize, m12: tan(Angle(degrees: 0.0).radians), m21: tan(Angle(degrees: 20.0).radians), m22: newFont.pointSize, tX: 0, tY: 0)
+                            let obliqueTransform = AffineTransform(m11: newFont.pointSize,
+                                                                   m12: tan(Angle(degrees: 0.0).radians),
+                                                                   m21: tan(Angle(degrees: 20.0).radians) * newFont.pointSize,
+                                                                   m22: newFont.pointSize, tX: 0, tY: 0)
                             font = NSFont(descriptor: font.fontDescriptor, textTransform: obliqueTransform) ?? font
                         }
                     }
