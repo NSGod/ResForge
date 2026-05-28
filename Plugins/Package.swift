@@ -82,7 +82,8 @@ let package = Package(
         .target(
             name: "CoreFont",
             dependencies: [.target(name: "RFSupport"),
-                           .product(name: "OrderedCollections", package:"swift-collections")]),
+                           .product(name: "OrderedCollections", package:"swift-collections")],
+                resources: [.copy("Briquette.otf")]),
         .target(name: "FONDEditor",
             dependencies: [.target(name: "RFSupport"),
                            .target(name: "CoreFont"),
@@ -119,6 +120,7 @@ let package = Package(
             dependencies: [.target(name: "RFSupport")]),
         .target(
             name: "TextEditor",
-            dependencies: [.target(name: "RFSupport")]),
+            dependencies: [.target(name: "RFSupport"),
+                           .target(name: "CoreFont")]),
     ]
 )

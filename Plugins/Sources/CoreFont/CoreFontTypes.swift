@@ -5,7 +5,7 @@
 //  Created by Mark Douma on 1/18/2026.
 //
 
-import Foundation
+import Cocoa
 import RFSupport
 
 extension ResourceType {
@@ -17,6 +17,53 @@ extension ResourceType {
 }
 
 public typealias ResID         = Int16
+
+extension ResID {
+    public static let briquette:    ResID = 0  // Charcoal equivalent
+    public static let newYork:      ResID = 2
+    public static let geneva:       ResID = 3
+    public static let monaco:       ResID = 4
+    public static let venice:       ResID = 5
+    public static let london:       ResID = 6
+    public static let athens:       ResID = 7
+    public static let sanFrancisco: ResID = 8
+    public static let toronto:      ResID = 9
+    public static let cairo:        ResID = 11
+    public static let losAngeles:   ResID = 12
+    public static let times:        ResID = 20
+    public static let helvetica:    ResID = 21
+    public static let courier:      ResID = 22
+    public static let symbol:       ResID = 23
+    public static let mobile:       ResID = 24
+    public static let copperplate:  ResID = 2003 // Capitals
+}
+
+extension FOND {
+
+    public static func fontFamilyName(for id: ResID) -> String {
+        switch id {
+            case .briquette: return "Briquette"
+            case .newYork: return "New York"
+            case .geneva: return "Geneva"
+            case .monaco: return "Monaco"
+            case .venice: return "Venice"
+            case .london: return "London"
+            case .athens: return "Athens"
+            case .sanFrancisco: return "San Francisco"
+            case .toronto: return "Toronto"
+            case .cairo: return "Cairo"
+            case .losAngeles: return "Los Angeles"
+            case .times: return "Times"
+            case .helvetica: return "Helvetica"
+            case .courier: return "Courier"
+            case .symbol: return "Symbol"
+            case .mobile: return "Mobile"
+            case .copperplate: return "Copperplate"
+            default:
+                return "Geneva"
+        }
+    }
+}
 
 public typealias CharCode      = UInt8
 public typealias CharCode16    = UInt16
@@ -89,6 +136,21 @@ public struct FontCreationOptions {
     public static let sizesKey      = "FontCreationOptions.sizes"
 }
 
+public struct RGBColor: Equatable {
+    public var red:   UInt16
+    public var green: UInt16
+    public var blue:  UInt16
+
+    public var color: NSColor {
+        return NSColor(srgbRed: CGFloat(red)/65535.0, green: CGFloat(green)/65535.0, blue: CGFloat(blue)/65535.0, alpha: 1.0)
+    }
+
+    public init(_ reader: BinaryDataReader) throws {
+        red = try reader.read()
+        green = try reader.read()
+        blue = try reader.read()
+    }
+}
 
 public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible {
     public let rawValue: UInt16

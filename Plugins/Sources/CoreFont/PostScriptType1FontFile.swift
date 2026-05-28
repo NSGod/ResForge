@@ -110,7 +110,7 @@ public final class PostScriptType1FontFile: NSObject {
 
         /// Requests local process activation of the font such that the `font` `NSFont` can be used for screen drawing
         /// - Important: If you have activated the font, you must call `deactivate()` before this
-        ///   PostScriptType1FontFile is deallocated.
+        ///   `PostScriptType1FontFile` is deallocated.
         public static let activate: ParseOptions = Self(rawValue: 1 << 1)
 
         /// Convenience option that combines `.default` and `.activate`
@@ -133,12 +133,12 @@ public final class PostScriptType1FontFile: NSObject {
         /// Adobe's Font Development Kit for OpenType fonts (afdko), but we have an easier way.
         /// Despite .pfa/.pfb being a PC-originating format, there's actually built-in support
         /// for that format in macOS. In recent versions of macOS, QuickLook will happily
-        /// preview a .pfa file while ignoring the Mac 'LWFN' next to it. In 10.15+, we can use
+        /// preview a .pfa file while ignoring the Mac `LWFN` next to it. In 10.15+, we can use
         /// `CTFontManagerRegisterFontDescriptors()` to activate fonts without first having to
         /// write the data to a file. We can activate it, extract useful information and then
         /// deactivate it, without having to resort to using Adobe's parsing code.
         /// AFAIK, it's not possible to activate an individual `LWFN` file without also activating
-        /// the font suitcase file that references it through a`FOND`, which probably isn't the best idea,
+        /// the font suitcase file that references it through a `FOND`, which probably isn't the best idea,
         /// given that we're potentially modifying the font behind `fontd`'s back.
         guard let desc: NSFontDescriptor = CTFontManagerCreateFontDescriptorFromData(self.data as CFData) as NSFontDescriptor? else {
             NSLog("\(type(of: self)).\(#function) *** ERROR: no font descriptor")
