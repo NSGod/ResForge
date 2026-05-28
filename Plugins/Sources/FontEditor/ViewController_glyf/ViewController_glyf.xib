@@ -19,13 +19,24 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <box fixedFrame="YES" boxType="custom" borderType="none" cornerRadius="4" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="DTC-y3-gr5" userLabel="box">
-                    <rect key="frame" x="0.0" y="0.0" width="700" height="700"/>
+                    <rect key="frame" x="0.0" y="27" width="700" height="673"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <view key="contentView" id="Fzr-V4-pd6">
-                        <rect key="frame" x="0.0" y="0.0" width="700" height="700"/>
+                        <rect key="frame" x="0.0" y="0.0" width="700" height="673"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </view>
                 </box>
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hbe-kv-ntg">
+                    <rect key="frame" x="535" y="4" width="64" height="20"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                    <buttonCell key="cell" type="push" title="Export…" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ggW-bw-lld">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="smallSystem"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="export:" target="-2" id="fRZ-N0-syx"/>
+                    </connections>
+                </button>
             </subviews>
             <point key="canvasLocation" x="178" y="-89"/>
         </customView>

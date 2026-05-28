@@ -29,4 +29,37 @@ final class ViewController_glyf: FontTableViewController {
         glyphCollectionViewController = UIGlyphCollectionViewController(glyphsProvider: table.fontFile, itemSizeAutosaveName: "glyfViewController")
         box.contentView = glyphCollectionViewController.view
     }
+
+    @IBAction func export(_ sender: Any) {
+        let panel = NSOpenPanel()
+        panel.allowsMultipleSelection = false
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.canCreateDirectories = true
+        panel.prompt = NSLocalizedString("Choose", comment: "")
+        panel.message = NSLocalizedString("Choose a folder to export glyphs to", comment: "")
+        panel.isExtensionHidden = false
+        panel.beginSheetModal(for: view.window!) { [self] (result) in
+            if result == .OK {
+                let feGlyphs = glyphCollectionViewController.glyphs
+                let glyphView = UIGlyphView(frame: NSMakeRect(0, 0, 2048, 2048))
+                for feGlyph in feGlyphs {
+                    glyphView.glyph = feGlyph.glyph
+                    autoreleasepool {
+                        if let bitmapRep = glyphView.bitmapImageRepForCachingDisplay(in: glyphView.bounds) {
+                            glyphView.cacheDisplay(in: glyphView.bounds, to: bitmapRep)
+                            if let data = bitmapRep.representation(using: .png, properties: [:]) {
+                                let url = panel.url!.appendingPathComponent(feGlyph.glyphName).appendingPathExtension("png").assuringUniqueFilename()
+                                do {
+                                    try data.write(to: url)
+                                } catch {
+                                    NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
