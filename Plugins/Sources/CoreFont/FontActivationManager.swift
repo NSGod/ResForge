@@ -17,7 +17,6 @@ public enum FontActivationError: Error {
 public final class FontActivationManager {
 
     private var urlsToFonts:            [URL: [NSFont]] = [:]
-    private var descriptorsToFonts:     [NSFontDescriptor: [NSFont]] = [:]
 
     public static let `default` = FontActivationManager()
 
@@ -37,12 +36,12 @@ public final class FontActivationManager {
         return nil
     }
 
+    @discardableResult
     public func activateFontFile(with url: URL) throws -> [NSFont]? {
         if let fonts = urlsToFonts[url] {
             return fonts
         }
-        let data = try Data(contentsOf: url)
-        guard let desc: NSFontDescriptor = CTFontManagerCreateFontDescriptorFromData(data as CFData) as NSFontDescriptor?  else {
+        guard let descriptors: [NSFontDescriptor] = CTFontManagerCreateFontDescriptorsFromURL(url as CFURL) as? [NSFontDescriptor] else {
             throw FontActivationError.activationFailed(nil)
         }
         let done = DispatchSemaphore(value: 0)
@@ -50,46 +49,47 @@ public final class FontActivationManager {
         let type = "\(type(of: self))"
         var actErrors: [NSError] = []
         DispatchQueue.global().async {
-            CTFontManagerRegisterFontDescriptors([desc] as CFArray, .process, true) { errors, descDone in
+            CTFontManagerRegisterFontURLs([url as CFURL] as CFArray, .process, true) { errors, descDone in
                 if let errors: [NSError] = (errors as NSArray) as? [NSError], errors.count > 0 {
-                    actErrors = errors
-                    actErrors.forEach { NSLog("\(type).\(#function) *** ERROR: \($0)") }
+                    actErrors.append(contentsOf: errors)
                 }
                 if descDone { done.signal() }
                 return true
             }
         }
+
         if done.wait(timeout: naptime) == .timedOut {
             NSLog("\(type).\(#function) *** ERROR: CTFontManagerRegisterFontDescriptors() timed out")
         }
-        guard let font = NSFont(descriptor: desc, size: 12.0) else {
-            throw FontActivationError.activationFailed("failed to get NSFont")
+        actErrors.forEach { NSLog("\(type).\(#function) *** ERROR: \($0)") }
+        var mFonts: [NSFont] = []
+        for descriptor in descriptors {
+            if let font: NSFont = NSFont(descriptor: descriptor, size: 12.0) {
+                mFonts.append(font)
+            }
         }
-        descriptorsToFonts[desc] = [font]
-        urlsToFonts[url] = [font]
-        return [font]
+        urlsToFonts[url] = mFonts
+        return mFonts
     }
 
     @objc private func appWillTerminate(_ notification: Notification) {
-        if descriptorsToFonts.isEmpty { return }
+        if urlsToFonts.isEmpty { return }
         let done = DispatchSemaphore(value: 0)
         let naptime = DispatchTime.now() + .seconds(10)
-        let descs: [NSFontDescriptor] = Array(self.descriptorsToFonts.keys)
-
-        DispatchQueue.global().async { [weak self] in
-            guard let self = self else { return }
-            CTFontManagerUnregisterFontDescriptors(descs as CFArray, .process) { errors, descDone in
+        let urls: [URL] = Array(self.urlsToFonts.keys)
+        DispatchQueue.global().async {
+            CTFontManagerUnregisterFontURLs(urls as CFArray, .process) { errors, urlDone in
                 if let errors: [NSError] = (errors as NSArray) as? [NSError], errors.count > 0 {
                     errors.forEach { NSLog("\(type(of: self)).\(#function) *** ERROR: \($0)") }
                 }
-                if descDone { done.signal() }
+                if urlDone { done.signal() }
                 return true
             }
         }
         if done.wait(timeout: naptime) == .timedOut {
             NSLog("\(type(of: self)).\(#function) *** ERROR: CTFontManagerUnregisterFontDescriptors() timed out")
         }
-        descriptorsToFonts = [:]
+        urlsToFonts = [:]
     }
 
 }
