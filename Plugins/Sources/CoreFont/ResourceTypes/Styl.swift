@@ -27,13 +27,13 @@ public final class Styl: CFResource {
 extension Styl {
 
     public final class Run {
-        public var startOffset:     Int = 0
-        public var lineHeight:      Int = 0
-        public var fontAscent:      Int = 0
-        public var fontFamilyID:    ResID = 0
-        public var style:           MacFontStyle = .regular
-        public var fontPointSize:   Int = 0
-        public var rgbColor:        RGBColor
+        public var startOffset:     Int = 0                     /// Int32
+        public var lineHeight:      Int = 0                     /// Int16
+        public var fontAscent:      Int = 0                     /// Int16
+        public var fontFamilyID:    ResID = 0                   /// Int16
+        public var style:           MacFontStyle = .regular     /// UInt16
+        public var fontPointSize:   Int = 0                     /// UInt16
+        public var rgbColor:        RGBColor                    /// 6
 
         // MARK: AUX
         public var color:           NSColor = .black
@@ -43,6 +43,8 @@ extension Styl {
 
         public var attrs:           [NSAttributedString.Key: Any]
 
+        public static var nodeLength: Int { 20 }
+
         private static var briquetteIsSetup: Bool = false
 
         public init(_ reader: BinaryDataReader, count textCount: Int) throws {
@@ -50,7 +52,7 @@ extension Styl {
             lineHeight = Int(try reader.read() as Int16)
             fontAscent = Int(try reader.read() as Int16)
             fontFamilyID = try reader.read()
-            style = try reader.read()
+            style = try reader.read(bigEndian: false)
             fontPointSize = Int(try reader.read() as UInt16)
             rgbColor = try RGBColor(reader)
             color = rgbColor.color
@@ -96,24 +98,29 @@ extension Styl {
                     font = NSFont(descriptor: font.fontDescriptor, textTransform: obliqueTransform) ?? font
                 }
             }
+            if style.contains(.outline) {
+                
+            }
             if style.contains(.underline) {
-                attrs[.underlineStyle] = NSUnderlineStyle.single
+                attrs[.underlineStyle] = 1
             }
             if style.contains(.condensed) {
-                let newFont = NSFontManager.shared.convert(font, toHaveTrait: .expandedFontMask)
-                if NSFontManager.shared.traits(of: newFont).contains(.expandedFontMask) {
-                    font = newFont
-                } else {
-                    // FIXME: add synthetic condensed effect
-
-                }
-            } else if style.contains(.extended) {
                 let newFont = NSFontManager.shared.convert(font, toHaveTrait: .condensedFontMask)
                 if NSFontManager.shared.traits(of: newFont).contains(.condensedFontMask) {
                     font = newFont
                 } else {
+                    // FIXME: add synthetic condensed effect
+                    let transform = AffineTransform(scaleByX: newFont.pointSize * 0.917, byY: newFont.pointSize)
+                    font = NSFont(descriptor: font.fontDescriptor, textTransform: transform) ?? font
+                }
+            } else if style.contains(.extended) {
+                let newFont = NSFontManager.shared.convert(font, toHaveTrait: .expandedFontMask)
+                if NSFontManager.shared.traits(of: newFont).contains(.expandedFontMask) {
+                    font = newFont
+                } else {
                     // FIXME: add synthetic expanded effect
-
+                    let transform = AffineTransform(scaleByX: newFont.pointSize * 1.083, byY: newFont.pointSize)
+                    font = NSFont(descriptor: font.fontDescriptor, textTransform: transform) ?? font
                 }
             }
             self.font = font
