@@ -136,7 +136,7 @@ public struct FontCreationOptions {
     public static let sizesKey      = "FontCreationOptions.sizes"
 }
 
-public struct RGBColor: Equatable {
+public struct RGBColor: Equatable, DataHandleWriting {
     public var red:   UInt16
     public var green: UInt16
     public var blue:  UInt16
@@ -149,6 +149,13 @@ public struct RGBColor: Equatable {
         red = try reader.read()
         green = try reader.read()
         blue = try reader.read()
+    }
+
+    public func write(to handle: DataHandle, offset: Int? = nil) throws {
+        assert(offset == nil)
+        handle.write(red)
+        handle.write(green)
+        handle.write(blue)
     }
 }
 

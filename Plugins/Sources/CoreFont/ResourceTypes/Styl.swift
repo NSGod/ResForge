@@ -22,11 +22,19 @@ public final class Styl: CFResource {
         numRuns = Int(try reader.read() as Int16)
         runs = try (0..<numRuns).map { _ in try Run(reader, count: textCount) }
     }
+
+    public func data() throws -> Data {
+        let handle = DataHandle()
+        numRuns = runs.count
+        handle.write(Int16(numRuns))
+        try runs.forEach { try $0.write(to: handle) }
+        return handle.data
+    }
 }
 
 extension Styl {
 
-    public final class Run {
+    public final class Run: DataHandleWriting {
         public var startOffset:     Int = 0                     /// Int32
         public var lineHeight:      Int = 0                     /// Int16
         public var fontAscent:      Int = 0                     /// Int16
@@ -125,6 +133,17 @@ extension Styl {
             }
             self.font = font
             attrs[.font] = font
+        }
+
+        public func write(to handle: DataHandle, offset: Int? = 0) throws {
+            assert(offset == 0)
+            handle.write(Int32(startOffset))
+            handle.write(Int16(lineHeight))
+            handle.write(Int16(fontAscent))
+            handle.write(ResID(fontFamilyID))
+            handle.write(style, bigEndian: false)
+            handle.write(UInt16(fontPointSize))
+            try rgbColor.write(to: handle)
         }
     }
 }
