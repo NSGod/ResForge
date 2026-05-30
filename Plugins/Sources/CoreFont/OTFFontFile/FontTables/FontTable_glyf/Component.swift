@@ -34,7 +34,8 @@ import RFSupport
 extension FontTable_glyf {
 
     public final class Component: FontTableNode, FontAwaking {
-        public struct Flags: OptionSet {
+
+        public struct Flags: OptionSet, CustomStringConvertible, CustomDebugStringConvertible, CaseIterable {
             public let rawValue: UInt16
 
             public static let none:                     Flags = []
@@ -58,7 +59,7 @@ extension FontTable_glyf {
             /// bits 4, 13, 14, & 15 are reserved; set to 0
 
             /// The Apple and MS rasterizers behave differently for
-            /// scaled composite components: one does scale first and then translate,
+            /// scaled composite components: one does `scale` first and then `translate`,
             /// and the other does it vice versa. MS defined some flags to indicate
             /// the difference, but it seems nobody actually _sets_ those flags.
             ///
@@ -70,6 +71,45 @@ extension FontTable_glyf {
 
             public init(rawValue: UInt16) {
                 self.rawValue = rawValue
+            }
+
+            public var flagDescription: String {
+                switch self {
+                    case .none: return "none"
+                    case .argsAre16Bit: return "argsAre16Bit"
+                    case .argsAreXYValues: return "argsAreXYValues"
+                    case .roundXYToGrid: return "roundXYToGrid"
+                    case .weHaveAScale: return "weHaveAScale"
+                    case .nonOverlapping: return "nonOverlapping"
+                    case .moreComponents: return "moreComponents"
+                    case .weHaveAnXAndYScale: return "weHaveAnXAndYScale"
+                    case .weHaveA2x2: return "weHaveA2x2"
+                    case .weHaveInstructions: return "weHaveInstructions"
+                    case .useMyMetrics: return "useMyMetrics"
+                    case .overlapCompound: return "overlapCompound"
+                    case .scaledComponentOffset: return "scaledComponentOffset"
+                    case .unscaledComponentOffset: return "unscaledComponentOffset"
+                    default: return "\(rawValue)"
+                }
+            }
+
+            public var description: String {
+                var desc = "["
+                for flag in Flags.allCases {
+                    if contains(flag) {
+                        desc += flag.flagDescription
+                        desc += " "
+                    }
+                }
+                desc += "]"
+                return desc
+            }
+
+            public var debugDescription: String { description }
+
+            public static var allCases: [Flags] {
+                [.argsAre16Bit, .argsAreXYValues, .roundXYToGrid, .weHaveAScale, .nonOverlapping, .moreComponents,
+                 .weHaveAnXAndYScale, .weHaveA2x2, .weHaveInstructions, .useMyMetrics, .overlapCompound, .scaledComponentOffset, .unscaledComponentOffset]
             }
         }
 
@@ -168,7 +208,7 @@ extension FontTable_glyf {
             }
             if flags.contains(.argsAreXYValues) {
                 /// component uses XY offsets
-                if flags.contains([.weHaveAScale, .weHaveAnXAndYScale, .weHaveA2x2]) {
+                if flags.contains(.weHaveAScale) || flags.contains(.weHaveAnXAndYScale) || flags.contains(.weHaveA2x2) {
                     transform.m11 = Fixed2Dot14ToDouble(fDotTransform[0][0])
                     transform.m12 = Fixed2Dot14ToDouble(fDotTransform[0][1])
                     transform.m21 = Fixed2Dot14ToDouble(fDotTransform[1][0])
@@ -185,19 +225,21 @@ extension FontTable_glyf {
                     } else {
                         scaleComponentOffset = appleWay
                     }
+                    let tForm = AffineTransform(translationByX: CGFloat(arg1), byY: CGFloat(arg2))
                     if scaleComponentOffset {
                         /// The Apple way: first move, then scale (i.e. scale the component offset)
-                        transform.prepend(AffineTransform(translationByX: CGFloat(arg1), byY: CGFloat(arg2)))
+                        transform.prepend(tForm)
                     } else {
-                        /// The MS way: first scale, then move
-                        /// already scaled, just do the translate
-                        transform.translate(x: CGFloat(arg1), y: CGFloat(arg2))
+                        /// The MS way: first scale, then move; it's already scaled, so just do the translate
+                        transform.append(tForm)
                     }
                 } else {
+                    // NSLog("\(type(of: self)).\(#function) ****** NOTICE: ONLY PERFORMING TRANSLATE() via transform.translate() ******")
+                    // FIXME: is this right, or should I be doing an append transform?
                     transform.translate(x: CGFloat(arg1), y: CGFloat(arg2))
                 }
             } else {
-//                NSLog("\(type(of: self)).\(#function) *** NOTICE: compound point for \(String(describing: table.fontGlyphName(for: glyphID))): {\(arg1), \(arg2)}")
+                // NSLog("\(type(of: self)).\(#function) *** NOTICE: compound point for \(String(describing: table.fontGlyphName(for: glyphID))): {\(arg1), \(arg2)}")
             }
             if flags.contains(.weHaveInstructions) {
                 instructionsLength = try reader.read()
