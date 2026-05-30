@@ -9,6 +9,9 @@
         <customObject id="-2" userLabel="File's Owner" customClass="ViewController_glyf" customModuleProvider="target">
             <connections>
                 <outlet property="box" destination="DTC-y3-gr5" id="pqn-SL-3hB"/>
+                <outlet property="exportButton" destination="hbe-kv-ntg" id="WVM-Od-2VZ"/>
+                <outlet property="progressIndicator" destination="EJF-0i-0kw" id="MxP-w1-GIo"/>
+                <outlet property="statusField" destination="kEa-eR-iTy" id="24a-6w-Su6"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
             </connections>
         </customObject>
@@ -19,24 +22,37 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <box fixedFrame="YES" boxType="custom" borderType="none" cornerRadius="4" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="DTC-y3-gr5" userLabel="box">
-                    <rect key="frame" x="0.0" y="27" width="700" height="673"/>
+                    <rect key="frame" x="0.0" y="37" width="700" height="663"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <view key="contentView" id="Fzr-V4-pd6">
-                        <rect key="frame" x="0.0" y="0.0" width="700" height="673"/>
+                        <rect key="frame" x="0.0" y="0.0" width="700" height="663"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </view>
                 </box>
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hbe-kv-ntg">
-                    <rect key="frame" x="535" y="4" width="64" height="20"/>
+                    <rect key="frame" x="610" y="8" width="74" height="24"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                    <buttonCell key="cell" type="push" title="Export…" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ggW-bw-lld">
+                    <buttonCell key="cell" type="push" title="Export…" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ggW-bw-lld">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="smallSystem"/>
+                        <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
                         <action selector="export:" target="-2" id="fRZ-N0-syx"/>
                     </connections>
                 </button>
+                <progressIndicator wantsLayer="YES" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="EJF-0i-0kw" userLabel="progressIndicator">
+                    <rect key="frame" x="502" y="14" width="100" height="12"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                </progressIndicator>
+                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kEa-eR-iTy" userLabel="statusField">
+                    <rect key="frame" x="254" y="12" width="242" height="16"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" id="aPq-mv-58c">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
             </subviews>
             <point key="canvasLocation" x="178" y="-89"/>
         </customView>

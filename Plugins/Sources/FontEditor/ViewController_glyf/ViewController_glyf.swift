@@ -9,7 +9,10 @@ import Cocoa
 import CoreFont
 
 final class ViewController_glyf: FontTableViewController {
-    @IBOutlet weak var box:         NSBox!
+    @IBOutlet weak var box:                 NSBox!
+    @IBOutlet weak var statusField:         NSTextField!
+    @IBOutlet weak var progressIndicator:   NSProgressIndicator!
+    @IBOutlet weak var exportButton:        NSButton!
 
     var glyphCollectionViewController: UIGlyphCollectionViewController!
 
@@ -41,25 +44,52 @@ final class ViewController_glyf: FontTableViewController {
         panel.isExtensionHidden = false
         panel.beginSheetModal(for: view.window!) { [self] (result) in
             if result == .OK {
-                let feGlyphs = glyphCollectionViewController.glyphs
-                let glyphView = UIGlyphView(frame: NSMakeRect(0, 0, 2048, 2048))
-                for feGlyph in feGlyphs {
+                exportImages(to: panel.url!)
+            }
+        }
+    }
+
+    func exportImages(to url: URL) {
+        let feGlyphs = self.glyphCollectionViewController.glyphs
+        let glyphView = UIGlyphView(frame: NSMakeRect(0, 0, 2048, 2048))
+        DispatchQueue.global().async {
+            var i = 0
+            for feGlyph in feGlyphs {
+                DispatchQueue.main.async {
+                    if i == 0 {
+                        self.progressIndicator.maxValue = Double(feGlyphs.count)
+                        self.progressIndicator.startAnimation(nil)
+                    }
+                    self.statusField.stringValue = "\(i + 1) of \(feGlyphs.count)"
+                    self.progressIndicator.doubleValue = Double(i + 1)
+                    if i == feGlyphs.count - 1 {
+                        self.progressIndicator.stopAnimation(nil)
+                        self.statusField.stringValue = ""
+                    }
+                }
+                DispatchQueue.main.sync { [weak self] in
                     glyphView.glyph = feGlyph.glyph
                     autoreleasepool {
                         if let bitmapRep = glyphView.bitmapImageRepForCachingDisplay(in: glyphView.bounds) {
                             glyphView.cacheDisplay(in: glyphView.bounds, to: bitmapRep)
-                            if let data = bitmapRep.representation(using: .png, properties: [:]) {
-                                let url = panel.url!.appendingPathComponent(feGlyph.glyphName).appendingPathExtension("png").assuringUniqueFilename()
-                                do {
-                                    try data.write(to: url)
-                                } catch {
-                                    NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+                            DispatchQueue.global().async {
+                                autoreleasepool {
+                                    if let data = bitmapRep.representation(using: .png, properties: [:]) {
+                                        let url = url.appendingPathComponent(feGlyph.glyphName).appendingPathExtension("png").assuringUniqueFilename()
+                                        do {
+                                            try data.write(to: url)
+                                        } catch {
+                                            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
+                i += 1
             }
         }
     }
+
 }
