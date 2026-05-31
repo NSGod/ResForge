@@ -148,6 +148,13 @@ public final class FontTable_OS2: FontTable {
         }
     }
 
+    override func prepareToWrite() throws {
+        /// Windows will reject a font with OS/2 version of 0
+        if version == .version0 {
+            version = .version1
+        }
+    }
+
     override func write() throws {
         dataHandle.write(version)
         dataHandle.write(xAvgCharWidth)
