@@ -1,42 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24765" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24765"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TextEditor" customModuleProvider="target">
             <connections>
-                <outlet property="textView" destination="QoM-iV-1Mc" id="GB6-hI-p2W"/>
+                <outlet property="colorWell" destination="R0u-ay-Gh1" id="mJY-NS-GCq"/>
+                <outlet property="fontPopUpButton" destination="Ydn-Xa-UI8" id="Yxv-B3-Nus"/>
+                <outlet property="sizeComboBox" destination="tfG-HO-hEi" id="sU2-UF-hCd"/>
+                <outlet property="styleControl" destination="Ekw-7F-nya" id="OCL-te-OfG"/>
+                <outlet property="textView" destination="QoM-iV-1Mc" id="r5G-V1-ikw"/>
+                <outlet property="widthControl" destination="cca-z6-Fdt" id="S7J-sg-6W7"/>
                 <outlet property="window" destination="17" id="22"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <window title="Menu Editor" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" tabbingMode="disallowed" id="17">
+        <window title="Text Editor" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" visibleAtLaunch="NO" frameAutosaveName="textEditor" animationBehavior="default" tabbingMode="disallowed" id="17">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="0.0" y="556" width="502" height="334"/>
+            <rect key="contentRect" x="0.0" y="556" width="540" height="418"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1169"/>
             <value key="minSize" type="size" width="240" height="120"/>
             <view key="contentView" id="18">
-                <rect key="frame" x="0.0" y="0.0" width="502" height="334"/>
+                <rect key="frame" x="0.0" y="0.0" width="540" height="418"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <scrollView appearanceType="aqua" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cyH-JA-sTd">
-                        <rect key="frame" x="0.0" y="0.0" width="502" height="334"/>
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="364"/>
                         <clipView key="contentView" drawsBackground="NO" id="0vp-F7-Zlw">
-                            <rect key="frame" x="0.0" y="0.0" width="485" height="334"/>
+                            <rect key="frame" x="0.0" y="0.0" width="523" height="364"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <textView wantsLayer="YES" verticallyResizable="YES" usesFontPanel="YES" usesInspectorBar="YES" findStyle="bar" allowsDocumentBackgroundColorChange="YES" allowsUndo="YES" usesRuler="YES" smartInsertDelete="YES" id="QoM-iV-1Mc">
-                                    <rect key="frame" x="0.0" y="0.0" width="485" height="334"/>
+                                <textView wantsLayer="YES" verticallyResizable="YES" usesFontPanel="YES" usesInspectorBar="YES" findStyle="bar" allowsDocumentBackgroundColorChange="YES" allowsUndo="YES" usesRuler="YES" smartInsertDelete="YES" id="QoM-iV-1Mc" userLabel="textView">
+                                    <rect key="frame" x="0.0" y="0.0" width="523" height="364"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <size key="minSize" width="485" height="334"/>
-                                    <size key="maxSize" width="502" height="10000000"/>
+                                    <size key="minSize" width="523" height="364"/>
+                                    <size key="maxSize" width="540" height="10000000"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="-2" id="mkG-HP-FvQ"/>
+                                    </connections>
                                 </textView>
                             </subviews>
                         </clipView>
@@ -45,19 +52,120 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="Vi3-05-oo8">
-                            <rect key="frame" x="485" y="0.0" width="17" height="334"/>
+                            <rect key="frame" x="523" y="0.0" width="17" height="364"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ekw-7F-nya">
+                        <rect key="frame" x="11" y="387" width="124" height="20"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" segmentDistribution="fillEqually" style="rounded" trackingMode="selectAny" id="07y-nG-JYP">
+                            <font key="font" metaFont="smallSystem"/>
+                            <segments>
+                                <segment toolTip="Bold text" image="bold" catalog="system" width="24" tag="1"/>
+                                <segment toolTip="Italicize text" image="italic" catalog="system" width="24" tag="2"/>
+                                <segment toolTip="Underline text" image="underline" catalog="system" width="24" tag="4"/>
+                                <segment toolTip="Outline text" image="outline" width="24" tag="8"/>
+                                <segment toolTip="Shadow text" image="shadow" catalog="system" width="24" tag="16"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="changeStyle:" target="-2" id="UL3-d4-fZQ"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cca-z6-Fdt">
+                        <rect key="frame" x="141" y="387" width="49" height="20"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" segmentDistribution="fillEqually" style="rounded" trackingMode="selectAny" id="0ag-oD-ule">
+                            <font key="font" metaFont="smallSystem"/>
+                            <segments>
+                                <segment toolTip="Condense text" image="condensed" width="24" tag="32"/>
+                                <segment toolTip="Extend text" image="extended" width="24" tag="64"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="changeWidth:" target="-2" id="GYg-Qc-TfO"/>
+                        </connections>
+                    </segmentedControl>
+                    <colorWell toolTip="Click to choose the text color" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R0u-ay-Gh1">
+                        <rect key="frame" x="196" y="387" width="21" height="20"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <color key="color" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <connections>
+                            <action selector="changeColor:" target="-2" id="hvm-Ne-8sd"/>
+                        </connections>
+                    </colorWell>
+                    <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ydn-Xa-UI8">
+                        <rect key="frame" x="223" y="387" width="141" height="20"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <popUpButtonCell key="cell" type="push" title="System Font" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="eeq-g3-7do" id="Sj7-pR-pq1">
+                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                            <menu key="menu" id="lpw-KG-rrB">
+                                <items>
+                                    <menuItem title="System Font" state="on" id="eeq-g3-7do"/>
+                                    <menuItem title="Application Font" tag="1" id="4Y6-Jx-NN6"/>
+                                    <menuItem title="Courier" tag="22" id="OtB-xG-XnY"/>
+                                    <menuItem title="Geneva" tag="3" id="taj-va-tNk"/>
+                                    <menuItem title="Helvetica" tag="21" id="UK1-Tr-joe"/>
+                                    <menuItem title="Monaco" tag="4" id="Yle-pF-OTT"/>
+                                    <menuItem title="New York" tag="2" id="WAk-t3-ToB"/>
+                                    <menuItem title="Symbol" tag="23" id="oe3-lP-Euu"/>
+                                    <menuItem title="Times" tag="20" id="RJk-gy-KXL"/>
+                                </items>
+                            </menu>
+                        </popUpButtonCell>
+                        <connections>
+                            <action selector="changeFont:" target="-2" id="Bia-zu-jpn"/>
+                        </connections>
+                    </popUpButton>
+                    <comboBox toolTip="Set the font size" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tfG-HO-hEi">
+                        <rect key="frame" x="370" y="387" width="55" height="20"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <comboBoxCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" completes="NO" numberOfVisibleItems="14" id="02l-lw-hEU">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            <objectValues>
+                                <string>9</string>
+                                <string>10</string>
+                                <string>11</string>
+                                <string>12</string>
+                                <string>13</string>
+                                <string>14</string>
+                                <string>18</string>
+                                <string>24</string>
+                                <string>36</string>
+                                <string>48</string>
+                                <string>64</string>
+                                <string>72</string>
+                                <string>96</string>
+                                <string>144</string>
+                                <string>288</string>
+                            </objectValues>
+                        </comboBoxCell>
+                        <connections>
+                            <action selector="changeFontSize:" target="-2" id="Qph-DP-P5i"/>
+                        </connections>
+                    </comboBox>
                 </subviews>
                 <constraints>
                     <constraint firstItem="cyH-JA-sTd" firstAttribute="leading" secondItem="18" secondAttribute="leading" id="1vL-Yd-BN9"/>
                     <constraint firstAttribute="trailing" secondItem="cyH-JA-sTd" secondAttribute="trailing" id="UU8-Po-6WV"/>
                     <constraint firstAttribute="bottom" secondItem="cyH-JA-sTd" secondAttribute="bottom" id="ahP-Ig-A7L"/>
-                    <constraint firstItem="cyH-JA-sTd" firstAttribute="top" secondItem="18" secondAttribute="top" id="iP9-jo-FVp"/>
+                    <constraint firstItem="cyH-JA-sTd" firstAttribute="top" secondItem="18" secondAttribute="top" constant="54" id="iP9-jo-FVp"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="215" y="441"/>
+            <point key="canvasLocation" x="206" y="474"/>
         </window>
     </objects>
+    <resources>
+        <image name="bold" catalog="system" width="12" height="12"/>
+        <image name="condensed" width="14" height="14"/>
+        <image name="extended" width="14" height="14"/>
+        <image name="italic" catalog="system" width="11" height="12"/>
+        <image name="outline" width="16" height="16"/>
+        <image name="shadow" catalog="system" width="13" height="12"/>
+        <image name="underline" catalog="system" width="12" height="14"/>
+    </resources>
 </document>

@@ -121,6 +121,9 @@ let package = Package(
         .target(
             name: "TextEditor",
             dependencies: [.target(name: "RFSupport"),
-                           .target(name: "CoreFont")]),
+                           .target(name: "CoreFont")],
+            resources: [.copy("Resources/condensed.pdf"),
+                        .copy("Resources/extended.pdf"),
+                        .copy("Resources/outline.pdf")]),
     ]
 )

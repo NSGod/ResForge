@@ -3,12 +3,7 @@ import RFSupport
 import SwiftUI
 import CoreFont
 
-/// To simulate bold?:
-/// Technical Q&A QA1531
-/// Drawing attributed strings that are both filled and stroked
-/// https://developer.apple.com/library/archive/qa/qa1531/_index.html#//apple_ref/doc/uid/DTS40007490
-
-public class TextEditor: AbstractEditor, ResourceEditor {
+public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     public static var bundle: Bundle { .module }
     public static let supportedTypes = [
         "TEXT"
@@ -16,11 +11,19 @@ public class TextEditor: AbstractEditor, ResourceEditor {
     public static func register() {
         PluginRegistry.register(self)
     }
-    @IBOutlet weak var textView: NSTextView!
+    @IBOutlet weak var textView:            NSTextView!
+    @IBOutlet weak var styleControl:        NSSegmentedControl!
+    @IBOutlet weak var widthControl:        NSSegmentedControl!
+    @IBOutlet weak var colorWell:           NSColorWell!
+    @IBOutlet weak var fontPopUpButton:     NSPopUpButton!
+    @IBOutlet weak var sizeComboBox:        NSComboBox!
+
     public let resource: Resource
     private let manager: RFEditorManager
 
     var style: Styl!
+
+    private var selectedWidthTag = 0
 
     public override var windowNibName: String {
         return "TextEditorWindow"
@@ -37,6 +40,10 @@ public class TextEditor: AbstractEditor, ResourceEditor {
     }
 
     public override func windowDidLoad() {
+        styleControl.setImage(NSImage(contentsOf: Self.bundle.url(forResource: "outline", withExtension: "pdf")!), forSegment: 3)
+        widthControl.setImage(NSImage(contentsOf: Self.bundle.url(forResource: "condensed", withExtension: "pdf")!), forSegment: 0)
+        widthControl.setImage(NSImage(contentsOf: Self.bundle.url(forResource: "extended", withExtension: "pdf")!), forSegment: 1)
+
         NotificationCenter.default.addObserver(self, selector: #selector(textFieldDidChange(_:)), name: NSTextStorage.didProcessEditingNotification, object: self.textView.textStorage)
 
         loadResourceIntoView()
@@ -48,7 +55,6 @@ public class TextEditor: AbstractEditor, ResourceEditor {
 //        } catch {
 //            self.window?.presentError(error)
 //        }
-
         self.setDocumentEdited(false)
     }
 
@@ -74,6 +80,95 @@ public class TextEditor: AbstractEditor, ResourceEditor {
         }
 
         self.setDocumentEdited(false)
+    }
+
+    @IBAction func changeStyle(_ sender: Any) {
+        NSLog("\(type(of: self)).\(#function)")
+
+    }
+
+    @IBAction func changeWidth(_ sender: Any) {
+        NSLog("\(type(of: self)).\(#function)")
+        /// make the choices mutually-exclusive, like radio buttons
+        if widthControl.isSelected(forSegment: 0) {
+            if selectedWidthTag == 64 {
+                widthControl.setSelected(false, forSegment: 1)
+            }
+        }
+        if widthControl.isSelected(forSegment: 1) {
+            if selectedWidthTag == 32 {
+                widthControl.setSelected(false, forSegment: 0)
+            }
+        }
+        selectedWidthTag = widthControl.tag(forSegment: widthControl.selectedSegment)
+
+    }
+
+    @IBAction func changeFont(_ sender: Any) {
+        NSLog("\(type(of: self)).\(#function)")
+        
+    }
+
+    @IBAction func changeColor(_ sender: Any) {
+        NSLog("\(type(of: self)).\(#function)")
+
+    }
+
+    @IBAction func changeFontSize(_ sender: Any) {
+        NSLog("\(type(of: self)).\(#function)")
+
+    }
+
+    public func textView(_ textView: NSTextView, willChangeSelectionFromCharacterRanges oldSelectedCharRanges: [NSValue], toCharacterRanges newSelectedCharRanges: [NSValue]) -> [NSValue] {
+        // NSLog("\(type(of: self)).\(#function) old == \(oldSelectedCharRanges), new == \(newSelectedCharRanges)")
+        if newSelectedCharRanges.isEmpty {
+            return newSelectedCharRanges
+        }
+        var totalRange: NSRange = .init()
+        for range in newSelectedCharRanges {
+            if totalRange == .init() {
+                totalRange = range.rangeValue
+            } else {
+                totalRange = totalRange.union(range.rangeValue)
+            }
+        }
+        return [NSValue(range: totalRange)]
+    }
+
+    @objc public func textViewDidChangeSelection(_ notification: Notification) {
+        // NSLog("\(type(of: self)).\(#function) notification == \(notification)")
+        let ranges: [NSRange] = textView.selectedRanges.map(\.rangeValue)
+        if !ranges.isEmpty {
+            var totalRange: NSRange = .init()
+            for range in ranges {
+                if totalRange == .init() {
+                    totalRange = range
+                } else {
+                    totalRange = totalRange.union(range)
+                }
+            }
+            if let style {
+                if let run = style.runs(in: totalRange).first {
+                    for i in 0..<styleControl.segmentCount {
+                        styleControl.setSelected(run.style.contains(MacFontStyle(rawValue: UInt16(styleControl.tag(forSegment: i)))), forSegment: i)
+                    }
+                    selectedWidthTag = 0
+                    for i in 0..<widthControl.segmentCount {
+                        widthControl.setSelected(run.style.contains(MacFontStyle(rawValue: UInt16(widthControl.tag(forSegment: i)))), forSegment: i)
+                        if widthControl.isSelected(forSegment: i) {
+                            selectedWidthTag = widthControl.tag(forSegment: i)
+                        }
+                    }
+                    sizeComboBox.objectValue = run.fontPointSize
+                    colorWell.color = run.color
+                    fontPopUpButton.selectItem(withTag: Int(run.fontFamilyID))
+                }
+            }
+        }
+    }
+
+    func selectedRange() -> NSRange? {
+        textView.selectedRanges.first?.rangeValue
     }
 
     @objc func textFieldDidChange(_ notification: Notification) {

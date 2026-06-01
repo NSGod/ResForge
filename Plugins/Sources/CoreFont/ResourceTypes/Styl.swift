@@ -30,6 +30,16 @@ public final class Styl: CFResource {
         try runs.forEach { try $0.write(to: handle) }
         return handle.data
     }
+
+    public func runs(in range: NSRange) -> [Run] {
+        var mRuns: [Run] = []
+        for run in runs {
+            if run.range.intersection(range) != nil {
+                mRuns.append(run)
+            }
+        }
+        return mRuns
+    }
 }
 
 extension Styl {
@@ -86,12 +96,13 @@ extension Styl {
             fontName = FOND.fontFamilyName(for: fontFamilyID)
             var font = NSFont(name: fontName, size: CGFloat(fontPointSize)) ?? NSFont.monospacedSystemFont(ofSize: CGFloat(fontPointSize), weight: .regular)
             if style.contains(.bold) {
-                let newFont = NSFontManager.shared.convert(font, toHaveTrait: .boldFontMask)
-                if NSFontManager.shared.traits(of: newFont).contains(.boldFontMask) {
-                    font = newFont
-                } else {
-                    // FIXME: add synthetic bold effect
-
+                font = NSFontManager.shared.convert(font, toHaveTrait: .boldFontMask)
+                if !NSFontManager.shared.traits(of: font).contains(.boldFontMask) {
+                    /// using negative stroke width allows for both stroke and fill
+                    /// Technical Q&A QA1531
+                    /// Drawing attributed strings that are both filled and stroked
+                    /// https://developer.apple.com/library/archive/qa/qa1531/_index.html#//apple_ref/doc/uid/DTS40007490
+                    attrs[.strokeWidth] = -font.pointSize * 0.2
                 }
             }
             if style.contains(.italic) {
@@ -107,18 +118,20 @@ extension Styl {
                 }
             }
             if style.contains(.outline) {
-                
+                attrs[.strokeWidth] = font.pointSize * 0.1
+                if style.contains(.underline) {
+                    attrs[.underlineStyle] = NSUnderlineStyle.double.rawValue
+                }
             }
-            if style.contains(.underline) {
-                attrs[.underlineStyle] = 1
+            if style.contains(.underline) && !style.contains(.outline) {
+                attrs[.underlineStyle] = NSUnderlineStyle.single.rawValue
             }
             if style.contains(.condensed) {
                 let newFont = NSFontManager.shared.convert(font, toHaveTrait: .condensedFontMask)
                 if NSFontManager.shared.traits(of: newFont).contains(.condensedFontMask) {
                     font = newFont
                 } else {
-                    // FIXME: add synthetic condensed effect
-                    let transform = AffineTransform(scaleByX: newFont.pointSize * 0.917, byY: newFont.pointSize)
+                    let transform = AffineTransform(scaleByX: newFont.pointSize * 0.82, byY: newFont.pointSize)
                     font = NSFont(descriptor: font.fontDescriptor, textTransform: transform) ?? font
                 }
             } else if style.contains(.extended) {
@@ -126,8 +139,7 @@ extension Styl {
                 if NSFontManager.shared.traits(of: newFont).contains(.expandedFontMask) {
                     font = newFont
                 } else {
-                    // FIXME: add synthetic expanded effect
-                    let transform = AffineTransform(scaleByX: newFont.pointSize * 1.083, byY: newFont.pointSize)
+                    let transform = AffineTransform(scaleByX: newFont.pointSize * 1.17, byY: newFont.pointSize)
                     font = NSFont(descriptor: font.fontDescriptor, textTransform: transform) ?? font
                 }
             }

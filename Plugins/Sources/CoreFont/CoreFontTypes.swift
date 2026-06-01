@@ -19,23 +19,25 @@ extension ResourceType {
 public typealias ResID         = Int16
 
 extension ResID {
-    public static let briquette:    ResID = 0  // Charcoal equivalent
-    public static let newYork:      ResID = 2
-    public static let geneva:       ResID = 3
-    public static let monaco:       ResID = 4
-    public static let venice:       ResID = 5
-    public static let london:       ResID = 6
-    public static let athens:       ResID = 7
-    public static let sanFrancisco: ResID = 8
-    public static let toronto:      ResID = 9
-    public static let cairo:        ResID = 11
-    public static let losAngeles:   ResID = 12
-    public static let times:        ResID = 20
-    public static let helvetica:    ResID = 21
-    public static let courier:      ResID = 22
-    public static let symbol:       ResID = 23
-    public static let mobile:       ResID = 24
-    public static let copperplate:  ResID = 2003 // Capitals
+    public static let systemFont:       ResID = 0
+    public static let applicationFont:  ResID = 1
+    public static let briquette:        ResID = 0  // Charcoal equivalent
+    public static let newYork:          ResID = 2
+    public static let geneva:           ResID = 3
+    public static let monaco:           ResID = 4
+    public static let venice:           ResID = 5
+    public static let london:           ResID = 6
+    public static let athens:           ResID = 7
+    public static let sanFrancisco:     ResID = 8
+    public static let toronto:          ResID = 9
+    public static let cairo:            ResID = 11
+    public static let losAngeles:       ResID = 12
+    public static let times:            ResID = 20
+    public static let helvetica:        ResID = 21
+    public static let courier:          ResID = 22
+    public static let symbol:           ResID = 23
+    public static let mobile:           ResID = 24
+    public static let copperplate:      ResID = 2003 // Capitals
 }
 
 extension FOND {
@@ -159,7 +161,8 @@ public struct RGBColor: Equatable, DataHandleWriting {
     }
 }
 
-public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible {
+public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvertible, CaseIterable {
+
     public let rawValue: UInt16
 
     public static let regular          = Self([])
@@ -174,6 +177,8 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
     public static let extended         = Self(rawValue: 1 << 6)    // 64
 
     public private(set) var isAbridged = false
+
+    public static let allCases: [MacFontStyle] = [.regular, .bold, .italic, .underline, .outline, .shadow, .condensed, .extended]
 
     public init(rawValue: UInt16) {
         self.rawValue = rawValue
