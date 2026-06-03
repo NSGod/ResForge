@@ -65,6 +65,34 @@ extension FOND {
                 return "Geneva"
         }
     }
+
+    public static func fontFamilyID(for font: NSFont) -> ResID {
+        if let familyName = font.familyName {
+            switch familyName {
+                case "Charcoal": return .systemFont
+                case "Briquette": return .systemFont
+                case "New York": return .newYork
+                case "Geneva": return .geneva
+                case "Monaco": return .monaco
+                case "Venice": return .venice
+                case "London": return .london
+                case "Athens": return .athens
+                case "San Francisco": return .sanFrancisco
+                case "Toronto": return .toronto
+                case "Cairo": return .cairo
+                case "Los Angeles": return .losAngeles
+                case "Times": return .times
+                case "Helvetica": return .helvetica
+                case "Courier": return .courier
+                case "Symbol": return .symbol
+                case "Mobile": return .mobile
+                case "Copperplate": return .copperplate
+                default:
+                    return .applicationFont
+            }
+        }
+        return .systemFont
+    }
 }
 
 public typealias CharCode      = UInt8

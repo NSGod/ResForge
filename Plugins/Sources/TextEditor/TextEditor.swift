@@ -11,6 +11,7 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     public static func register() {
         PluginRegistry.register(self)
     }
+
     @IBOutlet weak var textView:            NSTextView!
     @IBOutlet weak var styleControl:        NSSegmentedControl!
     @IBOutlet weak var widthControl:        NSSegmentedControl!
@@ -21,12 +22,13 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     public let resource: Resource
     private let manager: RFEditorManager
 
-    var style: Styl!
+    var style:          Styl!
+    var textStorage:    StylTextStorage!
 
     private var selectedWidthTag = 0
 
     public override var windowNibName: String {
-        return "TextEditorWindow"
+        return "TextEditor"
     }
 
     public required init(resource: Resource, manager: RFEditorManager) {
@@ -65,7 +67,9 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     }
 
     func loadResourceIntoView() {
-        self.textView.string = String(data: resource.data, encoding: .macOSRoman) ?? ""
+        textStorage = StylTextStorage()
+        textView.layoutManager?.replaceTextStorage(textStorage)
+        textView.string = String(data: resource.data, encoding: .macOSRoman) ?? ""
 
         do {
             if let styleResource = manager.findResource(type: ResourceType("styl"), id: resource.id, currentDocumentOnly: true) {
@@ -106,7 +110,7 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
 
     @IBAction func changeFont(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
-        
+
     }
 
     @IBAction func changeColor(_ sender: Any) {
@@ -121,6 +125,7 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
 
     public func textView(_ textView: NSTextView, willChangeSelectionFromCharacterRanges oldSelectedCharRanges: [NSValue], toCharacterRanges newSelectedCharRanges: [NSValue]) -> [NSValue] {
         // NSLog("\(type(of: self)).\(#function) old == \(oldSelectedCharRanges), new == \(newSelectedCharRanges)")
+        /// We want only a contiguous selection
         if newSelectedCharRanges.isEmpty {
             return newSelectedCharRanges
         }

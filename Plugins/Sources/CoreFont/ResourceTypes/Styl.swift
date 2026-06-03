@@ -42,6 +42,10 @@ public final class Styl: CFResource {
     }
 }
 
+extension NSAttributedString.Key {
+    public static let stylRun = NSAttributedString.Key("Styl.Run")
+}
+
 extension Styl {
 
     public final class Run: DataHandleWriting {
@@ -55,11 +59,11 @@ extension Styl {
 
         // MARK: AUX
         public var color:           NSColor = .black
-        public var font:            NSFont
+        public var font:            NSFont!
         public var fontName:        String = ""
-        public var range:           NSRange
+        public var range:           NSRange = NSRange(location: 0, length: 0)
 
-        public var attrs:           [NSAttributedString.Key: Any]
+        public var attrs:           [NSAttributedString.Key: Any] = [:]
 
         public static var nodeLength: Int { 20 }
 
@@ -83,8 +87,6 @@ extension Styl {
             }
             reader.popPosition()
             range = NSMakeRange(startOffset, endOffset - startOffset)
-            attrs = [:]
-            attrs[.foregroundColor] = color
             if Self.briquetteIsSetup == false {
                 do {
                     try FontActivationManager.default.activateFontFile(forResource: "Briquette", withExtension: "otf")
@@ -93,58 +95,7 @@ extension Styl {
                 }
                 Self.briquetteIsSetup = true
             }
-            fontName = FOND.fontFamilyName(for: fontFamilyID)
-            var font = NSFont(name: fontName, size: CGFloat(fontPointSize)) ?? NSFont.monospacedSystemFont(ofSize: CGFloat(fontPointSize), weight: .regular)
-            if style.contains(.bold) {
-                font = NSFontManager.shared.convert(font, toHaveTrait: .boldFontMask)
-                if !NSFontManager.shared.traits(of: font).contains(.boldFontMask) {
-                    /// using negative stroke width allows for both stroke and fill
-                    /// Technical Q&A QA1531
-                    /// Drawing attributed strings that are both filled and stroked
-                    /// https://developer.apple.com/library/archive/qa/qa1531/_index.html#//apple_ref/doc/uid/DTS40007490
-                    attrs[.strokeWidth] = -font.pointSize * 0.2
-                }
-            }
-            if style.contains(.italic) {
-                let newFont = NSFontManager.shared.convert(font, toHaveTrait: .italicFontMask)
-                if NSFontManager.shared.traits(of: newFont).contains(.italicFontMask) {
-                    font = newFont
-                } else {
-                    let obliqueTransform = AffineTransform(m11: newFont.pointSize,
-                                                           m12: tan(Angle(degrees: 0.0).radians),
-                                                           m21: tan(Angle(degrees: 20.0).radians) * newFont.pointSize,
-                                                           m22: newFont.pointSize, tX: 0, tY: 0)
-                    font = NSFont(descriptor: font.fontDescriptor, textTransform: obliqueTransform) ?? font
-                }
-            }
-            if style.contains(.outline) {
-                attrs[.strokeWidth] = font.pointSize * 0.1
-                if style.contains(.underline) {
-                    attrs[.underlineStyle] = NSUnderlineStyle.double.rawValue
-                }
-            }
-            if style.contains(.underline) && !style.contains(.outline) {
-                attrs[.underlineStyle] = NSUnderlineStyle.single.rawValue
-            }
-            if style.contains(.condensed) {
-                let newFont = NSFontManager.shared.convert(font, toHaveTrait: .condensedFontMask)
-                if NSFontManager.shared.traits(of: newFont).contains(.condensedFontMask) {
-                    font = newFont
-                } else {
-                    let transform = AffineTransform(scaleByX: newFont.pointSize * 0.82, byY: newFont.pointSize)
-                    font = NSFont(descriptor: font.fontDescriptor, textTransform: transform) ?? font
-                }
-            } else if style.contains(.extended) {
-                let newFont = NSFontManager.shared.convert(font, toHaveTrait: .expandedFontMask)
-                if NSFontManager.shared.traits(of: newFont).contains(.expandedFontMask) {
-                    font = newFont
-                } else {
-                    let transform = AffineTransform(scaleByX: newFont.pointSize * 1.17, byY: newFont.pointSize)
-                    font = NSFont(descriptor: font.fontDescriptor, textTransform: transform) ?? font
-                }
-            }
-            self.font = font
-            attrs[.font] = font
+            attrs = Self.attributes(for: self)
         }
 
         public func write(to handle: DataHandle, offset: Int? = 0) throws {
@@ -156,6 +107,84 @@ extension Styl {
             handle.write(style, bigEndian: false)
             handle.write(UInt16(fontPointSize))
             try rgbColor.write(to: handle)
+        }
+
+        public static func attributes(for styleRun: Run) -> [NSAttributedString.Key: Any] {
+            var attrs: [NSAttributedString.Key: Any] = [:]
+            if Self.briquetteIsSetup == false {
+                do {
+                    try FontActivationManager.default.activateFontFile(forResource: "Briquette", withExtension: "otf")
+                } catch {
+                    NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+                }
+                Self.briquetteIsSetup = true
+            }
+            styleRun.fontName = FOND.fontFamilyName(for: styleRun.fontFamilyID)
+            attrs[.foregroundColor] = styleRun.color
+            var font = NSFont(name: styleRun.fontName, size: CGFloat(styleRun.fontPointSize)) ?? NSFont.monospacedSystemFont(ofSize: CGFloat(styleRun.fontPointSize), weight: .regular)
+            if styleRun.style.contains(.bold) {
+                font = NSFontManager.shared.convert(font, toHaveTrait: .boldFontMask)
+                if !NSFontManager.shared.traits(of: font).contains(.boldFontMask) {
+                    /// using negative stroke width allows for both stroke and fill
+                    /// Technical Q&A QA1531
+                    /// Drawing attributed strings that are both filled and stroked
+                    /// https://developer.apple.com/library/archive/qa/qa1531/_index.html#//apple_ref/doc/uid/DTS40007490
+                    attrs[.strokeWidth] = -font.pointSize * 0.2
+                }
+            }
+            if styleRun.style.contains(.italic) {
+                let newFont = NSFontManager.shared.convert(font, toHaveTrait: .italicFontMask)
+                if NSFontManager.shared.traits(of: newFont).contains(.italicFontMask) {
+                    font = newFont
+                } else {
+                    let obliqueTransform = AffineTransform(m11: newFont.pointSize,
+                                                           m12: tan(Angle(degrees: 0.0).radians),
+                                                           m21: tan(Angle(degrees: 20.0).radians) * newFont.pointSize,
+                                                           m22: newFont.pointSize, tX: 0, tY: 0)
+                    font = NSFont(descriptor: font.fontDescriptor, textTransform: obliqueTransform) ?? font
+                }
+            }
+            if styleRun.style.contains(.shadow) {
+                /// `NSColor.clear` doesn't work
+                attrs[.foregroundColor] = NSColor.white
+                let shadow = NSShadow()
+                shadow.shadowColor = styleRun.color
+                shadow.shadowOffset = NSSize(width: 2.0, height: -2.0)
+                attrs[.shadow] = shadow
+                // attrs[.strokeColor] = color
+                // attrs[.strokeWidth] = -1
+            }
+            if styleRun.style.contains(.outline) {
+                attrs[.strokeWidth] = font.pointSize * 0.1
+                attrs[.strokeColor] = styleRun.color
+                if styleRun.style.contains(.underline) {
+                    attrs[.underlineStyle] = NSUnderlineStyle.double.rawValue
+                }
+            }
+            if styleRun.style.contains(.underline) && !styleRun.style.contains(.outline) {
+                attrs[.underlineStyle] = NSUnderlineStyle.single.rawValue
+            }
+            if styleRun.style.contains(.condensed) {
+                let newFont = NSFontManager.shared.convert(font, toHaveTrait: .condensedFontMask)
+                if NSFontManager.shared.traits(of: newFont).contains(.condensedFontMask) {
+                    font = newFont
+                } else {
+                    let transform = AffineTransform(scaleByX: newFont.pointSize * 0.82, byY: newFont.pointSize)
+                    font = NSFont(descriptor: font.fontDescriptor, textTransform: transform) ?? font
+                }
+            } else if styleRun.style.contains(.extended) {
+                let newFont = NSFontManager.shared.convert(font, toHaveTrait: .expandedFontMask)
+                if NSFontManager.shared.traits(of: newFont).contains(.expandedFontMask) {
+                    font = newFont
+                } else {
+                    let transform = AffineTransform(scaleByX: newFont.pointSize * 1.17, byY: newFont.pointSize)
+                    font = NSFont(descriptor: font.fontDescriptor, textTransform: transform) ?? font
+                }
+            }
+            styleRun.font = font
+            attrs[.font] = font
+            attrs[.stylRun] = self
+            return attrs
         }
     }
 }
