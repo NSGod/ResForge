@@ -8,7 +8,8 @@
 import Foundation
 import RFSupport
 
-// represents a single 'POST' resource
+/// represents a single `POST` resource
+
 public struct POST {
     private let dataType:           DataType    // UInt8
     private let ignored:            UInt8       // ignored

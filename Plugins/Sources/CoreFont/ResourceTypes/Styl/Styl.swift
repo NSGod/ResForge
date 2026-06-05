@@ -7,7 +7,8 @@
 
 import Cocoa
 import RFSupport
-import SwiftUI
+
+/// represents a `styl` resource
 
 public final class Styl: CFResource {
     public var numRuns:     Int = 0
@@ -43,73 +44,34 @@ public final class Styl: CFResource {
 }
 
 extension NSAttributedString.Key {
-    public static let stylRun = NSAttributedString.Key("Styl.Run")
+    public static let stylStyle     = NSAttributedString.Key("Styl.Style")
 }
 
 extension Styl {
 
-    public final class Run: DataHandleWriting {
-        public var startOffset:     Int = 0                     /// Int32
-        public var lineHeight:      Int = 0                     /// Int16
-        public var fontAscent:      Int = 0                     /// Int16
-        public var fontFamilyID:    ResID = 0                   /// Int16
-        public var style:           MacFontStyle = .regular     /// UInt16
-        public var fontPointSize:   Int = 0                     /// UInt16
-        public var rgbColor:        RGBColor                    /// 6
-
-        // MARK: AUX
+    public final class Style: CustomStringConvertible {
+        public var fontFamilyID:    ResID = 0
+        public var fontStyle:       MacFontStyle = .regular
+        public var fontPointSize:   Int = 0
         public var color:           NSColor = .black
-        public var font:            NSFont!
-        public var fontName:        String = ""
-        public var range:           NSRange = NSRange(location: 0, length: 0)
 
         public var attrs:           [NSAttributedString.Key: Any] = [:]
 
-        public static var nodeLength: Int { 20 }
-
         private static var briquetteIsSetup: Bool = false
 
-        public init(_ reader: BinaryDataReader, count textCount: Int) throws {
-            startOffset = Int(try reader.read() as Int32)
-            lineHeight = Int(try reader.read() as Int16)
-            fontAscent = Int(try reader.read() as Int16)
-            fontFamilyID = try reader.read()
-            style = try reader.read(bigEndian: false)
-            fontPointSize = Int(try reader.read() as UInt16)
-            rgbColor = try RGBColor(reader)
-            color = rgbColor.color
-            reader.pushSavedPosition()
-            var endOffset = 0
-            if let nextStartOffset: Int32 = try? reader.read() {
-                endOffset = Int(nextStartOffset)
-            } else {
-                endOffset = textCount
-            }
-            reader.popPosition()
-            range = NSMakeRange(startOffset, endOffset - startOffset)
-            if Self.briquetteIsSetup == false {
-                do {
-                    try FontActivationManager.default.activateFontFile(forResource: "Briquette", withExtension: "otf")
-                } catch {
-                    NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
-                }
-                Self.briquetteIsSetup = true
-            }
-            attrs = Self.attributes(for: self)
+        public init(fontFamilyID: ResID, fontStyle: MacFontStyle, fontPointSize: Int, color: NSColor) {
+            self.fontFamilyID = fontFamilyID
+            self.fontStyle = fontStyle
+            self.fontPointSize = fontPointSize
+            self.color = color
+            self.attrs = Self.attributes(for: self)
         }
 
-        public func write(to handle: DataHandle, offset: Int? = 0) throws {
-            assert(offset == 0)
-            handle.write(Int32(startOffset))
-            handle.write(Int16(lineHeight))
-            handle.write(Int16(fontAscent))
-            handle.write(ResID(fontFamilyID))
-            handle.write(style, bigEndian: false)
-            handle.write(UInt16(fontPointSize))
-            try rgbColor.write(to: handle)
+        public var description: String {
+            "\(fontFamilyID) \(fontStyle) \(fontPointSize) \(color)"
         }
 
-        public static func attributes(for styleRun: Run) -> [NSAttributedString.Key: Any] {
+        public static func attributes(for style: Style) -> [NSAttributedString.Key: Any] {
             var attrs: [NSAttributedString.Key: Any] = [:]
             if Self.briquetteIsSetup == false {
                 do {
@@ -119,10 +81,10 @@ extension Styl {
                 }
                 Self.briquetteIsSetup = true
             }
-            styleRun.fontName = FOND.fontFamilyName(for: styleRun.fontFamilyID)
-            attrs[.foregroundColor] = styleRun.color
-            var font = NSFont(name: styleRun.fontName, size: CGFloat(styleRun.fontPointSize)) ?? NSFont.monospacedSystemFont(ofSize: CGFloat(styleRun.fontPointSize), weight: .regular)
-            if styleRun.style.contains(.bold) {
+            let fontName = FOND.fontFamilyName(for: style.fontFamilyID)
+            attrs[.foregroundColor] = style.color
+            var font = NSFont(name: fontName, size: CGFloat(style.fontPointSize)) ?? NSFont.monospacedSystemFont(ofSize: CGFloat(style.fontPointSize), weight: .regular)
+            if style.fontStyle.contains(.bold) {
                 font = NSFontManager.shared.convert(font, toHaveTrait: .boldFontMask)
                 if !NSFontManager.shared.traits(of: font).contains(.boldFontMask) {
                     /// using negative stroke width allows for both stroke and fill
@@ -132,39 +94,39 @@ extension Styl {
                     attrs[.strokeWidth] = -font.pointSize * 0.2
                 }
             }
-            if styleRun.style.contains(.italic) {
+            if style.fontStyle.contains(.italic) {
                 let newFont = NSFontManager.shared.convert(font, toHaveTrait: .italicFontMask)
                 if NSFontManager.shared.traits(of: newFont).contains(.italicFontMask) {
                     font = newFont
                 } else {
                     let obliqueTransform = AffineTransform(m11: newFont.pointSize,
-                                                           m12: tan(Angle(degrees: 0.0).radians),
-                                                           m21: tan(Angle(degrees: 20.0).radians) * newFont.pointSize,
-                                                           m22: newFont.pointSize, tX: 0, tY: 0)
+                                                  m12: tan(0.degreesToRadians),
+                                                  m21: tan(20.0.degreesToRadians) * newFont.pointSize,
+                                                  m22: newFont.pointSize, tX: 0, tY: 0)
                     font = NSFont(descriptor: font.fontDescriptor, textTransform: obliqueTransform) ?? font
                 }
             }
-            if styleRun.style.contains(.shadow) {
-                /// `NSColor.clear` doesn't work
+            if style.fontStyle.contains(.shadow) {
+                /// `NSColor.clear` doesn't work; not opaque, so can't cast shadow?
                 attrs[.foregroundColor] = NSColor.white
                 let shadow = NSShadow()
-                shadow.shadowColor = styleRun.color
+                shadow.shadowColor = style.color
                 shadow.shadowOffset = NSSize(width: 2.0, height: -2.0)
                 attrs[.shadow] = shadow
                 // attrs[.strokeColor] = color
                 // attrs[.strokeWidth] = -1
             }
-            if styleRun.style.contains(.outline) {
+            if style.fontStyle.contains(.outline) {
                 attrs[.strokeWidth] = font.pointSize * 0.1
-                attrs[.strokeColor] = styleRun.color
-                if styleRun.style.contains(.underline) {
+                attrs[.strokeColor] = style.color
+                if style.fontStyle.contains(.underline) {
                     attrs[.underlineStyle] = NSUnderlineStyle.double.rawValue
                 }
             }
-            if styleRun.style.contains(.underline) && !styleRun.style.contains(.outline) {
+            if style.fontStyle.contains(.underline) && !style.fontStyle.contains(.outline) {
                 attrs[.underlineStyle] = NSUnderlineStyle.single.rawValue
             }
-            if styleRun.style.contains(.condensed) {
+            if style.fontStyle.contains(.condensed) {
                 let newFont = NSFontManager.shared.convert(font, toHaveTrait: .condensedFontMask)
                 if NSFontManager.shared.traits(of: newFont).contains(.condensedFontMask) {
                     font = newFont
@@ -172,7 +134,7 @@ extension Styl {
                     let transform = AffineTransform(scaleByX: newFont.pointSize * 0.82, byY: newFont.pointSize)
                     font = NSFont(descriptor: font.fontDescriptor, textTransform: transform) ?? font
                 }
-            } else if styleRun.style.contains(.extended) {
+            } else if style.fontStyle.contains(.extended) {
                 let newFont = NSFontManager.shared.convert(font, toHaveTrait: .expandedFontMask)
                 if NSFontManager.shared.traits(of: newFont).contains(.expandedFontMask) {
                     font = newFont
@@ -181,10 +143,58 @@ extension Styl {
                     font = NSFont(descriptor: font.fontDescriptor, textTransform: transform) ?? font
                 }
             }
-            styleRun.font = font
             attrs[.font] = font
-            attrs[.stylRun] = self
+            attrs[.stylStyle] = style
             return attrs
+        }
+    }
+
+    public final class Run: DataHandleWriting {
+        public var startOffset:     Int = 0                     /// Int32
+        public var lineHeight:      Int = 0                     /// Int16
+        public var fontAscent:      Int = 0                     /// Int16
+        public var fontFamilyID:    ResID = 0                   /// Int16
+        public var fontStyle:       MacFontStyle = .regular     /// UInt16 (little-endian; actually, UInt8 + UInt8 of padding)
+        public var fontPointSize:   Int = 0                     /// UInt16
+        public var rgbColor:        RGBColor                    /// 6
+
+        // MARK: AUX
+        public var style:           Style {
+            return Style(fontFamilyID: fontFamilyID, fontStyle: fontStyle, fontPointSize: fontPointSize, color: rgbColor.color)
+        }
+
+        public var range:           NSRange = NSRange(location: 0, length: 0)
+
+        public static var nodeLength: Int { 20 }
+
+        public init(_ reader: BinaryDataReader, count textCount: Int) throws {
+            startOffset = Int(try reader.read() as Int32)
+            lineHeight = Int(try reader.read() as Int16)
+            fontAscent = Int(try reader.read() as Int16)
+            fontFamilyID = try reader.read()
+            fontStyle = try reader.read(bigEndian: false)
+            fontPointSize = Int(try reader.read() as UInt16)
+            rgbColor = try RGBColor(reader)
+            reader.pushSavedPosition()
+            var endOffset = 0
+            if let nextStartOffset: Int32 = try? reader.read() {
+                endOffset = Int(nextStartOffset)
+            } else {
+                endOffset = textCount
+            }
+            reader.popPosition()
+            range = NSMakeRange(startOffset, endOffset - startOffset)
+        }
+
+        public func write(to handle: DataHandle, offset: Int? = 0) throws {
+            assert(offset == 0)
+            handle.write(Int32(startOffset))
+            handle.write(Int16(lineHeight))
+            handle.write(Int16(fontAscent))
+            handle.write(ResID(fontFamilyID))
+            handle.write(fontStyle, bigEndian: false)
+            handle.write(UInt16(fontPointSize))
+            try rgbColor.write(to: handle)
         }
     }
 }

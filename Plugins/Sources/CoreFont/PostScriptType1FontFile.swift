@@ -66,7 +66,8 @@ public class PSFontMetrics : NSObject, UIFontMetrics {
     }
 }
 
-// represents a PFA/PFB file
+/// represents a PFA/PFB file (Windows Type 1 PostScript font file .pfa/.pfb)
+
 public final class PostScriptType1FontFile: NSObject {
     public var data:            Data          // stored in PFA format
     var fileUrl:                URL?

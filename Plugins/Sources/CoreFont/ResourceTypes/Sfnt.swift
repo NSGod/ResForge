@@ -8,6 +8,8 @@
 import Cocoa
 import RFSupport
 
+/// represents an `sfnt` resource
+
 public final class Sfnt: NSObject, CFResource {
     public var resource:    Resource
     public var fontFile:    OTFFontFile?

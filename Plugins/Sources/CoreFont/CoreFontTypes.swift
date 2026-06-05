@@ -181,6 +181,12 @@ public struct RGBColor: Equatable, DataHandleWriting {
         blue = try reader.read()
     }
 
+    public init(_ color: NSColor) {
+        red = UInt16(color.redComponent * 65535.0)
+        green = UInt16(color.greenComponent * 65535.0)
+        blue = UInt16(color.blueComponent * 65535.0)
+    }
+
     public func write(to handle: DataHandle, offset: Int? = nil) throws {
         assert(offset == nil)
         handle.write(red)

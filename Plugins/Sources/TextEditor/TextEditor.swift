@@ -1,6 +1,5 @@
 import Cocoa
 import RFSupport
-import SwiftUI
 import CoreFont
 
 public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
@@ -76,7 +75,7 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
                 // TODO: Convert MacRoman byte offsets to UTF8 offsets.
                 style = try Styl(with: styleResource, count: resource.data.count)
                 for run in style.runs {
-                    textView.textStorage?.addAttributes(run.attrs, range: run.range)
+                    textView.textStorage?.addAttributes(run.style.attrs, range: run.range)
                 }
             }
         } catch {
@@ -93,7 +92,7 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
 
     @IBAction func changeWidth(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
-        /// make the choices mutually-exclusive, like radio buttons
+        /// make the condensed/extended choices mutually-exclusive, like radio buttons
         if widthControl.isSelected(forSegment: 0) {
             if selectedWidthTag == 64 {
                 widthControl.setSelected(false, forSegment: 1)
@@ -152,21 +151,31 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
                     totalRange = totalRange.union(range)
                 }
             }
-            if let style {
-                if let run = style.runs(in: totalRange).first {
+            if let textStorage {
+                if totalRange.location >= textStorage.length {
+                    return
+                }
+                let attrs = textStorage.attributes(at: totalRange.location, effectiveRange: nil)
+                if let style = attrs[.stylStyle] as? Styl.Style {
                     for i in 0..<styleControl.segmentCount {
-                        styleControl.setSelected(run.style.contains(MacFontStyle(rawValue: UInt16(styleControl.tag(forSegment: i)))), forSegment: i)
+                        styleControl.setSelected(style.fontStyle.contains(MacFontStyle(rawValue: UInt16(styleControl.tag(forSegment: i)))), forSegment: i)
                     }
                     selectedWidthTag = 0
                     for i in 0..<widthControl.segmentCount {
-                        widthControl.setSelected(run.style.contains(MacFontStyle(rawValue: UInt16(widthControl.tag(forSegment: i)))), forSegment: i)
+                        widthControl.setSelected(style.fontStyle.contains(MacFontStyle(rawValue: UInt16(widthControl.tag(forSegment: i)))), forSegment: i)
                         if widthControl.isSelected(forSegment: i) {
                             selectedWidthTag = widthControl.tag(forSegment: i)
                         }
                     }
-                    sizeComboBox.objectValue = run.fontPointSize
-                    colorWell.color = run.color
-                    fontPopUpButton.selectItem(withTag: Int(run.fontFamilyID))
+                    sizeComboBox.objectValue = style.fontPointSize
+                    if style.fontStyle.contains(.shadow) {
+                        if let shadow = attrs[.shadow] as? NSShadow, let color = shadow.shadowColor {
+                            colorWell.color = color
+                        }
+                    } else {
+                        colorWell.color = attrs[.foregroundColor] as! NSColor
+                    }
+                    fontPopUpButton.selectItem(withTag: Int(style.fontFamilyID))
                 }
             }
         }
