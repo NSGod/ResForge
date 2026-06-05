@@ -175,7 +175,9 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
                     } else {
                         colorWell.color = attrs[.foregroundColor] as! NSColor
                     }
-                    fontPopUpButton.selectItem(withTag: Int(style.fontFamilyID))
+                    if let font = attrs[.font] as? NSFont {
+                        fontPopUpButton.selectItem(withTag: Int(FOND.fontFamilyID(for: font)))
+                    }
                 }
             }
         }
