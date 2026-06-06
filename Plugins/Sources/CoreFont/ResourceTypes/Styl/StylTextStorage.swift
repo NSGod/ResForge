@@ -32,7 +32,11 @@ public class StylTextStorage: NSTextStorage {
 
     public override func setAttributes(_ attrs: [NSAttributedString.Key: Any]?, range: NSRange) {
         NSLog("\(type(of: self)).\(#function) range: \(range)")
-        storage.setAttributes(attrs, range: range)
+        if let style = attrs?[.stylStyle] as? Styl.Style, let count = attrs?.count, count == 1 {
+            storage.setAttributes(style.attrs, range: range)
+        } else {
+            storage.setAttributes(attrs, range: range)
+        }
         edited(.editedAttributes, range: range, changeInLength: 0)
     }
 

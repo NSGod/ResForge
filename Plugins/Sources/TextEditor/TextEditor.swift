@@ -11,12 +11,13 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
         PluginRegistry.register(self)
     }
 
-    @IBOutlet weak var textView:            NSTextView!
-    @IBOutlet weak var styleControl:        NSSegmentedControl!
-    @IBOutlet weak var widthControl:        NSSegmentedControl!
-    @IBOutlet weak var colorWell:           NSColorWell!
-    @IBOutlet weak var fontPopUpButton:     NSPopUpButton!
-    @IBOutlet weak var sizeComboBox:        NSComboBox!
+    @IBOutlet weak var textView:                NSTextView!
+    @IBOutlet weak var styleControl:            NSSegmentedControl!
+    @IBOutlet weak var widthControl:            NSSegmentedControl!
+    @IBOutlet weak var colorWell:               NSColorWell!
+    @IBOutlet weak var fontPopUpButton:         NSPopUpButton!
+    @IBOutlet weak var sizeComboBox:            NSComboBox!
+    @IBOutlet weak var lineHeightPopUpButton:   NSPopUpButton!
 
     public let resource: Resource
     private let manager: RFEditorManager
@@ -87,6 +88,9 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
 
     @IBAction func changeStyle(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
+        if let selectedRange = selectedRange() {
+            textView.textStorage?.setAttributes(configuredAttrs(), range: selectedRange)
+        }
 
     }
 
@@ -94,34 +98,92 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
         NSLog("\(type(of: self)).\(#function)")
         /// make the condensed/extended choices mutually-exclusive, like radio buttons
         if widthControl.isSelected(forSegment: 0) {
-            if selectedWidthTag == 64 {
+            if selectedWidthTag == 32 {
+                /// currently on, turn off
+                widthControl.setSelected(false, forSegment: 0)
+                selectedWidthTag = -1
+            } else {
                 widthControl.setSelected(false, forSegment: 1)
+                selectedWidthTag = 32
             }
         }
         if widthControl.isSelected(forSegment: 1) {
-            if selectedWidthTag == 32 {
+            if selectedWidthTag == 64 {
+                /// currently on, turn off
+                widthControl.setSelected(false, forSegment: 1)
+                selectedWidthTag = -1
+            } else {
                 widthControl.setSelected(false, forSegment: 0)
+                selectedWidthTag = 64
             }
         }
-        selectedWidthTag = widthControl.tag(forSegment: widthControl.selectedSegment)
-
+        if let selectedRange = selectedRange() {
+            textView.textStorage?.setAttributes(configuredAttrs(), range: selectedRange)
+        }
     }
 
     @IBAction func changeFont(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
+        if let selectedRange = selectedRange() {
+            textView.textStorage?.setAttributes(configuredAttrs(), range: selectedRange)
+        }
 
     }
 
     @IBAction func changeColor(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
+        if let selectedRange = selectedRange() {
+            textView.textStorage?.setAttributes(configuredAttrs(), range: selectedRange)
+        }
 
     }
 
     @IBAction func changeFontSize(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
+        if let selectedRange = selectedRange() {
+            textView.textStorage?.setAttributes(configuredAttrs(), range: selectedRange)
+        }
 
     }
 
+    @IBAction func changeLineHeight(_ sender: Any) {
+        NSLog("\(type(of: self)).\(#function)")
+        if let selectedRange = selectedRange() {
+            textView.textStorage?.setAttributes(configuredAttrs(), range: selectedRange)
+        }
+    }
+
+    var selectedFontStyle: MacFontStyle {
+        var style = MacFontStyle.normal
+        for i in 0..<styleControl.segmentCount {
+            if styleControl.isSelected(forSegment: i) {
+                style.formUnion(MacFontStyle(rawValue: UInt16(styleControl.tag(forSegment: i))))
+            }
+        }
+        for i in 0..<widthControl.segmentCount {
+            if widthControl.isSelected(forSegment: i) {
+                style.formUnion(MacFontStyle(rawValue: UInt16(widthControl.tag(forSegment: i))))
+            }
+        }
+        return style
+    }
+
+    func configuredAttrs() -> [NSAttributedString.Key: Any] {
+        guard let fontPointSize = sizeComboBox.objectValue as? Int else { return [:] }
+        let style = Styl.Style(fontFamilyID: ResID(fontPopUpButton.selectedTag()), fontStyle: selectedFontStyle, fontPointSize: fontPointSize, color: colorWell.color)
+        let attrs: [NSAttributedString.Key: Any] = [.stylStyle: style]
+        return attrs
+    }
+
+    func selectedRange() -> NSRange? {
+        textView.selectedRanges.first?.rangeValue
+    }
+
+    // MARK: - <NSTextViewDelegate>
+    public func textView(_ textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+        NSLog("\(type(of: self)).\(#function) \(NSStringFromSelector(commandSelector))")
+        return false
+    }
     public func textView(_ textView: NSTextView, willChangeSelectionFromCharacterRanges oldSelectedCharRanges: [NSValue], toCharacterRanges newSelectedCharRanges: [NSValue]) -> [NSValue] {
         // NSLog("\(type(of: self)).\(#function) old == \(oldSelectedCharRanges), new == \(newSelectedCharRanges)")
         /// We want only a contiguous selection
@@ -181,10 +243,6 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
                 }
             }
         }
-    }
-
-    func selectedRange() -> NSRange? {
-        textView.selectedRanges.first?.rangeValue
     }
 
     @objc func textFieldDidChange(_ notification: Notification) {

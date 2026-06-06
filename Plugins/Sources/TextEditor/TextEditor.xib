@@ -10,6 +10,7 @@
             <connections>
                 <outlet property="colorWell" destination="R0u-ay-Gh1" id="mJY-NS-GCq"/>
                 <outlet property="fontPopUpButton" destination="Ydn-Xa-UI8" id="Yxv-B3-Nus"/>
+                <outlet property="lineHeightPopUpButton" destination="0hi-6H-8fc" id="Wrq-2z-Jia"/>
                 <outlet property="sizeComboBox" destination="tfG-HO-hEi" id="sU2-UF-hCd"/>
                 <outlet property="styleControl" destination="Ekw-7F-nya" id="OCL-te-OfG"/>
                 <outlet property="textView" destination="QoM-iV-1Mc" id="r5G-V1-ikw"/>
@@ -35,7 +36,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="523" height="364"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <textView wantsLayer="YES" verticallyResizable="YES" usesFontPanel="YES" usesInspectorBar="YES" findStyle="bar" allowsDocumentBackgroundColorChange="YES" allowsUndo="YES" usesRuler="YES" smartInsertDelete="YES" id="QoM-iV-1Mc" userLabel="textView">
+                                <textView wantsLayer="YES" importsGraphics="NO" verticallyResizable="YES" usesInspectorBar="YES" findStyle="bar" allowsUndo="YES" usesRuler="YES" smartInsertDelete="YES" id="QoM-iV-1Mc" userLabel="textView">
                                     <rect key="frame" x="0.0" y="0.0" width="523" height="364"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -58,7 +59,7 @@
                         </scroller>
                     </scrollView>
                     <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ekw-7F-nya">
-                        <rect key="frame" x="11" y="387" width="124" height="20"/>
+                        <rect key="frame" x="11" y="393" width="124" height="20"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" segmentDistribution="fillEqually" style="rounded" trackingMode="selectAny" id="07y-nG-JYP">
                             <font key="font" metaFont="smallSystem"/>
@@ -75,9 +76,9 @@
                         </connections>
                     </segmentedControl>
                     <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cca-z6-Fdt">
-                        <rect key="frame" x="141" y="387" width="49" height="20"/>
+                        <rect key="frame" x="141" y="393" width="49" height="20"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" segmentDistribution="fillEqually" style="rounded" trackingMode="selectAny" id="0ag-oD-ule">
+                        <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" segmentDistribution="fillEqually" style="rounded" trackingMode="selectOne" id="0ag-oD-ule">
                             <font key="font" metaFont="smallSystem"/>
                             <segments>
                                 <segment toolTip="Condense text" image="condensed" width="24" tag="32"/>
@@ -89,7 +90,7 @@
                         </connections>
                     </segmentedControl>
                     <colorWell toolTip="Click to choose the text color" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R0u-ay-Gh1">
-                        <rect key="frame" x="196" y="387" width="21" height="20"/>
+                        <rect key="frame" x="196" y="393" width="21" height="20"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <color key="color" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <connections>
@@ -97,7 +98,7 @@
                         </connections>
                     </colorWell>
                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ydn-Xa-UI8">
-                        <rect key="frame" x="223" y="387" width="141" height="20"/>
+                        <rect key="frame" x="223" y="393" width="141" height="20"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="push" title="System Font" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="eeq-g3-7do" id="Sj7-pR-pq1">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -121,7 +122,7 @@
                         </connections>
                     </popUpButton>
                     <comboBox toolTip="Set the font size" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tfG-HO-hEi">
-                        <rect key="frame" x="370" y="387" width="55" height="20"/>
+                        <rect key="frame" x="370" y="393" width="55" height="20"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <comboBoxCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" completes="NO" numberOfVisibleItems="14" id="02l-lw-hEU">
                             <font key="font" metaFont="smallSystem"/>
@@ -149,6 +150,30 @@
                             <action selector="changeFontSize:" target="-2" id="Qph-DP-P5i"/>
                         </connections>
                     </comboBox>
+                    <popUpButton toolTip="Line and paragraph spacing" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0hi-6H-8fc">
+                        <rect key="frame" x="431" y="393" width="57" height="20"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <popUpButtonCell key="cell" type="push" title="1.0" bezelStyle="rounded" alignment="center" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="border" tag="10" imageScaling="proportionallyDown" inset="2" selectedItem="ftb-sb-XuO" id="Sp1-EZ-XD6">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                            <menu key="menu" id="UkD-5a-Xz1">
+                                <items>
+                                    <menuItem title="0.8" tag="8" id="ZiS-A6-y9Y"/>
+                                    <menuItem title="0.9" tag="9" id="14H-VE-Mov"/>
+                                    <menuItem title="1.0" state="on" tag="10" id="ftb-sb-XuO"/>
+                                    <menuItem title="1.1" tag="11" id="4Q5-Nq-fdc"/>
+                                    <menuItem title="1.2" tag="12" id="GFP-qJ-xp1"/>
+                                    <menuItem title="1.3" tag="13" id="LbX-Ta-o3b"/>
+                                    <menuItem title="1.4" tag="14" id="5JM-ch-C3o"/>
+                                    <menuItem title="1.5" tag="15" id="JQJ-t4-TqC"/>
+                                    <menuItem title="2.0" tag="20" id="bWe-y7-lIE"/>
+                                </items>
+                            </menu>
+                        </popUpButtonCell>
+                        <connections>
+                            <action selector="changeLineHeight:" target="-2" id="ekt-FZ-1L1"/>
+                        </connections>
+                    </popUpButton>
                 </subviews>
                 <constraints>
                     <constraint firstItem="cyH-JA-sTd" firstAttribute="leading" secondItem="18" secondAttribute="leading" id="1vL-Yd-BN9"/>
@@ -157,6 +182,9 @@
                     <constraint firstItem="cyH-JA-sTd" firstAttribute="top" secondItem="18" secondAttribute="top" constant="54" id="iP9-jo-FVp"/>
                 </constraints>
             </view>
+            <connections>
+                <outlet property="initialFirstResponder" destination="0hi-6H-8fc" id="OKG-YJ-I94"/>
+            </connections>
             <point key="canvasLocation" x="206" y="474"/>
         </window>
     </objects>
