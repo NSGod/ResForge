@@ -117,7 +117,7 @@ extension Styl {
                 // attrs[.strokeWidth] = -1
             }
             if style.fontStyle.contains(.outline) {
-                attrs[.strokeWidth] = font.pointSize * 0.1
+                attrs[.strokeWidth] = 2.0
                 attrs[.strokeColor] = style.color
                 if style.fontStyle.contains(.underline) {
                     attrs[.underlineStyle] = NSUnderlineStyle.double.rawValue
