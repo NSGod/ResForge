@@ -1,5 +1,5 @@
 //
-//  StylTextStorage.swift
+//  Styl.TextStorage.swift
 //  CoreFont
 //
 //  Created by Mark Douma on 6/2/2026.
@@ -8,8 +8,14 @@
 import Cocoa
 import RFSupport
 
-public class StylTextStorage: NSTextStorage {
+//extension Styl {
+
+public class TextStorage: NSTextStorage {
     private var storage = NSTextStorage()
+
+//        public var styleRuns: [Run] {
+//            return []
+//        }
 
     /// primitives:
     public override var string: String {
@@ -17,15 +23,11 @@ public class StylTextStorage: NSTextStorage {
     }
 
     public override func attributes(at location: Int, effectiveRange range: NSRangePointer?) -> [NSAttributedString.Key : Any] {
-//        NSLog("\(type(of: self)).\(#function) location == \(location)")
-//        if location >= storage.length {
-//            NSLog("\(type(of: self)).\(#function) location >= storage.length (\(storage.length))")
-//        }
         return storage.attributes(at: location, effectiveRange: range)
     }
 
     public override func replaceCharacters(in range: NSRange, with str: String) {
-//        NSLog("\(type(of: self)).\(#function) range: \(range)")
+        // NSLog("\(type(of: self)).\(#function) range: \(range)")
         storage.replaceCharacters(in: range, with: str)
         edited(.editedCharacters, range: range, changeInLength: (str as NSString).length - range.length)
     }
@@ -42,7 +44,7 @@ public class StylTextStorage: NSTextStorage {
 
     // MARK: -
     public override func attributes(at location: Int, longestEffectiveRange range: NSRangePointer?, in rangeLimit: NSRange) -> [NSAttributedString.Key : Any] {
-//        NSLog("\(type(of: self)).\(#function)")
+        //        NSLog("\(type(of: self)).\(#function)")
         return storage.attributes(at: location, longestEffectiveRange: range, in: rangeLimit)
     }
 
@@ -75,13 +77,5 @@ public class StylTextStorage: NSTextStorage {
         NSLog("\(type(of: self)).\(#function)")
         super.addAttributes(attrs, range: range)
     }
-
-    //    public override func replaceCharacters(in range: NSRange, with attrString: NSAttributedString) {
-    //        NSLog("\(type(of: self)).\(#function)")
-    //        beginEditing()
-    //        storage.replaceCharacters(in: range, with: attrString)
-    //        edited(.editedCharacters, range: range, changeInLength: attrString.length - range.length)
-    //        endEditing()
-    //    }
-
 }
+//}
