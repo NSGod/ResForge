@@ -23,7 +23,7 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     private let manager: RFEditorManager
 
     var style:          Styl!
-    var textStorage:    StylTextStorage!
+    var textStorage:    Styl.TextStorage!
 
     private var selectedWidthTag = 0
 
@@ -67,7 +67,7 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     }
 
     func loadResourceIntoView() {
-        textStorage = StylTextStorage()
+        textStorage = Styl.TextStorage()
         textView.layoutManager?.replaceTextStorage(textStorage)
         textView.string = String(data: resource.data, encoding: .macOSRoman) ?? ""
 

@@ -166,6 +166,12 @@ public struct FontCreationOptions {
     public static let sizesKey      = "FontCreationOptions.sizes"
 }
 
+extension NSColor {
+    public var rgbColor: RGBColor {
+        RGBColor(self)
+    }
+}
+
 public struct RGBColor: Equatable, DataHandleWriting {
     public var red:   UInt16
     public var green: UInt16

@@ -186,6 +186,18 @@ extension Styl {
             range = NSMakeRange(startOffset, endOffset - startOffset)
         }
 
+        public init(style: Style, range: NSRange) {
+            self.startOffset = range.location
+            if let font: NSFont = style.attrs[.font] as? NSFont {
+                lineHeight = Int(font.ascender - font.descender + font.leading)
+                fontAscent = Int(font.ascender)
+            }
+            self.fontFamilyID = style.fontFamilyID
+            self.fontStyle = style.fontStyle
+            self.fontPointSize = style.fontPointSize
+            self.rgbColor = style.color.rgbColor
+        }
+
         public func write(to handle: DataHandle, offset: Int? = 0) throws {
             assert(offset == 0)
             handle.write(Int32(startOffset))
