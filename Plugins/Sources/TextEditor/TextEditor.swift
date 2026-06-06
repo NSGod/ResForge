@@ -46,8 +46,6 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
         widthControl.setImage(NSImage(contentsOf: Self.bundle.url(forResource: "condensed", withExtension: "pdf")!), forSegment: 0)
         widthControl.setImage(NSImage(contentsOf: Self.bundle.url(forResource: "extended", withExtension: "pdf")!), forSegment: 1)
 
-        NotificationCenter.default.addObserver(self, selector: #selector(textFieldDidChange(_:)), name: NSTextStorage.didProcessEditingNotification, object: self.textView.textStorage)
-
         loadResourceIntoView()
     }
 
@@ -67,8 +65,10 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     }
 
     func loadResourceIntoView() {
+        NotificationCenter.default.removeObserver(self, name: NSTextStorage.didProcessEditingNotification, object: self.textView.textStorage)
         textStorage = Styl.TextStorage()
         textView.layoutManager?.replaceTextStorage(textStorage)
+        NotificationCenter.default.addObserver(self, selector: #selector(textFieldDidChange(_:)), name: NSTextStorage.didProcessEditingNotification, object: self.textView.textStorage)
         textView.string = String(data: resource.data, encoding: .macOSRoman) ?? ""
 
         do {
@@ -169,7 +169,8 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     }
 
     func configuredAttrs() -> [NSAttributedString.Key: Any] {
-        guard let fontPointSize = sizeComboBox.objectValue as? Int else { return [:] }
+        guard let obj = sizeComboBox.objectValue as? String else { return [:] }
+        guard let fontPointSize = Int(obj) else { return [:] }
         let style = Styl.Style(fontFamilyID: ResID(fontPopUpButton.selectedTag()), fontStyle: selectedFontStyle, fontPointSize: fontPointSize, color: colorWell.color)
         let attrs: [NSAttributedString.Key: Any] = [.stylStyle: style]
         return attrs
@@ -184,6 +185,7 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
         NSLog("\(type(of: self)).\(#function) \(NSStringFromSelector(commandSelector))")
         return false
     }
+
     public func textView(_ textView: NSTextView, willChangeSelectionFromCharacterRanges oldSelectedCharRanges: [NSValue], toCharacterRanges newSelectedCharRanges: [NSValue]) -> [NSValue] {
         // NSLog("\(type(of: self)).\(#function) old == \(oldSelectedCharRanges), new == \(newSelectedCharRanges)")
         /// We want only a contiguous selection
@@ -229,7 +231,7 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
                             selectedWidthTag = widthControl.tag(forSegment: i)
                         }
                     }
-                    sizeComboBox.objectValue = style.fontPointSize
+                    sizeComboBox.objectValue = "\(style.fontPointSize)"
                     if style.fontStyle.contains(.shadow) {
                         if let shadow = attrs[.shadow] as? NSShadow, let color = shadow.shadowColor {
                             colorWell.color = color
