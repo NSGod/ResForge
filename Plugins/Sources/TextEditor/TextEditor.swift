@@ -68,7 +68,7 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
         NotificationCenter.default.removeObserver(self, name: NSTextStorage.didProcessEditingNotification, object: self.textView.textStorage)
         textStorage = Styl.TextStorage()
         textView.layoutManager?.replaceTextStorage(textStorage)
-        NotificationCenter.default.addObserver(self, selector: #selector(textFieldDidChange(_:)), name: NSTextStorage.didProcessEditingNotification, object: self.textView.textStorage)
+        NotificationCenter.default.addObserver(self, selector: #selector(didProcessEditing(_:)), name: NSTextStorage.didProcessEditingNotification, object: self.textView.textStorage)
         textView.string = String(data: resource.data, encoding: .macOSRoman) ?? ""
 
         do {
@@ -89,9 +89,8 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     @IBAction func changeStyle(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
         if let selectedRange = selectedRange() {
-            textView.textStorage?.setAttributes(configuredAttrs(), range: selectedRange)
+            setAttributes(configuredAttrs(), range: selectedRange)
         }
-
     }
 
     @IBAction func changeWidth(_ sender: Any) {
@@ -118,39 +117,48 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
             }
         }
         if let selectedRange = selectedRange() {
-            textView.textStorage?.setAttributes(configuredAttrs(), range: selectedRange)
+            setAttributes(configuredAttrs(), range: selectedRange)
         }
     }
 
     @IBAction func changeFont(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
         if let selectedRange = selectedRange() {
-            textView.textStorage?.setAttributes(configuredAttrs(), range: selectedRange)
+            setAttributes(configuredAttrs(), range: selectedRange)
         }
-
     }
 
     @IBAction func changeColor(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
         if let selectedRange = selectedRange() {
-            textView.textStorage?.setAttributes(configuredAttrs(), range: selectedRange)
+            setAttributes(configuredAttrs(), range: selectedRange)
         }
-
     }
 
     @IBAction func changeFontSize(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
         if let selectedRange = selectedRange() {
-            textView.textStorage?.setAttributes(configuredAttrs(), range: selectedRange)
+            setAttributes(configuredAttrs(), range: selectedRange)
         }
-
     }
 
     @IBAction func changeLineHeight(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
         if let selectedRange = selectedRange() {
-            textView.textStorage?.setAttributes(configuredAttrs(), range: selectedRange)
+            setAttributes(configuredAttrs(), range: selectedRange)
         }
+    }
+
+    func setAttributes(_ attributes: [NSAttributedString.Key: Any], range: NSRange) {
+        guard let existingAttrs = textView.textStorage?.attributes(at: range.location, effectiveRange: nil) else {
+            return
+        }
+        window?.undoManager?.setActionName(NSLocalizedString("Change Attributes", comment: ""))
+        window?.undoManager?.registerUndo(withTarget: self) {
+            $0.setAttributes(existingAttrs, range: range)
+        }
+        textView.textStorage?.setAttributes(attributes, range: range)
+        setDocumentEdited(true)
     }
 
     var selectedFontStyle: MacFontStyle {
@@ -247,7 +255,7 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
         }
     }
 
-    @objc func textFieldDidChange(_ notification: Notification) {
+    @objc func didProcessEditing(_ notification: Notification) {
         self.setDocumentEdited(true)
     }
 }
