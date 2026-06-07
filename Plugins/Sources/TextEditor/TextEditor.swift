@@ -22,6 +22,7 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     public let resource: Resource
     private let manager: RFEditorManager
 
+    var stylResource:   Resource!
     var style:          Styl!
     var textStorage:    Styl.TextStorage!
 
@@ -50,11 +51,15 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     }
 
     @IBAction public func saveResource(_ sender: Any) {
-//        do {
+        do {
             resource.data = textView.string.data(using: .macOSRoman, allowLossyConversion: true) ?? Data()
-//        } catch {
-//            self.window?.presentError(error)
-//        }
+            if let txtStorage = textView.textStorage as? Styl.TextStorage {
+                style.runs = txtStorage.styleRuns
+                stylResource.data = try style.data()
+            }
+        } catch {
+            self.window?.presentError(error)
+        }
         self.setDocumentEdited(false)
     }
 
@@ -62,19 +67,21 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     @IBAction public func revertResource(_ sender: Any) {
         self.window?.contentView?.undoManager?.removeAllActions()
         loadResourceIntoView()
+        self.setDocumentEdited(false)
     }
 
     func loadResourceIntoView() {
-        NotificationCenter.default.removeObserver(self, name: NSTextStorage.didProcessEditingNotification, object: self.textView.textStorage)
+        NotificationCenter.default.removeObserver(self, name: NSTextStorage.didProcessEditingNotification, object: textView.textStorage)
         textStorage = Styl.TextStorage()
         textView.layoutManager?.replaceTextStorage(textStorage)
-        NotificationCenter.default.addObserver(self, selector: #selector(didProcessEditing(_:)), name: NSTextStorage.didProcessEditingNotification, object: self.textView.textStorage)
+        NotificationCenter.default.addObserver(self, selector: #selector(didProcessEditing(_:)), name: NSTextStorage.didProcessEditingNotification, object: textView.textStorage)
         textView.string = String(data: resource.data, encoding: .macOSRoman) ?? ""
 
         do {
-            if let styleResource = manager.findResource(type: ResourceType("styl"), id: resource.id, currentDocumentOnly: true) {
+            if let stylResource = manager.findResource(type: ResourceType("styl"), id: resource.id, currentDocumentOnly: true) {
                 // TODO: Convert MacRoman byte offsets to UTF8 offsets.
-                style = try Styl(with: styleResource, count: resource.data.count)
+                self.stylResource = stylResource
+                style = try Styl(with: stylResource, count: resource.data.count)
                 for run in style.runs {
                     textView.textStorage?.addAttributes(run.style.attrs, range: run.range)
                 }
@@ -156,6 +163,9 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
         window?.undoManager?.setActionName(NSLocalizedString("Change Attributes", comment: ""))
         window?.undoManager?.registerUndo(withTarget: self) {
             $0.setAttributes(existingAttrs, range: range)
+            /// force UI to update to reverted style information
+            let note = Notification(name: NSTextView.didChangeSelectionNotification, object: self.textView, userInfo: nil)
+            $0.textViewDidChangeSelection(note)
         }
         textView.textStorage?.setAttributes(attributes, range: range)
         setDocumentEdited(true)

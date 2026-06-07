@@ -12,7 +12,9 @@ import RFSupport
 
 public final class Styl: CFResource {
     public var numRuns:     Int = 0
-    public var runs:        [Run] = []
+    public var runs:        [Run] = [] {
+        didSet { numRuns = runs.count }
+    }
 
     public var resource:    Resource
     private var reader:     BinaryDataReader
@@ -20,6 +22,7 @@ public final class Styl: CFResource {
     public init(with resource: Resource, count textCount: Int) throws {
         self.resource = resource
         reader = BinaryDataReader(resource.data)
+        if reader.data.isEmpty { return }
         numRuns = Int(try reader.read() as Int16)
         runs = try (0..<numRuns).map { _ in try Run(reader, count: textCount) }
     }
@@ -31,16 +34,6 @@ public final class Styl: CFResource {
         try runs.forEach { try $0.write(to: handle) }
         return handle.data
     }
-
-    public func runs(in range: NSRange) -> [Run] {
-        var mRuns: [Run] = []
-        for run in runs {
-            if run.range.intersection(range) != nil {
-                mRuns.append(run)
-            }
-        }
-        return mRuns
-    }
 }
 
 extension NSAttributedString.Key {
@@ -49,6 +42,7 @@ extension NSAttributedString.Key {
 
 extension Styl {
 
+    /// working model class that's stored as a `.stylStyle` attribute in the attributed string
     public final class Style: CustomStringConvertible {
         public var fontFamilyID:    ResID = 0
         public var fontStyle:       MacFontStyle = .regular
@@ -149,6 +143,7 @@ extension Styl {
         }
     }
 
+    /// represents a style run that's stored in a `Styl` resource
     public final class Run: DataHandleWriting {
         public var startOffset:     Int = 0                     /// Int32
         public var lineHeight:      Int = 0                     /// Int16
