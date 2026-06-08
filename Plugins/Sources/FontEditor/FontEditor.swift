@@ -173,7 +173,8 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
                     NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
                 }
             } else {
-                manager.createResource(type: .fond, id: Int(MacEncoding.resID(for: options.encoding.scriptID)), name: options.fontFile.familyName) { fondRes in
+                manager.createResource(type: .fond, id: Int(MacEncoding.resID(for: options.encoding.scriptID)), name: options.fontFile.familyName) { [weak self] fondRes in
+                    guard let self else { return }
                     do {
                         fondRes.attributes = [.purgeable, .sysHeap]
                         fondResource = fondRes
@@ -198,7 +199,8 @@ public final class FontEditor: AbstractEditor, ResourceEditor, ExportProvider, T
 //        }
 //        if options.createNFNT, let sizes = options.sizes, sizes.count > 0 {
 //            for size in sizes {
-//                manager.createResource(type: .nfnt) { nfntResource in
+//                manager.createResource(type: .nfnt) { [weak self] nfntResource in
+//                    guard let self else { return }
 //                    do {
 //                        let nfnt = try NFNT(with: nfntResource, manager: self.manager, options: options, fontPointSize: Int16(size))
 //                        nfntResource.data = try nfnt.data()
