@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24765" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24765"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="System colors introduced in macOS 10.14" minToolsVersion="10.0"/>
@@ -2063,7 +2064,7 @@
                                                                     <rect key="frame" x="1" y="1" width="697" height="382"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
-                                                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" autosaveName="fontNameSuffixTableView" rowHeight="20" rowSizeStyle="automatic" headerView="0yu-AD-VVg" viewBased="YES" id="hv5-gg-7gl" userLabel="styleMappingTableView" customClass="TableView" customModule="CoreFont">
+                                                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" autosaveName="styleMappingTable" rowHeight="20" rowSizeStyle="automatic" headerView="0yu-AD-VVg" viewBased="YES" id="hv5-gg-7gl" userLabel="styleMappingTableView" customClass="TableView" customModule="CoreFont">
                                                                             <rect key="frame" x="0.0" y="0.0" width="697" height="354"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <size key="intercellSpacing" width="17" height="0.0"/>
