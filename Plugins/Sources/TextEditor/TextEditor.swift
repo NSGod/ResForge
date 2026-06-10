@@ -74,23 +74,39 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
         NotificationCenter.default.removeObserver(self, name: NSTextStorage.didProcessEditingNotification, object: textView.textStorage)
         textStorage = Styl.TextStorage()
         textView.layoutManager?.replaceTextStorage(textStorage)
-        NotificationCenter.default.addObserver(self, selector: #selector(didProcessEditing(_:)), name: NSTextStorage.didProcessEditingNotification, object: textView.textStorage)
         textView.string = String(data: resource.data, encoding: .macOSRoman) ?? ""
 
         do {
-            if let stylResource = manager.findResource(type: ResourceType("styl"), id: resource.id, currentDocumentOnly: true) {
+            if let stylResource = manager.findResource(type: .styl, id: resource.id, currentDocumentOnly: true) {
                 // TODO: Convert MacRoman byte offsets to UTF8 offsets.
                 self.stylResource = stylResource
                 style = try Styl(with: stylResource, count: resource.data.count)
                 for run in style.runs {
                     textView.textStorage?.addAttributes(run.style.attrs, range: run.range)
                 }
+            } else {
+                if resource.data.isEmpty {
+                    /// we're newly-created
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self else { return }
+                        /// schedule creating the cooresponding `styl` resource on the next event loop to allow
+                        /// first call to EditorManager.createResource to finish
+                        self.manager.createResource(type: .styl, id: resource.id) { stylRes in
+                            self.stylResource = stylRes
+                            do {
+                                self.style = try Styl(with: self.stylResource, count: self.resource.data.count)
+                            } catch {
+                                NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+                            }
+                        }
+                    }
+                }
             }
         } catch {
             self.window?.presentError(error)
         }
 
-        self.setDocumentEdited(false)
+        NotificationCenter.default.addObserver(self, selector: #selector(didProcessEditing(_:)), name: NSTextStorage.didProcessEditingNotification, object: textView.textStorage)
     }
 
     @IBAction func changeStyle(_ sender: Any) {

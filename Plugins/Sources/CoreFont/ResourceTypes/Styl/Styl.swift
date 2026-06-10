@@ -10,6 +10,10 @@ import RFSupport
 
 /// represents a `styl` resource
 
+extension ResourceType {
+    public static let styl = ResourceType("styl")
+}
+
 public final class Styl: CFResource {
     public var numRuns:     Int = 0
     public var runs:        [Run] = [] {
