@@ -85,9 +85,9 @@ extension Styl {
             if style.fontStyle.contains(.bold) {
                 font = NSFontManager.shared.convert(font, toHaveTrait: .boldFontMask)
                 if !NSFontManager.shared.traits(of: font).contains(.boldFontMask) {
-                    /// using negative stroke width allows for both stroke and fill
-                    /// Technical Q&A QA1531
-                    /// Drawing attributed strings that are both filled and stroked
+                    /// If we don't have intrinsic bold, synthesize bold using a slight stroke width;
+                    /// using a negative stroke width allows for both stroke and fill.
+                    /// See: Technical Q&A QA1531: Drawing attributed strings that are both filled and stroked
                     /// https://developer.apple.com/library/archive/qa/qa1531/_index.html#//apple_ref/doc/uid/DTS40007490
                     attrs[.strokeWidth] = -font.pointSize * 0.2
                 }
@@ -129,16 +129,28 @@ extension Styl {
                 if NSFontManager.shared.traits(of: newFont).contains(.condensedFontMask) {
                     font = newFont
                 } else {
-                    let transform = AffineTransform(scaleByX: newFont.pointSize * 0.82, byY: newFont.pointSize)
-                    font = NSFont(descriptor: font.fontDescriptor, textTransform: transform) ?? font
+                    /// be sure to apply to any existing text transform we already have from synth styles added above
+                    var finalTform = font.textTransform
+                    if finalTform == .identity {
+                        finalTform = AffineTransform(scaleByX: newFont.pointSize * 0.82, byY: newFont.pointSize * 1.0)
+                    } else {
+                        finalTform.append(AffineTransform(scaleByX: 0.82, byY: 1.0))
+                    }
+                    font = NSFont(descriptor: font.fontDescriptor, textTransform: finalTform) ?? font
                 }
             } else if style.fontStyle.contains(.extended) {
                 let newFont = NSFontManager.shared.convert(font, toHaveTrait: .expandedFontMask)
                 if NSFontManager.shared.traits(of: newFont).contains(.expandedFontMask) {
                     font = newFont
                 } else {
-                    let transform = AffineTransform(scaleByX: newFont.pointSize * 1.17, byY: newFont.pointSize)
-                    font = NSFont(descriptor: font.fontDescriptor, textTransform: transform) ?? font
+                    /// be sure to apply to any existing text transform we already have from synth styles added above
+                    var finalTform = font.textTransform
+                    if finalTform == .identity {
+                        finalTform = AffineTransform(scaleByX: newFont.pointSize * 1.17, byY: newFont.pointSize * 1.0)
+                    } else {
+                        finalTform.append(AffineTransform(scaleByX: 1.17, byY: 1.0))
+                    }
+                    font = NSFont(descriptor: font.fontDescriptor, textTransform: finalTform) ?? font
                 }
             }
             attrs[.font] = font
