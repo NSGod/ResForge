@@ -2,6 +2,14 @@ import Cocoa
 import RFSupport
 import CoreFont
 
+extension NSRange {
+    static let empty: NSRange = .init(location: 0, length: 0)
+
+    var isEmpty: Bool {
+        self == NSRange(location: 0, length: 0)
+    }
+}
+
 public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     public static var bundle: Bundle { .module }
     public static let supportedTypes = [
@@ -25,6 +33,37 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     var stylResource:   Resource!
     var style:          Styl!
     var textStorage:    Styl.TextStorage!
+    var currentStyle:   Styl.Style
+
+    var selectedRange: NSRange {
+        /// I think this should be safe?:
+        return textView.selectedRanges.first!.rangeValue
+    }
+
+    var configuredStyle: Styl.Style {
+        let obj = sizeComboBox.objectValue as? String ?? "12"
+        let fontPointSize = Int(obj) ?? 12
+        return .init(fontFamilyID: ResID(fontPopUpButton.selectedTag()), fontStyle: selectedFontStyle, fontPointSize: fontPointSize, color: colorWell.color)
+    }
+
+    var configuredAttrs: [NSAttributedString.Key: Any] {
+        return [.stylStyle: configuredStyle]
+    }
+
+    var selectedFontStyle: MacFontStyle {
+        var style = MacFontStyle.normal
+        for i in 0..<styleControl.segmentCount {
+            if styleControl.isSelected(forSegment: i) {
+                style.formUnion(MacFontStyle(rawValue: UInt16(styleControl.tag(forSegment: i))))
+            }
+        }
+        for i in 0..<widthControl.segmentCount {
+            if widthControl.isSelected(forSegment: i) {
+                style.formUnion(MacFontStyle(rawValue: UInt16(widthControl.tag(forSegment: i))))
+            }
+        }
+        return style
+    }
 
     private var selectedWidthTag = 0
 
@@ -35,6 +74,7 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     public required init(resource: Resource, manager: RFEditorManager) {
         self.resource = resource
         self.manager = manager
+        currentStyle = .default
         super.init(window: nil)
     }
 
@@ -74,16 +114,12 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
         NotificationCenter.default.removeObserver(self, name: NSTextStorage.didProcessEditingNotification, object: textView.textStorage)
         textStorage = Styl.TextStorage()
         textView.layoutManager?.replaceTextStorage(textStorage)
-        textView.string = String(data: resource.data, encoding: .macOSRoman) ?? ""
-
+        /// get style stuff loaded before setting `textView.string`
         do {
             if let stylResource = manager.findResource(type: .styl, id: resource.id, currentDocumentOnly: true) {
                 // TODO: Convert MacRoman byte offsets to UTF8 offsets.
                 self.stylResource = stylResource
                 style = try Styl(with: stylResource, count: resource.data.count)
-                for run in style.runs {
-                    textView.textStorage?.addAttributes(run.style.attrs, range: run.range)
-                }
             } else {
                 if resource.data.isEmpty {
                     /// we're newly-created
@@ -106,14 +142,22 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
             self.window?.presentError(error)
         }
 
+        /// this causes `textViewDidChangeSelection()` to be called
+        textView.string = String(data: resource.data, encoding: .macOSRoman) ?? ""
+        if let style {
+            for run in style.runs {
+                textView.textStorage?.addAttributes(run.style.attrs, range: run.range)
+            }
+        }
+        /// resend a synthesized `textViewDidChangeSelection()` event so the UI can be updated for selected text which now has proper `.stylStyle` information
+        textViewDidChangeSelection(Notification(name: NSTextView.didChangeSelectionNotification, object: textView))
+        window?.makeFirstResponder(textView)
         NotificationCenter.default.addObserver(self, selector: #selector(didProcessEditing(_:)), name: NSTextStorage.didProcessEditingNotification, object: textView.textStorage)
     }
 
     @IBAction func changeStyle(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
-        if let selectedRange = selectedRange() {
-            setAttributes(configuredAttrs(), range: selectedRange)
-        }
+        changeAttributes(sender)
     }
 
     @IBAction func changeWidth(_ sender: Any) {
@@ -139,36 +183,34 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
                 selectedWidthTag = 64
             }
         }
-        if let selectedRange = selectedRange() {
-            setAttributes(configuredAttrs(), range: selectedRange)
-        }
+        changeAttributes(sender)
     }
 
     @IBAction func changeFont(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
-        if let selectedRange = selectedRange() {
-            setAttributes(configuredAttrs(), range: selectedRange)
-        }
+        changeAttributes(sender)
     }
 
     @IBAction func changeColor(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
-        if let selectedRange = selectedRange() {
-            setAttributes(configuredAttrs(), range: selectedRange)
-        }
+        changeAttributes(sender)
     }
 
     @IBAction func changeFontSize(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
-        if let selectedRange = selectedRange() {
-            setAttributes(configuredAttrs(), range: selectedRange)
-        }
+        changeAttributes(sender)
     }
 
     @IBAction func changeLineHeight(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
-        if let selectedRange = selectedRange() {
-            setAttributes(configuredAttrs(), range: selectedRange)
+        changeAttributes(sender)
+    }
+
+    func changeAttributes(_ sender: Any) {
+        if selectedRange.location >= textStorage.length {
+            currentStyle = configuredStyle
+        } else {
+            setAttributes(configuredAttrs, range: selectedRange)
         }
     }
 
@@ -185,33 +227,6 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
         }
         textView.textStorage?.setAttributes(attributes, range: range)
         setDocumentEdited(true)
-    }
-
-    var selectedFontStyle: MacFontStyle {
-        var style = MacFontStyle.normal
-        for i in 0..<styleControl.segmentCount {
-            if styleControl.isSelected(forSegment: i) {
-                style.formUnion(MacFontStyle(rawValue: UInt16(styleControl.tag(forSegment: i))))
-            }
-        }
-        for i in 0..<widthControl.segmentCount {
-            if widthControl.isSelected(forSegment: i) {
-                style.formUnion(MacFontStyle(rawValue: UInt16(widthControl.tag(forSegment: i))))
-            }
-        }
-        return style
-    }
-
-    func configuredAttrs() -> [NSAttributedString.Key: Any] {
-        guard let obj = sizeComboBox.objectValue as? String else { return [:] }
-        guard let fontPointSize = Int(obj) else { return [:] }
-        let style = Styl.Style(fontFamilyID: ResID(fontPopUpButton.selectedTag()), fontStyle: selectedFontStyle, fontPointSize: fontPointSize, color: colorWell.color)
-        let attrs: [NSAttributedString.Key: Any] = [.stylStyle: style]
-        return attrs
-    }
-
-    func selectedRange() -> NSRange? {
-        textView.selectedRanges.first?.rangeValue
     }
 
     // MARK: - <NSTextViewDelegate>
@@ -238,23 +253,30 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     }
 
     @objc public func textViewDidChangeSelection(_ notification: Notification) {
-        // NSLog("\(type(of: self)).\(#function) notification == \(notification)")
+        NSLog("\(type(of: self)).\(#function) notification == \(notification)")
         let ranges: [NSRange] = textView.selectedRanges.map(\.rangeValue)
         if !ranges.isEmpty {
             var totalRange: NSRange = .init()
             for range in ranges {
-                if totalRange == .init() {
+                if totalRange.isEmpty {
                     totalRange = range
                 } else {
                     totalRange = totalRange.union(range)
                 }
             }
             if let textStorage {
-                if totalRange.location >= textStorage.length {
-                    return
+                let style: Styl.Style?
+                if textStorage.length == 0 {
+                    style = currentStyle
+                } else {
+                    if totalRange.location >= textStorage.length {
+                        totalRange.location = textStorage.length - 1
+                    }
+                    let attrs = textStorage.attributes(at: totalRange.location, effectiveRange: nil)
+                    style = attrs[.stylStyle] as? Styl.Style
                 }
-                let attrs = textStorage.attributes(at: totalRange.location, effectiveRange: nil)
-                if let style = attrs[.stylStyle] as? Styl.Style {
+                if let style {
+                    let attrs = style.attrs
                     for i in 0..<styleControl.segmentCount {
                         styleControl.setSelected(style.fontStyle.contains(MacFontStyle(rawValue: UInt16(styleControl.tag(forSegment: i)))), forSegment: i)
                     }
