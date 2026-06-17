@@ -48,14 +48,16 @@ extension Styl {
 
     /// working model class that's stored as a `.stylStyle` attribute in the attributed string
     public final class Style: CustomStringConvertible {
-        public var fontFamilyID:    ResID = 0
+        public var fontFamilyID:    ResID = .systemFont
         public var fontStyle:       MacFontStyle = .regular
-        public var fontPointSize:   Int = 0
+        public var fontPointSize:   Int = 12
         public var color:           NSColor = .black
 
         public var attrs:           [NSAttributedString.Key: Any] = [:]
 
         private static var briquetteIsSetup: Bool = false
+
+        public static let `default`: Style = .init(fontFamilyID: .systemFont, fontStyle: .regular, fontPointSize: 12, color: .black)
 
         public init(fontFamilyID: ResID, fontStyle: MacFontStyle, fontPointSize: Int, color: NSColor) {
             self.fontFamilyID = fontFamilyID
