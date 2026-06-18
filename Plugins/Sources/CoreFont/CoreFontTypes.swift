@@ -219,9 +219,15 @@ public struct RGBColor: Equatable, DataHandleWriting {
     }
 
     public init(_ color: NSColor) {
-        red = UInt16(color.redComponent * 65535.0)
-        green = UInt16(color.greenComponent * 65535.0)
-        blue = UInt16(color.blueComponent * 65535.0)
+        if let mColor = color.usingColorSpace(.sRGB) {
+            red = UInt16(mColor.redComponent * 65535.0)
+            green = UInt16(mColor.greenComponent * 65535.0)
+            blue = UInt16(mColor.blueComponent * 65535.0)
+        } else {
+            red = 0
+            green = 0
+            blue = 0
+        }
     }
 
     public func write(to handle: DataHandle, offset: Int? = nil) throws {
