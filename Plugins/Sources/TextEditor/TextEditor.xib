@@ -107,13 +107,22 @@
                                 <items>
                                     <menuItem title="System Font" state="on" id="eeq-g3-7do"/>
                                     <menuItem title="Application Font" tag="1" id="4Y6-Jx-NN6"/>
+                                    <menuItem title="Arial" tag="2001" id="rox-vN-cWu"/>
+                                    <menuItem title="Capitals" tag="2003" id="q3I-eB-gOu"/>
+                                    <menuItem title="Charcoal" tag="2002" id="IJy-Gz-APm"/>
+                                    <menuItem title="Chicago" tag="16383" id="p6K-hg-CRi"/>
                                     <menuItem title="Courier" tag="22" id="OtB-xG-XnY"/>
+                                    <menuItem title="Courier New" tag="2005" id="181-H2-2Ah"/>
                                     <menuItem title="Geneva" tag="3" id="taj-va-tNk"/>
                                     <menuItem title="Helvetica" tag="21" id="UK1-Tr-joe"/>
+                                    <menuItem title="Hoefler Text" tag="2013" id="QRZ-3Y-WtJ"/>
+                                    <menuItem title="Impact" tag="2039" id="icJ-zR-5Ce"/>
                                     <menuItem title="Monaco" tag="4" id="Yle-pF-OTT"/>
                                     <menuItem title="New York" tag="2" id="WAk-t3-ToB"/>
+                                    <menuItem title="Palatino" tag="16" id="WCE-HG-jVL"/>
                                     <menuItem title="Symbol" tag="23" id="oe3-lP-Euu"/>
                                     <menuItem title="Times" tag="20" id="RJk-gy-KXL"/>
+                                    <menuItem title="Times New Roman" tag="2010" id="LkW-QB-H6U"/>
                                 </items>
                             </menu>
                         </popUpButtonCell>

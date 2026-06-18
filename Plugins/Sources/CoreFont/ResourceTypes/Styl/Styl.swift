@@ -46,6 +46,7 @@ extension NSAttributedString.Key {
 
 extension Styl {
 
+    // MARK: -
     /// working model class that's stored as a `.stylStyle` attribute in the attributed string
     public final class Style: CustomStringConvertible {
         public var fontFamilyID:    ResID = .systemFont
@@ -55,7 +56,7 @@ extension Styl {
 
         public var attrs:           [NSAttributedString.Key: Any] = [:]
 
-        private static var briquetteIsSetup: Bool = false
+        private static var fontsAreSetup: Bool = false
 
         public static let `default`: Style = .init(fontFamilyID: .systemFont, fontStyle: .regular, fontPointSize: 12, color: .black)
 
@@ -73,13 +74,14 @@ extension Styl {
 
         public static func attributes(for style: Style) -> [NSAttributedString.Key: Any] {
             var attrs: [NSAttributedString.Key: Any] = [:]
-            if Self.briquetteIsSetup == false {
+            if Self.fontsAreSetup == false {
                 do {
                     try FontActivationManager.default.activateFontFile(forResource: "Briquette", withExtension: "otf")
+                    try FontActivationManager.default.activateFontFile(forResource: "Ditka", withExtension: "otf")
                 } catch {
                     NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
                 }
-                Self.briquetteIsSetup = true
+                Self.fontsAreSetup = true
             }
             let fontName = FOND.fontFamilyName(for: style.fontFamilyID)
             attrs[.foregroundColor] = style.color
@@ -161,6 +163,7 @@ extension Styl {
         }
     }
 
+    // MARK: -
     /// represents a style run that's stored in a `Styl` resource
     public final class Run: DataHandleWriting {
         public var startOffset:     Int = 0                     /// Int32

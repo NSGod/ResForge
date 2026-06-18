@@ -19,32 +19,43 @@ extension ResourceType {
 public typealias ResID         = Int16
 
 extension ResID {
-    public static let systemFont:       ResID = 0
-    public static let applicationFont:  ResID = 1
-    public static let briquette:        ResID = 0  // Charcoal equivalent
-    public static let newYork:          ResID = 2
-    public static let geneva:           ResID = 3
-    public static let monaco:           ResID = 4
-    public static let venice:           ResID = 5
-    public static let london:           ResID = 6
-    public static let athens:           ResID = 7
-    public static let sanFrancisco:     ResID = 8
-    public static let toronto:          ResID = 9
-    public static let cairo:            ResID = 11
-    public static let losAngeles:       ResID = 12
-    public static let times:            ResID = 20
-    public static let helvetica:        ResID = 21
-    public static let courier:          ResID = 22
-    public static let symbol:           ResID = 23
-    public static let mobile:           ResID = 24
-    public static let copperplate:      ResID = 2003 // Capitals
+    public static let systemFont:           ResID = 0
+    public static let applicationFont:      ResID = 1
+    public static let newYork:              ResID = 2
+    public static let geneva:               ResID = 3
+    public static let monaco:               ResID = 4
+    public static let venice:               ResID = 5
+    public static let london:               ResID = 6
+    public static let athens:               ResID = 7
+    public static let sanFrancisco:         ResID = 8
+    public static let toronto:              ResID = 9
+    public static let cairo:                ResID = 11
+    public static let losAngeles:           ResID = 12
+    public static let palatino:             ResID = 16
+    public static let times:                ResID = 20
+    public static let helvetica:            ResID = 21
+    public static let courier:              ResID = 22
+    public static let symbol:               ResID = 23
+    public static let mobile:               ResID = 24
+    public static let arial:                ResID = 2001
+    public static let charcoal:             ResID = 2002
+    public static let briquette:            ResID = 2002    // Charcoal equivalent
+    public static let capitals:             ResID = 2003
+    public static let copperplate:          ResID = 2003    // Capitals approximation
+    public static let courierNew:           ResID = 2005
+    public static let timesNewRoman:        ResID = 2010
+    public static let hoeflerText:          ResID = 2013
+    public static let impact:               ResID = 2039
+    public static let chicago:              ResID = 16383
+    public static let ditka:                ResID = 16383   // Chicago equivalent
 }
 
 extension FOND {
 
     public static func fontFamilyName(for id: ResID) -> String {
         switch id {
-            case .briquette: return "Briquette"
+            case .systemFont: return "Briquette"
+            case .applicationFont: return "Geneva"
             case .newYork: return "New York"
             case .geneva: return "Geneva"
             case .monaco: return "Monaco"
@@ -55,12 +66,23 @@ extension FOND {
             case .toronto: return "Toronto"
             case .cairo: return "Cairo"
             case .losAngeles: return "Los Angeles"
+            case .palatino: return "Palatino"
             case .times: return "Times"
             case .helvetica: return "Helvetica"
             case .courier: return "Courier"
             case .symbol: return "Symbol"
             case .mobile: return "Mobile"
             case .copperplate: return "Copperplate"
+            case .capitals: return "Capitals"
+            case .arial: return "Arial"
+            case .briquette: return "Briquette"
+            case .charcoal: return "Charcoal"
+            case .courierNew: return "Courier New"
+            case .timesNewRoman: return "Times New Roman"
+            case .hoeflerText: return "Hoefler Text"
+            case .impact: return "Impact"
+            case .ditka: return "Ditka"
+            case .chicago: return "Chicago"
             default:
                 return "Geneva"
         }
@@ -69,8 +91,8 @@ extension FOND {
     public static func fontFamilyID(for font: NSFont) -> ResID {
         if let familyName = font.familyName {
             switch familyName {
-                case "Charcoal": return .systemFont
-                case "Briquette": return .systemFont
+                case "Charcoal": return .charcoal
+                case "Briquette": return .briquette
                 case "New York": return .newYork
                 case "Geneva": return .geneva
                 case "Monaco": return .monaco
@@ -81,12 +103,21 @@ extension FOND {
                 case "Toronto": return .toronto
                 case "Cairo": return .cairo
                 case "Los Angeles": return .losAngeles
+                case "Palatino": return .palatino
                 case "Times": return .times
                 case "Helvetica": return .helvetica
                 case "Courier": return .courier
                 case "Symbol": return .symbol
                 case "Mobile": return .mobile
+                case "Capitals": return .capitals
                 case "Copperplate": return .copperplate
+                case "Arial": return .arial
+                case "Courier New": return .courierNew
+                case "Times New Roman": return .timesNewRoman
+                case "Hoefler Text": return .hoeflerText
+                case "Impact": return .impact
+                case "Chicago": return .chicago
+                case "Ditka": return .ditka
                 default:
                     return .applicationFont
             }
