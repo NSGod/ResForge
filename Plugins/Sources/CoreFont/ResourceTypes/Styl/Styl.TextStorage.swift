@@ -19,7 +19,15 @@ extension Styl {
             storage.enumerateAttributes(in: fullRange, using: { (attrs, range, _) in
                 guard let style = attrs[.stylStyle] as? Style else { return }
                 let run = Run(style: style, range: range)
-                runs.append(run)
+                if let lastRun = runs.last {
+                    if lastRun.canMerge(with: run) {
+                        lastRun.merge(with: run)
+                    } else {
+                        runs.append(run)
+                    }
+                } else {
+                    runs.append(run)
+                }
             })
             return runs
         }

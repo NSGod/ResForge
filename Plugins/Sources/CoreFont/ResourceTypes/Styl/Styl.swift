@@ -165,7 +165,7 @@ extension Styl {
 
     // MARK: -
     /// represents a style run that's stored in a `Styl` resource
-    public final class Run: DataHandleWriting {
+    public final class Run: DataHandleWriting, Equatable {
         public var startOffset:     Int = 0                     /// Int32
         public var lineHeight:      Int = 0                     /// Int16
         public var fontAscent:      Int = 0                     /// Int16
@@ -223,6 +223,30 @@ extension Styl {
             handle.write(fontStyle, bigEndian: false)
             handle.write(UInt16(fontPointSize))
             try rgbColor.write(to: handle)
+        }
+
+        public func canMerge(with other: Run) -> Bool {
+            return lineHeight == other.lineHeight &&
+            fontAscent == other.fontAscent &&
+            fontFamilyID == other.fontFamilyID &&
+            fontStyle == other.fontStyle &&
+            fontPointSize == other.fontPointSize &&
+            rgbColor == other.rgbColor
+        }
+
+        public func merge(with other: Run) {
+            assert(canMerge(with: other))
+            startOffset = min(startOffset, other.startOffset)
+        }
+
+        public static func == (lhs: Run, rhs: Run) -> Bool {
+            return lhs.startOffset == rhs.startOffset &&
+            lhs.lineHeight == rhs.lineHeight &&
+            lhs.fontAscent == rhs.fontAscent &&
+            lhs.fontFamilyID == rhs.fontFamilyID &&
+            lhs.fontStyle == rhs.fontStyle &&
+            lhs.fontPointSize == rhs.fontPointSize &&
+            lhs.rgbColor == rhs.rgbColor
         }
     }
 }
