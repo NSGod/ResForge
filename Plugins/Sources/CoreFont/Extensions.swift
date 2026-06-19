@@ -53,7 +53,7 @@ public extension BinaryFloatingPoint {
 }
 
 public extension RFEditorManager {
-    
+
     func uniqueResID(for type: ResourceType) -> ResID {
         var id: ResID = ResID.random(in: 1024..<0x7FFF)
         while true {

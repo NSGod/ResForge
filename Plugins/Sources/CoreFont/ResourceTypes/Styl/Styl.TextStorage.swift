@@ -35,8 +35,10 @@ extension Styl {
 
         public override func replaceCharacters(in range: NSRange, with str: String) {
             // NSLog("\(type(of: self)).\(#function) range: \(range)")
-            storage.replaceCharacters(in: range, with: str)
-            edited(.editedCharacters, range: range, changeInLength: (str as NSString).length - range.length)
+            /// replace `\n` with `\r`:
+            let mString = str.replacingOccurrences(of: "\n", with: "\r")
+            storage.replaceCharacters(in: range, with: mString)
+            edited(.editedCharacters, range: range, changeInLength: (mString as NSString).length - range.length)
         }
 
         public override func setAttributes(_ attrs: [NSAttributedString.Key: Any]?, range: NSRange) {
