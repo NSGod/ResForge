@@ -25,7 +25,6 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     @IBOutlet weak var colorWell:               NSColorWell!
     @IBOutlet weak var fontPopUpButton:         NSPopUpButton!
     @IBOutlet weak var sizeComboBox:            NSComboBox!
-    @IBOutlet weak var lineHeightPopUpButton:   NSPopUpButton!
 
     public let resource: Resource
     private let manager: RFEditorManager

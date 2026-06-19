@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24765" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24765"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TextEditor" customModuleProvider="target">
             <connections>
-                <outlet property="colorWell" destination="R0u-ay-Gh1" id="mJY-NS-GCq"/>
-                <outlet property="fontPopUpButton" destination="Ydn-Xa-UI8" id="Yxv-B3-Nus"/>
-                <outlet property="lineHeightPopUpButton" destination="0hi-6H-8fc" id="Wrq-2z-Jia"/>
-                <outlet property="sizeComboBox" destination="tfG-HO-hEi" id="sU2-UF-hCd"/>
-                <outlet property="styleControl" destination="Ekw-7F-nya" id="OCL-te-OfG"/>
+                <outlet property="colorWell" destination="R0u-ay-Gh1" id="6gE-mo-EM8"/>
+                <outlet property="fontPopUpButton" destination="Ydn-Xa-UI8" id="RuU-y8-7Xc"/>
+                <outlet property="sizeComboBox" destination="tfG-HO-hEi" id="YTI-Ig-Rl5"/>
+                <outlet property="styleControl" destination="Ekw-7F-nya" id="0BH-6f-52f"/>
                 <outlet property="textView" destination="QoM-iV-1Mc" id="r5G-V1-ikw"/>
-                <outlet property="widthControl" destination="cca-z6-Fdt" id="S7J-sg-6W7"/>
+                <outlet property="widthControl" destination="cca-z6-Fdt" id="dFR-uk-jN1"/>
                 <outlet property="window" destination="17" id="22"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <window title="Text Editor" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" visibleAtLaunch="NO" frameAutosaveName="textEditor" animationBehavior="default" tabbingMode="disallowed" id="17">
+        <window title="Text Editor" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" visibleAtLaunch="NO" frameAutosaveName="textEditor" animationBehavior="default" tabbingMode="disallowed" toolbarStyle="expanded" id="17">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="0.0" y="556" width="540" height="418"/>
@@ -31,17 +29,17 @@
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <scrollView appearanceType="aqua" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cyH-JA-sTd">
-                        <rect key="frame" x="0.0" y="0.0" width="540" height="364"/>
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="385"/>
                         <clipView key="contentView" drawsBackground="NO" id="0vp-F7-Zlw">
-                            <rect key="frame" x="0.0" y="0.0" width="523" height="364"/>
+                            <rect key="frame" x="0.0" y="0.0" width="523" height="385"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <textView wantsLayer="YES" importsGraphics="NO" verticallyResizable="YES" usesInspectorBar="YES" findStyle="bar" allowsUndo="YES" usesRuler="YES" smartInsertDelete="YES" id="QoM-iV-1Mc" userLabel="textView">
-                                    <rect key="frame" x="0.0" y="0.0" width="523" height="364"/>
+                                <textView wantsLayer="YES" importsGraphics="NO" verticallyResizable="YES" findStyle="bar" allowsUndo="YES" usesRuler="YES" smartInsertDelete="YES" id="QoM-iV-1Mc" userLabel="textView">
+                                    <rect key="frame" x="0.0" y="0.0" width="523" height="385"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <size key="minSize" width="523" height="364"/>
+                                    <size key="minSize" width="523" height="385"/>
                                     <size key="maxSize" width="540" height="10000000"/>
                                     <connections>
                                         <outlet property="delegate" destination="-2" id="mkG-HP-FvQ"/>
@@ -54,13 +52,12 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="Vi3-05-oo8">
-                            <rect key="frame" x="523" y="0.0" width="17" height="364"/>
+                            <rect key="frame" x="523" y="0.0" width="17" height="385"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
-                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ekw-7F-nya">
+                    <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ekw-7F-nya">
                         <rect key="frame" x="11" y="393" width="124" height="20"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" segmentDistribution="fillEqually" style="rounded" trackingMode="selectAny" id="07y-nG-JYP">
                             <font key="font" metaFont="smallSystem"/>
                             <segments>
@@ -75,9 +72,8 @@
                             <action selector="changeStyle:" target="-2" id="UL3-d4-fZQ"/>
                         </connections>
                     </segmentedControl>
-                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cca-z6-Fdt">
+                    <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cca-z6-Fdt">
                         <rect key="frame" x="141" y="393" width="49" height="20"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" segmentDistribution="fillEqually" style="rounded" trackingMode="selectOne" id="0ag-oD-ule">
                             <font key="font" metaFont="smallSystem"/>
                             <segments>
@@ -89,17 +85,19 @@
                             <action selector="changeWidth:" target="-2" id="GYg-Qc-TfO"/>
                         </connections>
                     </segmentedControl>
-                    <colorWell toolTip="Click to choose the text color" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R0u-ay-Gh1">
+                    <colorWell toolTip="Click to choose the text color" translatesAutoresizingMaskIntoConstraints="NO" id="R0u-ay-Gh1">
                         <rect key="frame" x="196" y="393" width="21" height="20"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="20" id="94X-G6-UUj"/>
+                            <constraint firstAttribute="width" constant="21" id="b8M-ie-XW4"/>
+                        </constraints>
                         <color key="color" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <connections>
                             <action selector="changeColor:" target="-2" id="hvm-Ne-8sd"/>
                         </connections>
                     </colorWell>
-                    <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ydn-Xa-UI8">
+                    <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ydn-Xa-UI8">
                         <rect key="frame" x="223" y="393" width="141" height="20"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="push" title="System Font" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="eeq-g3-7do" id="Sj7-pR-pq1">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="smallSystem"/>
@@ -126,13 +124,18 @@
                                 </items>
                             </menu>
                         </popUpButtonCell>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="141" id="f2a-2s-9Je"/>
+                        </constraints>
                         <connections>
                             <action selector="changeFont:" target="-2" id="Bia-zu-jpn"/>
                         </connections>
                     </popUpButton>
-                    <comboBox toolTip="Set the font size" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tfG-HO-hEi">
+                    <comboBox toolTip="Set the font size" focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tfG-HO-hEi">
                         <rect key="frame" x="370" y="393" width="55" height="20"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="55" id="OFw-mf-3nz"/>
+                        </constraints>
                         <comboBoxCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" completes="NO" numberOfVisibleItems="14" id="02l-lw-hEU">
                             <font key="font" metaFont="smallSystem"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -159,40 +162,26 @@
                             <action selector="changeFontSize:" target="-2" id="Qph-DP-P5i"/>
                         </connections>
                     </comboBox>
-                    <popUpButton toolTip="Line and paragraph spacing" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0hi-6H-8fc">
-                        <rect key="frame" x="431" y="393" width="57" height="20"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <popUpButtonCell key="cell" type="push" title="1.0" bezelStyle="rounded" alignment="center" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="border" tag="10" imageScaling="proportionallyDown" inset="2" selectedItem="ftb-sb-XuO" id="Sp1-EZ-XD6">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="smallSystem"/>
-                            <menu key="menu" id="UkD-5a-Xz1">
-                                <items>
-                                    <menuItem title="0.8" tag="8" id="ZiS-A6-y9Y"/>
-                                    <menuItem title="0.9" tag="9" id="14H-VE-Mov"/>
-                                    <menuItem title="1.0" state="on" tag="10" id="ftb-sb-XuO"/>
-                                    <menuItem title="1.1" tag="11" id="4Q5-Nq-fdc"/>
-                                    <menuItem title="1.2" tag="12" id="GFP-qJ-xp1"/>
-                                    <menuItem title="1.3" tag="13" id="LbX-Ta-o3b"/>
-                                    <menuItem title="1.4" tag="14" id="5JM-ch-C3o"/>
-                                    <menuItem title="1.5" tag="15" id="JQJ-t4-TqC"/>
-                                    <menuItem title="2.0" tag="20" id="bWe-y7-lIE"/>
-                                </items>
-                            </menu>
-                        </popUpButtonCell>
-                        <connections>
-                            <action selector="changeLineHeight:" target="-2" id="ekt-FZ-1L1"/>
-                        </connections>
-                    </popUpButton>
                 </subviews>
                 <constraints>
                     <constraint firstItem="cyH-JA-sTd" firstAttribute="leading" secondItem="18" secondAttribute="leading" id="1vL-Yd-BN9"/>
+                    <constraint firstItem="R0u-ay-Gh1" firstAttribute="leading" secondItem="cca-z6-Fdt" secondAttribute="trailing" constant="6" id="7Cj-to-GI0"/>
+                    <constraint firstItem="Ekw-7F-nya" firstAttribute="leading" secondItem="18" secondAttribute="leading" constant="11" id="PXB-Pc-9vU"/>
                     <constraint firstAttribute="trailing" secondItem="cyH-JA-sTd" secondAttribute="trailing" id="UU8-Po-6WV"/>
+                    <constraint firstItem="tfG-HO-hEi" firstAttribute="top" secondItem="18" secondAttribute="top" constant="5" id="XFV-an-HbG"/>
+                    <constraint firstItem="tfG-HO-hEi" firstAttribute="leading" secondItem="Ydn-Xa-UI8" secondAttribute="trailing" constant="6" id="YJn-Xi-1Pn"/>
                     <constraint firstAttribute="bottom" secondItem="cyH-JA-sTd" secondAttribute="bottom" id="ahP-Ig-A7L"/>
-                    <constraint firstItem="cyH-JA-sTd" firstAttribute="top" secondItem="18" secondAttribute="top" constant="54" id="iP9-jo-FVp"/>
+                    <constraint firstItem="R0u-ay-Gh1" firstAttribute="top" secondItem="18" secondAttribute="top" constant="5" id="e3e-TB-zsk"/>
+                    <constraint firstItem="Ydn-Xa-UI8" firstAttribute="top" secondItem="18" secondAttribute="top" constant="5" id="eSb-kP-R3g"/>
+                    <constraint firstItem="cyH-JA-sTd" firstAttribute="top" secondItem="18" secondAttribute="top" constant="33" id="iP9-jo-FVp"/>
+                    <constraint firstItem="Ydn-Xa-UI8" firstAttribute="leading" secondItem="R0u-ay-Gh1" secondAttribute="trailing" constant="6" id="rTW-Tn-BQb"/>
+                    <constraint firstItem="cca-z6-Fdt" firstAttribute="top" secondItem="18" secondAttribute="top" constant="5" id="tAi-6q-V4K"/>
+                    <constraint firstItem="cca-z6-Fdt" firstAttribute="leading" secondItem="Ekw-7F-nya" secondAttribute="trailing" constant="6" id="x4y-JI-ygC"/>
+                    <constraint firstItem="Ekw-7F-nya" firstAttribute="top" secondItem="18" secondAttribute="top" constant="5" id="xJ0-mj-ZHg"/>
                 </constraints>
             </view>
             <connections>
-                <outlet property="initialFirstResponder" destination="0hi-6H-8fc" id="OKG-YJ-I94"/>
+                <outlet property="delegate" destination="-2" id="6wc-MH-R6I"/>
             </connections>
             <point key="canvasLocation" x="206" y="474"/>
         </window>
