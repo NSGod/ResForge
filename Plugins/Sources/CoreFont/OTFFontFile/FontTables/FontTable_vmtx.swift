@@ -89,6 +89,14 @@ public final class VerticalMetric: FontTableNode {
         return table.fontGlyphName(for: glyphID)
     }()
 
+    /// for copying:
+    public init(glyphID: GlyphID, advanceHeight: UInt16, topSideBearing: Int16, table: FontTable) {
+        self.glyphID = glyphID
+        self.advanceHeight = advanceHeight
+        self.topSideBearing = topSideBearing
+        try! super.init(nil, table: table)
+    }
+
     public init(_ reader: BinaryDataReader, glyphID: GlyphID, table: FontTable) throws {
         self.glyphID = glyphID
         advanceHeight = try reader.read()
@@ -102,10 +110,7 @@ public final class VerticalMetric: FontTableNode {
     }
 
     public override func copy(with zone: NSZone? = nil) -> Any {
-        let copy = super.copy(with: zone) as! VerticalMetric
-        copy.advanceHeight = advanceHeight
-        copy.topSideBearing = topSideBearing
-        copy.glyphID = glyphID
+        let copy = VerticalMetric(glyphID: glyphID, advanceHeight: advanceHeight, topSideBearing: topSideBearing, table: table)
         return copy
     }
 }

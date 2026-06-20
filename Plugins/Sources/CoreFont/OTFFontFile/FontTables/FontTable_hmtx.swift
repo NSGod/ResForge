@@ -89,6 +89,14 @@ public final class HorizontalMetric: FontTableNode {
         return table.fontGlyphName(for: glyphID)
     }()
 
+    /// for copying:
+    public init(glyphID: GlyphID, advanceWidth: UInt16, leftSideBearing: Int16, table: FontTable) {
+        self.glyphID = glyphID
+        self.advanceWidth = advanceWidth
+        self.leftSideBearing = leftSideBearing
+        try! super.init(nil, table: table)
+    }
+
     public init(_ reader: BinaryDataReader, glyphID: GlyphID, table: FontTable) throws {
         self.glyphID = glyphID
         advanceWidth = try reader.read()
@@ -102,10 +110,7 @@ public final class HorizontalMetric: FontTableNode {
     }
 
     public override func copy(with zone: NSZone? = nil) -> Any {
-        let copy = super.copy(with: zone) as! HorizontalMetric
-        copy.advanceWidth = advanceWidth
-        copy.leftSideBearing = leftSideBearing
-        copy.glyphID = glyphID
+        let copy = HorizontalMetric(glyphID: glyphID, advanceWidth: advanceWidth, leftSideBearing: leftSideBearing, table: table)
         return copy
     }
 }
