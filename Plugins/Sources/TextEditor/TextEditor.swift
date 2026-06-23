@@ -65,6 +65,24 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
         return style
     }
 
+    var selectionStyle: Styl.Style {
+        var range = selectedRange
+        if let textStorage {
+            let style: Styl.Style?
+            if textStorage.length == 0 {
+                style = currentStyle
+            } else {
+                if range.location >= textStorage.length {
+                    range.location = textStorage.length - 1
+                }
+                let attrs = textStorage.attributes(at: range.location, effectiveRange: nil)
+                style = attrs[.stylStyle] as? Styl.Style
+            }
+            return style ?? .default
+        }
+        return .default
+    }
+
     private var selectedWidthTag = 0
 
     public override var windowNibName: String {
@@ -149,9 +167,12 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
                 textView.textStorage?.addAttributes(run.style.attrs, range: run.range)
             }
         }
-        /// resend a synthesized `textViewDidChangeSelection()` event so the UI can be updated for selected text which now has proper `.stylStyle` information
-        textViewDidChangeSelection(Notification(name: NSTextView.didChangeSelectionNotification, object: textView))
         window?.makeFirstResponder(textView)
+        /// reselect the current selection to generate a `textViewDidChangeSelection()` notification
+        /// so the UI can be updated for the selected text which now has proper `.stylStyle` information
+        textView.setSelectedRange(textView.selectedRange(), affinity: .upstream, stillSelecting: false)
+        /// set the typing attributes to current selection attributes
+        textView.typingAttributes = selectionStyle.attrs
         NotificationCenter.default.addObserver(self, selector: #selector(didProcessEditing(_:)), name: NSTextStorage.didProcessEditingNotification, object: textView.textStorage)
     }
 
@@ -254,52 +275,28 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     }
 
     @objc public func textViewDidChangeSelection(_ notification: Notification) {
-        NSLog("\(type(of: self)).\(#function) notification == \(notification)")
-        let ranges: [NSRange] = textView.selectedRanges.map(\.rangeValue)
-        if !ranges.isEmpty {
-            var totalRange: NSRange = .init()
-            for range in ranges {
-                if totalRange.isEmpty {
-                    totalRange = range
-                } else {
-                    totalRange = totalRange.union(range)
-                }
-            }
-            if let textStorage {
-                let style: Styl.Style?
-                if textStorage.length == 0 {
-                    style = currentStyle
-                } else {
-                    if totalRange.location >= textStorage.length {
-                        totalRange.location = textStorage.length - 1
-                    }
-                    let attrs = textStorage.attributes(at: totalRange.location, effectiveRange: nil)
-                    style = attrs[.stylStyle] as? Styl.Style
-                }
-                if let style {
-                    let attrs = style.attrs
-                    for i in 0..<styleControl.segmentCount {
-                        styleControl.setSelected(style.fontStyle.contains(MacFontStyle(rawValue: UInt16(styleControl.tag(forSegment: i)))), forSegment: i)
-                    }
-                    selectedWidthTag = 0
-                    for i in 0..<widthControl.segmentCount {
-                        widthControl.setSelected(style.fontStyle.contains(MacFontStyle(rawValue: UInt16(widthControl.tag(forSegment: i)))), forSegment: i)
-                        if widthControl.isSelected(forSegment: i) {
-                            selectedWidthTag = widthControl.tag(forSegment: i)
-                        }
-                    }
-                    sizeComboBox.objectValue = "\(style.fontPointSize)"
-                    if style.fontStyle.contains(.shadow) {
-                        if let shadow = attrs[.shadow] as? NSShadow, let color = shadow.shadowColor {
-                            colorWell.color = color
-                        }
-                    } else {
-                        colorWell.color = attrs[.foregroundColor] as! NSColor
-                    }
-                    fontPopUpButton.selectItem(withTag: Int(style.fontFamilyID))
-                }
+        // NSLog("\(type(of: self)).\(#function) notification == \(notification)")
+        let style = selectionStyle
+        let attrs = style.attrs
+        for i in 0..<styleControl.segmentCount {
+            styleControl.setSelected(style.fontStyle.contains(MacFontStyle(rawValue: UInt16(styleControl.tag(forSegment: i)))), forSegment: i)
+        }
+        selectedWidthTag = 0
+        for i in 0..<widthControl.segmentCount {
+            widthControl.setSelected(style.fontStyle.contains(MacFontStyle(rawValue: UInt16(widthControl.tag(forSegment: i)))), forSegment: i)
+            if widthControl.isSelected(forSegment: i) {
+                selectedWidthTag = widthControl.tag(forSegment: i)
             }
         }
+        sizeComboBox.objectValue = "\(style.fontPointSize)"
+        if style.fontStyle.contains(.shadow) {
+            if let shadow = attrs[.shadow] as? NSShadow, let color = shadow.shadowColor {
+                colorWell.color = color
+            }
+        } else {
+            colorWell.color = attrs[.foregroundColor] as! NSColor
+        }
+        fontPopUpButton.selectItem(withTag: Int(style.fontFamilyID))
     }
 
     @objc func didProcessEditing(_ notification: Notification) {
