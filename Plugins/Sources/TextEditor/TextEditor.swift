@@ -30,7 +30,8 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     private let manager: RFEditorManager
 
     var stylResource:   Resource!
-    var style:          Styl!
+    var styl:           Styl!
+
     var textStorage:    Styl.TextStorage!
     var currentStyle:   Styl.Style
 
@@ -42,14 +43,14 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     var configuredStyle: Styl.Style {
         let obj = sizeComboBox.objectValue as? String ?? "12"
         let fontPointSize = Int(obj) ?? 12
-        return .init(fontFamilyID: ResID(fontPopUpButton.selectedTag()), fontStyle: selectedFontStyle, fontPointSize: fontPointSize, color: colorWell.color)
+        return .init(fontFamilyID: ResID(fontPopUpButton.selectedTag()), fontStyle: configuredFontStyle, fontPointSize: fontPointSize, color: colorWell.color)
     }
 
     var configuredAttrs: [NSAttributedString.Key: Any] {
         return [.stylStyle: configuredStyle]
     }
 
-    var selectedFontStyle: MacFontStyle {
+    var configuredFontStyle: MacFontStyle {
         var style = MacFontStyle.normal
         for i in 0..<styleControl.segmentCount {
             if styleControl.isSelected(forSegment: i) {
@@ -93,8 +94,8 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
         do {
             resource.data = textView.string.data(using: .macOSRoman, allowLossyConversion: true) ?? Data()
             if let txtStorage = textView.textStorage as? Styl.TextStorage {
-                style.runs = txtStorage.styleRuns
-                stylResource.data = try style.data()
+                styl.runs = txtStorage.styleRuns
+                stylResource.data = try styl.data()
             }
         } catch {
             self.window?.presentError(error)
@@ -118,7 +119,7 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
             if let stylResource = manager.findResource(type: .styl, id: resource.id, currentDocumentOnly: true) {
                 // TODO: Convert MacRoman byte offsets to UTF8 offsets.
                 self.stylResource = stylResource
-                style = try Styl(with: stylResource, count: resource.data.count)
+                styl = try Styl(with: stylResource, count: resource.data.count)
             } else {
                 if resource.data.isEmpty {
                     /// we're newly-created
@@ -129,7 +130,7 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
                         self.manager.createResource(type: .styl, id: resource.id) { stylRes in
                             self.stylResource = stylRes
                             do {
-                                self.style = try Styl(with: self.stylResource, count: self.resource.data.count)
+                                self.styl = try Styl(with: self.stylResource, count: self.resource.data.count)
                             } catch {
                                 NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
                             }
@@ -143,8 +144,8 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
 
         /// this causes `textViewDidChangeSelection()` to be called
         textView.string = String(data: resource.data, encoding: .macOSRoman) ?? ""
-        if let style {
-            for run in style.runs {
+        if let styl {
+            for run in styl.runs {
                 textView.textStorage?.addAttributes(run.style.attrs, range: run.range)
             }
         }
@@ -154,6 +155,7 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(didProcessEditing(_:)), name: NSTextStorage.didProcessEditingNotification, object: textView.textStorage)
     }
 
+    // MARK: - actions
     @IBAction func changeStyle(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
         changeAttributes(sender)
