@@ -2,14 +2,6 @@ import Cocoa
 import RFSupport
 import CoreFont
 
-extension NSRange {
-    static let empty: NSRange = .init(location: 0, length: 0)
-
-    var isEmpty: Bool {
-        self == NSRange(location: 0, length: 0)
-    }
-}
-
 public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     public static var bundle: Bundle { .module }
     public static let supportedTypes = [
@@ -36,7 +28,6 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     var currentStyle:   Styl.Style
 
     var selectedRange: NSRange {
-        /// I think this should be safe?:
         return textView.selectedRanges.first!.rangeValue
     }
 
@@ -178,13 +169,12 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
 
     // MARK: - actions
     @IBAction func changeStyle(_ sender: Any) {
-        NSLog("\(type(of: self)).\(#function)")
         changeAttributes(sender)
     }
 
     @IBAction func changeWidth(_ sender: Any) {
-        NSLog("\(type(of: self)).\(#function)")
-        /// make the condensed/extended choices mutually-exclusive, like radio buttons
+        /// MacOS 9 doesn't appear to care if both condensed & extended set, but it doesn't make much sense to
+        /// allow it. So, make the condensed/extended choices mutually-exclusive, like radio buttons.
         if widthControl.isSelected(forSegment: 0) {
             if selectedWidthTag == 32 {
                 /// currently on, turn off
@@ -209,22 +199,14 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     }
 
     @IBAction func changeFont(_ sender: Any) {
-        NSLog("\(type(of: self)).\(#function)")
         changeAttributes(sender)
     }
 
     @IBAction func changeColor(_ sender: Any) {
-        NSLog("\(type(of: self)).\(#function)")
         changeAttributes(sender)
     }
 
     @IBAction func changeFontSize(_ sender: Any) {
-        NSLog("\(type(of: self)).\(#function)")
-        changeAttributes(sender)
-    }
-
-    @IBAction func changeLineHeight(_ sender: Any) {
-        NSLog("\(type(of: self)).\(#function)")
         changeAttributes(sender)
     }
 
@@ -252,13 +234,7 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     }
 
     // MARK: - <NSTextViewDelegate>
-    public func textView(_ textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
-        NSLog("\(type(of: self)).\(#function) \(NSStringFromSelector(commandSelector))")
-        return false
-    }
-
     public func textView(_ textView: NSTextView, willChangeSelectionFromCharacterRanges oldSelectedCharRanges: [NSValue], toCharacterRanges newSelectedCharRanges: [NSValue]) -> [NSValue] {
-        // NSLog("\(type(of: self)).\(#function) old == \(oldSelectedCharRanges), new == \(newSelectedCharRanges)")
         /// We want only a contiguous selection
         if newSelectedCharRanges.isEmpty {
             return newSelectedCharRanges
