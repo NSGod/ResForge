@@ -89,8 +89,8 @@ extension Styl {
             if style.fontStyle.contains(.bold) {
                 font = NSFontManager.shared.convert(font, toHaveTrait: .boldFontMask)
                 if !NSFontManager.shared.traits(of: font).contains(.boldFontMask) {
-                    /// If we don't have intrinsic bold, synthesize bold using a slight stroke width;
-                    /// using a negative stroke width allows for both stroke and fill.
+                    /// If we don't have intrinsic bold, synthesize bold using a slight stroke width.
+                    /// Using a negative stroke width allows for both stroke and fill.
                     /// See: Technical Q&A QA1531: Drawing attributed strings that are both filled and stroked
                     /// https://developer.apple.com/library/archive/qa/qa1531/_index.html#//apple_ref/doc/uid/DTS40007490
                     attrs[.strokeWidth] = -font.pointSize * 0.2
@@ -109,7 +109,7 @@ extension Styl {
                 }
             }
             if style.fontStyle.contains(.shadow) {
-                /// `NSColor.clear` doesn't work; not opaque, so can't cast shadow?
+                /// `NSColor.clear` doesn't work; perhaps it's not opaque, so can't cast shadow?
                 attrs[.foregroundColor] = NSColor.white
                 let shadow = NSShadow()
                 shadow.shadowColor = style.color
@@ -129,6 +129,8 @@ extension Styl {
                 attrs[.underlineStyle] = NSUnderlineStyle.single.rawValue
             }
             if style.fontStyle.contains(.condensed) {
+                /// Note that some fonts like `Impact` are already considered Condensed (via `OS/2.usWidthClass`)
+                /// so we won't apply a synthetic transform to it.
                 let newFont = NSFontManager.shared.convert(font, toHaveTrait: .condensedFontMask)
                 if NSFontManager.shared.traits(of: newFont).contains(.condensedFontMask) {
                     font = newFont
