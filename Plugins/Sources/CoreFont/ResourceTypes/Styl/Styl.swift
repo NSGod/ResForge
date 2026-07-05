@@ -78,6 +78,7 @@ extension Styl {
                 do {
                     try FontActivationManager.default.activateFontFile(forResource: "Briquette", withExtension: "otf")
                     try FontActivationManager.default.activateFontFile(forResource: "Ditka", withExtension: "otf")
+                    try FontActivationManager.default.activateFontFile(forResource: "Uppercase", withExtension: "otf")
                 } catch {
                     NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
                 }
