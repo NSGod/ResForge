@@ -84,7 +84,7 @@ let package = Package(
             dependencies: [.target(name: "RFSupport"),
                            .product(name: "OrderedCollections", package:"swift-collections")],
                 resources: [.copy("Fonts/Briquette.otf"),
-                            .copy("Fonts/Ditka.otf")]),
+                            .copy("Fonts/Evanston.otf"),
         .target(name: "FONDEditor",
             dependencies: [.target(name: "RFSupport"),
                            .target(name: "CoreFont"),

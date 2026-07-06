@@ -46,8 +46,8 @@ extension ResID {
     public static let timesNewRoman:        ResID = 2010
     public static let hoeflerText:          ResID = 2013
     public static let impact:               ResID = 2039
+    public static let evanston:             ResID = 16383   // Chicago equivalent
     public static let chicago:              ResID = 16383
-    public static let ditka:                ResID = 16383   // Chicago equivalent
 }
 
 extension FOND {
@@ -81,7 +81,7 @@ extension FOND {
             case .timesNewRoman: return "Times New Roman"
             case .hoeflerText: return "Hoefler Text"
             case .impact: return "Impact"
-            case .ditka: return "Ditka"
+            case .evanston: return "Evanston"
             case .chicago: return "Chicago"
             default:
                 return "Geneva"
@@ -117,7 +117,7 @@ extension FOND {
                 case "Hoefler Text": return .hoeflerText
                 case "Impact": return .impact
                 case "Chicago": return .chicago
-                case "Ditka": return .ditka
+                case "Evanston": return .evanston
                 default:
                     return .applicationFont
             }
