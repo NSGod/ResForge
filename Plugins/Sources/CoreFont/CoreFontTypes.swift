@@ -37,21 +37,36 @@ extension ResID {
     public static let courier:              ResID = 22
     public static let symbol:               ResID = 23
     public static let mobile:               ResID = 24
+    public static let trebuchetMS:          ResID = 1109
+    public static let arialNarrow:          ResID = 2000
     public static let arial:                ResID = 2001
     public static let charcoal:             ResID = 2002
     public static let briquette:            ResID = 2002    // Charcoal equivalent
     public static let capitals:             ResID = 2003
-    public static let copperplate:          ResID = 2003    // Capitals approximation
+    public static let uppercase:            ResID = 2003    // Capitals equivalent
     public static let courierNew:           ResID = 2005
     public static let timesNewRoman:        ResID = 2010
+    public static let wingdings:            ResID = 2011    // Wingdings-Regular (aka Wingdings 1)
     public static let hoeflerText:          ResID = 2013
     public static let impact:               ResID = 2039
+    public static let skia:                 ResID = 2040
+    public static let appleChancery:        ResID = 2311
+    public static let arialRoundedMTBold:   ResID = 3007
+    public static let brushScriptMT:        ResID = 3017
+    public static let comicSansMS:          ResID = 4513
+    public static let tahoma:               ResID = 6583
+    public static let andaleMono:           ResID = 7102
+    public static let verdana:              ResID = 7203
+    public static let arialBlack:           ResID = 12077
+    public static let georgia:              ResID = 12171
+    public static let webdings:             ResID = 14213
     public static let evanston:             ResID = 16383   // Chicago equivalent
     public static let chicago:              ResID = 16383
 }
 
 extension FOND {
 
+    /// replacements must be ordered first (e.g. `Briquette` before `Charcoal`)
     public static func fontFamilyName(for id: ResID) -> String {
         switch id {
             case .systemFont: return "Briquette"
@@ -72,27 +87,39 @@ extension FOND {
             case .courier: return "Courier"
             case .symbol: return "Symbol"
             case .mobile: return "Mobile"
-            case .copperplate: return "Copperplate"
-            case .capitals: return "Capitals"
+            case .trebuchetMS: return "Trebuchet MS"
+            case .arialNarrow: return "Arial Narrow"
             case .arial: return "Arial"
             case .briquette: return "Briquette"
             case .charcoal: return "Charcoal"
+            case .uppercase: return "Uppercase"
+            case .capitals: return "Capitals"
             case .courierNew: return "Courier New"
             case .timesNewRoman: return "Times New Roman"
+            case .wingdings: return "Wingdings"
             case .hoeflerText: return "Hoefler Text"
             case .impact: return "Impact"
+            case .skia: return "Skia"
+            case .appleChancery: return "Apple Chancery"
+            case .arialRoundedMTBold: return "Arial Rounded MT Bold"
+            case .brushScriptMT: return "Brush Script MT"
+            case .comicSansMS: return "Comic Sans MS"
+            case .tahoma: return "Tahoma"
+            case .andaleMono: return "Andale Mono"
+            case .verdana: return "Verdana"
+            case .arialBlack: return "Arial Black"
+            case .georgia: return "Georgia"
+            case .webdings: return "Webdings"
             case .evanston: return "Evanston"
             case .chicago: return "Chicago"
             default:
-                return "Geneva"
+                return "Briquette"
         }
     }
 
     public static func fontFamilyID(for font: NSFont) -> ResID {
         if let familyName = font.familyName {
             switch familyName {
-                case "Charcoal": return .charcoal
-                case "Briquette": return .briquette
                 case "New York": return .newYork
                 case "Geneva": return .geneva
                 case "Monaco": return .monaco
@@ -109,13 +136,29 @@ extension FOND {
                 case "Courier": return .courier
                 case "Symbol": return .symbol
                 case "Mobile": return .mobile
-                case "Capitals": return .capitals
-                case "Copperplate": return .copperplate
+                case "Trebuchet MS": return .trebuchetMS
+                case "Arial Narrow": return .arialNarrow
                 case "Arial": return .arial
+                case "Charcoal": return .charcoal
+                case "Briquette": return .briquette
+                case "Capitals": return .capitals
+                case "Uppercase": return .uppercase
                 case "Courier New": return .courierNew
                 case "Times New Roman": return .timesNewRoman
+                case "Wingdings": return .wingdings
                 case "Hoefler Text": return .hoeflerText
                 case "Impact": return .impact
+                case "Skia": return .skia
+                case "Apple Chancery": return .appleChancery
+                case "Arial Rounded MT Bold": return .arialRoundedMTBold
+                case "Brush Script MT": return .brushScriptMT
+                case "Comic Sans MS": return .comicSansMS
+                case "Tahoma": return .tahoma
+                case "Andale Mono": return .andaleMono
+                case "Verdana": return .verdana
+                case "Arial Black": return .arialBlack
+                case "Georgia": return .georgia
+                case "Webdings": return .webdings
                 case "Chicago": return .chicago
                 case "Evanston": return .evanston
                 default:

@@ -98,7 +98,7 @@
                         </connections>
                     </colorWell>
                     <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ydn-Xa-UI8">
-                        <rect key="frame" x="223" y="393" width="141" height="20"/>
+                        <rect key="frame" x="223" y="393" width="172" height="20"/>
                         <popUpButtonCell key="cell" type="push" title="System Font" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="eeq-g3-7do" id="Sj7-pR-pq1">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="smallSystem"/>
@@ -106,34 +106,49 @@
                                 <items>
                                     <menuItem title="System Font" state="on" id="eeq-g3-7do"/>
                                     <menuItem title="Application Font" tag="1" id="4Y6-Jx-NN6"/>
+                                    <menuItem isSeparatorItem="YES" id="NLD-lT-o9D"/>
+                                    <menuItem title="Andale Mono" tag="7102" id="bYi-0H-J0m"/>
+                                    <menuItem title="Apple Chancery" tag="2311" id="eo3-Bh-98N"/>
                                     <menuItem title="Arial" tag="2001" id="rox-vN-cWu"/>
+                                    <menuItem title="Arial Black" tag="12077" id="rDT-zi-Ebc"/>
+                                    <menuItem title="Arial Narrow" tag="2000" id="uto-vA-lV5"/>
+                                    <menuItem title="Arial Rounded MT Bold" tag="3007" id="ueF-Cn-jt4"/>
+                                    <menuItem title="Brush Script MT" tag="3017" id="cbc-9j-Frf"/>
                                     <menuItem title="Capitals" tag="2003" id="q3I-eB-gOu"/>
                                     <menuItem title="Charcoal" tag="2002" id="IJy-Gz-APm"/>
                                     <menuItem title="Chicago" tag="16383" id="p6K-hg-CRi"/>
+                                    <menuItem title="Comic Sans MS" tag="4513" id="Xae-w2-Gmt"/>
                                     <menuItem title="Courier" tag="22" id="OtB-xG-XnY"/>
                                     <menuItem title="Courier New" tag="2005" id="181-H2-2Ah"/>
                                     <menuItem title="Geneva" tag="3" id="taj-va-tNk"/>
+                                    <menuItem title="Georgia" tag="12171" id="19v-BL-Bz6"/>
                                     <menuItem title="Helvetica" tag="21" id="UK1-Tr-joe"/>
                                     <menuItem title="Hoefler Text" tag="2013" id="QRZ-3Y-WtJ"/>
                                     <menuItem title="Impact" tag="2039" id="icJ-zR-5Ce"/>
                                     <menuItem title="Monaco" tag="4" id="Yle-pF-OTT"/>
                                     <menuItem title="New York" tag="2" id="WAk-t3-ToB"/>
                                     <menuItem title="Palatino" tag="16" id="WCE-HG-jVL"/>
+                                    <menuItem title="Skia" tag="2040" id="NmD-6d-8nA"/>
                                     <menuItem title="Symbol" tag="23" id="oe3-lP-Euu"/>
+                                    <menuItem title="Tahoma" tag="6583" id="VtK-pz-fqM"/>
                                     <menuItem title="Times" tag="20" id="RJk-gy-KXL"/>
                                     <menuItem title="Times New Roman" tag="2010" id="LkW-QB-H6U"/>
+                                    <menuItem title="Trebuchet MS" tag="1109" id="6E0-GR-dQB"/>
+                                    <menuItem title="Verdana" tag="7203" id="BQv-eR-wza"/>
+                                    <menuItem title="Webdings" tag="14213" id="mEK-PN-q7R"/>
+                                    <menuItem title="Wingdings" tag="2011" id="7lu-Os-wWj"/>
                                 </items>
                             </menu>
                         </popUpButtonCell>
                         <constraints>
-                            <constraint firstAttribute="width" constant="141" id="f2a-2s-9Je"/>
+                            <constraint firstAttribute="width" constant="172" id="f2a-2s-9Je"/>
                         </constraints>
                         <connections>
                             <action selector="changeFont:" target="-2" id="Bia-zu-jpn"/>
                         </connections>
                     </popUpButton>
                     <comboBox toolTip="Set the font size" focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tfG-HO-hEi">
-                        <rect key="frame" x="370" y="393" width="55" height="20"/>
+                        <rect key="frame" x="403" y="393" width="55" height="20"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="55" id="OFw-mf-3nz"/>
                         </constraints>
@@ -170,7 +185,7 @@
                     <constraint firstItem="Ekw-7F-nya" firstAttribute="leading" secondItem="18" secondAttribute="leading" constant="11" id="PXB-Pc-9vU"/>
                     <constraint firstAttribute="trailing" secondItem="cyH-JA-sTd" secondAttribute="trailing" id="UU8-Po-6WV"/>
                     <constraint firstItem="tfG-HO-hEi" firstAttribute="top" secondItem="18" secondAttribute="top" constant="5" id="XFV-an-HbG"/>
-                    <constraint firstItem="tfG-HO-hEi" firstAttribute="leading" secondItem="Ydn-Xa-UI8" secondAttribute="trailing" constant="6" id="YJn-Xi-1Pn"/>
+                    <constraint firstItem="tfG-HO-hEi" firstAttribute="leading" secondItem="Ydn-Xa-UI8" secondAttribute="trailing" constant="8" id="YJn-Xi-1Pn"/>
                     <constraint firstAttribute="bottom" secondItem="cyH-JA-sTd" secondAttribute="bottom" id="ahP-Ig-A7L"/>
                     <constraint firstItem="R0u-ay-Gh1" firstAttribute="top" secondItem="18" secondAttribute="top" constant="5" id="e3e-TB-zsk"/>
                     <constraint firstItem="Ydn-Xa-UI8" firstAttribute="top" secondItem="18" secondAttribute="top" constant="5" id="eSb-kP-R3g"/>
