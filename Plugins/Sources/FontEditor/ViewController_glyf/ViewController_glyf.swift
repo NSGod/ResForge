@@ -39,8 +39,8 @@ final class ViewController_glyf: FontTableViewController {
         panel.canChooseFiles = false
         panel.canChooseDirectories = true
         panel.canCreateDirectories = true
-        panel.prompt = NSLocalizedString("Choose", comment: "")
-        panel.message = NSLocalizedString("Choose a folder to export glyphs to", comment: "")
+        panel.prompt = NSLocalizedString("Export", comment: "")
+        panel.message = NSLocalizedString("Choose a folder to export the glyphs to", comment: "")
         panel.isExtensionHidden = false
         panel.beginSheetModal(for: view.window!) { [self] (result) in
             if result == .OK {
@@ -74,12 +74,14 @@ final class ViewController_glyf: FontTableViewController {
                             glyphView.cacheDisplay(in: glyphView.bounds, to: bitmapRep)
                             DispatchQueue.global().async {
                                 autoreleasepool {
-                                    if let data = bitmapRep.representation(using: .png, properties: [:]) {
-                                        let url = url.appendingPathComponent(feGlyph.glyphName).appendingPathExtension("png").assuringUniqueFilename()
-                                        do {
-                                            try data.write(to: url)
-                                        } catch {
-                                            NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+                                    if let srgbRep = bitmapRep.retagging(with: .sRGB) {
+                                        if let data = srgbRep.representation(using: .png, properties: [:]) {
+                                            let url = url.appendingPathComponent(feGlyph.glyphName).appendingPathExtension("png").assuringUniqueFilename()
+                                            do {
+                                                try data.write(to: url)
+                                            } catch {
+                                                NSLog("\(type(of: self)).\(#function) *** ERROR: \(error)")
+                                            }
                                         }
                                     }
                                 }
