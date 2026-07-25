@@ -11,7 +11,7 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
         PluginRegistry.register(self)
     }
 
-    @IBOutlet weak var textView:                NSTextView!
+    @IBOutlet weak var textView:                TextView!
     @IBOutlet weak var styleControl:            NSSegmentedControl!
     @IBOutlet weak var widthControl:            NSSegmentedControl!
     @IBOutlet weak var colorWell:               NSColorWell!
@@ -173,7 +173,7 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
     }
 
     @IBAction func changeWidth(_ sender: Any) {
-        /// MacOS 9 doesn't appear to care if both condensed & extended set, but it doesn't make much sense to
+        /// MacOS 9 doesn't appear to care if both `condensed` & `extended` are set, but it doesn't make much sense to
         /// allow it. So, make the condensed/extended choices mutually-exclusive, like radio buttons.
         if widthControl.isSelected(forSegment: 0) {
             if selectedWidthTag == 32 {
@@ -273,6 +273,17 @@ public class TextEditor: AbstractEditor, ResourceEditor, NSTextViewDelegate {
             colorWell.color = attrs[.foregroundColor] as! NSColor
         }
         fontPopUpButton.selectItem(withTag: Int(style.fontFamilyID))
+    }
+
+    public func textView(_ textView: NSTextView, shouldChangeTypingAttributes oldTypingAttributes: [String : Any] = [:], toAttributes newTypingAttributes: [NSAttributedString.Key : Any] = [:]) -> [NSAttributedString.Key : Any] {
+        // NSLog("\(type(of: self)).\(#function) old == \(oldTypingAttributes)")
+        // NSLog("\(type(of: self)).\(#function) new == \(newTypingAttributes)")
+        return newTypingAttributes
+    }
+
+    public func textView(_ textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+        NSLog("\(type(of: self)).\(#function) commandSelector == \(commandSelector)")
+        return false
     }
 
     @objc func didProcessEditing(_ notification: Notification) {

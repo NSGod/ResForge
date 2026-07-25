@@ -12,15 +12,18 @@ extension NSAttributedString.Key {
 }
 
 extension Styl {
-    // MARK: -
-    /// working model class that's stored as a `.stylStyle` attribute in the attributed string
-    public final class Style: CustomStringConvertible, Equatable {
+
+    /// a "working" model class that's stored as a `.stylStyle` attribute in the attributed string
+    @objc(MDStyle) public final class Style: NSObject, NSSecureCoding {
+
         public var fontFamilyID:    ResID = .systemFont
         public var fontStyle:       MacFontStyle = .regular
         public var fontPointSize:   Int = 12
         public var color:           NSColor = .black
 
         public var attrs:           [NSAttributedString.Key: Any] = [:]
+
+        public static let supportsSecureCoding: Bool = true
 
         private static var fontsAreSetup: Bool = false
 
@@ -31,19 +34,48 @@ extension Styl {
             self.fontStyle = fontStyle
             self.fontPointSize = fontPointSize
             self.color = color
-            self.attrs = Self.attributes(for: self)
+            super.init()
+            attrs = Self.attributes(for: self)
         }
 
-        public static func == (lhs: Styl.Style, rhs: Styl.Style) -> Bool {
-            return lhs.fontFamilyID == rhs.fontFamilyID &&
-            lhs.fontStyle == rhs.fontStyle &&
-            lhs.fontPointSize == rhs.fontPointSize &&
-            lhs.color == rhs.color
+        public init?(coder: NSCoder) {
+            guard
+                let fontFamilyID = coder.decodeObject(of: NSNumber.self, forKey: "fontFamilyID")?.int16Value,
+                let fStyle = coder.decodeObject(of: NSNumber.self, forKey: "fontStyle")?.uint16Value,
+                let color = coder.decodeObject(of: NSColor.self, forKey: "color")
+            else {
+                return nil
+            }
+            self.fontFamilyID = fontFamilyID
+            self.fontStyle = MacFontStyle(rawValue: fStyle)
+            fontPointSize = coder.decodeInteger(forKey: "fontPointSize")
+            self.color = color
+            super.init()
+            attrs = Self.attributes(for: self)
         }
 
-        public var description: String {
+        public func encode(with coder: NSCoder) {
+            coder.encode(fontFamilyID, forKey: "fontFamilyID")
+            coder.encode(fontStyle.rawValue, forKey: "fontStyle")
+            coder.encode(fontPointSize, forKey: "fontPointSize")
+            coder.encode(color, forKey: "color")
+        }
+
+        public override func isEqual(_ object: Any?) -> Bool {
+            guard let other = object as? Styl.Style else { return false }
+            return fontFamilyID == other.fontFamilyID &&
+                   fontStyle == other.fontStyle &&
+                   fontPointSize == other.fontPointSize &&
+                   color == other.color
+        }
+
+        public override var hash: Int {
+            return fontFamilyID.hashValue &+ fontStyle.hashValue &+ fontPointSize.hashValue &+ color.hashValue
+        }
+
+        public override var description: String {
             if self == .default { return "default" }
-            return "(\(fontFamilyID)) \(FOND.fontFamilyName(for: fontFamilyID)), \(fontStyle) \(fontPointSize) \(color)"
+            return "(ResID: \(fontFamilyID)) \(FOND.fontFamilyName(for: fontFamilyID)), (\(fontStyle)) \(fontPointSize) pt.; \(color)"
         }
 
         public static func attributes(for style: Style) -> [NSAttributedString.Key: Any] {

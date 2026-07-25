@@ -46,7 +46,7 @@ extension ResID {
     public static let uppercase:            ResID = 2003    // Capitals equivalent
     public static let courierNew:           ResID = 2005
     public static let timesNewRoman:        ResID = 2010
-    public static let wingdings:            ResID = 2011    // Wingdings-Regular (aka Wingdings 1)
+    public static let wingdings:            ResID = 2011    /// `Wingdings-Regular` (aka Wingdings 1)
     public static let hoeflerText:          ResID = 2013
     public static let impact:               ResID = 2039
     public static let skia:                 ResID = 2040

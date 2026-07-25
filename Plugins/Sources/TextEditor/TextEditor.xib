@@ -35,7 +35,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="523" height="385"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <textView wantsLayer="YES" importsGraphics="NO" verticallyResizable="YES" findStyle="bar" allowsUndo="YES" usesRuler="YES" smartInsertDelete="YES" id="QoM-iV-1Mc" userLabel="textView">
+                                <textView wantsLayer="YES" importsGraphics="NO" verticallyResizable="YES" findStyle="bar" allowsUndo="YES" usesRuler="YES" smartInsertDelete="YES" id="QoM-iV-1Mc" userLabel="textView" customClass="TextView" customModule="TextEditor">
                                     <rect key="frame" x="0.0" y="0.0" width="523" height="385"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

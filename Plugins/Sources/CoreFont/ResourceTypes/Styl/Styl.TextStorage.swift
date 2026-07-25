@@ -10,7 +10,7 @@ import RFSupport
 
 extension Styl {
 
-    public class TextStorage: NSTextStorage {
+    public final class TextStorage: NSTextStorage {
         private var storage = NSTextStorage()
 
         public var styleRuns: [Run] {
@@ -32,7 +32,7 @@ extension Styl {
             return runs
         }
 
-        /// primitives:
+        // MARK: - primitives:
         public override var string: String {
             return storage.string
         }
@@ -57,6 +57,17 @@ extension Styl {
                 storage.setAttributes(attrs, range: range)
             }
             edited(.editedAttributes, range: range, changeInLength: 0)
+        }
+
+        // MARK: -
+        public func attributedStylStrings(from fromRange: NSRange) throws -> [StyledString] {
+            var styledStrings: [StyledString] = []
+            storage.enumerateAttributes(in: fromRange, using: { (attrs, range, _) in
+                guard let style = attrs[.stylStyle] as? Style else { return }
+                let str = StyledString(string: (string as NSString).substring(with: range), style: style)
+                styledStrings.append(str)
+            })
+            return styledStrings
         }
 
         // MARK: -
