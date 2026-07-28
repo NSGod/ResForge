@@ -5,6 +5,13 @@
 //  Created by Mark Douma on 1/26/2026.
 //
 
+/// Some of the descriptions and logic are taken, in part, from Adobe's afdko code at:
+/// https://github.com/adobe-type-tools/afdko/blob/develop/c/spot/hmtx.c
+///
+/* Copyright 2014 Adobe Systems Incorporated (http://www.adobe.com/). All Rights Reserved.
+   This software is licensed as OpenSource, under the Apache License, Version 2.0.
+   This license is available at: http://opensource.org/licenses/Apache-2.0. */
+
 import Foundation
 import RFSupport
 
