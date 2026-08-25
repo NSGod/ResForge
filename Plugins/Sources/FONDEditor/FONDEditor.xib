@@ -25,8 +25,8 @@
                 <outlet property="glyphWidthsOutlineView" destination="3Vq-Ol-tJo" id="3Zw-Cg-fmL"/>
                 <outlet property="kernPairsTreeController" destination="Gk8-7C-LRq" id="UmJ-wM-Ax3"/>
                 <outlet property="kernTableOutlineView" destination="pFf-hf-b0S" id="Pq5-yo-Zxg"/>
-                <outlet property="popover" destination="YYp-IR-VTk" id="PYk-Nw-pZe"/>
                 <outlet property="popoverButton" destination="D46-td-4gt" id="98P-01-nBP"/>
+                <outlet property="resIDRangePopover" destination="YYp-IR-VTk" id="PYk-Nw-pZe"/>
                 <outlet property="styleMappingEntriesController" destination="So6-VE-atF" id="ZnR-iN-7d7"/>
                 <outlet property="styleMappingTabView" destination="ozS-I3-6Os" id="k3z-JL-Me2"/>
                 <outlet property="styleMappingTableView" destination="hv5-gg-7gl" id="8JI-vd-vtP"/>
@@ -461,6 +461,7 @@
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                         <connections>
+                            <action selector="changeFamilyID:" target="-2" id="jq6-dr-bCl"/>
                             <binding destination="-2" name="value" keyPath="fond.famID" id="4rP-TF-axk"/>
                             <outlet property="delegate" destination="-2" id="kkA-oV-CZt"/>
                         </connections>
@@ -2054,18 +2055,18 @@
                                             <tabViewItems>
                                                 <tabViewItem label="Style-Mapping Table" identifier="" id="eZW-DC-Ief">
                                                     <view key="view" id="Vga-e0-CHR">
-                                                        <rect key="frame" x="10" y="25" width="723" height="433"/>
+                                                        <rect key="frame" x="10" y="29" width="723" height="429"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
                                                             <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i5a-bY-CTB">
-                                                                <rect key="frame" x="12" y="16" width="699" height="384"/>
+                                                                <rect key="frame" x="12" y="16" width="699" height="380"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <clipView key="contentView" id="hwe-pz-lXu">
-                                                                    <rect key="frame" x="1" y="1" width="697" height="382"/>
-                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                    <rect key="frame" x="1" y="1" width="697" height="378"/>
+                                                                    <autoresizingMask key="autoresizingMask"/>
                                                                     <subviews>
                                                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" autosaveName="styleMappingTable" rowHeight="20" rowSizeStyle="automatic" headerView="0yu-AD-VVg" viewBased="YES" id="hv5-gg-7gl" userLabel="styleMappingTableView" customClass="TableView" customModule="CoreFont">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="697" height="354"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="697" height="350"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <size key="intercellSpacing" width="17" height="0.0"/>
                                                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -2084,7 +2085,7 @@
                                                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                                     <prototypeCellViews>
                                                                                         <tableCellView identifier="styleIndex" id="r4M-6j-dlk">
-                                                                                            <rect key="frame" x="8" y="0.0" width="64" height="20"/>
+                                                                                            <rect key="frame" x="18" y="0.0" width="64" height="20"/>
                                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                             <subviews>
                                                                                                 <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vru-sM-Ggn">
@@ -2123,7 +2124,7 @@
                                                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                                     <prototypeCellViews>
                                                                                         <tableCellView identifier="objcStyle" id="JcL-vP-IoD">
-                                                                                            <rect key="frame" x="89" y="0.0" width="228" height="20"/>
+                                                                                            <rect key="frame" x="99" y="0.0" width="228" height="20"/>
                                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                             <subviews>
                                                                                                 <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="axi-S7-b6K">
@@ -2159,7 +2160,7 @@
                                                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                                     <prototypeCellViews>
                                                                                         <tableCellView identifier="stringIndex" id="Cqq-12-1m3">
-                                                                                            <rect key="frame" x="334" y="0.0" width="161" height="20"/>
+                                                                                            <rect key="frame" x="344" y="0.0" width="161" height="20"/>
                                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                             <subviews>
                                                                                                 <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pXC-kM-EkJ">
@@ -2198,7 +2199,7 @@
                                                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                                     <prototypeCellViews>
                                                                                         <tableCellView identifier="fontNameSuffixEntry" id="OZx-P0-sYS" customClass="ButtonTableCellView" customModule="FONDEditor">
-                                                                                            <rect key="frame" x="512" y="0.0" width="153" height="20"/>
+                                                                                            <rect key="frame" x="522" y="0.0" width="153" height="20"/>
                                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                             <subviews>
                                                                                                 <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rtq-IN-Csn">
@@ -2255,7 +2256,7 @@
                                                                 </tableHeaderView>
                                                             </scrollView>
                                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qY1-ao-hYX">
-                                                                <rect key="frame" x="485" y="409" width="228" height="14"/>
+                                                                <rect key="frame" x="485" y="405" width="228" height="14"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                                                 <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" selectable="YES" alignment="right" id="ozh-t0-Yee">
                                                                     <font key="font" metaFont="smallSystem"/>
@@ -2292,7 +2293,7 @@
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <clipView key="contentView" id="IDV-OM-8FP">
                                                                     <rect key="frame" x="1" y="1" width="697" height="382"/>
-                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                    <autoresizingMask key="autoresizingMask"/>
                                                                     <subviews>
                                                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" autosaveName="fontNameSuffixTableView" rowHeight="20" rowSizeStyle="automatic" headerView="PZx-QH-dIG" viewBased="YES" id="feb-Bk-nvK" userLabel="fontNameSuffixTableView" customClass="TableView" customModule="CoreFont">
                                                                             <rect key="frame" x="0.0" y="0.0" width="697" height="354"/>
@@ -2314,7 +2315,7 @@
                                                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                                     <prototypeCellViews>
                                                                                         <tableCellView identifier="index" id="wQ0-fJ-Zru">
-                                                                                            <rect key="frame" x="8" y="0.0" width="64" height="20"/>
+                                                                                            <rect key="frame" x="18" y="0.0" width="64" height="20"/>
                                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                             <subviews>
                                                                                                 <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2dr-Hk-5A0">
@@ -2350,7 +2351,7 @@
                                                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                                     <prototypeCellViews>
                                                                                         <tableCellView identifier="encodedStringRep" id="I4R-t6-IBT">
-                                                                                            <rect key="frame" x="89" y="0.0" width="176" height="20"/>
+                                                                                            <rect key="frame" x="99" y="0.0" width="176" height="20"/>
                                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                             <subviews>
                                                                                                 <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NZQ-ZP-4TL">
@@ -2382,7 +2383,7 @@
                                                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                                     <prototypeCellViews>
                                                                                         <tableCellView identifier="postScriptName" id="PhE-P9-U5T">
-                                                                                            <rect key="frame" x="282" y="0.0" width="188" height="20"/>
+                                                                                            <rect key="frame" x="292" y="0.0" width="188" height="20"/>
                                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                             <subviews>
                                                                                                 <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IYR-s0-fLo">
@@ -2417,7 +2418,7 @@
                                                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                                     <prototypeCellViews>
                                                                                         <tableCellView identifier="referencedFont" id="QCM-aV-fdl" customClass="ButtonTableCellView" customModule="FONDEditor">
-                                                                                            <rect key="frame" x="487" y="0.0" width="201" height="20"/>
+                                                                                            <rect key="frame" x="497" y="0.0" width="201" height="20"/>
                                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                             <subviews>
                                                                                                 <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ik2-s5-ydz">
@@ -3154,7 +3155,7 @@
                 <outlet property="view" destination="B7N-22-RPq" id="rh6-jL-47z"/>
             </connections>
         </viewController>
-        <popover behavior="t" id="YYp-IR-VTk" userLabel="popover">
+        <popover behavior="t" id="YYp-IR-VTk" userLabel="resIDRangePopover">
             <connections>
                 <outlet property="contentViewController" destination="S9m-2j-Bbj" id="fvp-i3-HiU"/>
             </connections>

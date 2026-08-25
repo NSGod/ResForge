@@ -41,7 +41,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     @IBOutlet weak var encodingField:                   NSTextField!
     @IBOutlet weak var famIDField:                      NSTextField!
 
-    @IBOutlet var popover:                              NSPopover!
+    @IBOutlet var resIDRangePopover:                    NSPopover!
     @IBOutlet weak var popoverButton:                   NSButton!
 
     @IBOutlet weak var exportKernPairButton:            NSButton!
@@ -105,9 +105,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
         NotificationCenter.default.removeObserver(self)
         flagsBitfieldControl.unbind(NSBindingName("objectValue"))
         fontClassBitfieldControl.unbind(NSBindingName("objectValue"))
-        Self.fondKeyPaths.forEach { fond.removeObserver(self, forKeyPath: $0) }
-        Self.fontAsscKeyPaths.forEach { (fond.fontAssociationTable.entries as NSArray).removeObserver(self, fromObjectsAt: IndexSet(0..<(fond.fontAssociationTable.entries.count)), forKeyPath: $0, context: &Self.fontAsscContext) }
-        Self.keyPaths.forEach { removeObserver(self, forKeyPath: $0) }
+        removeKeyPathObservers()
     }
 
     public override func windowDidLoad() {
@@ -130,11 +128,16 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
         UserDefaults.standard.set(styleMappingTabView.indexOfTabViewItem(styleMappingTabView.selectedTabViewItem!), forKey: "FONDEditor.selectedStyleMappingTabIndex")
     }
 
+    // MARK: -
+    private func removeKeyPathObservers() {
+        Self.fondKeyPaths.forEach { fond.removeObserver(self, forKeyPath: $0) }
+        Self.fontAsscKeyPaths.forEach { (fond.fontAssociationTable.entries as NSArray).removeObserver(self, fromObjectsAt: IndexSet(0..<(fond.fontAssociationTable.entries.count)), forKeyPath: $0, context: &Self.fontAsscContext) }
+        Self.keyPaths.forEach { removeObserver(self, forKeyPath: $0) }
+    }
+
     private func loadFOND() {
-        if let fond {
-            Self.fondKeyPaths.forEach { fond.removeObserver(self, forKeyPath: $0) }
-            Self.fontAsscKeyPaths.forEach { (fond.fontAssociationTable.entries as NSArray).removeObserver(self, fromObjectsAt: IndexSet(0..<(fond.fontAssociationTable.entries.count)), forKeyPath: $0, context: &Self.fontAsscContext) }
-            Self.keyPaths.forEach { removeObserver(self, forKeyPath: $0) }
+        if fond != nil {
+            removeKeyPathObservers()
         }
         do {
             fond = try FOND(with: resource)
@@ -196,7 +199,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     }
 
     @IBAction func showPopover(_ sender: Any) {
-        popover.show(relativeTo: popoverButton.bounds, of: popoverButton, preferredEdge: .minX)
+        resIDRangePopover.show(relativeTo: popoverButton.bounds, of: popoverButton, preferredEdge: .minX)
     }
 
     @IBAction func changeFlags(_ sender: Any) {
@@ -238,6 +241,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
         self.setDocumentEdited(false)
     }
 
+    // MARK: -
     private enum SenderTag: Int {
         case fontAssociationTableView = 1
         case fontNameSuffixTableView = 2
