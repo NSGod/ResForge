@@ -81,8 +81,8 @@ public final class FontTable_hhea: FontTable {
         reserved2 = 0
         reserved3 = 0
         if let hmtxTable {
-            /// we want `.metrics`, not optimized `.horizontalMetrics`
-            numberOfHMetrics = UInt16(hmtxTable.metrics.count)
+            /// we want optimized `.horizontalMetrics`, not full-count `.metrics`
+            numberOfHMetrics = UInt16(hmtxTable.horizontalMetrics.count)
         }
     }
 

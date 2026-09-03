@@ -83,8 +83,8 @@ public final class FontTable_vhea: FontTable {
         reserved2 = 0
         reserved3 = 0
         if let vmtxTable {
-            /// we want `.metrics`, not optimized/consolidated `.verticalMetrics`
-            numberOfVMetrics = UInt16(vmtxTable.metrics.count)
+            /// we want optimized `.verticalMetrics`, not full-count `.metrics`
+            numberOfVMetrics = UInt16(vmtxTable.verticalMetrics.count)
         }
     }
 
