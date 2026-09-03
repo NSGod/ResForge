@@ -46,7 +46,7 @@ extension FOND {
                 offset = try reader.read()
                 reserved = try reader.read()
                 indexes = try (0..<48).map { _ in try reader.read() }
-                NSLog("\(type(of: self)).\(#function) indexes == \(indexes)")
+                // NSLog("\(type(of: self)).\(#function) indexes == \(indexes)")
                 var nameSuffixRange = knownRange
                 nameSuffixRange.location += Self.nodeLength
                 nameSuffixRange.length -= Self.nodeLength

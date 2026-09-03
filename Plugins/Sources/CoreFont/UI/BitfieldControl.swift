@@ -78,7 +78,7 @@ public final class BitfieldControl: NSControl {
     }
 
     public override func awakeFromNib() {
-        NSLog("\(type(of: self)).\(#function)")
+        // NSLog("\(type(of: self)).\(#function)")
         super.awakeFromNib()
     }
 

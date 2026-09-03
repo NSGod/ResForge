@@ -294,7 +294,7 @@ public final class NFNT: NSObject, CFResource {
         /// function will work properly. In more recent versions of OS X, trying to draw the B&W bitmap image for every
         /// letter was trying to convert each tiny image segment to RGBA on the fly, which could fail if `vImageConvert_AnyToAny()`
         /// (called behind the scenes) didn't like the dimensions given.
-        /// Actually, rather than using bitmapImageRepByConvertingToImageSpace:, which could fail in previous versions
+        /// Actually, rather than using `bitmapImageRepByConvertingToImageSpace:`, which could fail in previous versions
         /// of OS X, we'll do the conversion ourselves.
         let sRGBRef = CGColorSpace.init(name: CGColorSpace.sRGB)!
         let bitmapContext = CGContext(data: nil,
