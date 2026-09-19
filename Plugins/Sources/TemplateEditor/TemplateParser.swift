@@ -119,6 +119,10 @@ public class TemplateParser {
         "REAL": ElementREAL.self,           // single precision float
         "DOUB": ElementDOUB.self,           // double precision float
         "FIXD": ElementFIXD.self,           // 16:16 fixed precision
+        "FRAC": ElementFRAC.self,           // 2:30 fixed precision
+        "SFRC": ElementSFRC.self,           // 0:16 fixed precision
+        "FWID": ElementFWID.self,           // 4:12 fixed precision
+        "FXYZ": ElementFXYZ.self,           // 1:15 fixed precision
 
         // strings
         "PSTR": ElementPSTR<UInt8>.self,    // Pascal string
@@ -273,6 +277,7 @@ public class TemplateParser {
         "SCPC": ElementDBYT<Int16>.self,    // MacOS script code (ScriptCode)
         "LNGC": ElementDBYT<Int16>.self,    // MacOS language code (LangCode)
         "RGNC": ElementDBYT<Int16>.self,    // MacOS region code (RegionCode)
+        "CODE": ElementHEXD.self,
     ]) { $1 }
 
     /// Register a custom element. These are considered non-standard and contain at least one character that is not uppercase ascii.
