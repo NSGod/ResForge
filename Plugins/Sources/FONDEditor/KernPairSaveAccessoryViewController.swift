@@ -61,16 +61,16 @@ final class KernPairSaveAccessoryViewController: NSViewController {
         guard let panel else { return }
         /// Try to change filename extension in save panel's field
         /// by limiting the allowed UT types to the currently selected one.
-        /// This only appears to work to change .txt to .csv, but not the
-        /// other way around.
+        /// `NOTE: This only appears to work to change .txt to .csv, but not the
+        /// other way around.`
         if selectedFileType == KernPairExporter.GPOSFeatureFileType {
-            panel.allowedFileTypes = [KernPairExporter.GPOSFeatureUTType]
+            panel.allowedContentTypes = [KernPairExporter.GPOSFeatureUTType]
             shouldResolveGlyphNames = true
             scaleToUnitsPerEm = true
         } else {
-            panel.allowedFileTypes = [KernPairExporter.CSVUTType]
+            panel.allowedContentTypes = [KernPairExporter.CSVUTType]
         }
-        /// GPOS format must have both scale and glyph names resolved
+        /// GPOS format _must_ have both scale and glyph names resolved
         scaleCheckbox.isEnabled = selectedFileType != KernPairExporter.GPOSFeatureFileType
         resolveCheckbox.isEnabled = selectedFileType != KernPairExporter.GPOSFeatureFileType
     }

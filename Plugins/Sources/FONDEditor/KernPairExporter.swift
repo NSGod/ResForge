@@ -9,12 +9,13 @@ import Foundation
 import RFSupport
 import CoreFont
 import CSV
+import UniformTypeIdentifiers
 
 public final class KernPairExporter {
     public static let GPOSFeatureFileType: String = NSLocalizedString("'GPOS' Feature File", comment: "")
-    public static let GPOSFeatureUTType:   String = kUTTypePlainText as String
+    public static let GPOSFeatureUTType:   UTType = .plainText
     public static let CSVFileType:         String = NSLocalizedString("Comma-Separated Variables (CSV)", comment: "")
-    public static let CSVUTType:           String = kUTTypeCommaSeparatedText as String
+    public static let CSVUTType:           UTType = .commaSeparatedText
 
     public struct Config {
         public enum Format {

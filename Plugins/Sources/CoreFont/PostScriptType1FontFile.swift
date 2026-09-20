@@ -8,6 +8,7 @@
 import Cocoa
 import RFSupport
 import Dispatch
+import UniformTypeIdentifiers
 
 public enum PostScriptError : LocalizedError {
     case encodingFailed(String?)
@@ -17,7 +18,12 @@ public enum PostScriptError : LocalizedError {
     case unsupportedFormat(String?)
 }
 
-// .pfa
+// .pfa & .pfb
+extension UTType {
+    public static let pfaOutlineFont = UTType(filenameExtension: "pfa")!
+    public static let pfbOutlineFont = UTType(filenameExtension: "pfb")!
+}
+
 public let MDUTTypePFAOutlineFont: String   = "com.adobe.postscript-pfa-font"
 public let MDPFAOutlineFontType: String     = "PostScript Type 1 (ASCII) outline font"
 

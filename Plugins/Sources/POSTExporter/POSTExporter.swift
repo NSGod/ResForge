@@ -91,7 +91,7 @@ public final class POSTExporter: AbstractEditor, ResourceEditor, ExportProvider,
     @IBAction func exportFont(_ sender: Any) {
         NSLog("\(type(of: self)).\(#function)")
         let panel = NSSavePanel()
-        panel.allowedFileTypes = ["pfa"]
+        panel.allowedContentTypes = [.pfaOutlineFont]
         if let psName = pfaFile?.postScriptName {
             panel.nameFieldStringValue = psName
         } else {
@@ -112,7 +112,7 @@ public final class POSTExporter: AbstractEditor, ResourceEditor, ExportProvider,
 
     public static func export(_ resource: Resource, to url: URL) throws {
         NSLog("\(type(of: self)).\(#function) resource: \(resource), url: \(url.path)")
-        /// not possible to complete given limitations of current API
+        /// not possible to complete given the limitations of current API
     }
 
     public func saveResource(_ sender: Any) { }

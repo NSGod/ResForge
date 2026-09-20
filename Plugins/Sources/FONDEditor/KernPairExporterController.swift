@@ -26,8 +26,8 @@ public final class KernPairExporterController {
         var panel: NSSavePanel!
         if entries.count == 1 {
             panel = NSSavePanel()
-            panel.allowedFileTypes = [KernPairExporter.GPOSFeatureUTType,
-                                      KernPairExporter.CSVUTType]
+            panel.allowedContentTypes = [KernPairExporter.GPOSFeatureUTType,
+                                         KernPairExporter.CSVUTType]
             let entry = entries[0]
             if let name = fond.postScriptNameForFont(with: entry.style) {
                 if let filename = (name as NSString).appendingPathExtension("txt") {
