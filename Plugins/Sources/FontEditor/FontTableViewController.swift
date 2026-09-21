@@ -36,7 +36,7 @@ class FontTableViewController: NSViewController {
 
     override func viewDidAppear() {
         super.viewDidAppear()
-        NSLog("\(type(of: self)).\(#function) undoManager == \(String(describing: undoManager))")
+        // NSLog("\(type(of: self)).\(#function) undoManager == \(String(describing: undoManager))")
     }
 
     @objc func updateUI() {

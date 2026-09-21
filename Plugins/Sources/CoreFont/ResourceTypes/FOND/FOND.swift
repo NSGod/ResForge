@@ -154,13 +154,17 @@ public final class FOND: NSObject, CFResource {
         case kernTable
     }
 
+    public var needsRepair:                 Bool {
+        /// the FOND's resource ID needs to match the font family ID or else it's "corrupt"
+        return self.resource.id != self.famID
+    }
+
     public var resource:                    Resource
     private var reader:                     BinaryDataReader
 
     // FIXME: switch to Swift Ranges?
     private var offsetTypesToRanges:    [TableOffsetType: NSRange] = [:]
     private var offsetsCalculated:      Bool = false
-    private var needsRepair:            Bool = false   // If this FOND resource's resourceID doesn't match the famID, we need to update the famID
     private var stylesToUnitsPerEm:     [MacFontStyle: UnitsPerEm] = [:]
 
     // MARK: - init
@@ -236,14 +240,6 @@ public final class FOND: NSObject, CFResource {
             ffVersion       = .version1
         }
 
-        // FIXME: make sure famID == this FOND's resource ID, otherwise repair it
-        if self.resource.id != famID {
-            needsRepair = true
-            famID = ResID(resource.id)
-            /* FIXME: we need some way to communicate this up the chain with
-             some sort of UI alerting user that resource was repaired and
-             needs to be saved, etc. */
-        }
         // FIXME: add validation/error-checking here
         fontAssociationTable = try FontAssociationTable(reader, options: options)
         super.init()

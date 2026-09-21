@@ -70,6 +70,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     private static let keyPaths = Set(["objcFFFlags", "objcFontClass"])
     private static let fontAsscKeyPaths = Set(["objcFontStyle", "fontPointSize", "fontID"])
     private static var fontAsscContext = 2
+    private var haveAskedToRepair = false
 
     private static var postScriptARedIcon: NSImage = {
         return NSImage(contentsOf: FONDEditor.bundle.url(forResource: "postScriptARed", withExtension: "pdf")!)!
@@ -87,7 +88,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     }
 
     public required init?(resource: Resource, manager: RFEditorManager) {
-        NSLog("\(type(of: self)).\(#function)")
+        // NSLog("\(type(of: self)).\(#function)")
         UserDefaults.standard.register(defaults: ["FONDEditor.selectedTabIndex": 0,
                                                   "FONDEditor.selectedEncodingTabIndex": 1,
                                                   "FONDEditor.selectedStyleMappingTabIndex": 1])
@@ -101,7 +102,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     }
 
     deinit {
-        NSLog("\(type(of: self)).\(#function)")
+        // NSLog("\(type(of: self)).\(#function)")
         NotificationCenter.default.removeObserver(self)
         flagsBitfieldControl.unbind(NSBindingName("objectValue"))
         fontClassBitfieldControl.unbind(NSBindingName("objectValue"))
@@ -111,6 +112,7 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
     public override func windowDidLoad() {
         super.windowDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(resourceDataChanged(_:)), name: .ResourceDataDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(resourceIDChanged(_:)), name: .ResourceIDDidChange, object: nil)
         flagsBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFFFlags")
         fontClassBitfieldControl.bind(NSBindingName("objectValue"), to: self, withKeyPath: "objcFontClass")
         tabView.selectTabViewItem(at: UserDefaults.standard.integer(forKey: "FONDEditor.selectedTabIndex"))
@@ -190,12 +192,52 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
         Self.fondKeyPaths.forEach { fond.addObserver(self, forKeyPath: $0, options: [.new, .old], context: &Self.fondContext) }
         Self.fontAsscKeyPaths.forEach { (fond.fontAssociationTable.entries as NSArray).addObserver(self, toObjectsAt: IndexSet(0..<fond.fontAssociationTable.entries.count),  forKeyPath: $0, options: [.new, .old], context: &Self.fontAsscContext) }
         Self.keyPaths.forEach { addObserver(self, forKeyPath: $0, options: [.new, .old], context: nil) }
+        if resource.id != Int(fond.famID) && !haveAskedToRepair {
+            /// Needs to be repaired
+            showResIDChangedDialog(changedFamilyID: false, needsRepair: true)
+        }
     }
 
     @objc func resourceDataChanged(_ notification: Notification) {
         NSLog("\(type(of: self)).\(#function)")
         if isSavingItem { return }
         loadFOND()
+    }
+
+    @objc func resourceIDChanged(_ notification: Notification) {
+        guard let res = notification.object as? Resource, res == resource else { return }
+        if resource.id != Int(fond.famID) {
+            NSLog("\(type(of: self)).\(#function) fond.famID should change from \(fond.famID) to \(res.id)…")
+            showResIDChangedDialog(changedFamilyID: false)
+        }
+    }
+
+    func showResIDChangedDialog(changedFamilyID: Bool, needsRepair: Bool? = nil) {
+        let alert = NSAlert()
+        if let needsRepair, needsRepair == true {
+            alert.messageText = NSLocalizedString("The 'FOND' font family ID (\(fond.famID)) does not match this resource’s resource ID (\(resource.id)).", comment: "")
+            alert.informativeText = NSLocalizedString("Would you like to repair the 'FOND' by updating the family ID?", comment: "")
+        } else if changedFamilyID {
+            alert.messageText = NSLocalizedString("Would you like to also change this 'FOND' resource’s resource ID to match the family ID?", comment: "")
+            alert.informativeText = NSLocalizedString("The 'FOND' resource’s resource ID must match the family ID, or else you’ll corrupt the FOND.", comment: "")
+        } else {
+            alert.messageText = NSLocalizedString("Would you like to also change the 'FOND' family ID to match the 'FOND' resource’s resource ID?", comment: "")
+            alert.informativeText = NSLocalizedString("The 'FOND' family ID must match the resource ID, or else you’ll corrupt the FOND.", comment: "")
+        }
+        alert.addButton(withTitle: NSLocalizedString("Change", comment: ""))
+        alert.addButton(withTitle: NSLocalizedString("Cancel", comment: ""))
+        // FIXME: handle a resource ID conflict?
+        // FIXME: also, be sure resID change doesn't alter our associated MacEncoding MacScriptID
+        alert.beginSheetModal(for: window!) { modalResponse in
+            self.haveAskedToRepair = true
+            if modalResponse == .alertFirstButtonReturn {
+                if changedFamilyID {
+                    self.resource.id = Int(self.fond.famID)
+                } else {
+                    self.fond.famID = ResID(self.resource.id)
+                }
+            }
+        }
     }
 
     @IBAction func showPopover(_ sender: Any) {
@@ -220,6 +262,13 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
         }
     }
 
+    @IBAction func changeFamilyID(_ sender: Any) {
+        if resource.id != Int(fond.famID) && !haveAskedToRepair {
+            showResIDChangedDialog(changedFamilyID: true)
+        }
+    }
+
+    // MARK: -
     @IBAction public func saveResource(_ sender: Any) {
         isSavingItem = true
         /// push local values into FOND
@@ -410,6 +459,9 @@ public final class FONDEditor : AbstractEditor, ResourceEditor, NSControlTextEdi
             return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
         if context == &Self.fondContext {
+            if keyPath == "famID" {
+                haveAskedToRepair = false
+            }
             undoManager?.registerUndo(withTarget: self, handler: {
                 $0.fond.setValue(change![.oldKey], forKeyPath: keyPath)
             })
