@@ -80,6 +80,8 @@ public final class NFNTLayoutManager {
 
     private func generateGlyphs() {
         if layoutIsValid { return }
+        /// Don't divide by zero
+        if textStorage.nfnt.lineHeight == 0 { return }
         let maxLineCount = Int(floor(textContainer.size.height/textStorage.nfnt.lineHeight))
         let sampleStringParagraphs = textStorage.string.components(separatedBy: CharacterSet.newlines)
         var lineIndex = 0
