@@ -95,7 +95,9 @@ let package = Package(
         .target(name: "FontEditor",
             dependencies: [.target(name: "RFSupport"),
                            .target(name: "CoreFont"),
-//                           .product(name: "HexFiend", package: "HexFiend"),
+                           /// despite Xcode's warning about a missing dependency, it works
+                           /// just fine to _not_ include the following HexFiend package/product:
+                           // .product(name: "HexFiend", package: "HexFiend"),
                            .product(name: "OrderedCollections", package:"swift-collections")],
                 resources: [.copy("ViewController_OS2/CodePageRangesOS2.plist"),
                             .copy("ViewController_OS2/UnicodeBlocksOS2.plist")]),

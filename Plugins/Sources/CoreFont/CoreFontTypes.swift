@@ -313,7 +313,7 @@ public struct MacFontStyle: OptionSet, Hashable, Comparable, CustomStringConvert
     /// of all possible combination of styles to be 32 + 8 + 4 + 2 + 1 = 47. Add 1 for no
     /// style and you have 48. So, when trying to look up the PostScript name in the
     /// StyleMappingTable, we abridge the style value first before finding the index in `indexes UInt8[48]`.
-    /// Also, I guess `.underline` doesn't come into play since it's an after-effect?
+    /// Also, I guess `.underline` doesn't come into play since it's an "after-effect"?
     /// This is used when getting the PostScript name of the font.
     /// - Note: `unabridged() -> abridged() -> unabridged()` is not lossless, as `.underline` cannot be preserved.
     public func abridged() -> MacFontStyle {
