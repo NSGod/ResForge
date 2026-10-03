@@ -23,7 +23,7 @@ public final class FontImporterController: NSWindowController, NSWindowDelegate 
     public weak var delegate:              FontImporterDelegate?
 
     @objc dynamic public var createFOND:   Bool = true
-    @objc dynamic public var createNFNT:   Bool = true
+    @objc dynamic public var createNFNT:   Bool = false
     @objc dynamic public var sizes:        [Int] = []
 
     private let manager:            RFEditorManager
@@ -31,7 +31,8 @@ public final class FontImporterController: NSWindowController, NSWindowDelegate 
 
     // FIXME: limit encoding popup button menu to only those encoding MacScriptIDs found in cmap table
     // FIXME: try to find an existing FOND and present that/give the option to use that one instead of creating new one
-
+    // TODO: actually implement NFNT creation by drawing font to bitmap image
+    
     deinit {
         NSLog("\(type(of: self)).\(#function)")
     }
@@ -47,7 +48,7 @@ public final class FontImporterController: NSWindowController, NSWindowDelegate 
     public init(delegate: FontImporterDelegate, manager: RFEditorManager) {
         NSLog("\(type(of: self)).\(#function)")
         UserDefaults.standard.register(defaults: [FontCreationOptions.createFONDKey: true,
-                                                  FontCreationOptions.createNFNTKey: true,
+                                                  FontCreationOptions.createNFNTKey: false,
                                                   FontCreationOptions.sizesKey: [10, 11, 12]])
         self.delegate = delegate
         self.manager = manager

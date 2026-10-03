@@ -221,7 +221,7 @@ public struct FontCreationOptions {
     public var sfnt:            Resource
     public var createFOND:      Bool = true
     public var encoding:        MacEncoding = .macRoman
-    public var createNFNT:      Bool = true
+    public var createNFNT:      Bool = false
     public var sizes:           [Int]?
     public var editorManager:   RFEditorManager
 
