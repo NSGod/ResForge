@@ -1,12 +1,11 @@
-// swift-tools-version: 5.9
-// The swift-tools-version declares the minimum version of Swift required to build this package.
+// swift-tools-version: 6.2
 
 import PackageDescription
 
 let package = Package(
     name: "Plugins",
     platforms: [
-        .macOS(.v11)
+        .macOS(.v12)
     ],
     products: [
         .library(
@@ -56,7 +55,7 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-collections.git", "1.0.0"..<"2.0.0"),
         .package(url: "https://github.com/yaslab/CSV.swift.git", "2.4.3"..<"3.0.0"),
 //        .package(url: "https://github.com/HexFiend/HexFiend.git", branch: "package"),
-        .package(url: "https://github.com/pointfreeco/swift-parsing.git", "0.14.0"..<"0.15.0")
+        .package(url: "https://github.com/pointfreeco/swift-parsing.git", "0.15.0"..<"0.16.0", traits: [])
     ],
     targets: [
         .target(
@@ -130,5 +129,6 @@ let package = Package(
             resources: [.copy("Resources/condensed.pdf"),
                         .copy("Resources/extended.pdf"),
                         .copy("Resources/outline.pdf")]),
-    ]
+    ],
+    swiftLanguageModes: [.v5]
 )
