@@ -39,9 +39,6 @@ let package = Package(
             name: "ImageEditor",
             targets: ["ImageEditor"]),
         .library(
-            name: "MenuEditor",
-            targets: ["MenuEditor"]),
-        .library(
             name: "NovaTools",
             targets: ["NovaTools"]),
         .library(
@@ -107,9 +104,6 @@ let package = Package(
         .target(name: "POSTExporter",
             dependencies: [.target(name: "RFSupport"),
                            .target(name: "CoreFont")], ),
-        .target(
-            name: "MenuEditor",
-            dependencies: [.target(name: "RFSupport")]),
         .target(
             name: "NovaTools",
             dependencies: [.target(name: "RFSupport"),
